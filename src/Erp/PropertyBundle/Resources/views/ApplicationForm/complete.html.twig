@@ -1,0 +1,110 @@
+{% extends '::base.html.twig' %}
+
+{% set headerWhiteClass = true %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpcore/js/select2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpcore/js/vendor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpcore/js/upload.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpcore/js/jasny-bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpproperty/js/application-complete.controller.js') }}"></script>
+{% endblock %}
+
+{% block headerBannerTitle %}
+    Application form
+{% endblock %}
+
+{% block pageContent %}
+
+    <!-- Application Form-->
+    <section id="rental-form" class="register-form rental-form">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text">Online Rental Application</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'msg_error' : 'message_errors', 'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error' } %}
+
+                <div class="col-md-10 col-md-offset-1">
+
+                    <form action="{{ path('erp_property_application_complete_form', {'propertyId':property.id}) }}"
+                    class="form-horizontal" method="post" enctype="multipart/form-data" name="application-form">
+                        {% if property.user.applicationForm %}
+                            {% set applicationSections = property.user.applicationForm.applicationSections %}
+                            {% if applicationSections %}
+
+                                <!-- Nav tabs -->
+                                <ul id="tabs" class="nav nav-tabs" role="tablist">
+                                    {% for key, applicationSection in applicationSections %}
+                                        <li role="presentation" {% if psData.error.section is not defined and key == 0 %}class="active"{% endif %}>
+                                            <a href="#section_{{ key }}" aria-controls="section_{{ key }}" role="tab" data-toggle="tab">{{ key + 1 }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    <li role="presentation" {% if psData.error.section is defined %}class="active"{% endif %}><a href="#section_last" aria-controls="section_last" role="tab" data-toggle="tab">{{ applicationSections|length + 1 }}</a></li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    {% for key, applicationSection in applicationSections %}
+                                        <div role="tabpanel" class="tab-pane{% if psData.error.section is not defined and key == 0 %} active{% endif %}" id="section_{{ key }}">
+                                            <div class="form-group section-block">
+                                                <div class="block-title">{{ applicationSection.name }}</div>
+                                                <div class="col-xs-12 block-fields">
+                                                    {% set fields = applicationSection.applicationFields %}
+                                                    {% for field in fields %}
+                                                        {% set field_id = field.type ~ '_' ~ field.id %}
+                                                        {% include 'ErpPropertyBundle:ApplicationForm/fields/complete:' ~ field.type ~ '-field.html.twig' with {'field_id': field_id} %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+
+                                            <div class="text-center">
+                                                {% if key %}
+                                                    <a href="#" class="btn submit-popup-btn tab-prev">Previous</a>
+                                                {% else %}
+                                                    {% if isLandlord %}
+                                                        <a href="{{ path('erp_property_application_form', {'propertyId':property.id}) }}" class="btn submit-popup-btn">Back to constructor</a>
+                                                    {% else %}
+                                                        <a href="{{ path('erp_property_page', {'stateCode': property.city.stateCode, 'cityName': property.city.name, 'name' : property.getName() }) }}" class="btn submit-popup-btn">Back to property</a>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <a href="#" class="btn submit-popup-btn tab-next">Next</a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div role="tabpanel" class="tab-pane{% if psData.error.section is defined %} active{% endif %}" id="section_last">
+                                        <div class="form-group section-block">
+                                            <div class="block-title">Payment info</div>
+                                            <div class="col-xs-12 block-fields">
+                                                {% include 'ErpPropertyBundle:ApplicationForm:complete-payment-form.html.twig' %}
+                                            </div>
+
+                                            <div class="col-xs-12 block-fields agreement-block">
+                                                <div class="agreement-group form-group col-xs-12">
+                                                    <input type="checkbox" name="agreement" class="form-control checkbox-btn"
+                                                           id="agreement-check" required="required">
+                                                    <label class="control-label agreement-check" for="agreement-check">I authorize the
+                                                        verification of the information provided on this form as to my credit and
+                                                        employment. I have received a copy of this application.</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <a href="#" class="btn submit-popup-btn tab-prev">Previous</a>
+                                            <button type="submit" class="btn submit-popup-btn application-submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

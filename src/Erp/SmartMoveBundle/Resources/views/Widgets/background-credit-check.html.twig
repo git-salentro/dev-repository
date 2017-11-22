@@ -1,0 +1,58 @@
+{% import '::widgets/form_errors.html.twig' as form_custom_errors %}
+<div class="col-md-5 col-xs-12 profile-widget-item screening-widget">
+    <div class="row widget-title-row">
+        <div class="login-block-title bold-text">Tenant Screening</div>
+    </div>
+    <div class="row check-block" style="margin-top: -10px !important;">
+        {% if smartMoveEnable %}
+        <div class="col-xs-6">
+            <div class="check-col">
+                <span class="check-icon bg-check"></span>
+                <span class="check-text">Background Check</span>
+            </div>
+            <input type="hidden" id="route-check-renter-paid" value="{{ path('erp_smart_move_check_is_paid') }}"/>
+            <input type="hidden" id="route-report-paid" value="{{ path('erp_smart_move_report_paid') }}"/>
+            <div class="edit-row">
+                <div class="row">
+                    <div class="form-group">
+                        {{ form_start(form, { attr: {'class': 'screening-background', 'novalidate': 'novalidate'},
+                        'enctype': form_enctype(form)}) }}
+                        {{ form_widget(form.email) }}
+
+                        {% if user.isReadOnlyUser() %}
+                        <a type="submit" class="btn edit-btn" href="{{ path('erp_user_profile_read_only_popup') }}"
+                           role="popup">GO</a>
+                        {% else %}
+                        {{ form_widget(form.go) }}
+                        {% endif %}
+                        <div class="hide">
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="check-col">
+                <span class="check-icon credit-check"></span>
+                <span class="check-text">Credit Check</span>
+            </div>
+            <div class="edit-row">
+
+            </div>
+            <div class="edit-row">
+                {{ render(controller('ErpSmartMoveBundle:SmartMove:getReports')) }}
+            </div>
+        </div>
+        {% else %}
+            <div class="payment-type">
+                Tenant Screening service is currently unavailable.
+            </div>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="question-mark">
+        <a role="popup"
+           href="{{ path('erp_user_profile_hint_content', {'hintCode':'background_check_credit_check'}) }}">&#063;</a>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+erp_user_registeration:
+    resource: "@ErpUserBundle/Resources/config/routing/registration.yml"
+    prefix:   /register
+
+erp_user_profile:
+    resource: "@ErpUserBundle/Resources/config/routing/profile.yml"
+    prefix:     /profile
+
+erp_user_profile_messages:
+    resource: "@ErpUserBundle/Resources/config/routing/messages.yml"
+    prefix:     /profile
+
+erp_user_profile_service_request:
+    resource: "@ErpUserBundle/Resources/config/routing/service-request.yml"
+    prefix:     /profile
+
+erp_user_profile_settings:
+    resource: "@ErpUserBundle/Resources/config/routing/settings.yml"
+    prefix:     /profile
+
+erp_user_profile_documentation:
+    resource: "@ErpUserBundle/Resources/config/routing/documentation.yml"
+    prefix:     /profile
+
+erp_user_profile_forum:
+    resource: "@ErpUserBundle/Resources/config/routing/forum.yml"
+    prefix:     /profile

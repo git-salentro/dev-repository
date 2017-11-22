@@ -1,0 +1,3 @@
+erp_payment_ps:
+    resource: "@ErpPaymentBundle/Resources/config/routing/pay-simple.yml"
+    prefix:   /payment
