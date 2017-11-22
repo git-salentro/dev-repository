@@ -1,0 +1,6 @@
+erp_esign_form:
+    path:     /esign/{documentId}
+    defaults: { _controller: ErpSignatureBundle:Signature:esign }
+    requirements:
+        documentId: \d+
+    methods: [GET, POST]

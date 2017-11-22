@@ -1,0 +1,5 @@
+services:
+
+    erp.payment.paysimple_service:
+        class: Erp\PaymentBundle\Services\PaySimpleService
+        arguments: [@service_container]

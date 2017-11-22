@@ -1,0 +1,50 @@
+{% for userDocument in userDocuments %}
+    <li class="doc-table-row">
+        <div class="col-xs-4 table-col file-name">
+            <span class="file-name-line">
+                <span class="fa fa-file-o"></span>
+                <a href="{{ asset(userDocument.document.path ~ '/' ~ userDocument.document.name) }}" target="_blank">
+                    {{ userDocument.document.originalName|e }}
+                </a>
+            </span>
+            <input class="file-name-input" name="name[]" value="{{ userDocument.document.originalName|e }}" 
+            data-document-id="{{ userDocument.document.id }}" type="text">
+        </div>
+        <div class="col-xs-2 table-col file-date">{{ userDocument.createdDate|date('m/d/Y') }}</div>
+        <div class="col-xs-3">
+            <div class="dropdown">
+                <button class="btn btn-default btn-status dropdown-toggle disabled" data-file-id="{{ userDocument.id }}"
+                data-selected-file-status="{{ userDocument.status }}" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
+                    {% if userDocument.status %}
+                        {% if userDocument.status == constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_SENT') and userDocument.fromUser.id != user.id %}
+                            {% set status = constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_RECIEVED') %}
+                        {% else %}
+                            {% set status = userDocument.status %}
+                        {% endif %}
+                        <li class="doc-{{ status|lower }} current" data-status="{{ status|lower }}">
+                            <span class="status"><span class="doc-{{ status|lower }}-icon doc-status-icon"></span>{{ status }}</span>
+                        </li>
+                    {% else %}
+                        <span class="select-container"></span>
+                    {% endif %}
+                </button>
+                {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) %}
+                    <ul class="companions-list dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <li class="doc-accepted" data-status="{{ constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED') }}">
+                            <span class="status"><span class="doc-accepted-icon doc-status-icon"></span>Accepted</span>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-xs-3 table-col sign-col">
+            {% if not currentCompanion.hasRole(constRoleAnonymous) %}<a role="popup" href="{{ path('erp_esign_form', {'documentId':userDocument.document.id}) }}" class="sign-btn signature-btn">Sign</a>{% endif %}
+            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED')) or user.hasRole(constRoleLandlord) %}
+                <span class="doc-edit" data-is-tenant="{% if user.hasRole(constRoleTenant) %}1{% else %}0{% endif %}"></span>
+                <span class="ok-btn">Ok</span>
+                <a role="popup" href="{{ path('erp_user_document_delete', {'documentId':userDocument.id}) }}" class="doc-delete">×</a>
+            {% endif %}
+        </div>
+    </li>
+{% endfor %}

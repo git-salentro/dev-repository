@@ -1,0 +1,21 @@
+{{ form_start(form, { attr: {'class': 'form-horizontal', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="errors">
+                {{ form_custom_errors.widget(form.document.file) }}
+                {{ form_custom_errors.widget(form.document.originalName) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 upload-doc-col">
+            <label class="doc-format"><span>Upload Your File</span><span>PDF, JPG, PNG, GIF, TIF, DOC, DOCX</span></label>
+            <label class="edit-doc-label">Document Name</label>
+            {{ form_widget(form.document.file) }}
+            <div class="file-upload">
+                {{ form_widget(form.document.originalName, {'attr': {'class':'form-control upload-input'}}) }}
+                {{ form_widget(form.save) }}
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}

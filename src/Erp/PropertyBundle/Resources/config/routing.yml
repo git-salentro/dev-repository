@@ -1,0 +1,15 @@
+erp_property_rout:
+    resource: "@ErpPropertyBundle/Resources/config/routing/property.yml"
+    prefix:   /property
+
+erp_property_listings:
+    resource: "@ErpPropertyBundle/Resources/config/routing/listings.yml"
+    prefix:   /listings
+
+erp_property_application_forms:
+    resource: "@ErpPropertyBundle/Resources/config/routing/application-forms.yml"
+    prefix:   /application-form
+
+erp_property_contract_forms:
+    resource: "@ErpPropertyBundle/Resources/config/routing/contract-forms.yml"
+    prefix:   /contract-form

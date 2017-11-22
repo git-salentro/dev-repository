@@ -1,0 +1,10 @@
+<div class="profile-widget-content">
+    <div class="row widget-title-row">
+        <div class="login-block-title bold-text">Message Landlord</div>
+    </div>
+    {% include "ErpUserBundle:Profile/Tenant/widgets:dashboard-messages-form.html.twig" %}
+    <hr>
+    <div class="question-mark">
+        <a role="popup" href="{{ path('erp_user_profile_hint_content', {'hintCode':'message_landlord'}) }}">&#063;</a>
+    </div>
+</div>

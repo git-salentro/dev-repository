@@ -1,0 +1,52 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpcore/js/file-validator.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/account-details.controller.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpproperty/js/listings-edit.controller.js') }}"></script>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ parent() }}
+
+    {% set page = pagination is defined ? pagination.currentPageNumber : 1 %}
+
+    <div class="page-content">
+        <section id="landlords-listings" class="listings profile">
+            <div class="container">
+                <div class="row">
+                    <div class="title-block">
+                        <h1 class="bold-text">Manage Property Details</h1>
+                    </div>
+                </div>
+
+                {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+                <div class="row">
+
+                {% if pagination|length %}
+                    {% for property in pagination %}
+                        {% include 'ErpPropertyBundle:Listings:property-listing.html.twig' %}
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center">
+                        You have no Properties yet.{% if not user.isReadOnlyUser() and not user.isPropertyCounterFree %} Number of available Properties that can be created: {{ user.propertyCounter }}. Fee for every additional Property: ${{ propertyFee }}.{% endif %}
+                    </div>
+                {% endif %}
+                <div class="col-xs-12 text-center">
+                    {{ knp_pagination_render(pagination) }}
+
+                    {% if user.propertyCounter > 0 or user.isPropertyCounterFree %}
+                        <a href="{{ path('erp_property_listings_add') }}" class="btn red-btn">&plus; Add Properties{% if not user.isReadOnlyUser() and not user.isPropertyCounterFree %} ({{ user.propertyCounter }} available){% endif %}</a>
+                    {% else %}
+                        <a href="{{ path('erp_property_listings_add_charge_popup') }}" role="popup" class="btn red-btn">&plus; Add Properties{% if not user.isReadOnlyUser() %} ({{ user.propertyCounter }} available){% endif %}</a>
+                    {% endif %}
+                </div>
+                {% include 'ErpPropertyBundle:Listings:properties-import-form.html.twig' %}
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

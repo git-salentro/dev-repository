@@ -1,0 +1,79 @@
+/* Add custom styles here */
+footer .copyright-dark {
+    height: 150px;
+    padding-top: 15px;
+}
+
+.social-icons-container {
+    max-width: 400px;
+    float: left;
+    margin-left: 200px;
+}
+
+ul.social-icons {
+    display: inline;
+}
+
+ul.social-icons li {
+    display: inline;
+}
+
+@media only screen and (max-width: 1199px) {
+    .social-icons-container {
+        margin-left: 100px;
+    }
+}
+
+@media only screen and (max-width: 993px) {
+    footer .copyright-dark {
+        height: 140px;
+    }
+
+    .social-icons-container {
+        width: auto;
+        margin: 0 auto;
+        float: none;
+        display: block;
+    }
+
+    ul.social-icons-container {
+        display: block;
+    }
+}
+
+@media only screen and  (max-width: 768px) {
+    footer .copyright-dark {
+        height: 300px;
+    }
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: -30px;
+    margin-left: 2px;
+    display: flex;
+    flex-direction: row;
+    flex-flow: row wrap;
+    align-content: stretch;
+    flex-wrap: wrap;
+}
+
+.nav-tabs>li {
+    flex: 1 1 0;
+    text-align: center;
+}
+
+.nav-tabs>li>a {
+    color: #b7b7b5;
+}
+
+.nav-tabs>li>a:hover {
+    color: #000000;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    background-color: #ca171b;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    color: #fff;
+}

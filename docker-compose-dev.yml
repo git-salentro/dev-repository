@@ -1,0 +1,42 @@
+version: '2'
+
+services:
+    db:
+        build: ./docker/mysql
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./log/mysql:/var/log/mysql
+        environment:
+            - MYSQL_ROOT_HOST
+            - MYSQL_ALLOW_EMPTY_PASSWORD
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+        ports:
+            - '3307:3306'
+
+    nginx:
+        build: ./docker/nginx
+        ports:
+          - '85:80'
+        volumes:
+          - ./log/nginx:/var/log/nginx
+          - ./:/var/www/
+
+    php:
+        build:
+            context: ./docker/php
+            args:
+                - APP_ENV=dev
+        volumes:
+            - ./:/var/www/
+#        depends_on:
+#            - data
+#        volumes_from:
+#            - data
+        environment:
+            - SYMFONY__DATABASE__HOST=${MYSQL_ROOT_HOST}
+            - SYMFONY__DATABASE__PORT=${MYSQL_PORT}
+            - SYMFONY__DATABASE__NAME=${MYSQL_DATABASE}
+            - SYMFONY__DATABASE__USER=${MYSQL_USER}
+            - SYMFONY__DATABASE__PASSWORD=${MYSQL_PASSWORD}
