@@ -9,7 +9,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjpeg62-turbo-dev \
     mc \
     git \
-    curl
+    curl \
+    libmagickwand-dev
+
+RUN pecl install imagick
+RUN docker-php-ext-enable imagick
 
 RUN docker-php-ext-install \
     intl \

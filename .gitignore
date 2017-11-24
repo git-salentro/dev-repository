@@ -56,3 +56,4 @@
 /.idea
 /composer.phar
 /log
+/web/cache
