@@ -4,9 +4,8 @@ function info {
     printf "\033[0;36m===> \033[0;33m${1}\033[0m\n"
 }
 
-#
-#info "Composer install"
-#
-#composer install --working-dir=/vaw/www/
+info "Run RabbitMQ"
+
+php app/console rabbitmq:consumer -m 50
 
 exec "$@"

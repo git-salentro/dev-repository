@@ -21,3 +21,61 @@
         {% endfor %}
     {% endblock notice_flash %}
 {% endif %}
+
+{% block table_footer %}
+    <tfoot>
+    <tr>
+        <th colspan="{{ admin.list.elements|length - (app.request.isXmlHttpRequest ? (admin.list.has('_action') + admin.list.has('batch')) : 0) }}">
+            <div class="form-inline">
+                {% if not app.request.isXmlHttpRequest %}
+                {% if admin.hasRoute('batch') and batchactions|length > 0  %}
+                    {% block batch %}
+                        {{ parent() }}
+                    {% endblock %}
+                {% endif %}
+
+                    <div class="pull-right">
+                        {% if admin.hasRoute('export') and admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <i class="glyphicon glyphicon-export"></i>
+                                    {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% for format in admin.getExportFormats() %}
+                                    <li>
+                                        <a href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">
+                                            <i class="glyphicon glyphicon-download"></i>
+                                            {{ format|upper }}
+                                        </a>
+                                    <li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                            &nbsp;-&nbsp;
+                        {% endif %}
+
+                        {% block pager_results %}
+                            {{ parent() }}
+                        {% endblock %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {#{{ form_row(paymentSettingsView.paymentAcceptanceDateFrom) }}#}
+            {#{{ form_row(paymentSettingsView.paymentAcceptanceDateTo) }}#}
+            {#{{ form_row(paymentSettingsView.paymentAmount) }}#}
+            {#{{ form_row(paymentSettingsView.allowPartialPayments) }}#}
+            {#{{ form_row(paymentSettingsView.allowCreditCardPayments) }}#}
+            {#{{ form_row(paymentSettingsView.allowAutoDraft) }}#}
+        </th>
+    </tr>
+
+    {% block pager_links %}
+        {{ parent() }}
+    {% endblock %}
+
+    </tfoot>
+{% endblock %}

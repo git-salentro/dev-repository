@@ -3,3 +3,71 @@ services:
     erp.payment.paysimple_service:
         class: Erp\PaymentBundle\Services\PaySimpleService
         arguments: [@service_container]
+
+    erm.payment.stripe.client:
+        class: Erp\PaymentBundle\Stripe\Client\Client
+        arguments:
+            - '%stripe.secret_key%'
+
+    #TODO Create abstract manager
+    erp.payment.stripe.manager.customer_manager:
+        class: Erp\PaymentBundle\Stripe\Manager\CustomerManager
+        arguments:
+            - '@erm.payment.stripe.client'
+
+    erp.payment.stripe.manager.plan_manager:
+        class: Erp\PaymentBundle\Stripe\Manager\PlanManager
+        arguments:
+            - '@erm.payment.stripe.client'
+
+    erp.payment.stripe.manager.subscription_manager:
+        class: Erp\PaymentBundle\Stripe\Manager\SubscriptionManager
+        arguments:
+            - '@erm.payment.stripe.client'
+
+    erp.payment.form.type.stripe_credit_card:
+        class: Erp\PaymentBundle\Form\Type\StripeCreditCardType
+        tags:
+            - { name: form.type, alias: erp_stripe_credit_card }
+
+    erp.payment.form.stripe_credit_card:
+        class: Symfony\Component\Form\Form
+        factory: 'form.factory:createNamed'
+        arguments: ['erp_stripe_credit_card', 'erp_stripe_credit_card', null]
+
+    erp.payment.form.type.stripe_bank_account:
+        class: Erp\PaymentBundle\Form\Type\StripeBankAccountType
+        tags:
+            - { name: form.type, alias: erp_stripe_bank_account }
+
+    erp.payment.form.stripe_bank_account:
+        class: Symfony\Component\Form\Form
+        factory: 'form.factory:createNamed'
+        arguments: ['erp_stripe_credit_card', 'erp_stripe_bank_account', null]
+
+    erp.payment.registry.stripe_form_registry:
+        class: Erp\PaymentBundle\Registry\StripeFormRegistry
+        arguments:
+            - {cc: '@erp.payment.form.stripe_credit_card', ba: '@erp.payment.form.stripe_bank_account'}
+
+    erp.payment.registry.stripe_models:
+        class: Erp\PaymentBundle\Registry\StripeModelRegistry
+        arguments:
+            - {cc: 'Erp\PaymentBundle\Stripe\Model\CreditCard', ba: 'Erp\PaymentBundle\Stripe\Model\BankAccount'}
+
+    erp.payment.stripe.manager.user_manager:
+        class: Erp\PaymentBundle\Stripe\Manager\UserManager
+        arguments:
+            - '@erp.payment.stripe.manager.customer_manager'
+            - '@phy_cache'
+
+    erp.payment.entity.unit_settings_manager:
+        class: Erp\PaymentBundle\Entity\UnitSettingsManager
+        arguments:
+            - '@doctrine'
+
+    erp.payment.consumer.update_subscriptions:
+        class: Erp\PaymentBundle\Consumer\UpdateSubscriptionsConsumer
+        arguments:
+            - '@doctrine'
+            - '@erp.payment.stripe.manager.subscription_manager'

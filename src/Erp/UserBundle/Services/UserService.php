@@ -224,22 +224,22 @@ class UserService
             $paySimpleCredentials['paySimpleApiSecretKey']
         );
 
-        $responce = $paySimpleManager->setModel($this->getPaySimpleCustomerModel($user))->proccess(
+        $response = $paySimpleManager->setModel($this->getPaySimpleCustomerModel($user))->proccess(
             PaySimpleManagerInterface::METHOD_CUSTOMER_CREATE
         );
 
         $result['status'] = true;
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
             $psCustomer = new PaySimpleCustomer();
             $psCustomer->setUser($user)
-                ->setCustomerId($responce['data']['Id']);
+                ->setCustomerId($response['data']['Id']);
             $this->em->persist($psCustomer);
             $this->em->flush();
 
             $result['data'] = $psCustomer;
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -302,10 +302,10 @@ class UserService
             ? PaySimpleManagerInterface::METHOD_PAYMENT_CREATE_CC
             : PaySimpleManagerInterface::METHOD_PAYMENT_CREATE_BA;
 
-        $responce = $paySimpleManager->setModel($model)->proccess($method);
+        $response = $paySimpleManager->setModel($model)->proccess($method);
         $result['status'] = true;
 
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
             $psCustomer = $model->getCustomer();
             $user = $psCustomer->getUser();
             $modelMethodSet = 'set' . strtoupper($type) . 'Id';
@@ -318,12 +318,12 @@ class UserService
             if ($isType || $isHasRecurring || $isFirst) {
                 $psCustomer->setPrimaryType($type);
             }
-            $psCustomer->{$modelMethodSet}($responce['data']['Id']);
+            $psCustomer->{$modelMethodSet}($response['data']['Id']);
 
             $this->em->persist($psCustomer);
             $this->em->flush();
 
-            if (!$responce['data']['IsDefault']) {
+            if (!$response['data']['IsDefault']) {
                 $paySimpleManager = PaySimpleManagerFactory::getManagerInstance(
                     PaySimpleManagerInterface::TYPE_PAYMENT,
                     $this->container
@@ -336,7 +336,7 @@ class UserService
             $result['data'] = $psCustomer;
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -496,13 +496,13 @@ class UserService
             $paySimpleCredentials['paySimpleApiSecretKey']
         );
 
-        $responce = $paySimpleManager->setModel($model)->proccess(
+        $response = $paySimpleManager->setModel($model)->proccess(
             PaySimpleManagerInterface::METHOD_RECURRING_SUSPEND
         );
 
         $result['status'] = true;
-        $this->logger->add('paysimple', 'PaySimple Suspend Recurring => ' . json_encode($responce), 'INFO');
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
+        $this->logger->add('paysimple', 'PaySimple Suspend Recurring => ' . json_encode($response), 'INFO');
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
             $recurringResponse = $this->retrieveRecurringPayment($model);
 
             if ($recurringResponse['status']) {
@@ -520,7 +520,7 @@ class UserService
             }
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -567,17 +567,17 @@ class UserService
             $paySimpleCredentials['paySimpleApiSecretKey']
         );
 
-        $responce = $paySimpleManager->setModel($model)->proccess(
+        $response = $paySimpleManager->setModel($model)->proccess(
             PaySimpleManagerInterface::METHOD_RECURRING_GET
         );
 
         $result['status'] = true;
-        $this->logger->add('paysimple', 'PaySimple Retrive Recurring => ' . json_encode($responce), 'INFO');
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
-            $result['data'] = $responce['data'];
+        $this->logger->add('paysimple', 'PaySimple Retrive Recurring => ' . json_encode($response), 'INFO');
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
+            $result['data'] = $response['data'];
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -861,14 +861,14 @@ class UserService
                     $paySimpleCredentials['paySimpleApiSecretKey']
                 );
 
-                $responce = $paySimpleManager->setModel($model)->proccess($type);
+                $response = $paySimpleManager->setModel($model)->proccess($type);
 
-                if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
-                    $cache->set($hashKey, $responce['data']);
-                    $result['data'] = $responce['data'];
+                if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
+                    $cache->set($hashKey, $response['data']);
+                    $result['data'] = $response['data'];
                 } else {
                     $result['status'] = false;
-                    $result['errors'] = $responce['errors'];
+                    $result['errors'] = $response['errors'];
                     $cache->delete($hashKey);
                 }
             }
@@ -902,16 +902,16 @@ class UserService
                     PaySimpleManagerInterface::TYPE_CUSTOMER,
                     $this->container
                 );
-                $responce = $paySimpleManager->setModel($model)->proccess(
+                $response = $paySimpleManager->setModel($model)->proccess(
                     PaySimpleManagerInterface::METHOD_CUSTOMER_GET_INFO
                 );
 
-                if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
-                    $cache->set($hashKey, $responce['data']);
-                    $result['data'] = $responce['data'];
+                if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
+                    $cache->set($hashKey, $response['data']);
+                    $result['data'] = $response['data'];
                 } else {
                     $result['status'] = false;
-                    $result['errors'] = $responce['errors'];
+                    $result['errors'] = $response['errors'];
                     $cache->delete($hashKey);
                 }
             }

@@ -19,6 +19,7 @@ use Goodby\CSV\Export\Standard\ExporterConfig;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PaymentWidgetsController extends BaseController

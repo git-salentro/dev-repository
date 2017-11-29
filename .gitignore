@@ -46,14 +46,15 @@
 /.web-server-pid
 
 # Node modules
-/node_modules
+/node_modules/
 
 #Docker
-/docker/mysql/data
+/docker/mysql/data/
 
 #Other
 /.sass-cache
 /.idea
 /composer.phar
-/log
-/web/cache
+/log/
+/web/cache/
+.env

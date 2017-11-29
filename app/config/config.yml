@@ -214,3 +214,36 @@ trsteel_ckeditor:
 
 knp_snappy:
     temporary_folder: %kernel.cache_dir%/snappy
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     '%rabbitmq.host%'
+            port:     '%rabbitmq.port%'
+            user:     '%rabbitmq.user%'
+            password: '%rabbitmq.password%'
+            vhost:    '%rabbitmq.vhost%'
+            lazy:     false
+            connection_timeout: 3
+            read_write_timeout: 3
+
+            # requires php-amqplib v2.4.1+ and PHP5.4+
+            keepalive: false
+
+            # requires php-amqplib v2.4.1+
+            heartbeat: 0
+
+            #requires php_sockets.dll
+            use_socket: false # default false
+    producers:
+        update_subscriptions:
+            connection:       default
+            exchange_options: {name: 'update-subscriptions', type: direct}
+            service_alias:    update_subscriptions_producer
+    consumers:
+        update_subscriptions:
+            connection:       default
+            exchange_options: {name: 'update-subscriptions', type: direct}
+            queue_options:    {name: 'update-subscriptions'}
+            callback:         erp.payment.consumer.update_subscriptions
+            enable_logger: true

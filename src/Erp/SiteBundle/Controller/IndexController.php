@@ -23,6 +23,7 @@ class IndexController extends BaseController
      */
     public function indexAction()
     {
+        $test = $this->generateUrl('erp_payment_unit_buy');
         $properties = $this->em->getRepository('ErpPropertyBundle:Property')
             ->findAvailable($this->getUser());
         $slider = $this->em->getRepository('ErpSiteBundle:HomePageSlider')

@@ -71,3 +71,8 @@ erp_property_listings_import:
     path:     /import
     defaults: { _controller: ErpPropertyBundle:Listing:import }
     methods: [GET, POST]
+
+erp_property_set_settings:
+    path: /set-settings
+    defaults: { _controller: ErpPropertyBundle:Listing:setSettings }
+    methods: [POST]

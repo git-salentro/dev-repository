@@ -443,7 +443,7 @@ class User extends BaseUser
     protected $userDocuments;
 
     /**
-     * @var text
+     * @var string
      *
      * @ORM\Column(name="settings", type="text", nullable=true)
      */
@@ -468,6 +468,19 @@ class User extends BaseUser
      * @ORM\OrderBy({"updatedDate"="DESC"})
      */
     protected $paySimpleCustomers;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *      targetEntity="Erp\PaymentBundle\Entity\StripeCustomer",
+     *      mappedBy="user",
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     * @ORM\OrderBy({"updatedAt"="DESC"})
+     */
+    protected $stripeCustomers;
 
     /**
      * @var ArrayCollection
@@ -535,6 +548,7 @@ class User extends BaseUser
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
+        $this->stripeCustomers = new ArrayCollection();
     }
 
     /**
@@ -1654,5 +1668,52 @@ class User extends BaseUser
     public function getIsActiveMonthlyFee()
     {
         return $this->isActiveMonthlyFee;
+    }
+
+    /**
+     * Add stripeCustomer
+     *
+     * @param \Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer|null
+     *
+     * @return User
+     */
+    public function addStripeCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer = null)
+    {
+        if (!$stripeCustomer) {
+            return;
+        }
+
+        $stripeCustomer->setUser($this);
+        $this->stripeCustomers[] = $stripeCustomer;
+
+        return $this;
+    }
+
+    /**
+     * Remove stripeCustomer
+     *
+     * @param \Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer
+     */
+    public function removeStripeCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer)
+    {
+        $this->stripeCustomers->removeElement($stripeCustomer);
+    }
+
+    /**
+     * Get stripeCustomers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStripeCustomers()
+    {
+        return $this->stripeCustomers;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return self::STATUS_ACTIVE === $this->status;
     }
 }

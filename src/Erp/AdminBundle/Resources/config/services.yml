@@ -204,3 +204,13 @@ services:
         calls:
             - [ setTemplate, [list, ErpAdminBundle:Options:list.html.twig]]
             - [ setTemplate, [edit, ErpAdminBundle:PaySimpleHistory:edit.html.twig]]
+
+    sonata.page.admin.unit_settints:
+        class: Erp\AdminBundle\Admin\UnitSettings
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Options", label: "Charging/Fees" }
+        arguments:
+            - ~
+            - Erp\PaymentBundle\Entity\UnitSettings
+            - ~
+            - '@old_sound_rabbit_mq.update_subscriptions_producer'

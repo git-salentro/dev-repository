@@ -1,0 +1,4 @@
+erp_payment_unit_buy:
+    path:     /buy
+    defaults: { _controller: ErpPaymentBundle:Unit:buy }
+    methods: [GET,POST]

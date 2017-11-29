@@ -16,6 +16,10 @@
         {% set availRoutes = ['erp_property_listings_all', 'erp_property_listings_add', 'erp_property_listings_edit'] %}
 
         <li class="menu-item{{ (currentRoute in availRoutes) ? ' current' : ''}}">
+            <a href="{{ path('erp_property_listings_all') }}">Dashboard</a>
+            <span class="secondary-menu-icon listings-icon"></span>
+        </li>
+        <li class="menu-item{{ (currentRoute in availRoutes) ? ' current' : ''}}">
             <a href="{{ path('erp_property_listings_all') }}">Listings</a>
             <span class="secondary-menu-icon listings-icon"></span>
         </li>

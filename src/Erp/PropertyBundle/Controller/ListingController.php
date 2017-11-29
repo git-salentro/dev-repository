@@ -2,11 +2,12 @@
 
 namespace Erp\PropertyBundle\Controller;
 
+use Doctrine\ORM\QueryBuilder;
 use Erp\CoreBundle\Controller\BaseController;
-use Erp\CoreBundle\Entity\City;
 use Erp\CoreBundle\Entity\Document;
-use Erp\CoreBundle\Entity\FeeOption;
 use Erp\CoreBundle\Entity\Image;
+use Erp\PropertyBundle\Entity\PropertySettings;
+use Erp\PropertyBundle\Form\Type\PropertySettingsType;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\PropertyBundle\Entity\Property;
@@ -700,6 +701,58 @@ class ListingController extends BaseController
                 'actionUrl' => $this->generateUrl('erp_property_repost_request', ['propertyId' => $propertyId])
             ]
         );
+    }
+
+    public function setSettingsAction(Request $request)
+    {
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
+
+        if ($form->isValid() && $form->isSubmitted()) {
+            $idx = $request->get('idx', []);
+            $allElements = $request->get('all_elements');
+
+            $propertyRepository = $this->getDoctrine()->getRepository(Property::class);
+            /** @var QueryBuilder $qb */
+            $qb = $propertyRepository->getQueryBuilder();
+
+            if (count($idx) > 0) {
+                $propertyRepository->addIdentifiersToQueryBuilder($qb, $idx);
+            } elseif (!$allElements) {
+                $query = null;
+            }
+
+            $em = $this->getDoctrine()->getManagerForClass(Property::class);
+
+            try {
+                $i = 0;
+                foreach ($qb->getQuery()->iterate() as $object) {
+                    /** @var PropertySettings $settings */
+                    $settings = $object[0]->getSettings();
+
+                    if (!$settings) {
+                        $propertySettings = clone $propertySettings;
+                        $object[0]->setSettings($propertySettings);
+                    } else {
+                        $propertySettings->replace($propertySettings);
+                    }
+
+                    if ((++$i % 20) == 0) {
+                        $em->flush();
+                        $em->clear();
+                    }
+                }
+
+                $em->flush();
+                $em->clear();
+            } catch (\PDOException $e) {
+                throw $e;
+            }
+
+        }
+
+        return $this->redirectToRoute('erp_property_listings_all');
     }
 
     /**

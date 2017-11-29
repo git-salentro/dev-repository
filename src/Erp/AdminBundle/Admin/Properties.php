@@ -191,6 +191,17 @@ class Properties extends Admin
             ->add('_action', 'actions', ['actions' => ['edit' => []]]);
     }
 
+    public function getBatchActions()
+    {
+        $actions = parent::getBatchActions();
+        $actions['update_payment_settings'] = [
+            'label'            => 'Set payment setting',
+            'ask_confirmation' => true,
+        ];
+
+        return $actions;
+    }
+
     /**
      * Fields to be shown on create/edit forms
      *

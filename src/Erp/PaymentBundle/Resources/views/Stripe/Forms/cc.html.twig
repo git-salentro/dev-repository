@@ -1,0 +1,68 @@
+{% import '::widgets/form_errors.html.twig' as form_custom_errors %}
+
+{% set ba = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::BANK_ACCOUNT') %}
+
+{{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
+    <div class="row">
+        <div class="form-group">
+            <div class="col-xs-12">
+                {{ form_label(form.number) }}
+                {{ form_widget(form.number) }}
+                {{ form_custom_errors.widget(form.number) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-xs-4">
+                {{ form_label(form.expMonth) }}
+                <div class="select-container">
+                    {{ form_widget(form.expMonth) }}
+                </div>
+                {{ form_custom_errors.widget(form.expMonth) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_label(form.expYear) }}
+                <div class="select-container">
+                    {{ form_widget(form.expYear) }}
+                </div>
+                {{ form_custom_errors.widget(form.expYear) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_label(form.cvc) }}
+                <div class="select-container">
+                    {{ form_widget(form.cvc) }}
+                </div>
+                {{ form_custom_errors.widget(form.cvc) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-xs-12 cc-form-footer">
+                {#TODO See additional condition#}
+                {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) and (not customer) %}
+                    <h3>Amount: ${{ amount }} /month</h3>
+                {% else %}
+                    <br/>
+                {% endif %}
+                {{ form_widget(form.submit) }}
+                <span class="or-text">OR</span>
+                <a href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}" class="back-dashboard btn">Add Bank
+                    Account</a>
+            </div>
+        </div>
+    </div>
+
+    {% if not customer and user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) and user.isActiveMonthlyFee %}
+        <div class="row">
+            <div class="form-group">
+                <div class="col-xs-16"><br/>
+                    <label for="">You will be charged eRentPay monthly fee starting from today.</label>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{{ form_end(form) }}

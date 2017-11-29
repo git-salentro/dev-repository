@@ -17,6 +17,8 @@ use Erp\UserBundle\Entity\User;
  */
 class PropertyRepository extends EntityRepository
 {
+    const ID_SEPARATOR = '~';
+
     /**
      * @param \Erp\UserBundle\Entity\User $user
      *
@@ -63,6 +65,11 @@ class PropertyRepository extends EntityRepository
         $result = $qb->getQuery()->getResult();
 
         return $result;
+    }
+
+    public function getQueryBuilder()
+    {
+        return $this->createQueryBuilder('p');
     }
 
     /**
@@ -171,6 +178,28 @@ class PropertyRepository extends EntityRepository
         $result = $paginator->getQuery()->getResult();
 
         return $result;
+    }
+
+    public function addIdentifiersToQueryBuilder(QueryBuilder $qb, array $idx)
+    {
+        $fieldNames = $this->getClassMetadata()->getIdentifierFieldNames();
+
+        $prefix = uniqid();
+        $sqls = array();
+        foreach ($idx as $pos => $id) {
+            $ids     = explode(self::ID_SEPARATOR, $id);
+
+            $ands = array();
+            foreach ($fieldNames as $posName => $name) {
+                $parameterName = sprintf('field_%s_%s_%d', $prefix, $name, $pos);
+                $ands[] = sprintf('%s.%s = :%s', $qb->getRootAliases(), $name, $parameterName);
+                $qb->setParameter($parameterName, $ids[$posName]);
+            }
+
+            $sqls[] = implode(' AND ', $ands);
+        }
+
+        $qb->andWhere(sprintf('( %s )', implode(' OR ', $sqls)));
     }
 
     /**

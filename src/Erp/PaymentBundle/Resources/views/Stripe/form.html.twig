@@ -1,0 +1,100 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% import '::widgets/form_errors.html.twig' as form_custom_errors %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpcore/js/select2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpproperty/js/available-properties.controller.js') }}"></script>
+{% endblock %}
+
+{% block pageContent %}
+    {% set cc = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::CREDIT_CARD') %}
+    {% set ba = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::BANK_ACCOUNT') %}
+
+    {% if is_granted('ROLE_LANDLORD') %}
+        <div class="modal fade" tabindex="-1" id="unit-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Buy units</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% if errors %}
+                            <span class="field-validation-error">{{ errors }}</span>
+                        {% endif %}
+
+                        {{ form_start(unitForm, {'action': path('erp_payment_unit_buy'), attr: {'class': 'form-horizontal cc-form'}}) }}
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    {{ form_label(unitForm.count) }}
+                                    {{ form_widget(unitForm.count) }}
+                                    {{ form_custom_errors.widget(unitForm.count) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="button-wrap">
+                                    {{ form_widget(unitForm.submit) }}
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(unitForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ parent() }}
+
+    <section id="register-form-tenants" class="register-form cc-form-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text"> {{ type == cc ? 'Credit Card' : 'Bank Account' }}</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    {% if isLandlord %}
+                        <p>Enter the Credit Card you wish to keep stored in your eRentPay Manager account for future payments. eRentPay accepts visa, mastercard, discover and debits.
+                            Note: every time you add new card info, you will be charged a card verification fee of ${{ checkPaymentAmount }}.
+                        </p>
+                    {% else %}
+                        <p>Enter the Credit Card you wish to keep stored in your eRentPay Tenant account for future
+                            payments. eRentPay accepts visa, mastercard, discover and debits.
+                            Note: if you have active recurring payment and you add new card info, you will be charged a
+                            card verification fee of ${{ checkPaymentAmount }}.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    {% if errors %}
+                        <span class="field-validation-error">{{ errors }}</span>
+                    {% endif %}
+
+                    {% include 'ErpPaymentBundle:Stripe/Forms:' ~ type ~'.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript_inline %}
+    {{ parent() }}
+    {% if success and is_granted('ROLE_LANDLORD') %}
+        <script>
+            (function ($) {
+                $('#unit-modal').modal('show');
+            })(jQuery);
+        </script>
+    {% endif %}
+{% endblock %}
