@@ -8,6 +8,7 @@ use Stripe\Plan;
 use Stripe\Stripe;
 use Stripe\Token;
 use Stripe\Subscription;
+use Stripe\BankAccount;
 
 class Client
 {
@@ -141,6 +142,17 @@ class Client
         }
 
         $response = $object->save();
+
+        return new Response($response);
+    }
+
+    public function verifyBankAccount(BankAccount $bankAccount)
+    {
+        try {
+            $response = $bankAccount->verify(['amounts' => [32, 45]]);
+        } catch (\Exception $e) {
+            return new Response(null, $e);
+        }
 
         return new Response($response);
     }

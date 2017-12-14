@@ -4,8 +4,7 @@ namespace Erp\PaymentBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeCustomer;
-use Erp\PaymentBundle\Stripe\Model\BankAccount as BankAccountModel;
-use Erp\PaymentBundle\Stripe\Model\CreditCard;
+use Erp\PaymentBundle\Stripe\Model\PaymentTypeInterface;
 use Erp\UserBundle\Entity\User;
 use Stripe\BankAccount;
 use Stripe\Card;
@@ -20,18 +19,16 @@ class StripeController extends BaseController
     {
         /** @var $user User */
         $user = $this->getUser();
-        //TODO Create voter
-        $access = $this->checkAccessToPaymentPage($user);
 
-        if ($access) {
-            throw $access;
+        if (!$user->hasAccessToPaymentPage()) {
+            throw new AccessDeniedException;
         }
 
         $amount = $this->get('erp.core.fee.service')->getFees();
         $amount = $amount ? $amount->getErentPay() : 0;
 
-        $formTypesRegistry = $this->get('erp.payment.registry.stripe_form_registry');
-        $modelRegistry = $this->get('erp.payment.registry.stripe_models');
+        $formTypesRegistry = $this->get('erp.payment.stripe.registry.form_registry');
+        $modelRegistry = $this->get('erp.payment.stripe.registry.model_registry');
 
         $form = $formTypesRegistry->getForm($type);
         $model = $modelRegistry->getModel($type);
@@ -39,20 +36,16 @@ class StripeController extends BaseController
         $form->setData($model);
         $form->handleRequest($request);
 
-        $unitForm = $this->createForm(new UnitType());
-
         $template = 'ErpPaymentBundle:Stripe:form.html.twig';
         $templateParams = [
             'type' => $type,
             'user' => $user,
             'form' => $form->createView(),
-            'unitForm' => $unitForm->createView(),
             'errors' => null,
             'amount' => $amount,
             'customer' => $user->getStripeCustomers()->first(),
             'isLandlord' => $user->hasRole(User::ROLE_LANDLORD),
             'checkPaymentAmount' => $this->get('erp.core.fee.service')->getCheckPaymentFee(),
-            'success' => false,
         ];
 
         if ($form->isValid() && $form->isSubmitted()) {
@@ -78,7 +71,6 @@ class StripeController extends BaseController
                 $user->addStripeCustomer($stripeCustomer);
 
                 $this->em->persist($user);
-                $this->em->flush();
             } else {
                 /** @var StripeCustomer $stripeCustomer */
                 $stripeCustomer = $stripeCustomers->first();
@@ -91,27 +83,25 @@ class StripeController extends BaseController
                     return $this->render($template, $templateParams);
                 }
             }
-
-            //TODO Optimize logic
-            if ($type == 'cc') {
-                /** @var CreditCard $creditCard */
-                $creditCard = $form->getData();
-                $response = $customerManager->createCard($customer, $creditCard->__toArray());
-            } else {
-                /** @var BankAccountModel $creditCard */
-                $bankAccount = $form->getData();
-                $response = $customerManager->createBankAccount($customer, $bankAccount->__toArray());
-            }
+            /** @var PaymentTypeInterface $model */
+            $model = $form->getData();
+            $paymentTypeProvider = $this->get('erp.payment.stripe.provider.payment_type_provider');
+            $response = $paymentTypeProvider->createPayment($customer, $type, $model->toArray());
 
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();
                 return $this->render($template, $templateParams);
             }
 
-            if ($type == 'cc') {
-                $stripeCustomer->setCreditCardId($response->getContent()['id']);
-            } else {
-                $stripeCustomer->setBankAccountId($response->getContent()['id']);
+            $content = $response->getContent();
+            $paymentTypeProvider->updateIdField($stripeCustomer, $type, $content['id']);
+
+            if ($content instanceof BankAccount) {
+                $response = $customerManager->verifyBankAccount($content);
+
+                if (!$response->isSuccess()) {
+                    $templateParams['errors'] = $response->getErrorMessage();
+                }
             }
 
             $this->em->persist($stripeCustomer);
@@ -142,8 +132,8 @@ class StripeController extends BaseController
 //            $this->addFlash('alert_ok', $msg);
 //
 //            return $this->redirectToRoute('erp_payment_ps_create_account', ['type' => $type]);
-            $templateParams['success'] = true;
-            return $this->render($template, $templateParams);
+
+            return $this->redirectToRoute('erp_payment_unit_buy');
         }
 
         return $this->render($template, $templateParams);
@@ -172,22 +162,5 @@ class StripeController extends BaseController
                 'customer' => $user->getPaySimpleCustomers()->first(),
             ]
         );
-    }
-
-    /**
-     * Check if user has access to payment page
-     *
-     * @param User $user
-     *
-     * @return null|AccessDeniedException
-     */
-    private function checkAccessToPaymentPage(User $user = null)
-    {
-        $result = null;
-        if (!$user || (!$user->hasRole(User::ROLE_LANDLORD) && !$user->hasRole(User::ROLE_TENANT))) {
-            $result = new AccessDeniedException;
-        }
-
-        return $result;
     }
 }

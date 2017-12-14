@@ -3,14 +3,14 @@
      * @param options
      */
     $.fn.erpPopup = function(options) {
-
         var settings = $.extend({
             selector: 'a[ role="popup" ]',
             callback: null
         }, options);
 
-        $( this ).find( settings.selector ).each(function() {
-            init( this, settings );
+        $(this).on('click', settings.selector, function (e) {
+            e.preventDefault();
+            init($(this), settings);
         });
 
         if ( !$( '#epr-modal-popup' ).length ) {
@@ -36,33 +36,29 @@
      * @param element
      * @param settings
      */
-    function init( element, settings ) {
+    function init(element, settings) {
+        var trigger = $(element);
 
-        var trigger = $( element );
-        trigger.bind('click', function( e ) {
-            e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            cache: false,
+            url: trigger.attr('href'),
+            dataType: 'json',
+            async: true,
+            success: function (response) {
+                var noAjax = trigger.data('noajax');
 
-            $.ajax({
-                type: 'GET',
-                cache: false,
-                url: trigger.attr( 'href' ),
-                dataType: 'json',
-                async: true,
-                success: function( response ) {
-                    var noAjax = trigger.data( 'noajax' );
-
-                    processResponse( response, noAjax );
-                    var fn = settings.callback;
-                    if ( fn ) {
-                        fn();
-                    }
-
-                    return false;
+                processResponse(response, noAjax);
+                var fn = settings.callback;
+                if (fn) {
+                    fn();
                 }
-            });
 
-            $( '#epr-modal-popup' ).modal( 'show' );
+                return false;
+            }
         });
+
+        $('#epr-modal-popup').modal('show');
     };
 
     /**

@@ -3,6 +3,7 @@
 namespace Erp\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\PaySimpleCustomer;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -1715,5 +1716,13 @@ class User extends BaseUser
     public function isActive()
     {
         return self::STATUS_ACTIVE === $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAccessToPaymentPage()
+    {
+        return $this->hasRole(self::ROLE_LANDLORD) && !$this->hasRole(self::ROLE_TENANT);
     }
 }

@@ -1,0 +1,31 @@
+{% form_theme form _self %}
+
+{%- block date_widget -%}
+    {% set type = 'hidden' %}
+    {{ block('form_widget_simple') }}
+{%- endblock date_widget -%}
+
+{%- block text_widget -%}
+    {% set type = 'hidden' %}
+    {{ block('form_widget_simple') }}
+{%- endblock text_widget -%}
+
+{%- block checkbox_widget -%}
+    {% set type = 'hidden' %}
+    {{ block('form_widget_simple') }}
+{%- endblock checkbox_widget -%}
+
+<div>
+    {{ form_start(form, {'action': path('erp_property_save_settings')}) }}
+        <input type="hidden" name="data" value="{{ data|json_encode }}">
+        {{ form_widget(form.paymentAcceptanceDateFrom) }}
+        {{ form_widget(form.paymentAcceptanceDateTo) }}
+        {{ form_widget(form.paymentAmount) }}
+        {{ form_widget(form.allowPartialPayments) }}
+        {{ form_widget(form.allowCreditCardPayments) }}
+        {{ form_widget(form.allowAutoDraft) }}
+
+        <button type="submit" class="btn edit-btn">Submit</button>
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+<a class="btn edit-btn" type="submit" href="{{ path('erp_property_choose_properties') }}" role="settings-popup">Back</a>

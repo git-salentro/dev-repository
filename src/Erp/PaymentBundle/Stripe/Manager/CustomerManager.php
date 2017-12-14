@@ -4,6 +4,7 @@ namespace Erp\PaymentBundle\Stripe\Manager;
 
 use Erp\PaymentBundle\Stripe\Client\Client;
 use Stripe\Customer;
+use Stripe\BankAccount;
 
 class CustomerManager
 {
@@ -49,5 +50,10 @@ class CustomerManager
     public function retrieveCreditCard(Customer $customer, $id)
     {
         return $this->client->sendSourceRequest($customer, 'retrieve', $id);
+    }
+
+    public function verifyBankAccount(BankAccount $bankAccount)
+    {
+        return $this->client->verifyBankAccount($bankAccount);
     }
 }

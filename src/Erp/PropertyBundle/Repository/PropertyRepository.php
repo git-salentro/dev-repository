@@ -67,9 +67,12 @@ class PropertyRepository extends EntityRepository
         return $result;
     }
 
-    public function getQueryBuilder()
+    public function getQueryBuilderByUser(User $user)
     {
-        return $this->createQueryBuilder('p');
+        $qb = $this->createQueryBuilder('p');
+        return $qb
+            ->where('p.user = :user')
+            ->setParameter('user', $user);
     }
 
     /**
@@ -192,7 +195,7 @@ class PropertyRepository extends EntityRepository
             $ands = array();
             foreach ($fieldNames as $posName => $name) {
                 $parameterName = sprintf('field_%s_%s_%d', $prefix, $name, $pos);
-                $ands[] = sprintf('%s.%s = :%s', $qb->getRootAliases(), $name, $parameterName);
+                $ands[] = sprintf('%s.%s = :%s', $qb->getRootAlias(), $name, $parameterName);
                 $qb->setParameter($parameterName, $ids[$posName]);
             }
 

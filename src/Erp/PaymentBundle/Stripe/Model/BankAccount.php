@@ -2,7 +2,7 @@
 
 namespace Erp\PaymentBundle\Stripe\Model;
 
-class BankAccount
+class BankAccount implements PaymentTypeInterface
 {
     /**
      * @var string
@@ -183,7 +183,7 @@ class BankAccount
         return $this;
     }
 
-    public function __toArray()
+    public function toArray()
     {
         return [
             'account_holder_name' => $this->accountHolderName,

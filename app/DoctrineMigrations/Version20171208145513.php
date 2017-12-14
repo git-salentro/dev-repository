@@ -17,7 +17,7 @@ class Version20171208145513 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-        $this->addSql('ALTER TABLE stripe_customer ADD credit_card_id VARCHAR(255) NOT NULL, ADD bank_account_id VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE stripe_customer ADD credit_card_id VARCHAR(255) DEFAULT NULL, ADD bank_account_id VARCHAR(255) DEFAULT NULL');
     }
 
     /**

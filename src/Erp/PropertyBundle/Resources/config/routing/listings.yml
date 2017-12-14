@@ -72,7 +72,22 @@ erp_property_listings_import:
     defaults: { _controller: ErpPropertyBundle:Listing:import }
     methods: [GET, POST]
 
-erp_property_set_settings:
-    path: /set-settings
-    defaults: { _controller: ErpPropertyBundle:Listing:setSettings }
+erp_property_choose_settings:
+    path: /choose-settings
+    defaults: { _controller: ErpPropertyBundle:Listing:chooseSettings }
+    methods: [POST, GET]
+
+erp_property_choose_properties:
+    path: /choose-properties
+    defaults: { _controller: ErpPropertyBundle:Listing:chooseProperties }
+    methods: [POST, GET]
+
+erp_property_confirm_settings:
+    path: /confirm-settings
+    defaults: { _controller: ErpPropertyBundle:Listing:confirmSettings }
+    methods: [POST, GET]
+
+erp_property_save_settings:
+    path: /confirm-settings
+    defaults: { _controller: ErpPropertyBundle:Listing:saveSettings }
     methods: [POST]

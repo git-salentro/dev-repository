@@ -251,13 +251,11 @@ class PropertySettings
 
     public function replace(PropertySettings $settings)
     {
-        $reflection = new \ReflectionClass($this);
-        $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE);
-
-        foreach ($properties as $property) {
-            if ($reflection->hasProperty($property)) {
-                $this->{$property} = $settings->{'get'.$property};
-            }
-        }
+       $this->paymentAcceptanceDateFrom = $settings->getPaymentAcceptanceDateFrom();
+       $this->paymentAcceptanceDateTo = $settings->getPaymentAcceptanceDateTo();
+       $this->paymentAmount = $settings->getPaymentAmount();
+       $this->allowPartialPayments = $settings->getAllowPartialPayments();
+       $this->allowCreditCardPayments = $settings->getAllowCreditCardPayments();
+       $this->allowAutoDraft = $settings->getAllowAutoDraft();
     }
 }

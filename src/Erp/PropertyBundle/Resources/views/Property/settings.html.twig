@@ -1,0 +1,23 @@
+{% form_theme form _self %}
+
+{%- block date_widget -%}
+    {% set type = 'text' %}
+    {{ block('form_widget_simple') }}
+{%- endblock date_widget -%}
+
+<div>
+    {% if error is defined and error %}
+        <div>{{ error }}</div>
+    {% endif %}
+    {{ form_start(form, {'action': path('erp_property_choose_properties'), 'attr': {'class': 'payment-calendar', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
+        {{ form_row(form.paymentAcceptanceDateFrom) }}
+        {{ form_row(form.paymentAcceptanceDateTo) }}
+        {{ form_row(form.paymentAmount) }}
+        {{ form_row(form.allowPartialPayments) }}
+        {{ form_row(form.allowCreditCardPayments) }}
+        {{ form_row(form.allowAutoDraft) }}
+        <div class="button-wrap">
+            {{ form_widget(form.submit) }}
+        </div>
+    {{ form_end(form) }}
+</div>

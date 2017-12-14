@@ -45,14 +45,14 @@ class StripeCustomer
     /**
      * @var string
      *
-     * @ORM\Column(name="credit_card_id", type="string")
+     * @ORM\Column(name="credit_card_id", type="string", nullable=true)
      */
     private $creditCardId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="bank_account_id", type="string")
+     * @ORM\Column(name="bank_account_id", type="string", nullable=true)
      */
     private $bankAccountId;
 

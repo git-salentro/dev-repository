@@ -1,10 +1,10 @@
 <?php
 
-namespace Erp\PaymentBundle\Registry;
+namespace Erp\PaymentBundle\Stripe\Registry;
 
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 
-class StripeModelRegistry
+class ModelRegistry
 {
     private $models = [];
 

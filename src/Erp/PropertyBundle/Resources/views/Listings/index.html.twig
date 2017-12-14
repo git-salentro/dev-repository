@@ -5,6 +5,7 @@
     <script type="text/javascript" src="{{ asset('bundles/erpcore/js/file-validator.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/account-details.controller.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpproperty/js/listings-edit.controller.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpproperty/js/properties-settings.controller.js') }}"></script>
 {% endblock %}
 
 {% block pageContent %}
@@ -19,6 +20,7 @@
                 <div class="row">
                     <div class="title-block">
                         <h1 class="bold-text">Manage Property Details</h1>
+                        <a class="btn edit-btn" type="submit" href="{{ path('erp_property_choose_settings') }}" role="settings-popup">Set Properties Settings</a>
                     </div>
                 </div>
 

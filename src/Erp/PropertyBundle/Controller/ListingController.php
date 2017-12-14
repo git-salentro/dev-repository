@@ -6,16 +6,16 @@ use Doctrine\ORM\QueryBuilder;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\Entity\Document;
 use Erp\CoreBundle\Entity\Image;
-use Erp\PropertyBundle\Entity\PropertySettings;
-use Erp\PropertyBundle\Form\Type\PropertySettingsType;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\PropertyBundle\Entity\PropertyRepostRequest;
+use Erp\PropertyBundle\Entity\PropertySettings;
 use Erp\PropertyBundle\Form\Type\EditDocumentPropertyFormType;
 use Erp\PropertyBundle\Form\Type\EditImagePropertyFormType;
 use Erp\PropertyBundle\Form\Type\EditPropertyFormType;
 use Erp\PropertyBundle\Form\Type\PropertyImportFormType;
+use Erp\PropertyBundle\Form\Type\PropertySettingsType;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -703,56 +703,182 @@ class ListingController extends BaseController
         );
     }
 
-    public function setSettingsAction(Request $request)
+    public function chooseSettingsAction(Request $request)
     {
         $propertySettings = new PropertySettings();
         $form = $this->createForm(new PropertySettingsType(), $propertySettings);
         $form->handleRequest($request);
 
-        if ($form->isValid() && $form->isSubmitted()) {
-            $idx = $request->get('idx', []);
-            $allElements = $request->get('all_elements');
-
-            $propertyRepository = $this->getDoctrine()->getRepository(Property::class);
-            /** @var QueryBuilder $qb */
-            $qb = $propertyRepository->getQueryBuilder();
-
-            if (count($idx) > 0) {
-                $propertyRepository->addIdentifiersToQueryBuilder($qb, $idx);
-            } elseif (!$allElements) {
-                $query = null;
+        if ($request->getMethod() == 'POST') {
+            if (!$form->isValid()) {
+                return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+                    'form' => $form->createView(),
+                    'modalTitle' => 'Set Payment Settings',
+                ]);
             }
+            /** @var User $user */
+            $user = $this->getUser();
 
-            $em = $this->getDoctrine()->getManagerForClass(Property::class);
+            $properties = $user->getProperties()->filter(function (Property $property) {
+                return $property->getStatus() != Property::STATUS_DELETED;
+            });
 
-            try {
-                $i = 0;
-                foreach ($qb->getQuery()->iterate() as $object) {
-                    /** @var PropertySettings $settings */
-                    $settings = $object[0]->getSettings();
-
-                    if (!$settings) {
-                        $propertySettings = clone $propertySettings;
-                        $object[0]->setSettings($propertySettings);
-                    } else {
-                        $propertySettings->replace($propertySettings);
-                    }
-
-                    if ((++$i % 20) == 0) {
-                        $em->flush();
-                        $em->clear();
-                    }
-                }
-
-                $em->flush();
-                $em->clear();
-            } catch (\PDOException $e) {
-                throw $e;
-            }
+            return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
+                'form' => $form->createView(),
+                'properties' => $properties,
+                'modalTitle' => 'Choose properties',
+            ]);
 
         }
 
-        return $this->redirectToRoute('erp_property_listings_all');
+        return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+            'form' => $form->createView(),
+            'modalTitle' => 'Set Payment Settings',
+        ]);
+    }
+
+    public function choosePropertiesAction(Request $request)
+    {
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$form->isValid() && $request->getMethod() == 'POST') {
+            return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+                'form' => $form->createView(),
+                'modalTitle' => 'Set Payment Settings',
+            ]);
+        }
+
+        $properties = $user->getProperties()->filter(function (Property $property) {
+            return $property->getStatus() != Property::STATUS_DELETED;
+        });
+
+        return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
+            'form' => $form->createView(),
+            'properties' => $properties,
+            'modalTitle' => 'Choose properties',
+        ]);
+    }
+
+    public function confirmSettingsAction(Request $request)
+    {
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$form->isValid()) {
+            return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+                'form' => $form->createView(),
+                'modalTitle' => 'Set Payment Settings',
+            ]);
+        }
+
+        $idx = $request->get('idx', []);
+        $allElements = $request->get('all_elements', false);
+
+        if (!$idx && !$allElements) {
+            $properties = $user->getProperties()->filter(function (Property $property) {
+                return $property->getStatus() != Property::STATUS_DELETED;
+            });
+
+            return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
+                'form' => $form->createView(),
+                'properties' => $properties,
+                'modalTitle' => 'Choose properties',
+                'error' => 'Please, select at least one property',
+            ]);
+        }
+
+        return $this->render('ErpPropertyBundle:Listings:settings-confirm.html.twig', [
+            'form' => $form->createView(),
+            'data' => [
+                'idx' => $idx,
+                'all_elements' => $allElements,
+            ],
+        ]);
+    }
+
+    public function saveSettingsAction(Request $request)
+    {
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$form->isValid()) {
+            return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+                'form' => $form->createView(),
+                'modalTitle' => 'Set Payment Settings',
+            ]);
+        }
+
+        if ($data = json_decode($request->get('data'), true)) {
+            $idx = $data['idx'];
+            $allElements = $data['all_elements'];
+        } else {
+            $idx = $request->get('idx', []);
+            $allElements = $request->get('all_elements', false);
+        }
+
+        if (!$idx && !$allElements) {
+            $properties = $user->getProperties()->filter(function (Property $property) {
+                return $property->getStatus() != Property::STATUS_DELETED;
+            });
+
+            return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
+                'form' => $form->createView(),
+                'properties' => $properties,
+                'modalTitle' => 'Choose properties',
+                'error' => 'Please, select at least one property',
+            ]);
+        }
+
+        $propertyRepository = $this->getDoctrine()->getRepository(Property::class);
+        /** @var QueryBuilder $qb */
+        $qb = $propertyRepository->getQueryBuilderByUser($user);
+
+        if (count($idx) > 0) {
+            $propertyRepository->addIdentifiersToQueryBuilder($qb, $idx);
+        } elseif (!$allElements) {
+            $query = null;
+        }
+
+        $em = $this->getDoctrine()->getManagerForClass(Property::class);
+
+        try {
+            $i = 0;
+            foreach ($qb->getQuery()->iterate() as $object) {
+                /** @var Property $property */
+                $property = $object[0];
+                /** @var PropertySettings $settings */
+                $settings = $property->getSettings();
+
+                if (!$settings) {
+                    $propertySettings = clone $propertySettings;
+                    $property->setSettings($propertySettings);
+                } else {
+                    $settings->replace($propertySettings);
+                }
+
+                if ((++$i % 20) == 0) {
+                    $em->flush();
+                    $em->clear();
+                }
+            }
+
+            $em->flush();
+            $em->clear();
+
+            return $this->redirect($this->generateUrl('erp_property_listings_all'));
+        } catch (\PDOException $e) {
+            throw $e;
+        }
     }
 
     /**

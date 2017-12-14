@@ -28,7 +28,7 @@ class UnitController extends BaseController
             'errors' => null,
         ];
 
-        if (!$form->isValid() && !$form->isSubmitted()) {
+        if (!$form->isValid()) {
             return $this->render($template, $templateParams);
         }
         /** @var Unit $unit */

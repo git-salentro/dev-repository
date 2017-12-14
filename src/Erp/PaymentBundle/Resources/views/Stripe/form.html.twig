@@ -12,51 +12,13 @@
     {% set cc = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::CREDIT_CARD') %}
     {% set ba = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::BANK_ACCOUNT') %}
 
-    {% if is_granted('ROLE_LANDLORD') %}
-        <div class="modal fade" tabindex="-1" id="unit-modal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Buy units</h4>
-                    </div>
-                    <div class="modal-body">
-                        {% if errors %}
-                            <span class="field-validation-error">{{ errors }}</span>
-                        {% endif %}
-
-                        {{ form_start(unitForm, {'action': path('erp_payment_unit_buy'), attr: {'class': 'form-horizontal cc-form'}}) }}
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-xs-12">
-                                    {{ form_label(unitForm.count) }}
-                                    {{ form_widget(unitForm.count) }}
-                                    {{ form_custom_errors.widget(unitForm.count) }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="button-wrap">
-                                    {{ form_widget(unitForm.submit) }}
-                                </div>
-                            </div>
-                        </div>
-                        {{ form_end(unitForm) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
     {{ parent() }}
 
     <section id="register-form-tenants" class="register-form cc-form-wrap">
         <div class="container">
             <div class="row">
                 <div class="title-block">
-                    <h1 class="bold-text"> {{ type == cc ? 'Credit Card' : 'Bank Account' }}</h1>
+                    <h1 class="bold-text">{{ type == cc ? 'Credit Card' : 'Bank Account' }}</h1>
                 </div>
             </div>
 
@@ -86,15 +48,4 @@
             </div>
         </div>
     </section>
-{% endblock %}
-
-{% block javascript_inline %}
-    {{ parent() }}
-    {% if success and is_granted('ROLE_LANDLORD') %}
-        <script>
-            (function ($) {
-                $('#unit-modal').modal('show');
-            })(jQuery);
-        </script>
-    {% endif %}
 {% endblock %}

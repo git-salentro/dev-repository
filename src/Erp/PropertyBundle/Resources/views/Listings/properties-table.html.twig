@@ -1,0 +1,56 @@
+{% form_theme form _self %}
+
+{%- block date_widget -%}
+    {% set type = 'hidden' %}
+    {{ block('form_widget_simple') }}
+{%- endblock date_widget -%}
+
+{%- block text_widget -%}
+    {% set type = 'hidden' %}
+    {{ block('form_widget_simple') }}
+{%- endblock text_widget -%}
+
+{%- block checkbox_widget -%}
+    {% set type = 'hidden' %}
+    {{ block('form_widget_simple') }}
+{%- endblock checkbox_widget -%}
+
+<div>
+    Choosen Properties:
+    <div>{{ form.paymentAcceptanceDateFrom.vars.value }}</div>
+    <div>{{ form.paymentAcceptanceDateTo.vars.value }}</div>
+    <div>{{ form.paymentAmount.vars.value }}</div>
+    <div>{{ form.allowPartialPayments.vars.value }}</div>
+    <div>{{ form.allowCreditCardPayments.vars.value }}</div>
+    <div>{{ form.allowAutoDraft.vars.value }}</div>
+</div>
+{{ form_start(form, {'action': path('erp_property_confirm_settings')}) }}
+    <table>
+        <thead>
+            <tr>
+                <td>Select All<input type="checkbox" value="all_elements"></td>
+                <td>Property</td>
+                <td>Address</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for property in properties %}
+                <tr>
+                    <td><input type="checkbox" name="idx[]" value="{{ property.id }}"></td>
+                    <td>{{ property.name }}</td>
+                    <td>{{ property.address }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {{ form_widget(form.paymentAcceptanceDateFrom) }}
+    {{ form_widget(form.paymentAcceptanceDateTo) }}
+    {{ form_widget(form.paymentAmount) }}
+    {{ form_widget(form.allowPartialPayments) }}
+    {{ form_widget(form.allowCreditCardPayments) }}
+    {{ form_widget(form.allowAutoDraft) }}
+
+    <button type="submit" class="btn edit-btn">Next</button>
+{{ form_end(form, {'render_rest': false}) }}
+<a class="btn edit-btn" type="submit" href="{{ path('erp_property_choose_settings') }}" role="settings-popup">Back</a>

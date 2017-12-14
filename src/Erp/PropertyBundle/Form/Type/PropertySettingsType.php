@@ -2,10 +2,13 @@
 
 namespace Erp\PropertyBundle\Form\Type;
 
+use Erp\PropertyBundle\Entity\PropertySettings;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Erp\PropertyBundle\Entity\PropertySettings;
 
 class PropertySettingsType extends AbstractType
 {
@@ -17,16 +20,24 @@ class PropertySettingsType extends AbstractType
         $builder
             ->add(
                 'paymentAcceptanceDateFrom',
-                'sonata_type_date_picker',
+                'date',
                 [
-                    'label' => 'Payment Acceptance Date From'
+                    'label' => 'Payment Acceptance Date From',
+                    'label_attr'  => ['class' => 'control-label'],
+                    'attr'        => ['class' => 'form-control col-xs-4 date'],
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
                 ]
             )
             ->add(
                 'paymentAcceptanceDateTo',
-                'sonata_type_date_picker',
+                'date',
                 [
-                    'label' => 'Payment Acceptance Date To'
+                    'label' => 'Payment Acceptance Date To',
+                    'label_attr'  => ['class' => 'control-label'],
+                    'attr'        => ['class' => 'form-control col-xs-4 date'],
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
                 ]
             )
             ->add(
@@ -59,7 +70,20 @@ class PropertySettingsType extends AbstractType
                     'label' => 'Set auto-draft from tenant account?',
                     'required' => false,
                 ]
+            )
+            ->add(
+                'submit',
+                'submit',
+                [
+                    'label' => 'Choose properties',
+                    'attr' =>
+                        [
+                            'class' => 'btn edit-btn',
+                        ]
+                ]
             );
+
+        $builder->addEventListener(FormEvents::SUBMIT, [$this, 'submit']);
     }
 
     /**
@@ -69,6 +93,7 @@ class PropertySettingsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PropertySettings::class,
+            'csrf_protection'   => false,
         ]);
     }
 
@@ -78,5 +103,22 @@ class PropertySettingsType extends AbstractType
     public function getName()
     {
         return 'erp_property_payment_settings';
+    }
+
+    /**r
+     * @param FormEvent $event
+     */
+    public function submit(FormEvent $event)
+    {
+        /** @var PropertySettings $data */
+        $data = $event->getData();
+
+        $paymentAcceptanceDateFrom = $data->getPaymentAcceptanceDateFrom();
+        $paymentAcceptanceDateTo = $data->getPaymentAcceptanceDateTo();
+
+        if ($paymentAcceptanceDateFrom > $paymentAcceptanceDateTo) {
+            $form = $event->getForm();
+            $form->get('paymentAcceptanceDateFrom')->addError(new FormError('Payment Acceptance Date must be greater then Payment Acceptance Date'));
+        }
     }
 }

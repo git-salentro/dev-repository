@@ -2,7 +2,7 @@
 
 namespace Erp\PaymentBundle\Stripe\Model;
 
-class CreditCard
+class CreditCard implements PaymentTypeInterface
 {
     /**
      * @var string
@@ -149,7 +149,7 @@ class CreditCard
         return $this->cvc;
     }
     
-    public function __toArray()
+    public function toArray()
     {
         return [
             'number' => $this->number,

@@ -45,13 +45,13 @@ services:
         factory: 'form.factory:createNamed'
         arguments: ['erp_stripe_credit_card', 'erp_stripe_bank_account', null]
 
-    erp.payment.registry.stripe_form_registry:
-        class: Erp\PaymentBundle\Registry\StripeFormRegistry
+    erp.payment.stripe.registry.form_registry:
+        class: Erp\PaymentBundle\Stripe\Registry\FormRegistry
         arguments:
             - {cc: '@erp.payment.form.stripe_credit_card', ba: '@erp.payment.form.stripe_bank_account'}
 
-    erp.payment.registry.stripe_models:
-        class: Erp\PaymentBundle\Registry\StripeModelRegistry
+    erp.payment.stripe.registry.model_registry:
+        class: Erp\PaymentBundle\Stripe\Registry\ModelRegistry
         arguments:
             - {cc: 'Erp\PaymentBundle\Stripe\Model\CreditCard', ba: 'Erp\PaymentBundle\Stripe\Model\BankAccount'}
 
@@ -71,3 +71,26 @@ services:
         arguments:
             - '@doctrine'
             - '@erp.payment.stripe.manager.subscription_manager'
+
+    erp.payment.stripe.provider.bank_account_payment_type_provider:
+        class: 'Erp\PaymentBundle\Stripe\Provider\BankAccountPaymentTypeProvider'
+        arguments:
+            - '@erp.payment.stripe.manager.customer_manager'
+
+    erp.payment.stripe.provider.credit_card_payment_type_provider:
+        class: 'Erp\PaymentBundle\Stripe\Provider\CreditCardPaymentTypeProvider'
+        arguments:
+            - '@erp.payment.stripe.manager.customer_manager'
+
+    erp.payment.stripe.provider.payment_type_registry:
+        class: 'Erp\PaymentBundle\Stripe\Provider\PaymentTypeRegistry'
+        arguments:
+            -
+                - '@erp.payment.stripe.provider.bank_account_payment_type_provider'
+                - '@erp.payment.stripe.provider.credit_card_payment_type_provider'
+
+    erp.payment.stripe.provider.payment_type_provider:
+        class: 'Erp\PaymentBundle\Stripe\Provider\PaymentTypeProvider'
+        arguments:
+            - '@erp.payment.stripe.provider.payment_type_registry'
+
