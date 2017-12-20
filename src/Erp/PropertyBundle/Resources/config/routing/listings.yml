@@ -91,3 +91,10 @@ erp_property_save_settings:
     path: /save-settings
     defaults: { _controller: ErpPropertyBundle:Listing:saveSettings }
     methods: [POST]
+
+erp_property_property_settings_edit:
+    path:     /{propertyId}/payment-settings/edit
+    defaults: { _controller: ErpPropertyBundle:Listing:editPaymentSettings }
+    options:
+        expose: true
+    methods: [GET, POST]

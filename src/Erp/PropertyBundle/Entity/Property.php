@@ -40,7 +40,7 @@ class Property
 
     const LIMIT_AVAILABLE_PER_PAGE = 8;
     const LIMIT_SEARCH_PER_PAGE    = 9;
-    const LIMIT_USER_LISTINGS      = 3;
+    const LIMIT_USER_LISTINGS      = 9;
 
     /**
      * @var integer

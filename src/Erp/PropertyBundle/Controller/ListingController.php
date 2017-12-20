@@ -882,6 +882,38 @@ class ListingController extends BaseController
         }
     }
 
+    public function editPaymentSettingsAction($propertyId, Request $request)
+    {
+        /** @var $user User */
+        $user = $this->getUser();
+        /** @var Property $property */
+        $property = $this->em->getRepository('ErpPropertyBundle:Property')->getPropertyByUser($user, $propertyId);
+
+        if (!$property) {
+            throw $this->createNotFoundException();
+        }
+
+        $page = $request->get('page', 1);
+        $propertySettings = $property->getSettings();
+
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings ?: new PropertySettings());
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->em->persist($property);
+            $this->em->flush();
+
+            return $this->redirectToRoute('erp_property_listings_all');
+        }
+
+        return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+            'property' => $property,
+            'page' => $page
+        ]);
+    }
+
     /**
      * Create form for new|existing property
      *

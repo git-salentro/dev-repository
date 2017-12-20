@@ -1,0 +1,91 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block pageContent %}
+
+    {{ parent() }}
+
+    <div class="page-content">
+        <section id="landlords-listings-edit" class="listings profile">
+            <div class="container">
+                <div class="row">
+                    <div class="title-block">
+                        <h1 class="bold-text">Edit Property Settings</h1>
+                    </div>
+                </div>
+
+                {% if property.id %}
+                    <div class="row">
+                        <div class="col-xs-12 features property-tab">
+                            <a class="btn red-btn tab-btn" href="{{ path('erp_property_listings_edit', {'propertyId': property.id}) }}">Property Details</a>
+                            <a class="btn red-btn tab-btn active " href="{{ path('erp_property_property_settings_edit', {'propertyId': property.id}) }}">Edit Payment Settings</a>
+                            <a class="btn red-btn tab-btn" href="{{ path('erp_property_listings_edit_images', {'propertyId': property.id}) }}">Property Images</a>
+                            <a class="btn red-btn tab-btn" href="{{ path('erp_property_listings_edit_documents', {'propertyId': property.id}) }}">Property Documents</a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+                <div class="row">
+                    {{ form_start(form, { attr: {'id' : 'property-edit-form', 'class': 'form-horizontal'}, 'enctype': form_enctype(form)}) }}
+                    <div class="col-md-10 col-md-offset-1 listings-block">
+                        <div class="listing-block">
+                            {{ form_custom_errors.widget(form) }}
+                            <p>To set Property status to "Rented" please add Tenant to it on Listings page.</p>
+
+                            <div class="desc-block">
+                                <div class="listing-form form-horizontal edit-prop-form">
+                                    <div class="prop-description form-group">
+                                        <div class="prop-info">
+                                            {{ form_label(form.paymentAcceptanceDateFrom) }}
+                                            {{ form_widget(form.paymentAcceptanceDateFrom) }}
+                                            {{ form_custom_errors.widget(form.paymentAcceptanceDateFrom) }}
+                                        </div>
+                                        <div class="prop-info">
+                                            {{ form_label(form.paymentAcceptanceDateTo) }}
+                                            <div class="prop-details dropdown">
+                                                <div class="select-container">
+                                                    {{ form_widget(form.paymentAcceptanceDateTo) }}
+                                                </div>
+                                            </div>
+                                            {{ form_custom_errors.widget(form.paymentAcceptanceDateTo) }}
+                                        </div>
+                                        <div class="prop-info">
+                                            {{ form_label(form.paymentAmount) }}
+                                            <div class="prop-details dropdown">
+                                                <div class="select-container">
+                                                    {{ form_widget(form.paymentAmount) }}
+                                                </div>
+                                            </div>
+                                            {{ form_custom_errors.widget(form.paymentAmount) }}
+                                        </div>
+                                        <div class="prop-info">
+                                            {{ form_label(form.allowPartialPayments) }}
+                                            {{ form_widget(form.allowPartialPayments) }}
+                                            {{ form_custom_errors.widget(form.allowPartialPayments) }}
+                                        </div>
+                                        <div class="prop-info">
+                                            {{ form_label(form.allowCreditCardPayments) }}
+                                            {{ form_widget(form.allowCreditCardPayments) }}
+                                            {{ form_custom_errors.widget(form.allowCreditCardPayments) }}
+                                        </div>
+                                        <div class="prop-info">
+                                            {{ form_label(form.allowAutoDraft) }}
+                                            {{ form_widget(form.allowAutoDraft) }}
+                                            {{ form_custom_errors.widget(form.allowAutoDraft) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 submit-row">
+                        <a class="back-dashboard listings-back" href="{{ path('erp_property_listings_all', {'page': page}) }}">Back to Listings</a>
+                        {{ form_widget(form.submit, {'label': 'Submit', 'attr': {'class': 'btn red-btn'}}) }}
+                    </div>
+                    <div class="hide"> {{ form_end(form) }}</div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
