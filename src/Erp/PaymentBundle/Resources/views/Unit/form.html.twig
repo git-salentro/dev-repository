@@ -27,15 +27,16 @@
                         <span class="field-validation-error">{{ errors }}</span>
                     {% endif %}
 
-                    {% if hasRecurringPayments == false %}
-                        <p>Initial unit price: <span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
-                        <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
-                        <p>Total price: <span id="total-price">0</span></p>
-                    {% else %}
+                    {% if hasRecurringPayments %}
                         <p>Current year price: <span id="current-year-price">{{ currentYearPrice }}</span></p>
                         <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
                         <p>Total price: <span id="total-price">{{ totalPrice }}</span></p>
+                    {% else %}
+                        <p>Initial unit price: <span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
+                        <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
+                        <p>Total price: <span id="total-price">0</span></p>
                     {% endif %}
+
                     {{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
                         <div class="row">
                             <div class="form-group">

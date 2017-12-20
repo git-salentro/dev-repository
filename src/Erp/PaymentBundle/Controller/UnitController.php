@@ -42,8 +42,16 @@ class UnitController extends BaseController
         }
 
         $stripeRecurringPayments = $stripeCustomer->getStripeRecurringPayments();
-        $hasRecurringPayments = $stripeRecurringPayments->isEmpty();
+        $hasRecurringPayments = !$stripeRecurringPayments->isEmpty();
         $templateParams['hasRecurringPayments'] = $hasRecurringPayments;
+
+        if ($hasRecurringPayments) {
+            /** @var StripeRecurringPayment $stripeRecurringPayment */
+            $stripeRecurringPayment = $stripeRecurringPayments->last();
+
+            $templateParams['currentYearPrice'] = $stripeRecurringPayment->getQuantity();
+            $templateParams['totalPrice'] = $stripeRecurringPayment->getQuantity();
+        }
 
         $form->handleRequest($request);
 
