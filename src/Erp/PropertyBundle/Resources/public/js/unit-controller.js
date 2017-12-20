@@ -16,7 +16,6 @@ UnitController.prototype.listenCount = function () {
 
         if (that.currentYearPriceSelector.length) {
             totalPrice += unitCount * additionalUnitPrice;
-            that.currentYearPriceSelector.html(totalPrice);
         } else {
             var initialUnitPrice = parseInt(that.initialUnitPriceSelector.html());
             totalPrice += initialUnitPrice + unitCount * additionalUnitPrice;

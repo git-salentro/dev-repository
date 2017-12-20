@@ -796,6 +796,7 @@ class ListingController extends BaseController
 
         return $this->render('ErpPropertyBundle:Listings:settings-confirm.html.twig', [
             'form' => $form->createView(),
+            'modalTitle' => 'Confirmation',
             'data' => [
                 'idx' => $idx,
                 'all_elements' => $allElements,
@@ -812,7 +813,7 @@ class ListingController extends BaseController
         $user = $this->getUser();
 
         if (!$form->isValid()) {
-            return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+            return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
                 'form' => $form->createView(),
                 'modalTitle' => 'Set Payment Settings',
             ]);

@@ -48,7 +48,7 @@ class UnitController extends BaseController
         if ($hasRecurringPayments) {
             /** @var StripeRecurringPayment $stripeRecurringPayment */
             $stripeRecurringPayment = $stripeRecurringPayments->last();
-
+            //TODO Add actual currentYearPrice, totalPrice from frontend
             $templateParams['currentYearPrice'] = $stripeRecurringPayment->getQuantity();
             $templateParams['totalPrice'] = $stripeRecurringPayment->getQuantity();
         }
@@ -95,8 +95,6 @@ class UnitController extends BaseController
         } else {
             /** @var StripeRecurringPayment $stripeRecurringPayment */
             $stripeRecurringPayment = $stripeRecurringPayments->last();
-            $templateParams['currentYearPrice'] = $stripeRecurringPayment->getQuantity();
-            $templateParams['totalPrice'] = $stripeRecurringPayment->getQuantity();
 
             $response = $subscriptionManager->retrieve($stripeRecurringPayment->getSubscriptionId());
 
@@ -133,7 +131,8 @@ class UnitController extends BaseController
         $prototype = new Property();
         for ($i=1; $i<=$count; $i++) {
             $property = clone $prototype;
-            $property->setUser($user);
+            $property->setUser($user)
+                ->setStatus(Property::STATUS_DRAFT);
 
             $this->em->persist($property);
         }
