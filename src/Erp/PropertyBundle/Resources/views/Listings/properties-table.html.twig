@@ -15,20 +15,22 @@
     {{ block('form_widget_simple') }}
 {%- endblock checkbox_widget -%}
 
+{% set entity = form.vars.value %}
+
 <div>
     Choosen Properties:
-    <div>{{ form.paymentAcceptanceDateFrom.vars.value }}</div>
-    <div>{{ form.paymentAcceptanceDateTo.vars.value }}</div>
-    <div>{{ form.paymentAmount.vars.value }}</div>
-    <div>{{ form.allowPartialPayments.vars.value }}</div>
-    <div>{{ form.allowCreditCardPayments.vars.value }}</div>
-    <div>{{ form.allowAutoDraft.vars.value }}</div>
+    <div>{{ entity.paymentAcceptanceDateFrom|date('m/d/Y') }}</div>
+    <div>{{ entity.paymentAcceptanceDateTo|date('m/d/Y') }}</div>
+    <div>{{ entity.paymentAmount }}</div>
+    <div>{{ entity.allowPartialPayments ? 'Yes' : 'No' }}</div>
+    <div>{{ entity.allowCreditCardPayments ? 'Yes' : 'No' }}</div>
+    <div>{{ entity.allowAutoDraft ? 'Yes': 'No' }}</div>
 </div>
 {{ form_start(form, {'action': path('erp_property_confirm_settings')}) }}
-    <table>
+    <table class="table">
         <thead>
             <tr>
-                <td>Select All<input type="checkbox" value="all_elements"></td>
+                <td>Select All<input type="checkbox" name="all_elements"></td>
                 <td>Property</td>
                 <td>Address</td>
             </tr>

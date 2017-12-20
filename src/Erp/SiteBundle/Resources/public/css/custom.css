@@ -3,77 +3,171 @@ footer .copyright-dark {
     height: 150px;
     padding-top: 15px;
 }
-
 .social-icons-container {
     max-width: 400px;
     float: left;
     margin-left: 200px;
 }
-
 ul.social-icons {
     display: inline;
 }
-
 ul.social-icons li {
     display: inline;
 }
-
 @media only screen and (max-width: 1199px) {
     .social-icons-container {
         margin-left: 100px;
     }
 }
-
 @media only screen and (max-width: 993px) {
     footer .copyright-dark {
         height: 140px;
     }
-
     .social-icons-container {
         width: auto;
         margin: 0 auto;
         float: none;
         display: block;
     }
-
     ul.social-icons-container {
         display: block;
     }
 }
-
 @media only screen and  (max-width: 768px) {
     footer .copyright-dark {
         height: 300px;
     }
 }
-
-.nav-tabs {
-    border-bottom: 1px solid #ddd;
-    margin-bottom: -30px;
-    margin-left: 2px;
-    display: flex;
-    flex-direction: row;
-    flex-flow: row wrap;
-    align-content: stretch;
-    flex-wrap: wrap;
+/*Slider updates*/
+.slider .slide-inner .slider-text p {
+    font-size: 48px;
+    text-shadow: 1px 2px #000;
 }
-
-.nav-tabs>li {
-    flex: 1 1 0;
-    text-align: center;
+html body .bold-text {
+    color: #000;
+    text-shadow: 1px 1px #fff;
 }
-
-.nav-tabs>li>a {
-    color: #b7b7b5;
+.slider .slide-inner .slider-text .slide-text .can-text {
+    text-shadow: none;
 }
-
-.nav-tabs>li>a:hover {
-    color: #000000;
+.no-shadow {
+    text-shadow: none !important;
 }
-
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-    background-color: #ca171b;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
+.bold-white {
+    color: #fff !important;
+}
+ul.slider-list li {
+    font-weight: bold;
     color: #fff;
+}
+.about .text-col .about-text a {
+    color: #706e7b;
+    text-decoration: none;
+}
+.about .text-col .about-text a:hover {
+    text-decoration: underline;
+}
+.features {
+    display: block;
+    text-align: center;
+    margin: 25px 0;
+}
+h3.sli {
+    font-size: 21px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.features img {
+    padding-bottom: 8px;
+}
+a.learnmore {
+    color: #B00F13;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 14px;
+}
+a.learnmore:hover {
+    color: #000;
+}
+a.gradient-btn.btn.pmang {
+    width: 385px;
+}
+.pt25 {
+    padding-top: 25px;
+}
+.slider .slide-inner .slider-text {
+    padding: 200px 0 0 150px;
+    color: #fff;
+    overflow: hidden;
+    font-family: LatoLight;
+}
+.profile .profile-widget-row .profile-widget-item .bank-info-row {
+    margin: 0;
+}
+ul.bank-info li {
+    list-style-type: disc;
+    font-weight: bold;
+    color: #000;
+}
+ul.bank-info {
+    margin-bottom: 0;
+}
+.profile .profile-widget-row .profile-widget-item .edit-row {
+    margin-top: 15px;
+}
+.profile .profile-widget-row .profile-widget-item .bank-info-row {
+    margin: 8px 10px;
+}
+.black {
+    color: #000;
+}
+.black:hover {
+    color: #000;
+    text-decoration: none;
+}
+.custombutton {
+    margin-top: 3px !important;
+}
+#features .text-capabilities .text-block-service {
+    height: 250px;
+    padding-left: 30px;
+    font-family: NunitoRegular;
+    color: #706e7b;
+}
+.col-md-5.col-xs-6.profile-widget-item.widget-last {
+    height: 300px !important;
+    margin-bottom: 10px !important;
+}
+.col-md-5.col-xs-12.profile-widget-item.screening-widget {
+    margin-bottom: 10px !important;
+}
+.col-md-3.col-xs-5.profile-widget-item.widget-first.address-widget {
+    height: 300px !important;
+}
+.col-md-3.col-xs-5.profile-widget-item.login-widget.widget-first {
+    height: 300px !important;
+}
+@media only screen and (max-width: 667px) {
+    .col-md-5.col-xs-6.profile-widget-item.widget-last {
+        height: 450px !important;
+        margin-bottom: 10px !important;
+    }
+    .col-md-3.col-xs-5.profile-widget-item.widget-first.address-widget {
+        height: 450px !important;
+        margin-bottom: 10px !important;
+    }
+    .col-md-3.col-xs-5.profile-widget-item.login-widget.widget-first {
+        height: 450px !important;
+        margin-bottom: 10px !important;
+    }
+}
+section#rental-form {
+    background: url('/assets/images/red.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+section#rental-form h1 {
+    color: #fff;
+    text-shadow: none;
 }

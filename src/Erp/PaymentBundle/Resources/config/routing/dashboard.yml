@@ -1,0 +1,4 @@
+erp_payment_dashboard_dashboard:
+    path: /account/dashboard
+    defaults: { _controller: ErpPaymentBundle:Dashboard:dashboard }
+    methods: [GET]

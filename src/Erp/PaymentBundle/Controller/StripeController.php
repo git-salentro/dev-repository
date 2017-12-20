@@ -96,16 +96,16 @@ class StripeController extends BaseController
             $content = $response->getContent();
             $paymentTypeProvider->updateIdField($stripeCustomer, $type, $content['id']);
 
+            $this->em->persist($stripeCustomer);
+            $this->em->flush();
+
             if ($content instanceof BankAccount) {
                 $response = $customerManager->verifyBankAccount($content);
 
                 if (!$response->isSuccess()) {
-                    $templateParams['errors'] = $response->getErrorMessage();
+                    $this->addFlash('alert_error', $response->getErrorMessage());
                 }
             }
-
-            $this->em->persist($stripeCustomer);
-            $this->em->flush();
 
 //            $modelMethodSet = 'set' . strtoupper($type) . 'Id';
 //            $modelMethodGet = 'get' . strtoupper($type).'Id';
@@ -162,5 +162,10 @@ class StripeController extends BaseController
                 'customer' => $user->getPaySimpleCustomers()->first(),
             ]
         );
+    }
+
+    public function payRentAction()
+    {
+
     }
 }

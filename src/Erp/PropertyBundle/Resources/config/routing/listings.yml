@@ -88,6 +88,6 @@ erp_property_confirm_settings:
     methods: [POST, GET]
 
 erp_property_save_settings:
-    path: /confirm-settings
+    path: /save-settings
     defaults: { _controller: ErpPropertyBundle:Listing:saveSettings }
     methods: [POST]

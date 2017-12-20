@@ -1,0 +1,23 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block pageContent %}
+    {{ parent() }}
+    <section id="landlords-profile" class="profile">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text">Dashboard</h1>
+                </div>
+            </div>
+
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+            <div class="row profile-widget-row">
+                {{ render(controller('ErpPaymentBundle:Stripe:bankCards')) }}
+            </div>
+            <div class="row profile-widget-row tip-item-row">
+                {{ render(controller('ErpPaymentBundle:PaymentWidgets:paymentHistory', {'export' : null})) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -2,6 +2,11 @@
 
 {% import '::widgets/form_errors.html.twig' as form_custom_errors %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpproperty/js/unit-controller.js') }}"></script>
+{% endblock %}
+
 {% block pageContent %}
     {% set ba = constant('Erp\\PaymentBundle\\PaySimple\\Managers\\PaySimpleManagerInterface::BANK_ACCOUNT') %}
 
@@ -22,12 +27,21 @@
                         <span class="field-validation-error">{{ errors }}</span>
                     {% endif %}
 
+                    {% if hasRecurringPayments == false %}
+                        <p>Initial unit price: <span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
+                        <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
+                        <p>Total price: <span id="total-price">0</span></p>
+                    {% else %}
+                        <p>Current year price: <span id="current-year-price">{{ currentYearPrice }}</span></p>
+                        <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
+                        <p>Total price: <span id="total-price">{{ totalPrice }}</span></p>
+                    {% endif %}
                     {{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-xs-12">
                                     {{ form_label(form.count) }}
-                                    {{ form_widget(form.count) }}
+                                    {{ form_widget(form.count, {'id': 'unit-count'}) }}
                                     {{ form_custom_errors.widget(form.count) }}
                                 </div>
                             </div>

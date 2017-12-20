@@ -9,3 +9,7 @@ erp_payment_stripe:
 erp_payment_unit:
     resource: "@ErpPaymentBundle/Resources/config/routing/unit.yml"
     prefix:   /unit
+
+erp_payment_dashboard:
+    resource: "@ErpPaymentBundle/Resources/config/routing/dashboard.yml"
+    prefix:   /

@@ -44,7 +44,9 @@ class PropertySettingsType extends AbstractType
                 'paymentAmount',
                 'text',
                 [
-                    'label' => 'Payment Amount'
+                    'label' => 'Payment Amount',
+                    'label_attr'  => ['class' => 'control-label'],
+                    'attr'        => ['class' => 'form-control col-xs-4'],
                 ]
             )
             ->add(

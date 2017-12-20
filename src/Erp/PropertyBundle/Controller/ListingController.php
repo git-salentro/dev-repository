@@ -711,7 +711,7 @@ class ListingController extends BaseController
 
         if ($request->getMethod() == 'POST') {
             if (!$form->isValid()) {
-                return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+                return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
                     'form' => $form->createView(),
                     'modalTitle' => 'Set Payment Settings',
                 ]);
@@ -731,7 +731,7 @@ class ListingController extends BaseController
 
         }
 
-        return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+        return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
             'form' => $form->createView(),
             'modalTitle' => 'Set Payment Settings',
         ]);
@@ -746,7 +746,7 @@ class ListingController extends BaseController
         $user = $this->getUser();
 
         if (!$form->isValid() && $request->getMethod() == 'POST') {
-            return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+            return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
                 'form' => $form->createView(),
                 'modalTitle' => 'Set Payment Settings',
             ]);
@@ -772,7 +772,7 @@ class ListingController extends BaseController
         $user = $this->getUser();
 
         if (!$form->isValid()) {
-            return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+            return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
                 'form' => $form->createView(),
                 'modalTitle' => 'Set Payment Settings',
             ]);

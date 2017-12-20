@@ -52,12 +52,7 @@
     <div class="row">
         <div class="form-group">
             <div class="col-xs-12 cc-form-footer">
-                {#TODO See additional condition#}
-                {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) %}
-                    <h3>Amount: ${{ amount }} /month</h3>
-                {% else %}
-                    <br/>
-                {% endif %}
+                <br/>
                 {{ form_widget(form.submit) }}
                 {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_TENANT')) %}
                     <span class="or-text">OR</span>
