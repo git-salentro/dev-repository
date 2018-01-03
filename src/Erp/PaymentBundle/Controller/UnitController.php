@@ -34,7 +34,7 @@ class UnitController extends BaseController
             'unitSettings' => $unitSettings,
         ];
         /** @var StripeCustomer $stripeCustomer */
-        $stripeCustomer = $user->getStripeCustomers()->first();
+        $stripeCustomer = $user->getStripeCustomers()->last();
 
         if (!$stripeCustomer) {
             $templateParams['errors'] = 'Please, add bank account.';
@@ -48,7 +48,6 @@ class UnitController extends BaseController
         if ($hasRecurringPayments) {
             /** @var StripeRecurringPayment $stripeRecurringPayment */
             $stripeRecurringPayment = $stripeRecurringPayments->last();
-            //TODO Add actual currentYearPrice, totalPrice from frontend
             $templateParams['currentYearPrice'] = $stripeRecurringPayment->getQuantity();
             $templateParams['totalPrice'] = $stripeRecurringPayment->getQuantity();
         }
@@ -66,18 +65,21 @@ class UnitController extends BaseController
         $subscriptionManager = $this->get('erp.payment.stripe.manager.subscription_manager');
 
         if (!$hasRecurringPayments) {
-            $response = $subscriptionManager->create([
-                'customer' => $stripeCustomer->getCustomerId(),
-                'items' => [
-                    [
-                        'plan' => StripeRecurringPayment::BASE_PLAN_ID,
-                        'quantity' => $quantity,
+            $response = $subscriptionManager->create(
+                [
+                    'customer' => $stripeCustomer->getCustomerId(),
+                    'items' => [
+                        [
+                            'plan' => StripeRecurringPayment::BASE_PLAN_ID,
+                            'quantity' => $quantity,
+                        ],
                     ],
-                ],
-                'metadata' => [
-                    'unit_count' => $unit->getCount(),
-                ],
-            ]);
+                    'billing' => StripeCustomer::BILLING_SEND_INVOICE,
+                    'metadata' => [
+                        'unit_count' => $unit->getCount(),
+                    ],
+                ]
+            );
 
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();

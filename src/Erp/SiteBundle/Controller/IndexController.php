@@ -23,7 +23,70 @@ class IndexController extends BaseController
      */
     public function indexAction()
     {
-        $test = $this->generateUrl('erp_payment_unit_buy');
+        \Stripe\Stripe::setApiKey("sk_test_ajlUnDTI4WUVjU6gq8x3Rxe3");
+
+//        $acct = \Stripe\Account::create(array(
+//            "country" => "US",
+//            "type" => "custom",
+//            'external_account' => [
+//                'object' => 'bank_account',
+//                'account_holder_name' => 'TEEEEST',
+//                'account_holder_type' => 'individual',
+//                'account_number' => '000123456789',
+//                'country' => 'US',
+//                'currency' => 'usd',
+//                'routing_number' => '110000000',
+//            ]
+//        ));
+//
+//
+//        $token = \Stripe\Token::create(array(
+//            "card" => array(
+//                'number' => '4242424242424242',
+//                'name' => 'name',
+//                'exp_month' => '07',
+//                'exp_year' => '2018',
+//                'cvc' => '111',
+//            )
+//        ));
+//        $cust = \Stripe\Customer::create(
+//            array("email" => "peterparker@test.com",
+//                'source' => $token['id']
+//
+//                ),
+//            array("stripe_account" => 'acct_1BdZrMFi2vFS0I5Q')
+//        );
+//
+//        $acct = \Stripe\Account::retrieve('acct_1BdZrMFi2vFS0I5Q');
+//        $acct->tos_acceptance->date = time();
+//        // Assumes you're not using a proxy
+//        $acct->tos_acceptance->ip = '0.0.0.0';
+//        $acct->save();
+//
+//        $transfer = \Stripe\Transfer::create(array(
+//            "amount" => 7000,
+//            "currency" => "usd",
+//            "destination" => "acct_1BdZrMFi2vFS0I5Q",
+//            "transfer_group" => "{ORDER10}",
+//        ), ["stripe_account" => 'acct_1BdZJTLHqxGWEHQ7']);
+//        $charge = \Stripe\Charge::create(array(
+//            "amount" => 2000,
+//            "currency" => "usd",
+//            'customer' => $cust['id'],
+//            'application_fee' => 10,
+//        ),
+//            ["stripe_account" => 'acct_1BdZJTLHqxGWEHQ7']);
+//
+//        $charge = \Stripe\Charge::create(array(
+//            "amount" => 1000,
+//            "currency" => "usd",
+//            "source" => "tok_visa",
+//            "destination" => array(
+//                "customer" => "acct_1BdZJTLHqxGWEHQ7",
+//            ),
+//        ));
+
+
         $properties = $this->em->getRepository('ErpPropertyBundle:Property')
             ->findAvailable($this->getUser());
         $slider = $this->em->getRepository('ErpSiteBundle:HomePageSlider')

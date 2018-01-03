@@ -2,13 +2,13 @@
 
 namespace Erp\PaymentBundle\Stripe\Client;
 
+use Stripe\Account;
 use Stripe\Charge;
 use Stripe\Customer;
 use Stripe\Plan;
 use Stripe\Stripe;
 use Stripe\Token;
 use Stripe\Subscription;
-use Stripe\BankAccount;
 
 class Client
 {
@@ -37,16 +37,66 @@ class Client
             Stripe::setApiVersion($this->apiVersion);
         }
     }
-
-    /**
-     * @param $method
-     * @param $params
-     * @return Response
-     */
-    protected function sendChargeRequest($method, $params)
+    
+    public function sendChargeRequest($method, $params, $options = null)
     {
         try {
-            $response = Charge::$method($params);
+            $response = Charge::$method($params, $options);
+        } catch (\Exception $e) {
+            return new Response(null, $e);
+        }
+
+        return new Response($response);
+    }
+    
+    public function sendTokenRequest($method, $params, $options = null)
+    {
+        try {
+            $response = Token::$method($params, $options);
+        } catch (\Exception $e) {
+            return new Response(null, $e);
+        }
+
+        return new Response($response);
+    }
+    
+    public function sendCustomerRequest($method, $params, $options = null)
+    {
+        try {
+            $response = Customer::$method($params, $options);
+        } catch (\Exception $e) {
+            return new Response(null, $e);
+        }
+
+        return new Response($response);
+    }
+    
+    public function sendCustomerSourceRequest(Customer $customer, $method, $params, $options = null)
+    {
+        try {
+            $response = $customer->sources->{$method}($params, $options);
+        } catch (\Exception $e) {
+            return new Response(null, $e);
+        }
+
+        return new Response($response);
+    }
+    
+    public function sendPlanRequest($method, $params, $options = null)
+    {
+        try {
+            $response = Plan::$method($params, $options);
+        } catch (\Exception $e) {
+            return new Response(null, $e);
+        }
+
+        return new Response($response);
+    }
+    
+    public function sendSubscriptionRequest($method, $params, $options = null)
+    {
+        try {
+            $response = Subscription::$method($params, $options);
         } catch (\Exception $e) {
             return new Response(null, $e);
         }
@@ -54,102 +104,21 @@ class Client
         return new Response($response);
     }
 
-    /**
-     * @param $method
-     * @param $params
-     * @return Response
-     */
-    protected function sendTokenRequest($method, $params)
-    {
-        try {
-            $response = Token::$method($params);
-        } catch (\Exception $e) {
-            return new Response(null, $e);
-        }
-
-        return new Response($response);
-    }
-
-    /**
-     * @param $method
-     * @param $params
-     * @return Response
-     */
-    public function sendCustomerRequest($method, $params)
-    {
-        try {
-            $response = Customer::$method($params);
-        } catch (\Exception $e) {
-            return new Response(null, $e);
-        }
-
-        return new Response($response);
-    }
-
-    /**
-     * @param Customer $customer
-     * @param $method
-     * @param $params
-     * @return Response
-     */
-    public function sendSourceRequest(Customer $customer, $method, $params)
-    {
-        try {
-            $response = $customer->sources->{$method}($params);
-        } catch (\Exception $e) {
-            return new Response(null, $e);
-        }
-
-        return new Response($response);
-    }
-
-    /**
-     * @param $method
-     * @param $params
-     * @return Response
-     */
-    public function sendPlanRequest($method, $params)
-    {
-        try {
-            $response = Plan::$method($params);
-        } catch (\Exception $e) {
-            return new Response(null, $e);
-        }
-
-        return new Response($response);
-    }
-
-    /**
-     * @param $method
-     * @param $params
-     * @return Response
-     */
-    public function sendSubscriptionRequest($method, $params)
-    {
-        try {
-            $response = Subscription::$method($params);
-        } catch (\Exception $e) {
-            return new Response(null, $e);
-        }
-
-        return new Response($response);
-    }
-
-    public function sendUpdateRequest($object, $params)
+    public function sendUpdateRequest($object, $params, $options = null)
     {
         foreach ($params as $prop => $value) {
             $object->{$prop} = $value;
         }
 
-        $response = $object->save();
+        $response = $object->save($options);
 
         return new Response($response);
     }
 
-    public function verifyBankAccount(BankAccount $bankAccount)
+    public function sendAccountRequest($method, $params, array $options)
     {
         try {
-            $response = $bankAccount->verify(['amounts' => [32, 45]]);
+            $response = Account::$method($params, $options);
         } catch (\Exception $e) {
             return new Response(null, $e);
         }

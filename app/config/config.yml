@@ -39,6 +39,8 @@ twig:
     globals:
         fees: "@erp.core.fee.service"
         ga_id: %ga_id%
+        plaid_public_key: '%plaid.public.key%'
+        plaid_env: '%plaid.env%'
     form:
         resources:
             - 'SonataCoreBundle:Form:datepicker.html.twig'

@@ -85,27 +85,27 @@
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Payment Acceptance Date From</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.paymentAcceptanceDateFrom|date('m/d/Y') : 'N/A' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.paymentAcceptanceDateFrom|date('m/d/Y') : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Payment Acceptance Date To</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.paymentAcceptanceDateTo|date('m/d/Y') : 'N/A' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.paymentAcceptanceDateTo|date('m/d/Y') : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Payment Amount</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.paymentAmount : 'N/A' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.paymentAmount : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Allow Partial Payments</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.allowPartialPayments ? 'Yes' : 'No' : 'N/A' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.allowPartialPayments ? 'Yes' : 'No' : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Allow Credit Card Payments</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.allowCreditCardPayments ? 'Yes' : 'No' : 'N/A' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.allowCreditCardPayments ? 'Yes' : 'No' : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Set auto-draft from tenant account?</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.allowAutoDraft ? 'Yes' : 'No' : 'N/A' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.allowAutoDraft ? 'Yes' : 'No' : '' }}</span>
                     </div>
                 </div>
 

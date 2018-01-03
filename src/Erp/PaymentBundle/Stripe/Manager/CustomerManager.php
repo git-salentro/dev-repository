@@ -2,58 +2,40 @@
 
 namespace Erp\PaymentBundle\Stripe\Manager;
 
-use Erp\PaymentBundle\Stripe\Client\Client;
 use Stripe\Customer;
 use Stripe\BankAccount;
 
-class CustomerManager
+class CustomerManager extends AbstractManager
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function __construct(Client $client)
+    public function create($params, $options = null)
     {
-        $this->client = $client;
+        return $this->client->sendCustomerRequest('create', $params, $options);
     }
 
-    public function create($params)
+    public function retrieve($id, $options = null)
     {
-        return $this->client->sendCustomerRequest('create', $params);
+        return $this->client->sendCustomerRequest('retrieve', $id, $options);
     }
 
-    public function retrieve($id)
-    {
-        return $this->client->sendCustomerRequest('retrieve', $id);
-    }
-
-    public function createCard(Customer $customer, $params)
-    {
-        $params = array_merge($params, ['object' => 'card']);
-
-        return $this->client->sendSourceRequest($customer, 'create', ['source' => $params]);
-    }
-
-    public function createBankAccount(Customer $customer, $params)
+    public function createBankAccount(Customer $customer, $params, $options = null)
     {
         $params = array_merge($params, ['object' => 'bank_account']);
 
-        return $this->client->sendSourceRequest($customer, 'create', ['source' => $params]);
+        return $this->client->sendCustomerSourceRequest($customer, 'create', ['source' => $params], $options);
     }
 
-    public function retrieveBankAccount(Customer $customer, $id)
+    public function retrieveBankAccount(Customer $customer, $id, $options = null)
     {
-        return $this->client->sendSourceRequest($customer, 'retrieve', $id);
+        return $this->client->sendCustomerSourceRequest($customer, 'retrieve', $id, $options);
     }
 
-    public function retrieveCreditCard(Customer $customer, $id)
+    public function retrieveCreditCard(Customer $customer, $id, $options = null)
     {
-        return $this->client->sendSourceRequest($customer, 'retrieve', $id);
+        return $this->client->sendCustomerSourceRequest($customer, 'retrieve', $id, $options);
     }
 
-    public function verifyBankAccount(BankAccount $bankAccount)
+    public function update(Customer $account, $params, $options = null)
     {
-        return $this->client->verifyBankAccount($bankAccount);
+        return $this->client->sendUpdateRequest($account, $params, $options);
     }
 }

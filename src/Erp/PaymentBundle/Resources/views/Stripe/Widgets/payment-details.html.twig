@@ -29,10 +29,6 @@
                                 <span>{{ creditCard.name }}</span>
                                 <span>**** **** **** {{ creditCard.last4 }}</span>
                             </div>
-                            {#TODO Primary type#}
-                            {#{% if psCustomer and psCustomer.getPrimaryType() == cc %}#}
-                            {#<div class="primary-account">Primary, Account</div>#}
-                            {#{% endif %}#}
                         </div>
                         <div class="row edit-row">
                             <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : cc}) }}"
@@ -57,10 +53,6 @@
                                         class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
                             <div class="bank-card"><span>{{ bankAccount.account_holder_name }}</span></div>
                             <div class="bank-card"><span>{{ bankAccount.routing_number }}</span></div>
-                            {#TODO Primary type#}
-                            {#{% if psCustomer and psCustomer.getPrimaryType() == ba %}#}
-                            {#<div class="primary-account">Primary, Account</div>#}
-                            {#{% endif %}#}
                         </div>
                         <div class="row edit-row">
                             <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"
@@ -101,10 +93,6 @@
                                     class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
                         <div class="bank-card"><span>{{ bankAccount.account_holder_name }}</span></div>
                         <div class="bank-card"><span>{{ bankAccount.routing_number }}</span></div>
-                        {#TODO Primary type#}
-                        {#{% if psCustomer and psCustomer.getPrimaryType() == ba %}#}
-                        {#<div class="primary-account">Primary, Account</div>#}
-                        {#{% endif %}#}
                     </div>
                     <div class="row edit-row">
                         <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"

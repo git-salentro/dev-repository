@@ -17,27 +17,27 @@ class PropertySettingsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $months = array_combine(range(1,31),range(1,31));
         $builder
             ->add(
                 'paymentAcceptanceDateFrom',
-                'date',
+                'choice',
                 [
                     'label' => 'Payment Acceptance Date From',
-                    'label_attr'  => ['class' => 'control-label'],
-                    'attr'        => ['class' => 'form-control col-xs-4 date'],
-                    'widget' => 'single_text',
-                    'format' => 'MM/dd/yyyy',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr' => ['class' => 'form-control col-xs-4'],
+                    'choices' => $months,
+                    'choices_as_values' => true,
                 ]
             )
             ->add(
                 'paymentAcceptanceDateTo',
-                'date',
+                'choice',
                 [
                     'label' => 'Payment Acceptance Date To',
-                    'label_attr'  => ['class' => 'control-label'],
-                    'attr'        => ['class' => 'form-control col-xs-4 date'],
-                    'widget' => 'single_text',
-                    'format' => 'MM/dd/yyyy',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr' => ['class' => 'form-control col-xs-4'],
+                    'choices' => $months,
                 ]
             )
             ->add(
@@ -71,17 +71,6 @@ class PropertySettingsType extends AbstractType
                 [
                     'label' => 'Set auto-draft from tenant account?',
                     'required' => false,
-                ]
-            )
-            ->add(
-                'submit',
-                'submit',
-                [
-                    'label' => 'Choose properties',
-                    'attr' =>
-                        [
-                            'class' => 'btn edit-btn',
-                        ]
                 ]
             );
 

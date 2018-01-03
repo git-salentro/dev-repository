@@ -7,5 +7,10 @@ parameters:
 
     paysimple.api.test_mode: false
 
-    stripe.public_key: pk_test_pItb6gPjAbEqLnLcsC5gIYpG
-    stripe.secret_key: sk_test_ajlUnDTI4WUVjU6gq8x3Rxe3
+    stripe.public_key: '%stripe.public.key%'
+    stripe.secret_key: '%stripe.secret.key%'
+
+    plaid.client_id: '%plaid.client.id%'
+    plaid.public_key: '%plaid.public.key%'
+    plaid.secret_key: '%plaid.secret.key%'
+    plaid_env: '%plaid.env%'

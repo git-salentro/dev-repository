@@ -59,7 +59,7 @@ class UserFixture extends Fixture
         $user = $userManager->createUser();
         $user->addRole(User::ROLE_TENANT);
         $user
-            ->setCompanyName('My landlord Company')
+            ->setCompanyName('Tenant')
             ->setFirstName('Peter')
             ->setLastName('Parker')
             ->setPhone('555-555-5555')

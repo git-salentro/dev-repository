@@ -1,15 +1,9 @@
-{% form_theme form _self %}
+<div id="properties-settings">
+    {{ form_start(form, {'action': path('erp_property_choose_properties'), 'attr': {'class': 'payment-calendar', 'novalidate': 'novalidate'}}) }}
 
-{%- block date_widget -%}
-    {% set type = 'text' %}
-    {{ block('form_widget_simple') }}
-{%- endblock date_widget -%}
-
-<div>
-    {% if error is defined and error %}
-        <div>{{ error }}</div>
-    {% endif %}
-    {{ form_start(form, {'action': path('erp_property_choose_properties'), 'attr': {'class': 'payment-calendar', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
+        {% if error is defined and error %}
+            <div>{{ error }}</div>
+        {% endif %}
         {{ form_row(form.paymentAcceptanceDateFrom) }}
         {{ form_row(form.paymentAcceptanceDateTo) }}
         {{ form_row(form.paymentAmount) }}
@@ -17,7 +11,15 @@
         {{ form_row(form.allowCreditCardPayments) }}
         {{ form_row(form.allowAutoDraft) }}
         <div class="button-wrap">
-            {{ form_widget(form.submit) }}
+            <a
+                    href="{{ path('erp_property_choose_properties') }}"
+                    type="submit"
+                    class="btn edit-btn"
+                    step="properties-table"
+                    role="next"
+            >
+                Next
+            </a>
         </div>
     {{ form_end(form) }}
 </div>

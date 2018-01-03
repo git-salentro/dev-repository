@@ -30,16 +30,16 @@ class PropertySettings
     private $property;
 
     /**
-     * @var \DateTime
+     * @var integer
      *
-     * @ORM\Column(name="payment_acceptance_date_from", type="date")
+     * @ORM\Column(name="payment_acceptance_date_from", type="integer")
      */
     private $paymentAcceptanceDateFrom;
 
     /**
-     * @var \DateTime
+     * @var integer
      *
-     * @ORM\Column(name="payment_acceptance_date_to", type="date")
+     * @ORM\Column(name="payment_acceptance_date_to", type="integer")
      */
     private $paymentAcceptanceDateTo;
 
@@ -84,7 +84,7 @@ class PropertySettings
     /**
      * Set paymentAcceptanceDateFrom
      *
-     * @param \DateTime $paymentAcceptanceDateFrom
+     * @param integer $paymentAcceptanceDateFrom
      *
      * @return PropertySettings
      */
@@ -98,7 +98,7 @@ class PropertySettings
     /**
      * Get paymentAcceptanceDateFrom
      *
-     * @return \DateTime
+     * @return integer
      */
     public function getPaymentAcceptanceDateFrom()
     {
@@ -108,7 +108,7 @@ class PropertySettings
     /**
      * Set paymentAcceptanceDateTo
      *
-     * @param \DateTime $paymentAcceptanceDateTo
+     * @param integer $paymentAcceptanceDateTo
      *
      * @return PropertySettings
      */
@@ -122,7 +122,7 @@ class PropertySettings
     /**
      * Get paymentAcceptanceDateTo
      *
-     * @return \DateTime
+     * @return integer
      */
     public function getPaymentAcceptanceDateTo()
     {

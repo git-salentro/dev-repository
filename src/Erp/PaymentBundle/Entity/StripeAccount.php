@@ -2,23 +2,20 @@
 
 namespace Erp\PaymentBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\UserBundle\Entity\User;
 
 /**
- * Class StripeCustomer
+ * Class StripeAccount
  *
- * @ORM\Table(name="stripe_customer")
+ * @ORM\Table(name="stripe_account")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class StripeCustomer
+class StripeAccount
 {
-    const BANK_ACCOUNT = 'ba';
-    const CREDIT_CARD = 'cc';
-    const BILLING_AUTOMATICALLY = 'charge_automatically';
-    const BILLING_SEND_INVOICE = 'send_invoice';
+    const DEFAULT_ACCOUNT_TYPE = 'custom';
+    const DEFAULT_ACCOUNT_COUNTRY = 'US';
 
     /**
      * @var integer
@@ -32,7 +29,7 @@ class StripeCustomer
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeCustomers")
+     * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeCustomers", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
@@ -40,9 +37,9 @@ class StripeCustomer
     /**
      * @var string
      *
-     * @ORM\Column(name="customer_id", type="string")
+     * @ORM\Column(name="account_id", type="string")
      */
-    private $customerId;
+    private $accountId;
 
     /**
      * @var \DateTime
@@ -57,23 +54,6 @@ class StripeCustomer
      * @ORM\Column(name="updated_at", type="datetime")
      */
     private $updatedAt;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Erp\PaymentBundle\Entity\StripeRecurringPayment",
-     *     mappedBy="stripeCustomer",
-     *     cascade={"ALL"}
-     * )
-     * @ORM\OrderBy({"createdAt"="DESC"})
-     */
-    protected $stripeRecurringPayments;
-
-    public function __construct()
-    {
-        $this->stripeRecurringPayments = new ArrayCollection();
-    }
 
     /**
      * @ORM\PrePersist
@@ -104,27 +84,27 @@ class StripeCustomer
     }
 
     /**
-     * Set customerId
+     * Set accountId
      *
-     * @param string $customerId
+     * @param string $accountId
      *
-     * @return StripeCustomer
+     * @return StripeAccount
      */
-    public function setCustomerId($customerId)
+    public function setAccountId($accountId)
     {
-        $this->customerId = $customerId;
+        $this->accountId = $accountId;
 
         return $this;
     }
 
     /**
-     * Get customerId
+     * Get accountId
      *
      * @return string
      */
-    public function getCustomerId()
+    public function getAccountId()
     {
-        return $this->customerId;
+        return $this->accountId;
     }
 
     /**
@@ -132,7 +112,7 @@ class StripeCustomer
      *
      * @param \DateTime $createdAt
      *
-     * @return StripeCustomer
+     * @return StripeAccount
      */
     public function setCreatedAt($createdAt)
     {
@@ -156,7 +136,7 @@ class StripeCustomer
      *
      * @param \DateTime $updatedAt
      *
-     * @return StripeCustomer
+     * @return StripeAccount
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -180,7 +160,7 @@ class StripeCustomer
      *
      * @param \Erp\UserBundle\Entity\User $user
      *
-     * @return StripeCustomer
+     * @return StripeAccount
      */
     public function setUser(\Erp\UserBundle\Entity\User $user = null)
     {
@@ -197,40 +177,5 @@ class StripeCustomer
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Add stripeRecurringPayment
-     *
-     * @param \Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment
-     *
-     * @return StripeCustomer
-     */
-    public function addStripeRecurringPayment(\Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment)
-    {
-        $stripeRecurringPayment->setStripeCustomer($this);
-        $this->stripeRecurringPayments[] = $stripeRecurringPayment;
-
-        return $this;
-    }
-
-    /**
-     * Remove stripeRecurringPayment
-     *
-     * @param \Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment
-     */
-    public function removeStripeRecurringPayment(\Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment)
-    {
-        $this->stripeRecurringPayments->removeElement($stripeRecurringPayment);
-    }
-
-    /**
-     * Get stripeRecurringPayments
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getStripeRecurringPayments()
-    {
-        return $this->stripeRecurringPayments;
     }
 }

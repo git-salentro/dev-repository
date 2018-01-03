@@ -707,57 +707,25 @@ class ListingController extends BaseController
     {
         $propertySettings = new PropertySettings();
         $form = $this->createForm(new PropertySettingsType(), $propertySettings);
-        $form->handleRequest($request);
 
-        if ($request->getMethod() == 'POST') {
-            if (!$form->isValid()) {
-                return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
-                    'form' => $form->createView(),
-                    'modalTitle' => 'Set Payment Settings',
-                ]);
-            }
-            /** @var User $user */
-            $user = $this->getUser();
-
-            $properties = $user->getProperties()->filter(function (Property $property) {
-                return $property->getStatus() != Property::STATUS_DELETED;
-            });
-
-            return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
-                'form' => $form->createView(),
-                'properties' => $properties,
-                'modalTitle' => 'Choose properties',
-            ]);
-
-        }
+        /** @var User $user */
+        $user = $this->getUser();
+        $properties = $user->getActiveProperties();
 
         return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
             'form' => $form->createView(),
             'modalTitle' => 'Set Payment Settings',
+            'properties' => $properties,
         ]);
     }
 
-    public function choosePropertiesAction(Request $request)
+    public function choosePropertiesAction()
     {
-        $propertySettings = new PropertySettings();
-        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
-        $form->handleRequest($request);
         /** @var User $user */
         $user = $this->getUser();
-
-        if (!$form->isValid() && $request->getMethod() == 'POST') {
-            return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
-                'form' => $form->createView(),
-                'modalTitle' => 'Set Payment Settings',
-            ]);
-        }
-
-        $properties = $user->getProperties()->filter(function (Property $property) {
-            return $property->getStatus() != Property::STATUS_DELETED;
-        });
+        $properties = $user->getActiveProperties();
 
         return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
-            'form' => $form->createView(),
             'properties' => $properties,
             'modalTitle' => 'Choose properties',
         ]);
@@ -765,38 +733,26 @@ class ListingController extends BaseController
 
     public function confirmSettingsAction(Request $request)
     {
-        $propertySettings = new PropertySettings();
-        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
-        $form->handleRequest($request);
         /** @var User $user */
         $user = $this->getUser();
 
-        if (!$form->isValid()) {
-            return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
-                'form' => $form->createView(),
-                'modalTitle' => 'Set Payment Settings',
-            ]);
-        }
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
 
         $idx = $request->get('idx', []);
         $allElements = $request->get('all_elements', false);
 
-        if (!$idx && !$allElements) {
-            $properties = $user->getProperties()->filter(function (Property $property) {
-                return $property->getStatus() != Property::STATUS_DELETED;
-            });
+        $propertyRepository = $this->getDoctrine()->getRepository(Property::class);
+        /** @var QueryBuilder $qb */
+        $qb = $propertyRepository->getQueryBuilderByUser($user);
 
-            return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
-                'form' => $form->createView(),
-                'properties' => $properties,
-                'modalTitle' => 'Choose properties',
-                'error' => 'Please, select at least one property',
-            ]);
-        }
+        $propertyRepository->addIdentifiersToQueryBuilder($qb, $idx);
 
         return $this->render('ErpPropertyBundle:Listings:settings-confirm.html.twig', [
             'form' => $form->createView(),
             'modalTitle' => 'Confirmation',
+            'properties' => $qb->getQuery()->getResult(),
             'data' => [
                 'idx' => $idx,
                 'all_elements' => $allElements,
@@ -828,9 +784,7 @@ class ListingController extends BaseController
         }
 
         if (!$idx && !$allElements) {
-            $properties = $user->getProperties()->filter(function (Property $property) {
-                return $property->getStatus() != Property::STATUS_DELETED;
-            });
+            $properties = $user->getActiveProperties();
 
             return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
                 'form' => $form->createView(),

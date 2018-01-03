@@ -1,5 +1,13 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>#}
+    <script type="text/javascript" src="{{ asset('bundles/erppayment/js/Chart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erppayment/js/cacheflows-chart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erppayment/js/invoices-chart.js') }}"></script>
+{% endblock %}
+
 {% block pageContent %}
     {{ parent() }}
     <section id="landlords-profile" class="profile">
@@ -13,10 +21,12 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row profile-widget-row">
-                {{ render(controller('ErpPaymentBundle:Stripe:bankCards')) }}
+                {#{{ render(controller('ErpPaymentBundle:Stripe:showPaymentDetails')) }}#}
             </div>
-            <div class="row profile-widget-row tip-item-row">
-                {{ render(controller('ErpPaymentBundle:PaymentWidgets:paymentHistory', {'export' : null})) }}
+            <div class="row profile-widget-row">
+                {{ render(controller('ErpPaymentBundle:Stripe:showCashflows')) }}
+                {{ render(controller('ErpPaymentBundle:Stripe:showInvoices')) }}
+                {{ render(controller('ErpPaymentBundle:Stripe:showTransactions')) }}
             </div>
         </div>
     </section>

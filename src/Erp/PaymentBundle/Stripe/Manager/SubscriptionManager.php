@@ -2,33 +2,22 @@
 
 namespace Erp\PaymentBundle\Stripe\Manager;
 
-use Erp\PaymentBundle\Stripe\Client\Client;
 use Stripe\Subscription;
 
-class SubscriptionManager
+class SubscriptionManager extends AbstractManager
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function __construct(Client $client)
+    public function create($params, $options = null)
     {
-        $this->client = $client;
+        return $this->client->sendSubscriptionRequest('create', $params, $options);
     }
 
-    public function create($params)
+    public function retrieve($id, $options = null)
     {
-        return $this->client->sendSubscriptionRequest('create', $params);
+        return $this->client->sendSubscriptionRequest('retrieve', $id, $options);
     }
 
-    public function retrieve($id)
+    public function update(Subscription $subscription, $params, $options = null)
     {
-        return $this->client->sendSubscriptionRequest('retrieve', $id);
-    }
-
-    public function update(Subscription $subscription, $params)
-    {
-        return $this->client->sendUpdateRequest($subscription, $params);
+        return $this->client->sendUpdateRequest($subscription, $params, $options);
     }
 }

@@ -42,27 +42,11 @@
     <div class="row">
         <div class="form-group">
             <div class="col-xs-12 cc-form-footer">
-                {#TODO See additional condition#}
-                {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) and (not customer) %}
-                    <h3>Amount: ${{ amount }} /month</h3>
-                {% else %}
-                    <br/>
-                {% endif %}
+                <br/>
                 {{ form_widget(form.submit) }}
                 <span class="or-text">OR</span>
-                <a href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}" class="back-dashboard btn">Add Bank
-                    Account</a>
+                <a href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}" class="back-dashboard btn">Add Bank Account</a>
             </div>
         </div>
     </div>
-
-    {% if not customer and user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) and user.isActiveMonthlyFee %}
-        <div class="row">
-            <div class="form-group">
-                <div class="col-xs-16"><br/>
-                    <label for="">You will be charged eRentPay monthly fee starting from today.</label>
-                </div>
-            </div>
-        </div>
-    {% endif %}
 {{ form_end(form) }}

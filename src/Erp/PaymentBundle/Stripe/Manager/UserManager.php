@@ -30,7 +30,7 @@ class UserManager
     public function getBankAccount(User $user)
     {
         /** @var StripeCustomer $stripeCustomer */
-        $stripeCustomer = $user->getStripeCustomers()->first();
+        $stripeCustomer = $user->getStripeCustomers()->last();
 
         if (!$stripeCustomer) {
             return;
@@ -57,7 +57,7 @@ class UserManager
     public function getCreditCard(User $user)
     {
         /** @var StripeCustomer $stripeCustomer */
-        $stripeCustomer = $user->getStripeCustomers()->first();
+        $stripeCustomer = $user->getStripeCustomers()->last();
 
         if (!$stripeCustomer) {
             return;

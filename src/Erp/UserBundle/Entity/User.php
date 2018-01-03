@@ -4,6 +4,7 @@ namespace Erp\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\PaySimpleCustomer;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -482,6 +483,15 @@ class User extends BaseUser
      * @ORM\OrderBy({"updatedAt"="DESC"})
      */
     protected $stripeCustomers;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="\Erp\PaymentBundle\Entity\StripeAccount",
+     *      mappedBy="user",
+     *      cascade={"persist"}
+     * )
+     */
+    protected $stripeAccount;
 
     /**
      * @var ArrayCollection
@@ -1711,6 +1721,30 @@ class User extends BaseUser
     }
 
     /**
+     * Set stripeAccount
+     *
+     * @param \Erp\PaymentBundle\Entity\StripeAccount $stripeAccount
+     *
+     * @return User
+     */
+    public function setStripeAccount(\Erp\PaymentBundle\Entity\StripeAccount $stripeAccount = null)
+    {
+        $this->stripeAccount = $stripeAccount;
+
+        return $this;
+    }
+
+    /**
+     * Get stripeAccount
+     *
+     * @return \Erp\PaymentBundle\Entity\StripeAccount
+     */
+    public function getStripeAccount()
+    {
+        return $this->stripeAccount;
+    }
+
+    /**
      * @return bool
      */
     public function isActive()
@@ -1724,5 +1758,21 @@ class User extends BaseUser
     public function hasAccessToPaymentPage()
     {
         return $this->hasRole(self::ROLE_LANDLORD) && !$this->hasRole(self::ROLE_TENANT);
+    }
+
+    public function hasStripeAccount()
+    {
+        return null !== $this->stripeAccount;
+    }
+
+    /**
+     * @return ArrayCollection|Collection
+     */
+    public function getActiveProperties()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('status', self::STATUS_DELETED));
+
+        return $this->properties->matching($criteria);
     }
 }

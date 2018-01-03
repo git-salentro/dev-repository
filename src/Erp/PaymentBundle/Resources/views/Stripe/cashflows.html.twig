@@ -1,0 +1,22 @@
+<div class="col-md-5 col-xs-6 profile-widget-item widget-last">
+    <div class="row widget-title-row">
+        <div class="login-block-title bold-text">Cacheflows</div>
+    </div>
+
+    <div class="row bank-info-row">
+        <div class="col-xs-12">
+            <canvas
+                id="cashflows-chart"
+                width="400" height="200"
+                data-cache-in="{{ cache_in|json_encode }}"
+                data-cache-out="{{ cache_out|json_encode }}"
+            >
+            </canvas>
+        </div>
+    </div>
+    <hr>
+
+    <div class="question-mark">
+
+    </div>
+</div>

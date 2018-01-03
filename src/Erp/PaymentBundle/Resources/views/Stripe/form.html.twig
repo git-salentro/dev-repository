@@ -23,21 +23,6 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-12">
-                    {% if isLandlord %}
-                        <p>Enter the Credit Card you wish to keep stored in your eRentPay Manager account for future payments. eRentPay accepts visa, mastercard, discover and debits.
-                            Note: every time you add new card info, you will be charged a card verification fee of ${{ checkPaymentAmount }}.
-                        </p>
-                    {% else %}
-                        <p>Enter the Credit Card you wish to keep stored in your eRentPay Tenant account for future
-                            payments. eRentPay accepts visa, mastercard, discover and debits.
-                            Note: if you have active recurring payment and you add new card info, you will be charged a
-                            card verification fee of ${{ checkPaymentAmount }}.
-                        </p>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     {% if errors %}
                         <span class="field-validation-error">{{ errors }}</span>

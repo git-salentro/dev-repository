@@ -2,33 +2,22 @@
 
 namespace Erp\PaymentBundle\Stripe\Manager;
 
-use Erp\PaymentBundle\Stripe\Client\Client;
 use Stripe\Plan;
 
-class PlanManager
+class PlanManager extends AbstractManager
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function __construct(Client $client)
+    public function create($params, $options = null)
     {
-        $this->client = $client;
+        return $this->client->sendPlanRequest('create', $params, $options);
     }
 
-    public function create($params)
+    public function retrieve($id, $options = null)
     {
-        return $this->client->sendPlanRequest('create', $params);
+        return $this->client->sendPlanRequest('retrieve', $id, $options);
     }
 
-    public function retrieve($id)
+    public function update(Plan $plan, $params, $options = null)
     {
-        return $this->client->sendPlanRequest('retrieve', $id);
-    }
-
-    public function update(Plan $plan, $params)
-    {
-        return $this->client->sendUpdateRequest($plan, $params);
+        return $this->client->sendUpdateRequest($plan, $params, $options);
     }
 }
