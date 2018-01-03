@@ -185,6 +185,10 @@ class PropertyRepository extends EntityRepository
 
     public function addIdentifiersToQueryBuilder(QueryBuilder $qb, array $idx)
     {
+        if (!$idx) {
+            return;
+        }
+
         $fieldNames = $this->getClassMetadata()->getIdentifierFieldNames();
 
         $prefix = uniqid();

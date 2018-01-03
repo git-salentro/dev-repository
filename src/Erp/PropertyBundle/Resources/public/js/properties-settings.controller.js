@@ -138,7 +138,7 @@ PropertiesSettingsController.prototype.listenBack = function () {
 
 PropertiesSettingsController.prototype.listenClosePopup = function () {
     var that = this;
-    $('#erp-settings-popup').on('show.bs.modal', function (e) {
+    $('#erp-settings-popup').on('hide.bs.modal', function (e) {
         that.loadedSteps = [];
     })
 };
