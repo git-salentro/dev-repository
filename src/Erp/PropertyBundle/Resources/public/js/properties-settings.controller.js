@@ -140,6 +140,8 @@ PropertiesSettingsController.prototype.listenClosePopup = function () {
     var that = this;
     $('#erp-settings-popup').on('hide.bs.modal', function (e) {
         that.loadedSteps = [];
+        that.currentStep = null;
+        $('#erp-settings-popup').find('.modal-body').empty();
     })
 };
 
