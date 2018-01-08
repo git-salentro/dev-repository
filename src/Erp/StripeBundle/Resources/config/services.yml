@@ -1,0 +1,19 @@
+services:
+    erp.stripe.syncer.abstract_syncer:
+        class: Erp\StripeBundle\Syncer\AbstractSyncer
+        abstract:  true
+        calls:
+            - [setChargeSyncer, ['@erp.stripe.syncer.charge_syncer']]
+            - [setInvoiceSyncer, ['@erp.stripe.syncer.invoice_syncer']]
+
+    erp.stripe.syncer.charge_syncer:
+        class: Erp\StripeBundle\Syncer\ChargeSyncer
+        parent: erp.stripe.syncer.abstract_syncer
+
+    erp.stripe.syncer.invoice_syncer:
+        class: Erp\StripeBundle\Syncer\InvoiceSyncer
+        parent: erp.stripe.syncer.abstract_syncer
+
+    erp.stripe.syncer.webhook_syncer:
+        class: Erp\StripeBundle\Syncer\WebhookSyncer
+        parent: erp.stripe.syncer.abstract_syncer
