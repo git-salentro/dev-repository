@@ -28,20 +28,13 @@ class PropertySettings
      * @ORM\JoinColumn(name="property_id", referencedColumnName="id")
      */
     private $property;
-
+    
     /**
      * @var integer
      *
-     * @ORM\Column(name="payment_acceptance_date_from", type="integer")
+     * @ORM\Column(name="day_until_due", type="integer")
      */
-    private $paymentAcceptanceDateFrom;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="payment_acceptance_date_to", type="integer")
-     */
-    private $paymentAcceptanceDateTo;
+    private $dayUntilDue;
 
     /**
      * @var float
@@ -82,51 +75,27 @@ class PropertySettings
     }
 
     /**
-     * Set paymentAcceptanceDateFrom
+     * Set dayUntilDue
      *
-     * @param integer $paymentAcceptanceDateFrom
+     * @param integer $dayUntilDue
      *
      * @return PropertySettings
      */
-    public function setPaymentAcceptanceDateFrom($paymentAcceptanceDateFrom)
+    public function setDayUntilDue($dayUntilDue)
     {
-        $this->paymentAcceptanceDateFrom = $paymentAcceptanceDateFrom;
+        $this->dayUntilDue = $dayUntilDue;
 
         return $this;
     }
 
     /**
-     * Get paymentAcceptanceDateFrom
+     * Get dayUntilDue
      *
      * @return integer
      */
-    public function getPaymentAcceptanceDateFrom()
+    public function getDayUntilDue()
     {
-        return $this->paymentAcceptanceDateFrom;
-    }
-
-    /**
-     * Set paymentAcceptanceDateTo
-     *
-     * @param integer $paymentAcceptanceDateTo
-     *
-     * @return PropertySettings
-     */
-    public function setPaymentAcceptanceDateTo($paymentAcceptanceDateTo)
-    {
-        $this->paymentAcceptanceDateTo = $paymentAcceptanceDateTo;
-
-        return $this;
-    }
-
-    /**
-     * Get paymentAcceptanceDateTo
-     *
-     * @return integer
-     */
-    public function getPaymentAcceptanceDateTo()
-    {
-        return $this->paymentAcceptanceDateTo;
+        return $this->dayUntilDue;
     }
 
     /**
@@ -251,8 +220,7 @@ class PropertySettings
 
     public function replace(PropertySettings $settings)
     {
-       $this->paymentAcceptanceDateFrom = $settings->getPaymentAcceptanceDateFrom();
-       $this->paymentAcceptanceDateTo = $settings->getPaymentAcceptanceDateTo();
+       $this->dayUntilDue = $settings->getDayUntilDue();
        $this->paymentAmount = $settings->getPaymentAmount();
        $this->allowPartialPayments = $settings->getAllowPartialPayments();
        $this->allowCreditCardPayments = $settings->getAllowCreditCardPayments();

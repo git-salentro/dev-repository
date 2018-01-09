@@ -84,12 +84,8 @@
                         Property Settings
                     </div>
                     <div class="prop-info">
-                        <span class="prop-label">Payment Acceptance Date From</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.paymentAcceptanceDateFrom|date('m/d/Y') : '' }}</span>
-                    </div>
-                    <div class="prop-info">
                         <span class="prop-label">Payment Acceptance Date To</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.paymentAcceptanceDateTo|date('m/d/Y') : '' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.dayUntilDue : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Payment Amount</span>

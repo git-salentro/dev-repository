@@ -74,8 +74,8 @@ class UnitController extends BaseController
                             'quantity' => $quantity,
                         ],
                     ],
-                    'billing' => StripeCustomer::BILLING_SEND_INVOICE,
-                    'days_until_due' => StripeCustomer::BILLING_DAYS_UNTIL_DUE,
+//                    'billing' => StripeCustomer::BILLING_SEND_INVOICE,
+//                    'days_until_due' => StripeCustomer::BILLING_DAYS_UNTIL_DUE,
                     'metadata' => [
                         'unit_count' => $unit->getCount(),
                     ],

@@ -18,7 +18,7 @@
                             Cards information is not added yet
                         </div>
                         <div class="row edit-row">
-                            <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : cc}) }}"
+                            <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
                                class="btn edit-btn">
                                 add card info
                             </a>
@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="row edit-row">
-                            <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : cc}) }}"
+                            <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
                                class="btn edit-btn">edit</a>
                         </div>
                     {% endif %}
@@ -71,7 +71,7 @@
             <div class="row bank-info-row">
                 <div class="col-xs-6">
                     <div class="row edit-row custombutton">
-                        <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : cc}) }}"
+                        <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
                            class="btn edit-btn">add card info</a>
                     </div>
                 </div>
@@ -95,8 +95,7 @@
                         <div class="bank-card"><span>{{ bankAccount.routing_number }}</span></div>
                     </div>
                     <div class="row edit-row">
-                        <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"
-                           class="btn edit-btn">edit</a>
+                        <button id='verify-ba' class="btn edit-btn">Verify</button>
                     </div>
                 </div>
             </div>
@@ -120,13 +119,13 @@
             <div class="row bank-info-row">
                 <div class="col-xs-12">
                     <div class="row edit-row custombutton">
-                        <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"
-                           class="btn edit-btn">add bank info</a>
+                        <button id='verify-ba' class="btn edit-btn">Verify</button>
                     </div>
                 </div>
             </div>
             <hr>
         {% endif %}
+        {% include 'ErpPaymentBundle:Plaid:link.html.twig' %}
     {% endif %}
 
     <div class="question-mark">

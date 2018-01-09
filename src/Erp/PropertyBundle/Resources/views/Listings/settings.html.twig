@@ -4,8 +4,7 @@
         {% if error is defined and error %}
             <div>{{ error }}</div>
         {% endif %}
-        {{ form_row(form.paymentAcceptanceDateFrom) }}
-        {{ form_row(form.paymentAcceptanceDateTo) }}
+        {{ form_row(form.dayUntilDue) }}
         {{ form_row(form.paymentAmount) }}
         {{ form_row(form.allowPartialPayments) }}
         {{ form_row(form.allowCreditCardPayments) }}

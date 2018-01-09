@@ -20,10 +20,10 @@ class PropertySettingsType extends AbstractType
         $months = array_combine(range(1,31),range(1,31));
         $builder
             ->add(
-                'paymentAcceptanceDateFrom',
+                'dayUntilDue',
                 'choice',
                 [
-                    'label' => 'Payment Acceptance Date From',
+                    'label' => 'Day Until Due',
                     'label_attr' => ['class' => 'control-label'],
                     'attr' => ['class' => 'form-control col-xs-4'],
                     'choices' => $months,
@@ -31,22 +31,12 @@ class PropertySettingsType extends AbstractType
                 ]
             )
             ->add(
-                'paymentAcceptanceDateTo',
-                'choice',
-                [
-                    'label' => 'Payment Acceptance Date To',
-                    'label_attr' => ['class' => 'control-label'],
-                    'attr' => ['class' => 'form-control col-xs-4'],
-                    'choices' => $months,
-                ]
-            )
-            ->add(
                 'paymentAmount',
                 'text',
                 [
                     'label' => 'Payment Amount',
-                    'label_attr'  => ['class' => 'control-label'],
-                    'attr'        => ['class' => 'form-control col-xs-4'],
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr' => ['class' => 'form-control col-xs-4'],
                 ]
             )
             ->add(
@@ -73,8 +63,6 @@ class PropertySettingsType extends AbstractType
                     'required' => false,
                 ]
             );
-
-        $builder->addEventListener(FormEvents::SUBMIT, [$this, 'submit']);
     }
 
     /**
@@ -94,22 +82,5 @@ class PropertySettingsType extends AbstractType
     public function getName()
     {
         return 'erp_property_payment_settings';
-    }
-
-    /**r
-     * @param FormEvent $event
-     */
-    public function submit(FormEvent $event)
-    {
-        /** @var PropertySettings $data */
-        $data = $event->getData();
-
-        $paymentAcceptanceDateFrom = $data->getPaymentAcceptanceDateFrom();
-        $paymentAcceptanceDateTo = $data->getPaymentAcceptanceDateTo();
-
-        if ($paymentAcceptanceDateFrom > $paymentAcceptanceDateTo) {
-            $form = $event->getForm();
-            $form->get('paymentAcceptanceDateFrom')->addError(new FormError('Payment Acceptance Date must be greater then Payment Acceptance Date'));
-        }
     }
 }

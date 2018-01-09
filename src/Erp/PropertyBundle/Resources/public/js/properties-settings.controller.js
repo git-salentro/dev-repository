@@ -27,14 +27,23 @@ PropertiesSettingsController.prototype.processResponse = function (response) {
             if (currentStep === 'properties-confirmation') {
                 data = {
                     erp_property_payment_settings: {
-                        paymentAcceptanceDateFrom: $('[name="erp_property_payment_settings[paymentAcceptanceDateFrom]"]').val(),
-                        paymentAcceptanceDateTo: $('[name="erp_property_payment_settings[paymentAcceptanceDateTo]"]').val(),
-                        paymentAmount: $('[name="erp_property_payment_settings[paymentAmount]"]').val(),
-                        allowPartialPayments: $('[name="erp_property_payment_settings[allowPartialPayments]"]').val(),
-                        allowCreditCardPayments: $('[name="erp_property_payment_settings[allowCreditCardPayments]"]').val(),
-                        allowAutoDraft: $('[name="erp_property_payment_settings[allowAutoDraft]"]').val()
+                        dayUntilDue: $('[name="erp_property_payment_settings[dayUntilDue]"]').val(),
+                        paymentAmount: $('[name="erp_property_payment_settings[paymentAmount]"]').val()
                     }
                 };
+
+                if ($('[name="erp_property_payment_settings[allowPartialPayments]"]').is(":checked")) {
+                    data.erp_property_payment_settings.allowPartialPayments = '1';
+                }
+
+                if ($('[name="erp_property_payment_settings[allowCreditCardPayments]"]').is(":checked")) {
+                    data.erp_property_payment_settings.allowCreditCardPayments = '1';
+                }
+
+                if ($('[name="erp_property_payment_settings[allowAutoDraft]"]').is(":checked")) {
+                    data.erp_property_payment_settings.allowAutoDraft = '1';
+                }
+
             }
 
             $form.find('button[type=submit]').prop('disabled', true);
@@ -51,6 +60,12 @@ PropertiesSettingsController.prototype.processResponse = function (response) {
                 async: true,
                 dataType: 'json',
                 success: function (response) {
+                    if (response.redirect) {
+                        window.location = response.redirect;
+
+                        return;
+                    }
+
                     $form.find('button[type=submit]').prop('disabled', false);
                     $('#' + that.currentStep).hide();
 

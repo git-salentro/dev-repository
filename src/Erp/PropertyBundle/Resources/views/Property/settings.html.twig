@@ -37,26 +37,13 @@
                                 <div class="listing-form form-horizontal edit-prop-form">
                                     <div class="prop-description form-group">
                                         <div class="prop-info">
-                                            {{ form_label(form.paymentAcceptanceDateFrom) }}
-                                            {{ form_widget(form.paymentAcceptanceDateFrom) }}
-                                            {{ form_custom_errors.widget(form.paymentAcceptanceDateFrom) }}
-                                        </div>
-                                        <div class="prop-info">
-                                            {{ form_label(form.paymentAcceptanceDateTo) }}
-                                            <div class="prop-details dropdown">
-                                                <div class="select-container">
-                                                    {{ form_widget(form.paymentAcceptanceDateTo) }}
-                                                </div>
-                                            </div>
-                                            {{ form_custom_errors.widget(form.paymentAcceptanceDateTo) }}
+                                            {{ form_label(form.dayUntilDue) }}
+                                            {{ form_widget(form.dayUntilDue) }}
+                                            {{ form_custom_errors.widget(form.dayUntilDue) }}
                                         </div>
                                         <div class="prop-info">
                                             {{ form_label(form.paymentAmount) }}
-                                            <div class="prop-details dropdown">
-                                                <div class="select-container">
-                                                    {{ form_widget(form.paymentAmount) }}
-                                                </div>
-                                            </div>
+                                            {{ form_widget(form.paymentAmount) }}
                                             {{ form_custom_errors.widget(form.paymentAmount) }}
                                         </div>
                                         <div class="prop-info">

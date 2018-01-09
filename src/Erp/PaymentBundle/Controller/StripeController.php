@@ -5,10 +5,10 @@ namespace Erp\PaymentBundle\Controller;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
+use Erp\PaymentBundle\Form\Type\StripeCreditCardType;
 use Erp\PaymentBundle\Plaid\Exception\ServiceException;
 use Erp\PaymentBundle\Stripe\Model\CreditCard;
 use Erp\UserBundle\Entity\User;
-use Doctrine\Common\Inflector\Inflector;
 use Stripe\Account;
 use Stripe\Customer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,50 +37,19 @@ class StripeController extends BaseController
         );
     }
 
-    public function choosePaymentMethodAction($type, Request $request)
-    {
-        if ($request->getMethod() === 'POST') {
-            $action = $request->get('action');
-            $camelizedAction = Inflector::camelize($action);
-
-            $finalAction = sprintf('%s', $camelizedAction);
-            if (!method_exists($this, $finalAction)) {
-                throw new \RuntimeException(sprintf('A `%s::%s` method must be created', get_class($this), $finalAction));
-            }
-
-            return call_user_func(array($this, $finalAction), $type, $request);
-        }
-        /** @var $user User */
-        $user = $this->getUser();
-
-        $formTypesRegistry = $this->get('erp.payment.stripe.registry.form_registry');
-        $form = $formTypesRegistry->getForm($type);
-
-        return $this->render('ErpPaymentBundle:Stripe:form.html.twig', [
-            'type' => $type,
-            'user' => $user,
-            'form' => $form->createView(),
-            'errors' => null,
-            'customer' => $user->getStripeCustomers()->last(),
-        ]);
-    }
-
     //TODO Optimize logic
-    public function saveCreditCard($type, Request $request)
+    public function saveCreditCardAction(Request $request)
     {
-        $formTypesRegistry = $this->get('erp.payment.stripe.registry.form_registry');
-        $modelRegistry = $this->get('erp.payment.stripe.registry.model_registry');
-
-        $form = $formTypesRegistry->getForm($type);
+        $form = $this->createForm(new StripeCreditCardType());
         /** @var CreditCard $model */
-        $model = $modelRegistry->getModel($type);
+        $model = new CreditCard();
 
         $form->setData($model);
         $form->handleRequest($request);
         /** @var $user User */
         $user = $this->getUser();
 
-        $template = 'ErpPaymentBundle:Stripe:form.html.twig';
+        $template = 'ErpPaymentBundle:Stripe/Forms:cc.html.twig';
         $templateParams = [
             'type' => StripeCustomer::CREDIT_CARD,
             'user' => $user,
@@ -156,7 +125,7 @@ class StripeController extends BaseController
     }
 
     //TODO Optimize logic
-    public function verifyBankAccount($type, Request $request)
+    public function verifyBankAccountAction(Request $request)
     {
         $publicToken = $request->get('publicToken');
         $accountId = $request->get('accountId');
@@ -294,9 +263,11 @@ class StripeController extends BaseController
             }
         }
 
-        return new JsonResponse([
-            'success' => true,
-        ]);
+        return new JsonResponse(
+            [
+                'success' => true,
+            ]
+        );
     }
 
     public function payRentAction()

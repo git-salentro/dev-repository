@@ -703,7 +703,7 @@ class ListingController extends BaseController
         );
     }
 
-    public function chooseSettingsAction(Request $request)
+    public function chooseSettingsAction()
     {
         $propertySettings = new PropertySettings();
         $form = $this->createForm(new PropertySettingsType(), $propertySettings);
