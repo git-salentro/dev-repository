@@ -110,12 +110,16 @@ class Client
             $object->{$prop} = $value;
         }
 
-        $response = $object->save($options);
+        try {
+            $response = $object->save($options);
+        } catch (\Exception $e) {
+            return new Response(null, $e);
+        }
 
         return new Response($response);
     }
 
-    public function sendAccountRequest($method, $params, array $options)
+    public function sendAccountRequest($method, $params, $options = null)
     {
         try {
             $response = Account::$method($params, $options);

@@ -22,15 +22,10 @@ erp_payment_ps_history:
     defaults: { _controller: ErpPaymentBundle:PaymentWidgets:paymentHistory}
     methods: [GET, POST]
 
-erp_payment_verify_bank_account:
-    path: /verify-bank-account
-    defaults: { _controller: ErpPaymentBundle:Stripe:verifyBankAccount}
-    methods: [POST]
-
 erp_payment_ps_create_account:
     path: /account/create/{type}
-    defaults: { _controller: ErpPaymentBundle:Stripe:choosePaymentMethod}
-    methods: [GET]
+    defaults: { _controller: ErpPaymentBundle:Stripe:choosePaymentMethod }
+    methods: [GET, POST]
     requirements:
         type: cc|ba
 

@@ -5,13 +5,12 @@ namespace Erp\PaymentBundle\Controller;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
-use Erp\PaymentBundle\Stripe\Model\PaymentTypeInterface;
+use Erp\PaymentBundle\Plaid\Exception\ServiceException;
+use Erp\PaymentBundle\Stripe\Model\CreditCard;
 use Erp\UserBundle\Entity\User;
+use Doctrine\Common\Inflector\Inflector;
 use Stripe\Account;
-use Stripe\BankAccount;
-use Stripe\Card;
 use Stripe\Customer;
-use Stripe\Token;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,25 +20,36 @@ class StripeController extends BaseController
     {
         /** @var User $user */
         $user = $this->getUser();
-        //TODO Add cache layer (APC or Doctrine)
-        $stripeUserManager = $this->get('erp.payment.stripe.manager.user_manager');
-        /** @var BankAccount $bankAccount */
-        $bankAccount = $stripeUserManager->getBankAccount($user);
-        /** @var Card $creditCard */
-        $creditCard = $stripeUserManager->getCreditCard($user);
+//        //TODO Add cache layer (APC or Doctrine)
+//        $stripeUserManager = $this->get('erp.payment.stripe.manager.user_manager');
+//        /** @var BankAccount $bankAccount */
+//        $bankAccount = $stripeUserManager->getBankAccount($user);
+//        /** @var Card $creditCard */
+//        $creditCard = $stripeUserManager->getCreditCard($user);
 
         return $this->render(
             'ErpPaymentBundle:Stripe/Widgets:payment-details.html.twig',
             [
-                'creditCard' => $creditCard,
-                'bankAccount' => $bankAccount,
+                'creditCard' => null,
+                'bankAccount' => null,
                 'customer' => $user->getPaySimpleCustomers()->first(),
             ]
         );
     }
 
-    public function choosePaymentMethodAction($type)
+    public function choosePaymentMethodAction($type, Request $request)
     {
+        if ($request->getMethod() === 'POST') {
+            $action = $request->get('action');
+            $camelizedAction = Inflector::camelize($action);
+
+            $finalAction = sprintf('%s', $camelizedAction);
+            if (!method_exists($this, $finalAction)) {
+                throw new \RuntimeException(sprintf('A `%s::%s` method must be created', get_class($this), $finalAction));
+            }
+
+            return call_user_func(array($this, $finalAction), $type, $request);
+        }
         /** @var $user User */
         $user = $this->getUser();
 
@@ -55,21 +65,20 @@ class StripeController extends BaseController
         ]);
     }
 
-    //TODO Optimize logic. Use consumer
-    public function saveCreditCardAction(Request $request)
+    //TODO Optimize logic
+    public function saveCreditCard($type, Request $request)
     {
-        /** @var $user User */
-        $user = $this->getUser();
-
         $formTypesRegistry = $this->get('erp.payment.stripe.registry.form_registry');
         $modelRegistry = $this->get('erp.payment.stripe.registry.model_registry');
 
-        $form = $formTypesRegistry->getForm(StripeCustomer::CREDIT_CARD);
-        /** @var PaymentTypeInterface $model */
-        $model = $modelRegistry->getModel(StripeCustomer::CREDIT_CARD);
+        $form = $formTypesRegistry->getForm($type);
+        /** @var CreditCard $model */
+        $model = $modelRegistry->getModel($type);
 
         $form->setData($model);
         $form->handleRequest($request);
+        /** @var $user User */
+        $user = $this->getUser();
 
         $template = 'ErpPaymentBundle:Stripe:form.html.twig';
         $templateParams = [
@@ -83,22 +92,9 @@ class StripeController extends BaseController
         if ($form->isValid()) {
             $landlord = $user->getTenantProperty()->getUser();
             $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
+
+            $stripeToken = $model->getToken();
             $requestOptions = ['stripe_account' => $landlordStripeAccountId];
-
-            $tokenManager = $this->get('erp.payment.stripe.manager.token_manager');
-            $response = $tokenManager->create(
-                [
-                    'card' => $model->toArray()
-                ],
-                $requestOptions
-            );
-
-            if (!$response->isSuccess()) {
-                $templateParams['errors'] = $response->getErrorMessage();
-                return $this->render($template, $templateParams);
-            }
-            /** @var Token $token */
-            $token = $response->getContent();
 
             $stripeCustomers = $user->getStripeCustomers();
             $customerManager = $this->get('erp.payment.stripe.manager.customer_manager');
@@ -107,7 +103,7 @@ class StripeController extends BaseController
                 $response = $customerManager->create(
                     [
                         'email' => $user->getEmail(),
-                        'source' => $token['id'],
+                        'source' => $stripeToken,
                     ],
                     $requestOptions
                 );
@@ -130,11 +126,19 @@ class StripeController extends BaseController
             } else {
                 /** @var StripeCustomer $stripeCustomer */
                 $stripeCustomer = $stripeCustomers->last();
-                $customer = $customerManager->retrieve($stripeCustomer->getCustomerId(), $requestOptions);
+                $response = $customerManager->retrieve($stripeCustomer->getCustomerId(), $requestOptions);
+
+                if (!$response->isSuccess()) {
+                    $templateParams['errors'] = $response->getErrorMessage();
+                    return $this->render($template, $templateParams);
+                }
+
+                /** @var Customer $customer */
+                $customer = $response->getContent();
                 $response = $customerManager->update(
                     $customer,
                     [
-                        'source' => $token['id']
+                        'source' => $stripeToken,
                     ],
                     $requestOptions
                 );
@@ -144,49 +148,34 @@ class StripeController extends BaseController
                     return $this->render($template, $templateParams);
                 }
             }
+
+            return $this->redirectToRoute('erp_payment_unit_buy');
         }
 
         return $this->render($template, $templateParams);
     }
 
-    //TODO Optimize logic. Use consumer?
-    public function verifyBankAccountAction(Request $request)
+    //TODO Optimize logic
+    public function verifyBankAccount($type, Request $request)
     {
-        /** @var $user User */
-        $user = $this->getUser();
+        $publicToken = $request->get('publicToken');
+        $accountId = $request->get('accountId');
 
-        $itemPlaidService = $this->get('erp.payment.plaid.service.item');
-        $processorPlaidService = $this->get('erp.payment.plaid.service.processor');
-
-        $result = $itemPlaidService->exchangePublicToken($request->get('publicToken'));
-
-        if (400 == $result['code']) {
+        try {
+            $stripeBankAccountToken = $this->createBankAccountToken($publicToken, $accountId);
+        } catch (ServiceException $e) {
             return new JsonResponse(
                 [
                     'success' => false,
-                    'error' => 'An occurred error.',
+                    'error' => $e->getMessage(),
                 ]
             );
         }
-
-        $result = json_decode($result['body']);
-        $result = $processorPlaidService->bankAccountTokenCreate($result->access_token, $request->get('accountId'));
-
-        if (400 == $result['code']) {
-            return new JsonResponse(
-                [
-                    'success' => false,
-                    'error' => 'An occurred error.',
-                ]
-            );
-        }
-
-        $result = json_decode($result['body']);
-        $stripeBankAccountToken = $result['stripe_bank_account_token'];
 
         $customerManager = $this->get('erp.payment.stripe.manager.customer_manager');
         $accountManager = $this->get('erp.payment.stripe.manager.account_manager');
-
+        /** @var $user User */
+        $user = $this->getUser();
         $stripeCustomers = $user->getStripeCustomers();
         //TODO Why use ArrayCollection in PaySimple customers?
         if ($stripeCustomers->isEmpty()) {
@@ -243,6 +232,17 @@ class StripeController extends BaseController
             }
         }
 
+        try {
+            $stripeBankAccountToken = $this->createBankAccountToken($publicToken, $accountId);
+        } catch (ServiceException $e) {
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                ]
+            );
+        }
+
         if (!$user->hasStripeAccount()) {
             $response = $accountManager->create([
                 'country' => StripeAccount::DEFAULT_ACCOUNT_COUNTRY,
@@ -266,6 +266,7 @@ class StripeController extends BaseController
                 ->setAccountId($account['id']);
 
             $this->em->persist($stripeAccount);
+            // Force flush for saving Stripe account
             $this->em->flush();
         } else {
             $stripeAccount = $user->getStripeAccount();
@@ -319,5 +320,27 @@ class StripeController extends BaseController
     public function showTransactionsAction()
     {
         return $this->render('ErpPaymentBundle:Stripe:transactions.html.twig', []);
+    }
+
+    private function createBankAccountToken($publicToken, $accountId)
+    {
+        $itemPlaidService = $this->get('erp.payment.plaid.service.item');
+        $processorPlaidService = $this->get('erp.payment.plaid.service.processor');
+
+        $response = $itemPlaidService->exchangePublicToken($publicToken);
+        $result = json_decode($response['body'], true);
+
+        if ($response['code'] < 200 || $response['code'] >= 300) {
+            throw new ServiceException($result['display_message']);
+        }
+
+        $response = $processorPlaidService->createBankAccountToken($result['access_token'], $accountId);
+        $result = json_decode($response['body'], true);
+
+        if ($response['code'] < 200 || $response['code'] >= 300) {
+            throw new ServiceException($result['display_message']);
+        }
+
+        return $result['stripe_bank_account_token'];
     }
 }

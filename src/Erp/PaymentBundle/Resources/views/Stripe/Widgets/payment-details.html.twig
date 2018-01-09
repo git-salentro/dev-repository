@@ -41,12 +41,12 @@
                         <div class="bank-details">
                             Bank information is not added yet
                         </div>
-                        <div class="row edit-row">
-                            <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"
-                               class="btn edit-btn">
-                                add bank info
-                            </a>
-                        </div>
+                        {#<div class="row edit-row">#}
+                            {#<a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"#}
+                               {#class="btn edit-btn">#}
+                                {#add bank info#}
+                            {#</a>#}
+                        {#</div>#}
                     {% else %}
                         <div class="bank-details">
                             <div class="bank-title"><span
@@ -54,10 +54,10 @@
                             <div class="bank-card"><span>{{ bankAccount.account_holder_name }}</span></div>
                             <div class="bank-card"><span>{{ bankAccount.routing_number }}</span></div>
                         </div>
-                        <div class="row edit-row">
-                            <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"
-                               class="btn edit-btn">edit</a>
-                        </div>
+                        {#<div class="row edit-row">#}
+                            {#<a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"#}
+                               {#class="btn edit-btn">edit</a>#}
+                        {#</div>#}
 
                     {% endif %}
                 </div>
@@ -75,12 +75,12 @@
                            class="btn edit-btn">add card info</a>
                     </div>
                 </div>
-                <div class="col-xs-6">
-                    <div class="row edit-row custombutton">
-                        <a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"
-                           class="btn edit-btn">add bank info</a>
-                    </div>
-                </div>
+                {#<div class="col-xs-6">#}
+                    {#<div class="row edit-row custombutton">#}
+                        {#<a type="submit" href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}"#}
+                           {#class="btn edit-btn">add bank info</a>#}
+                    {#</div>#}
+                {#</div>#}
             </div>
             <hr>
         {% endif %}

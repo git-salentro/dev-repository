@@ -21,7 +21,7 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row profile-widget-row">
-                {#{{ render(controller('ErpPaymentBundle:Stripe:showPaymentDetails')) }}#}
+                {{ render(controller('ErpPaymentBundle:Stripe:showPaymentDetails')) }}
             </div>
             <div class="row profile-widget-row">
                 {{ render(controller('ErpPaymentBundle:Stripe:showCashflows')) }}

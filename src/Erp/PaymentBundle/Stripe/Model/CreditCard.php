@@ -30,6 +30,11 @@ class CreditCard implements PaymentTypeInterface
     protected $cvc;
 
     /**
+     * @var string
+     */
+    protected $token;
+
+    /**
      * SetcartHolderFullName
      *
      * @param $cartHolderFullName
@@ -148,10 +153,35 @@ class CreditCard implements PaymentTypeInterface
     {
         return $this->cvc;
     }
+
+    /**
+     * Get token
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Set token
+     *
+     * @param string $token
+     *
+     * @return CreditCard
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
+    }
     
-    public function toArray()
+    public function toStripe()
     {
         return [
+            'object' => 'card',
             'number' => $this->number,
             'name' => $this->cartHolderFullName,
             'exp_month' => $this->expMonth,

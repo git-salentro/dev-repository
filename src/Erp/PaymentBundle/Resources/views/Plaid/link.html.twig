@@ -10,14 +10,17 @@
         selectAccount: true,
         onSuccess: function(public_token, metadata) {
             $.ajax({
-                url: '{{ url('erp_payment_verify_bank_account') }}',
+                url: '{{ path("erp_payment_ps_create_account", {'type': ba}) }}',
                 type: 'POST',
                 data: {
                     publicToken: public_token,
-                    accountId: metadata.account_id
+                    accountId: metadata.account_id,
+                    action: 'verify-bank-account'
                 },
                 success: function (response) {
-
+                    if (response.success) {
+                        window.location.href = '{{ path("erp_payment_unit_buy") }}';
+                    }
                 }
             });
         },

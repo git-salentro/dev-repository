@@ -1,8 +1,7 @@
 {% import '::widgets/form_errors.html.twig' as form_custom_errors %}
 
-{% set ba = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::BANK_ACCOUNT') %}
-
-{{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
+{{ form_start(form, {'action': path('erp_payment_ps_create_account', {'type': cc}), 'attr': {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}}) }}
+    <input type="hidden" name="action" value="save-credit-card">
     <div class="row">
         <div class="form-group">
             <div class="col-xs-12">
@@ -31,7 +30,7 @@
             </div>
             <div class="col-xs-4">
                 {{ form_label(form.cvc) }}
-                <div class="select-container">
+                <div class="select-containear">
                     {{ form_widget(form.cvc) }}
                 </div>
                 {{ form_custom_errors.widget(form.cvc) }}
@@ -44,8 +43,8 @@
             <div class="col-xs-12 cc-form-footer">
                 <br/>
                 {{ form_widget(form.submit) }}
-                <span class="or-text">OR</span>
-                <a href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}" class="back-dashboard btn">Add Bank Account</a>
+                {#<span class="or-text">OR</span>#}
+                {#<a href="{{ path('erp_payment_ps_create_account', {'type' : ba}) }}" class="back-dashboard btn">Add Bank Account</a>#}
             </div>
         </div>
     </div>

@@ -23,7 +23,7 @@ class Processor extends AbstractService
         $this->secretKey = $secretKey;
     }
 
-    public function bankAccountTokenCreate($accessToken, $accountId)
+    public function createBankAccountToken($accessToken, $accountId)
     {
         $params = [
             'client_id' => $this->clientId,

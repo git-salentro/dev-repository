@@ -22,7 +22,10 @@ class StripeCreditCardType extends AbstractType
                     'required' => true,
                     'label' => 'Card Number',
                     'label_attr' => ['class' => 'control-label required-label'],
-                    'attr' => ['class' => 'form-control'],
+                    'attr' => [
+                        'class' => 'form-control',
+                        'data-stripe' => 'number',
+                    ],
                     'constraints' => [
                         new Assert\NotBlank(['message' => 'Please enter a card number']),
                         new Assert\Length(
@@ -43,7 +46,10 @@ class StripeCreditCardType extends AbstractType
                     'required' => true,
                     'label' => 'CVC',
                     'label_attr' => ['class' => 'control-label required-label'],
-                    'attr' => ['class' => 'form-control'],
+                    'attr' => [
+                        'class' => 'form-control',
+                        'data-stripe' => 'cvc',
+                    ],
                     'constraints' => [
                         new Assert\NotBlank(['message' => 'Please enter a security code']),
                         new Assert\Length(
@@ -65,7 +71,10 @@ class StripeCreditCardType extends AbstractType
                     'choices' => array_combine(range(1, 12), range(1, 12)),
                     'label' => 'Month',
                     'label_attr' => ['class' => 'control-label required-label'],
-                    'attr' => ['class' => 'form-control'],
+                    'attr' => [
+                        'class' => 'form-control',
+                        'data-stripe' => 'exp-month',
+                    ],
                     'constraints' => [
                         new Assert\NotBlank(['message' => 'Please enter an expiry month']),
                         new Assert\Range(
@@ -87,7 +96,10 @@ class StripeCreditCardType extends AbstractType
                     'choices' => array_combine(range(date('Y'), date('Y') + 10), range(date('Y'), date('Y') + 10)),
                     'label' => 'Year',
                     'label_attr' => ['class' => 'control-label required-label'],
-                    'attr' => ['class' => 'form-control'],
+                    'attr' => [
+                        'class' => 'form-control',
+                        'data-stripe' => 'exp-year',
+                    ],
                     'constraints' => [
                         new Assert\NotBlank(['message' => 'Please enter an expiry year']),
                         new Assert\Range(
@@ -110,8 +122,8 @@ class StripeCreditCardType extends AbstractType
                         'class' => 'btn submit-popup-btn'
                     ]
                 ]
-            );
-//            ->add('token', 'hidden');
+            )
+            ->add('token', 'hidden');
     }
 
     /**

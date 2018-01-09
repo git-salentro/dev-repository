@@ -19,6 +19,7 @@ class StripeCustomer
     const CREDIT_CARD = 'cc';
     const BILLING_AUTOMATICALLY = 'charge_automatically';
     const BILLING_SEND_INVOICE = 'send_invoice';
+    const BILLING_DAYS_UNTIL_DUE = 5;
 
     /**
      * @var integer

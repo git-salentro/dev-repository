@@ -183,7 +183,7 @@ class BankAccount implements PaymentTypeInterface
         return $this;
     }
 
-    public function toArray()
+    public function toStripe()
     {
         return [
             'account_holder_name' => $this->accountHolderName,

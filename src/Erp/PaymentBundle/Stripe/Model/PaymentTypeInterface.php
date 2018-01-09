@@ -7,5 +7,5 @@ interface PaymentTypeInterface
     /**
      * @return array
      */
-    public function toArray();
+    public function toStripe();
 }
