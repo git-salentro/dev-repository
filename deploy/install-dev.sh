@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#docker run --rm -v $(pwd):/app composer/composer install && \
+docker-compose -f docker-compose-dev.yml exec php bash -c "composer install"
 docker-compose -f docker-compose-dev.yml exec php bash -c "php app/console doctrine:database:create --if-not-exists"
 docker-compose -f docker-compose-dev.yml exec php bash -c "php app/console doctrine:migrations:migrate -n"
 docker-compose -f docker-compose-dev.yml exec php bash -c "php app/console assets:install --symlink --env=dev"
