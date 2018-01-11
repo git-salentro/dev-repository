@@ -11,7 +11,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
     libmagickwand-dev \
-    mysql-client
+    mysql-client \
+    cron
+
+RUN apt-get install -y supervisor
 
 RUN pecl install imagick
 RUN docker-php-ext-enable imagick
@@ -51,6 +54,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY php.ini                 /usr/local/etc/php/
 COPY www.conf                /usr/local/etc/php-fpm.d/www.conf
 COPY docker-entrypoint.sh    /usr/local/bin/
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+RUN mkdir -p /var/www/app/logs/supervisor
+RUN mkdir -p /var/run/supervisord
 
 RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
 
@@ -58,4 +65,6 @@ WORKDIR /var/www
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-CMD ["php-fpm"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf" ]
+
+#CMD ["php-fpm"]

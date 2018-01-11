@@ -27,7 +27,7 @@
                         <span class="field-validation-error">{{ errors }}</span>
                     {% endif %}
 
-                    {% if hasRecurringPayments %}
+                    {% if hasSubscriptions %}
                         <p>Current year price: <span id="current-year-price">{{ currentYearPrice }}</span></p>
                         <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
                         <p>Total price: <span id="total-price">{{ totalPrice }}</span></p>

@@ -4,7 +4,7 @@ namespace Erp\PaymentBundle\Consumer;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Erp\PaymentBundle\Stripe\Manager\SubscriptionManager;
-use Erp\PaymentBundle\Entity\StripeRecurringPayment;
+use Erp\PaymentBundle\Entity\StripeSubscription;
 use Erp\PaymentBundle\Entity\UnitSettings;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -46,7 +46,7 @@ class UpdateSubscriptionsConsumer implements ConsumerInterface
         $repository = $this->getRepository();
         $subscriptions = $repository->findAll();
 
-        /** @var StripeRecurringPayment $subscription */
+        /** @var StripeSubscription $subscription */
         foreach ($subscriptions as $subscription) {
             $response = $this->manager->retrieve($subscription->getSubscriptionId());
             /** @var Subscription $stripeSubscription */
@@ -63,6 +63,6 @@ class UpdateSubscriptionsConsumer implements ConsumerInterface
 
     private function getRepository()
     {
-        return $this->registry->getManagerForClass(StripeRecurringPayment::class)->getRepository(StripeRecurringPayment::class);
+        return $this->registry->getManagerForClass(StripeSubscription::class)->getRepository(StripeSubscription::class);
     }
 }

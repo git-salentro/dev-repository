@@ -8,14 +8,16 @@ use Doctrine\ORM\Mapping as ORM;
  * Class StripeRecurringPayment
  *
  * @ORM\Table(name="stripe_recurring_payment")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Erp\PaymentBundle\Repository\StripeRecurringPaymentRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class StripeRecurringPayment
 {
-    const BASE_PLAN_ID = 'base_yearly_plan';
-    const DEFAULT_CURRENCY = 'usd';
-    const DEFAULT_INTERVAL = 'year';
+    const TYPE_SINGLE = 'single';
+    const TYPE_RECURRING = 'recurring';
+    const STATUS_PENDING = 'pending';
+    const STATUS_FAILURE = 'failure';
+    const STATUS_SUCCESS = 'success';
 
     /**
      * @var integer
@@ -29,27 +31,53 @@ class StripeRecurringPayment
     /**
      * @var StripeCustomer
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="Erp\PaymentBundle\Entity\StripeCustomer",
-     *     inversedBy="stripeRecurringPayments"
-     * )
-     * @ORM\JoinColumn(name="stripe_customer_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="StripeCustomer", inversedBy="recurringPayments")
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      */
-    private $stripeCustomer;
+    private $customer;
+
+    /**
+     * @var StripeAccount
+     *
+     * @ORM\ManyToOne(targetEntity="StripeAccount", inversedBy="recurringPayments")
+     * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
+     */
+    private $account;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="amount", type="float", scale=2, nullable=true)
+     */
+    private $amount;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="subscription_id", type="string")
+     * @ORM\Column(name="type", type="string", columnDefinition="ENUM('single','recurring')", nullable=true)
      */
-    private $subscriptionId;
+    private $type = self::TYPE_RECURRING;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="quantity", type="integer")
+     * @ORM\Column(name="status", type="string", columnDefinition="ENUM('pending', 'failure', 'success')", nullable=true)
      */
-    private $quantity;
+    private $status = self::STATUS_PENDING;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_payment_at", type="date", nullable=true)
+     */
+    private $startPaymentAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="next_payment_at", type="date", nullable=true)
+     */
+    private $nextPaymentAt;
 
     /**
      * @var \DateTime
@@ -66,6 +94,25 @@ class StripeRecurringPayment
     private $updatedAt;
 
     /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+
+
+    /**
      * Get id
      *
      * @return integer
@@ -76,51 +123,123 @@ class StripeRecurringPayment
     }
 
     /**
-     * Set subscriptionId
+     * Set amount
      *
-     * @param string $subscriptionId
+     * @param float $amount
      *
      * @return StripeRecurringPayment
      */
-    public function setSubscriptionId($subscriptionId)
+    public function setAmount($amount)
     {
-        $this->subscriptionId = $subscriptionId;
+        $this->amount = $amount;
 
         return $this;
     }
 
     /**
-     * Get subscriptionId
+     * Get amount
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return StripeRecurringPayment
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
      *
      * @return string
      */
-    public function getSubscriptionId()
+    public function getType()
     {
-        return $this->subscriptionId;
+        return $this->type;
     }
 
     /**
-     * Set quantity
+     * Set status
      *
-     * @param $quantity
+     * @param string $status
      *
      * @return StripeRecurringPayment
      */
-    public function setQuantity($quantity)
+    public function setStatus($status)
     {
-        $this->quantity = $quantity;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get quantity
+     * Get status
      *
-     * @return integer
+     * @return string
      */
-    public function getQuantity()
+    public function getStatus()
     {
-        return $this->quantity;
+        return $this->status;
+    }
+
+    /**
+     * Set startPaymentAt
+     *
+     * @param \DateTime $startPaymentAt
+     *
+     * @return StripeRecurringPayment
+     */
+    public function setStartPaymentAt($startPaymentAt)
+    {
+        $this->startPaymentAt = $startPaymentAt;
+
+        return $this;
+    }
+
+    /**
+     * Get startPaymentAt
+     *
+     * @return \DateTime
+     */
+    public function getStartPaymentAt()
+    {
+        return $this->startPaymentAt;
+    }
+
+    /**
+     * Set nextPaymentAt
+     *
+     * @param \DateTime $nextPaymentAt
+     *
+     * @return StripeRecurringPayment
+     */
+    public function setNextPaymentAt($nextPaymentAt)
+    {
+        $this->nextPaymentAt = $nextPaymentAt;
+
+        return $this;
+    }
+
+    /**
+     * Get nextPaymentAt
+     *
+     * @return \DateTime
+     */
+    public function getNextPaymentAt()
+    {
+        return $this->nextPaymentAt;
     }
 
     /**
@@ -172,45 +291,55 @@ class StripeRecurringPayment
     }
 
     /**
-     * Set stripeCustomer
+     * Set customer
      *
-     * @param \Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer
+     * @param \Erp\PaymentBundle\Entity\StripeCustomer $customer
      *
      * @return StripeRecurringPayment
      */
-    public function setStripeCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer = null)
+    public function setCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $customer = null)
     {
-        $this->stripeCustomer = $stripeCustomer;
+        $this->customer = $customer;
 
         return $this;
     }
 
     /**
-     * Get stripeCustomer
+     * Get customer
      *
      * @return \Erp\PaymentBundle\Entity\StripeCustomer
      */
-    public function getStripeCustomer()
+    public function getCustomer()
     {
-        return $this->stripeCustomer;
+        return $this->customer;
     }
 
     /**
-     * @ORM\PrePersist
+     * Set account
+     *
+     * @param \Erp\PaymentBundle\Entity\StripeAccount $account
+     *
+     * @return StripeRecurringPayment
      */
-    public function prePersist()
+    public function setAccount(\Erp\PaymentBundle\Entity\StripeAccount $account = null)
     {
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
+        $this->account = $account;
+
+        return $this;
     }
 
     /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
+     * Get account
+     *
+     * @return \Erp\PaymentBundle\Entity\StripeAccount
      */
-    public function preUpdate()
+    public function getAccount()
     {
-        $this->updatedAt = new \DateTime();
+        return $this->account;
+    }
+
+    public function isRecurring()
+    {
+        return $this->type === self::TYPE_RECURRING;
     }
 }
-

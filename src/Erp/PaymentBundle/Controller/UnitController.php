@@ -4,7 +4,7 @@ namespace Erp\PaymentBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeCustomer;
-use Erp\PaymentBundle\Entity\StripeRecurringPayment;
+use Erp\PaymentBundle\Entity\StripeSubscription;
 use Erp\PaymentBundle\Entity\Unit;
 use Erp\PaymentBundle\Entity\UnitSettings;
 use Erp\PaymentBundle\Form\Type\UnitType;
@@ -30,26 +30,26 @@ class UnitController extends BaseController
             'user' => $user,
             'form' => $form->createView(),
             'errors' => null,
-            'hasRecurringPayments' => false,
+            'hasSubscriptions' => false,
             'unitSettings' => $unitSettings,
         ];
         /** @var StripeCustomer $stripeCustomer */
-        $stripeCustomer = $user->getStripeCustomers()->last();
+        $stripeCustomer = $user->getStripeCustomer();
 
         if (!$stripeCustomer) {
             $templateParams['errors'] = 'Please, add bank account.';
             return $this->render($template, $templateParams);
         }
 
-        $stripeRecurringPayments = $stripeCustomer->getStripeRecurringPayments();
-        $hasRecurringPayments = !$stripeRecurringPayments->isEmpty();
-        $templateParams['hasRecurringPayments'] = $hasRecurringPayments;
+        $stripeSubscriptions = $stripeCustomer->getStripeSubscriptions();
+        $hasSubscriptions = !$stripeSubscriptions->isEmpty();
+        $templateParams['hasSubscriptions'] = $hasSubscriptions;
 
-        if ($hasRecurringPayments) {
-            /** @var StripeRecurringPayment $stripeRecurringPayment */
-            $stripeRecurringPayment = $stripeRecurringPayments->last();
-            $templateParams['currentYearPrice'] = $stripeRecurringPayment->getQuantity();
-            $templateParams['totalPrice'] = $stripeRecurringPayment->getQuantity();
+        if ($hasSubscriptions) {
+            /** @var StripeSubscription $stripeSubscription */
+            $stripeSubscription = $stripeSubscriptions->last();
+            $templateParams['currentYearPrice'] = $stripeSubscription->getQuantity();
+            $templateParams['totalPrice'] = $stripeSubscription->getQuantity();
         }
 
         $form->handleRequest($request);
@@ -64,13 +64,13 @@ class UnitController extends BaseController
 
         $subscriptionManager = $this->get('erp.payment.stripe.manager.subscription_manager');
 
-        if (!$hasRecurringPayments) {
+        if (!$hasSubscriptions) {
             $response = $subscriptionManager->create(
                 [
                     'customer' => $stripeCustomer->getCustomerId(),
                     'items' => [
                         [
-                            'plan' => StripeRecurringPayment::BASE_PLAN_ID,
+                            'plan' => StripeSubscription::BASE_PLAN_ID,
                             'quantity' => $quantity,
                         ],
                     ],
@@ -89,17 +89,17 @@ class UnitController extends BaseController
             /** @var Subscription $subscription */
             $subscription = $response->getContent();
 
-            $stripeRecurringPayment = new StripeRecurringPayment();
-            $stripeRecurringPayment->setSubscriptionId($subscription['id']);
+            $stripeSubscription = new StripeSubscription();
+            $stripeSubscription->setSubscriptionId($subscription['id']);
 
-            $stripeCustomer->addStripeRecurringPayment($stripeRecurringPayment);
+            $stripeCustomer->addStripeSubscription($stripeSubscription);
 
             $this->em->persist($stripeCustomer);
         } else {
-            /** @var StripeRecurringPayment $stripeRecurringPayment */
-            $stripeRecurringPayment = $stripeRecurringPayments->last();
+            /** @var StripeSubscription $stripeSubscription */
+            $stripeSubscription = $stripeSubscriptions->last();
 
-            $response = $subscriptionManager->retrieve($stripeRecurringPayment->getSubscriptionId());
+            $response = $subscriptionManager->retrieve($stripeSubscription->getSubscriptionId());
 
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();
@@ -127,8 +127,8 @@ class UnitController extends BaseController
             }
         }
 
-        $stripeRecurringPayment->setQuantity($quantity);
-        $this->em->persist($stripeRecurringPayment);
+        $stripeSubscription->setQuantity($quantity);
+        $this->em->persist($stripeSubscription);
 
         $count = $unit->getCount();
         $prototype = new Property();

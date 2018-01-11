@@ -33,10 +33,17 @@ class StripeCustomer
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeCustomers")
+     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeCustomers", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="StripeRecurringPayment", mappedBy="customer", cascade={"persist"})
+     */
+    private $recurringPayments;
 
     /**
      * @var string
@@ -62,18 +69,15 @@ class StripeCustomer
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(
-     *     targetEntity="Erp\PaymentBundle\Entity\StripeRecurringPayment",
-     *     mappedBy="stripeCustomer",
-     *     cascade={"ALL"}
-     * )
+     * @ORM\OneToMany(targetEntity="Erp\PaymentBundle\Entity\StripeSubscription", mappedBy="stripeCustomer", cascade={"ALL"})
      * @ORM\OrderBy({"createdAt"="DESC"})
      */
-    protected $stripeRecurringPayments;
+    protected $stripeSubscriptions;
 
     public function __construct()
     {
-        $this->stripeRecurringPayments = new ArrayCollection();
+        $this->stripeSubscriptions = new ArrayCollection();
+        $this->recurringPayments = new ArrayCollection();
     }
 
     /**
@@ -201,37 +205,37 @@ class StripeCustomer
     }
 
     /**
-     * Add stripeRecurringPayment
+     * Add stripeSubscription
      *
-     * @param \Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment
+     * @param \Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription
      *
      * @return StripeCustomer
      */
-    public function addStripeRecurringPayment(\Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment)
+    public function addStripeSubscription(\Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription)
     {
-        $stripeRecurringPayment->setStripeCustomer($this);
-        $this->stripeRecurringPayments[] = $stripeRecurringPayment;
+        $stripeSubscription->setStripeCustomer($this);
+        $this->stripeSubscriptions[] = $stripeSubscription;
 
         return $this;
     }
 
     /**
-     * Remove stripeRecurringPayment
+     * Remove stripeSubscription
      *
-     * @param \Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment
+     * @param \Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription
      */
-    public function removeStripeRecurringPayment(\Erp\PaymentBundle\Entity\StripeRecurringPayment $stripeRecurringPayment)
+    public function removeStripeSubscription(\Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription)
     {
-        $this->stripeRecurringPayments->removeElement($stripeRecurringPayment);
+        $this->stripeSubscriptions->removeElement($stripeSubscription);
     }
 
     /**
-     * Get stripeRecurringPayments
+     * Get stripeSubscriptions
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getStripeRecurringPayments()
+    public function getStripeSubscriptions()
     {
-        return $this->stripeRecurringPayments;
+        return $this->stripeSubscriptions;
     }
 }

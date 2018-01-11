@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\PaySimpleCustomer;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -472,17 +473,15 @@ class User extends BaseUser
     protected $paySimpleCustomers;
 
     /**
-     * @var ArrayCollection
+     * @var StripeCustomer
      *
-     * @ORM\OneToMany(
+     * @ORM\OneToOne(
      *      targetEntity="Erp\PaymentBundle\Entity\StripeCustomer",
      *      mappedBy="user",
-     *      cascade={"persist"},
-     *      orphanRemoval=true
+     *      cascade={"persist"}
      * )
-     * @ORM\OrderBy({"updatedAt"="DESC"})
      */
-    protected $stripeCustomers;
+    protected $stripeCustomer;
 
     /**
      * @ORM\OneToOne(
@@ -559,7 +558,6 @@ class User extends BaseUser
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
-        $this->stripeCustomers = new ArrayCollection();
     }
 
     /**
@@ -1682,42 +1680,27 @@ class User extends BaseUser
     }
 
     /**
-     * Add stripeCustomer
+     * Set stripeCustomer
      *
-     * @param \Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer|null
+     * @param \Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer
      *
      * @return User
      */
-    public function addStripeCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer = null)
+    public function setStripeCustomer($stripeCustomer)
     {
-        if (!$stripeCustomer) {
-            return;
-        }
-
-        $stripeCustomer->setUser($this);
-        $this->stripeCustomers[] = $stripeCustomer;
+        $this->stripeCustomer = $stripeCustomer;
 
         return $this;
     }
 
     /**
-     * Remove stripeCustomer
+     * Get stripeCustomer
      *
-     * @param \Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer
+     * @return StripeCustomer
      */
-    public function removeStripeCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer)
+    public function getStripeCustomer()
     {
-        $this->stripeCustomers->removeElement($stripeCustomer);
-    }
-
-    /**
-     * Get stripeCustomers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getStripeCustomers()
-    {
-        return $this->stripeCustomers;
+        return $this->stripeCustomer;
     }
 
     /**

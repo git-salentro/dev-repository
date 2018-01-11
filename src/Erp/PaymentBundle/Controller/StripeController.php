@@ -6,8 +6,10 @@ use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Form\Type\StripeCreditCardType;
+use Erp\PaymentBundle\Form\Type\StripeRecurringPaymentType;
 use Erp\PaymentBundle\Plaid\Exception\ServiceException;
 use Erp\PaymentBundle\Stripe\Model\CreditCard;
+use Erp\PaymentBundle\Entity\StripeRecurringPayment;
 use Erp\UserBundle\Entity\User;
 use Stripe\Account;
 use Stripe\Customer;
@@ -40,11 +42,8 @@ class StripeController extends BaseController
     //TODO Optimize logic
     public function saveCreditCardAction(Request $request)
     {
-        $form = $this->createForm(new StripeCreditCardType());
-        /** @var CreditCard $model */
         $model = new CreditCard();
-
-        $form->setData($model);
+        $form = $this->createForm(new StripeCreditCardType(), $model);
         $form->handleRequest($request);
         /** @var $user User */
         $user = $this->getUser();
@@ -55,7 +54,7 @@ class StripeController extends BaseController
             'user' => $user,
             'form' => $form->createView(),
             'errors' => null,
-            'customer' => $user->getStripeCustomers()->first(),
+            'customer' => $user->getStripeCustomer(),
         ];
 
         if ($form->isValid()) {
@@ -65,10 +64,10 @@ class StripeController extends BaseController
             $stripeToken = $model->getToken();
             $requestOptions = ['stripe_account' => $landlordStripeAccountId];
 
-            $stripeCustomers = $user->getStripeCustomers();
+            $stripeCustomer = $user->getStripeCustomer();
             $customerManager = $this->get('erp.payment.stripe.manager.customer_manager');
 
-            if ($stripeCustomers->isEmpty()) {
+            if (!$stripeCustomer) {
                 $response = $customerManager->create(
                     [
                         'email' => $user->getEmail(),
@@ -87,14 +86,12 @@ class StripeController extends BaseController
                 $stripeCustomer = new StripeCustomer();
                 $stripeCustomer->setCustomerId($customer['id']);
 
-                $user->addStripeCustomer($stripeCustomer);
+                $user->setStripeCustomer($stripeCustomer);
 
                 $this->em->persist($user);
                 // Force flush for saving Stripe customer
                 $this->em->flush();
             } else {
-                /** @var StripeCustomer $stripeCustomer */
-                $stripeCustomer = $stripeCustomers->last();
                 $response = $customerManager->retrieve($stripeCustomer->getCustomerId(), $requestOptions);
 
                 if (!$response->isSuccess()) {
@@ -118,7 +115,7 @@ class StripeController extends BaseController
                 }
             }
 
-            return $this->redirectToRoute('erp_payment_unit_buy');
+            return $this->redirectToRoute('erp_user_profile_dashboard');
         }
 
         return $this->render($template, $templateParams);
@@ -145,9 +142,9 @@ class StripeController extends BaseController
         $accountManager = $this->get('erp.payment.stripe.manager.account_manager');
         /** @var $user User */
         $user = $this->getUser();
-        $stripeCustomers = $user->getStripeCustomers();
+        $stripeCustomer = $user->getStripeCustomer();
         //TODO Why use ArrayCollection in PaySimple customers?
-        if ($stripeCustomers->isEmpty()) {
+        if (!$stripeCustomer) {
             $response = $customerManager->create(
                 [
                     'email' => $user->getEmail(),
@@ -169,14 +166,13 @@ class StripeController extends BaseController
             $stripeCustomer = new StripeCustomer();
             $stripeCustomer->setCustomerId($customer['id']);
 
-            $user->addStripeCustomer($stripeCustomer);
+            $user->setStripeCustomer($stripeCustomer);
 
             $this->em->persist($user);
             // Force flush for saving Stripe customer
             $this->em->flush();
         } else {
             /** @var StripeCustomer $stripeCustomer */
-            $stripeCustomer = $stripeCustomers->last();
             $response = $customerManager->retrieve($stripeCustomer->getCustomerId());
 
             if (!$response->isSuccess()) {
@@ -270,9 +266,50 @@ class StripeController extends BaseController
         );
     }
 
-    public function payRentAction()
+    public function payRentAction(Request $request)
     {
+        $entity = new StripeRecurringPayment();
 
+        $form = $this->createForm(new StripeRecurringPaymentType(), $entity);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $landlord = $user->getTenantProperty()->getUser();
+            $landlordStripeAccount = $landlord->getStripeAccount();
+            $tenantStripeCustomer = $user->getStripeCustomer();
+
+            if (!$landlordStripeAccount || !$tenantStripeCustomer) {
+                $this->addFlash(
+                    'alert_error',
+                    ''
+                );
+
+                return $this->redirectToRoute('erp_user_profile_dashboard');
+            }
+
+            $startPaymentAt = $entity->getStartPaymentAt();
+            $entity
+                ->setNextPaymentAt($startPaymentAt)
+                ->setAccount($landlordStripeAccount)
+                ->setCustomer($tenantStripeCustomer);
+
+            $em = $this->getDoctrine()->getManagerForClass(StripeRecurringPayment::class);
+            $em->persist($entity);
+            $em->flush();
+
+            $this->addFlash(
+                'alert_ok',
+                ''
+            );
+
+            return $this->redirectToRoute('erp_user_profile_dashboard');
+        }
+
+        return $this->render('ErpPaymentBundle:Stripe\Widgets:rental-payment.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     public function showCashflowsAction()

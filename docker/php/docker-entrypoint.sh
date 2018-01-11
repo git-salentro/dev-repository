@@ -5,7 +5,9 @@ function info {
 }
 
 info "Run RabbitMQ"
-
 php app/console rabbitmq:consumer -m 50
+
+info "Add Cron Job"
+#echo '* * * * * root php /var/www/app/console erp:payment:charge' >> /etc/crontab
 
 exec "$@"

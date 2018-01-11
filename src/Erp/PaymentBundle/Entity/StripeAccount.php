@@ -2,6 +2,7 @@
 
 namespace Erp\PaymentBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\UserBundle\Entity\User;
 
@@ -29,10 +30,17 @@ class StripeAccount
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeCustomers", cascade={"persist"})
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeCustomers", cascade={"persist"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="StripeRecurringPayment", mappedBy="account", cascade={"persist"})
+     */
+    private $recurringPayments;
 
     /**
      * @var string
@@ -54,6 +62,11 @@ class StripeAccount
      * @ORM\Column(name="updated_at", type="datetime")
      */
     private $updatedAt;
+
+    public function __construct()
+    {
+        $this->recurringPayments = new ArrayCollection();
+    }
 
     /**
      * @ORM\PrePersist
