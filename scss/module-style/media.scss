@@ -1108,7 +1108,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
         .profile-widget-row {
-            height: 260px;
+            //height: 260px;
+            height: auto;
             position: relative;
             margin: 0 5px 30px;
             .profile-widget-item {
@@ -1798,6 +1799,11 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 }
 
 @media (min-width: 590px) and (max-width: 767px) {
+    #landlords-profile .col-md-5.col-xs-6.profile-widget-item.widget-last{
+        margin: 0 0 20px 0;
+        width: 100%;
+        height: 395px!important;
+    }
     #tenants-profile {
         .profile-widget-row {
             .profile-widget-item {
