@@ -208,54 +208,56 @@ class StripeController extends BaseController
             );
         }
 
-        if (!$user->hasStripeAccount()) {
-            $response = $accountManager->create([
-                'country' => StripeAccount::DEFAULT_ACCOUNT_COUNTRY,
-                'type' => StripeAccount::DEFAULT_ACCOUNT_TYPE,
-                'external_account' => $stripeBankAccountToken,
-            ]);
+        if ($user->hasRole(User::ROLE_LANDLORD)) {
+            if (!$user->hasStripeAccount()) {
+                $response = $accountManager->create([
+                    'country' => StripeAccount::DEFAULT_ACCOUNT_COUNTRY,
+                    'type' => StripeAccount::DEFAULT_ACCOUNT_TYPE,
+                    'external_account' => $stripeBankAccountToken,
+                ]);
 
-            if (!$response->isSuccess()) {
-                return new JsonResponse(
-                    [
-                        'success' => false,
-                        'error' => $response->getErrorMessage(),
-                    ]
-                );
-            }
-            /** @var Account $account */
-            $account = $response->getContent();
+                if (!$response->isSuccess()) {
+                    return new JsonResponse(
+                        [
+                            'success' => false,
+                            'error' => $response->getErrorMessage(),
+                        ]
+                    );
+                }
+                /** @var Account $account */
+                $account = $response->getContent();
 
-            $stripeAccount = new StripeAccount();
-            $stripeAccount->setUser($user)
-                ->setAccountId($account['id']);
+                $stripeAccount = new StripeAccount();
+                $stripeAccount->setUser($user)
+                    ->setAccountId($account['id']);
 
-            $this->em->persist($stripeAccount);
-            // Force flush for saving Stripe account
-            $this->em->flush();
-        } else {
-            $stripeAccount = $user->getStripeAccount();
-            $response = $accountManager->retrieve($stripeAccount->getAccountId());
+                $this->em->persist($stripeAccount);
+                // Force flush for saving Stripe account
+                $this->em->flush();
+            } else {
+                $stripeAccount = $user->getStripeAccount();
+                $response = $accountManager->retrieve($stripeAccount->getAccountId());
 
-            if (!$response->isSuccess()) {
-                return new JsonResponse(
-                    [
-                        'success' => false,
-                        'error' => $response->getErrorMessage(),
-                    ]
-                );
-            }
-            /** @var Account $account */
-            $account = $response->getContent();
-            $response = $accountManager->update($account, ['external_account' => $stripeBankAccountToken]);
+                if (!$response->isSuccess()) {
+                    return new JsonResponse(
+                        [
+                            'success' => false,
+                            'error' => $response->getErrorMessage(),
+                        ]
+                    );
+                }
+                /** @var Account $account */
+                $account = $response->getContent();
+                $response = $accountManager->update($account, ['external_account' => $stripeBankAccountToken]);
 
-            if (!$response->isSuccess()) {
-                return new JsonResponse(
-                    [
-                        'success' => false,
-                        'error' => $response->getErrorMessage(),
-                    ]
-                );
+                if (!$response->isSuccess()) {
+                    return new JsonResponse(
+                        [
+                            'success' => false,
+                            'error' => $response->getErrorMessage(),
+                        ]
+                    );
+                }
             }
         }
 
