@@ -406,6 +406,7 @@
     input[type=checkbox], input[type=radio] {
         display: inline-block;
         vertical-align: middle;
+        margin: 0;
     }
     label {
         padding: 10px 5px 5px 0;
@@ -426,4 +427,8 @@
         margin: 5px 0;
     }
 }
-#properties-table{}
+#properties-confirmation{
+    .btn.edit-btn{
+        margin-right: 20px;
+    }
+}
