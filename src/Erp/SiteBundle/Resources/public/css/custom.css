@@ -161,7 +161,7 @@ ul.bank-info {
     .col-md-5.col-xs-6.profile-widget-item.widget-last {
         /*height: 450px !important;*/
         width: 100%;
-        margin-bottom: 10px !important;
+        margin: 0 0 10px 0!important;
     }
     .col-md-3.col-xs-5.profile-widget-item.widget-first.address-widget {
         height: 450px !important;
