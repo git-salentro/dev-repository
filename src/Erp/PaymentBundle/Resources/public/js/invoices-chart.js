@@ -1,11 +1,13 @@
 (function ($) {
-    var ctx = document.getElementById("invoices-chart");
+    var ctx = $('#invoices-chart');
+    var labels = ctx.data('labels');
+    var invoices = ctx.data('invoices');
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["July", "August", "September", "October", "November", "December"],
+            labels: labels,
             datasets: [{
-                data: [12, 19, 3, 5, 2, 3],
+                data: invoices,
                 backgroundColor:  'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255,99,132,1)',
                 borderWidth: 1

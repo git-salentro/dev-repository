@@ -17,3 +17,26 @@ services:
     erp.stripe.syncer.webhook_syncer:
         class: Erp\StripeBundle\Syncer\WebhookSyncer
         parent: erp.stripe.syncer.abstract_syncer
+
+    erp_stripe.event.event_guesser:
+        class: Erp\StripeBundle\Event\EventGuesser
+        arguments:
+            - '%kernel.debug%'
+
+    erp_stripe.event_listener.abstract_subscriber:
+        abstract: true
+        class:
+        arguments:
+            - '@doctrine'
+
+    erp_stripe.event_listener.charge_subscriber:
+        parent: erp_stripe.event_listener.abstract_subscriber
+        class: Erp\StripeBundle\EventListener\ChargeSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+    erp_stripe.event_listener.invoice_subscriber:
+        parent: erp_stripe.event_listener.abstract_subscriber
+        class: Erp\StripeBundle\EventListener\InvoiceSubscriber
+        tags:
+            - { name: kernel.event_subscriber }

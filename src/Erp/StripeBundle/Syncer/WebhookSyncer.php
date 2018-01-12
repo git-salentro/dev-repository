@@ -16,13 +16,17 @@ class WebhookSyncer extends AbstractSyncer
         $stripeObjectData = $stripeResource->data->object;
         switch ($stripeObjectData->object) {
             case 'charge':
-                $this->getChargeSyncer()->syncLocalFromStripe($entity, $stripeObjectData);
+                $this->getChargeSyncer()->syncLocalFromStripe($stripeObjectData);
                 break;
             case 'invoice':
-                $this->getChargeSyncer()->syncLocalFromStripe($entity, $stripeObjectData);
+                $this->getChargeSyncer()->syncLocalFromStripe($stripeObjectData);
+                break;
+            case 'refunds':
+                $this->getChargeSyncer()->syncLocalFromStripe($stripeObjectData);
+                break;
+            case 'transfers':
+                $this->getChargeSyncer()->syncLocalFromStripe($stripeObjectData);
                 break;
         }
-
-
     }
 }

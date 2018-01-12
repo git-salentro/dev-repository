@@ -2,6 +2,7 @@
 
 namespace Erp\PaymentBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\UserBundle\Entity\User;
 
@@ -35,6 +36,20 @@ class StripeAccount
     private $user;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Invoice", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $invoices;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Transaction", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $transactions;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="account_id", type="string")
@@ -55,6 +70,12 @@ class StripeAccount
      */
     private $updatedAt;
 
+    public function __construct()
+    {
+        $this->invoices = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+    }
+
     /**
      * @ORM\PrePersist
      */
@@ -65,7 +86,6 @@ class StripeAccount
     }
 
     /**
-     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function preUpdate()
@@ -177,5 +197,73 @@ class StripeAccount
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Add invoice
+     *
+     * @param \Erp\StripeBundle\Entity\Invoice $invoice
+     *
+     * @return StripeAccount
+     */
+    public function addInvoice(\Erp\StripeBundle\Entity\Invoice $invoice)
+    {
+        $this->invoices[] = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * Remove invoice
+     *
+     * @param \Erp\StripeBundle\Entity\Invoice $invoice
+     */
+    public function removeInvoice(\Erp\StripeBundle\Entity\Invoice $invoice)
+    {
+        $this->invoices->removeElement($invoice);
+    }
+
+    /**
+     * Get invoices
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInvoices()
+    {
+        return $this->invoices;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param \Erp\StripeBundle\Entity\Invoice $invoice
+     *
+     * @return StripeAccount
+     */
+    public function addTransaction(\Erp\StripeBundle\Entity\Transaction $transaction)
+    {
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove invoice
+     *
+     * @param \Erp\StripeBundle\Entity\Transaction $transaction
+     */
+    public function removeTransaction(\Erp\StripeBundle\Entity\Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 }

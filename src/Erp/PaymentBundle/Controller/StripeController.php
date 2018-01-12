@@ -6,6 +6,8 @@ use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Stripe\Model\PaymentTypeInterface;
+use Erp\StripeBundle\Entity\Invoice;
+use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
 use Stripe\Account;
 use Stripe\BankAccount;
@@ -305,19 +307,83 @@ class StripeController extends BaseController
 
     public function showCashflowsAction()
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $now = new \DateTime();
+        $sixMonthsAgo = (new \DateTime())->modify('-5 month');
+        $stripeAccount = $user->getStripeAccount();
+
+        $transactionsRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
+        $items = $transactionsRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+
+        $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
+        $months = array_keys($labels);
+        $labels = array_values($labels);
+        $casheIn = $this->getPreparedItems($items, $months);
+        $casheOut =  $this->getPreparedItems($items, $months);
+
         return $this->render('ErpPaymentBundle:Stripe:cashflows.html.twig', [
-            'cache_in' => [],
-            'cache_out' => [],
+            'cashe_in' => $casheIn,
+            'cashe_out' => $casheOut,
+            'labels' => $labels,
         ]);
     }
 
     public function showInvoicesAction()
     {
-        return $this->render('ErpPaymentBundle:Stripe:invoices.html.twig', []);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $now = new \DateTime();
+        $sixMonthsAgo = (new \DateTime())->modify('-5 month');
+        $stripeAccount = $user->getStripeAccount();
+
+        $invoicesRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Invoice::class);
+        $items = $invoicesRepo->getGroupedInvoices($stripeAccount, $sixMonthsAgo, $now);
+
+        $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
+        $months = array_keys($labels);
+        $labels = array_values($labels);
+        $invoices = $this->getPreparedItems($items, $months);
+
+        return $this->render('ErpPaymentBundle:Stripe:invoices.html.twig', [
+            'labels' => $labels,
+            'invoices' => $invoices,
+        ]);
     }
 
     public function showTransactionsAction()
     {
         return $this->render('ErpPaymentBundle:Stripe:transactions.html.twig', []);
+    }
+
+    private function getMonthsLabels(\DateTime $dateFrom, \DateTime $dateTo)
+    {
+        $diff = $dateFrom->diff($dateTo);
+        $count = ($diff->format('%y') * 12) + $diff->format('%m') +1;
+
+        $labels = [];
+        for ($i=1; $i<=$count; $i++) {
+            $labels[$dateFrom->format('n')] = $dateFrom->format('F');
+            $dateFrom->modify('+1 month');
+        }
+
+        return $labels;
+    }
+
+    private function getPreparedItems(array $items, array $months)
+    {
+        $results = [];
+        $existingMonth = array_column($items, 'gMonth');
+        foreach ($months as $month) {
+            if (false !== $key = array_search($month, $existingMonth)) {
+                $results[] = $items[$key]['gAmount'];
+            } else {
+                $results[] = 0;
+            }
+        }
+
+        return $results;
     }
 }
