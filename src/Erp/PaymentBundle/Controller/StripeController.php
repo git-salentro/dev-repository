@@ -326,8 +326,8 @@ class StripeController extends BaseController
         $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
 
-        $transactionsRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-        $items = $transactionsRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+        $transactionRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
+        $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
         $months = array_keys($labels);
@@ -367,7 +367,25 @@ class StripeController extends BaseController
 
     public function showTransactionsAction()
     {
-        return $this->render('ErpPaymentBundle:Stripe:transactions.html.twig', []);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $now = new \DateTime();
+        $sixMonthsAgo = (new \DateTime())->modify('-5 month');
+        $stripeAccount = $user->getStripeAccount();
+
+        $transactionRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Transaction::class);
+        $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+
+        $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
+        $months = array_keys($labels);
+        $labels = array_values($labels);
+        $transactions = $this->getPreparedItems($items, $months);
+        
+        return $this->render('ErpPaymentBundle:Stripe:transactions.html.twig', [
+            'transactions' => $transactions,
+            'labels' => $labels,
+        ]);
     }
 
     private function createBankAccountToken($publicToken, $accountId)
