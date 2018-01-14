@@ -41,6 +41,7 @@ class AppKernel extends Kernel
             new Erp\SmartMoveBundle\ErpSmartMoveBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new Erp\StripeBundle\ErpStripeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -39,6 +39,10 @@ services:
         class: Erp\PaymentBundle\Stripe\Manager\ChargeManager
         parent: erp.payment.stripe.manager.abstract_manager
 
+    erp.payment.stripe.manager.event_manager:
+        class: Erp\PaymentBundle\Stripe\Manager\EventManager
+        parent: erp.payment.stripe.manager.abstract_manager
+
     erp.payment.form.type.stripe_credit_card:
         class: Erp\PaymentBundle\Form\Type\StripeCreditCardType
         tags:
