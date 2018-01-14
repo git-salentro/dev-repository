@@ -402,3 +402,33 @@
         }
     }
 }
+.modal-body {
+    input[type=checkbox], input[type=radio] {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0;
+    }
+    label {
+        padding: 10px 5px 5px 0;
+    }
+    .btn {
+        //border: 0;
+        //padding-left: 0;
+    }
+    #properties-table{
+
+        input[type=checkbox], input[type=radio] {
+            margin: 0 0 0 6px;
+        }
+    }
+}
+.table_info{
+    div{
+        margin: 5px 0;
+    }
+}
+#properties-confirmation{
+    .btn.edit-btn{
+        margin-right: 20px;
+    }
+}

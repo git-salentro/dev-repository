@@ -23,9 +23,11 @@
             <div class="row profile-widget-row">
                 {{ render(controller('ErpPaymentBundle:Stripe:showPaymentDetails')) }}
             </div>
-            <div class="row profile-widget-row">
+            <div class="row profile-widget-row profile-widget-custom">
                 {{ render(controller('ErpPaymentBundle:Stripe:showCashflows')) }}
                 {{ render(controller('ErpPaymentBundle:Stripe:showInvoices')) }}
+            </div>
+            <div class="row profile-widget-row">
                 {{ render(controller('ErpPaymentBundle:Stripe:showTransactions')) }}
             </div>
         </div>

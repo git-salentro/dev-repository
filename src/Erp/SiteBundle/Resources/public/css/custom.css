@@ -137,6 +137,12 @@ ul.bank-info {
 .col-md-5.col-xs-6.profile-widget-item.widget-last {
     height: 300px !important;
     margin-bottom: 10px !important;
+    width: 47%;
+    margin-right: 3%;
+}
+
+.profile-widget-custom .col-md-5.col-xs-6.profile-widget-item.widget-last:last-child{
+    margin: 0 0 0 3%;
 }
 .col-md-5.col-xs-12.profile-widget-item.screening-widget {
     margin-bottom: 10px !important;
@@ -147,10 +153,15 @@ ul.bank-info {
 .col-md-3.col-xs-5.profile-widget-item.login-widget.widget-first {
     height: 300px !important;
 }
+.modal-dialog .edit-btn:active,
+.modal-dialog .edit-btn:hover {
+    color: #fb872b;
+}
 @media only screen and (max-width: 667px) {
     .col-md-5.col-xs-6.profile-widget-item.widget-last {
-        height: 450px !important;
-        margin-bottom: 10px !important;
+        /*height: 450px !important;*/
+        width: 100%;
+        margin: 0 0 10px 0!important;
     }
     .col-md-3.col-xs-5.profile-widget-item.widget-first.address-widget {
         height: 450px !important;
