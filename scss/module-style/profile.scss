@@ -147,7 +147,7 @@
     .screening-widget {
         .edit-btn {
             margin-top: 50px;
-            width: 147px;
+            width: 170px;
             outline: 0;
             font-family: LatoRegular;
         }
@@ -699,7 +699,8 @@
             padding: 0;
             box-shadow: none;
             &.request-item {
-                height: 550px;
+                //height: 550px;
+                height: 630px;
                 padding: 0 11px;
                 -webkit-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
                 -moz-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
