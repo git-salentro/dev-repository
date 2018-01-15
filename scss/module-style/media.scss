@@ -1376,6 +1376,22 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             bottom: 260px;
             margin-right: 0;
             width: 364px;
+            top: -319px;
+        }
+        .profile-widget-item-adr{
+            margin: 0 0 0 20px;
+        }
+        .profile-widget-row .profile-widget-item.widget-first.payment-widget{
+            height: 260px;
+        }
+        .profile-widget-row .profile-widget-item.widget-last{
+            width: 100%;
+        }
+        .profile-widget-row .profile-widget-item .tip-form{
+            height: auto;
+        }
+        .col-md-5.col-xs-12.profile-widget-item.screening-widget {
+            margin-bottom: 30px !important;
         }
     }
 
@@ -2173,6 +2189,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         text-align: left;
         width: 100%;
     }
+    #landlords-profile .profile-widget-item-adr {
+        margin: 0;
+        //margin: 0 0 0 20px;
+    }
     .profile {
         margin-bottom: 100px;
         .title-block {
@@ -2201,7 +2221,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     margin-right: 0;
                 }
                 &.widget-first {
-                    width: 45%;
+                    width: 46%;
                 }
                 .address-details-block {
                     .address-details {
@@ -2446,13 +2466,36 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         .tip-item-row {
             float: left;
         }
+        //.tip-item {
+        //    height: 260px;
+        //    position: absolute;
+        //    left: 48%;
+        //    bottom: 260px;
+        //    margin-right: 0;
+        //    width: 52%;
+        //    top: -290px;
+        //}
         .tip-item {
             height: 260px;
-            position: absolute;
-            left: 48%;
-            bottom: 260px;
+            position: static;
+            left: auto;
+            bottom:auto;
             margin-right: 0;
-            width: 52%;
+            width: 100%;
+            top: 0;
+            margin-bottom: 0;
+        }
+        .profile-widget-row .profile-widget-item .tip-form{
+            height: 260px;
+        }
+        .col-md-5.col-xs-12.profile-widget-item.screening-widget {
+            margin-bottom: 30px !important;
+        }
+        .profile-widget-item.payment-widget{
+            height: 260px;
+        }
+        .profile-widget-row .profile-widget-item.widget-last, .property-details .property-accordion .panel .doc-property .doc-property-item {
+            width: 100%;
         }
     }
 

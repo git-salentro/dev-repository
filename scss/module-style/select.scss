@@ -1,4 +1,7 @@
 /* Select */
+.select2-container--default .select2-selection--single{
+    border: 0;
+}
 .select2-container--default {
     .select2-selection--single {
         height: 44px;
