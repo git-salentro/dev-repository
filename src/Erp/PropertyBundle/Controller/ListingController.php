@@ -821,6 +821,8 @@ class ListingController extends BaseController
                     $settings->replace($propertySettings);
                 }
 
+                $em->persist($property);
+
                 if ((++$i % 20) == 0) {
                     $em->flush();
                     $em->clear();
@@ -829,6 +831,11 @@ class ListingController extends BaseController
 
             $em->flush();
             $em->clear();
+
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
 
             return $this->redirect($this->generateUrl('erp_property_listings_all'));
         } catch (\PDOException $e) {

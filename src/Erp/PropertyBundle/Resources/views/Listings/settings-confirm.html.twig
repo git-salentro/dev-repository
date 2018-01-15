@@ -1,6 +1,7 @@
 {% set entity = form.vars.value %}
 
 <div id="properties-confirmation">
+    Chosen Properties:
     <form action="{{ path('erp_property_save_settings') }}">
         <input type="hidden" name="data" value="{{ data|json_encode }}">
         <ul>
@@ -11,32 +12,29 @@
             {% endfor %}
         </ul>
 
+        <div class="table_info">
+            Chosen Settings:
+            <div>Rent Payment acceptance date: {{ entity.dayUntilDue }}</div>
+            <div>Rent Payment Amount Allowed for Unit: {{ entity.paymentAmount }}</div>
+            <div>Allow Partial Payments: {{ entity.allowPartialPayments ? 'Yes' : 'No' }}</div>
+            <div>Allow Credit Card Payments: {{ entity.allowCreditCardPayments ? 'Yes' : 'No' }}</div>
+            <div>Set auto-draft from tenant account: {{ entity.allowAutoDraft ? 'Yes': 'No' }}</div>
+        </div>
 
+        <button
+                class="btn edit-btn"
+                href="{{ path('erp_property_choose_properties') }}"
+                role="back"
+                step="properties-table"
+        >
+            Back
+        </button>
+        <button
+                type="submit"
+                class="btn edit-btn"
+                step="save-settings"
+        >
+            Submit
+        </button>
     </form>
-
-    <div class="table_info">
-        Choosen Properties:
-
-        <div>{{ entity.dayUntilDue }}</div>
-        <div>{{ entity.paymentAmount }}</div>
-        <div>{{ entity.allowPartialPayments ? 'Yes' : 'No' }}</div>
-        <div>{{ entity.allowCreditCardPayments ? 'Yes' : 'No' }}</div>
-        <div>{{ entity.allowAutoDraft ? 'Yes': 'No' }}</div>
-    </div>
-
-    <button
-        class="btn edit-btn"
-        href="{{ path('erp_property_choose_properties') }}"
-        role="back"
-        step="properties-table"
-    >
-        Back
-    </button>
-    <button
-        type="submit"
-        class="btn edit-btn"
-        step="properties-confirmation"
-    >
-        Submit
-    </button>
 </div>

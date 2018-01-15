@@ -20,14 +20,6 @@ class PropertySettings
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var Property
-     *
-     * @ORM\OneToOne(targetEntity="Property")
-     * @ORM\JoinColumn(name="property_id", referencedColumnName="id")
-     */
-    private $property;
     
     /**
      * @var integer
@@ -192,30 +184,6 @@ class PropertySettings
     public function getAllowAutoDraft()
     {
         return $this->allowAutoDraft;
-    }
-
-    /**
-     * Set property
-     *
-     * @param \Erp\PropertyBundle\Entity\Property $property
-     *
-     * @return PropertySettings
-     */
-    public function setProperty(\Erp\PropertyBundle\Entity\Property $property = null)
-    {
-        $this->property = $property;
-
-        return $this;
-    }
-
-    /**
-     * Get property
-     *
-     * @return \Erp\PropertyBundle\Entity\Property
-     */
-    public function getProperty()
-    {
-        return $this->property;
     }
 
     public function replace(PropertySettings $settings)

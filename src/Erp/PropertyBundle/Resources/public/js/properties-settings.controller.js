@@ -23,7 +23,7 @@ PropertiesSettingsController.prototype.processResponse = function (response) {
             var currentStep = $form.find('button[type=submit]').attr('step');
             var data = {};
 
-            if (currentStep === 'properties-confirmation') {
+            if (currentStep === 'properties-confirmation' || currentStep === 'save-settings') {
                 data = {
                     erp_property_payment_settings: {
                         dayUntilDue: $('[name="erp_property_payment_settings[dayUntilDue]"]').val(),
@@ -47,9 +47,18 @@ PropertiesSettingsController.prototype.processResponse = function (response) {
 
             $form.find('button[type=submit]').prop('disabled', true);
 
-            $.each($form.serializeArray(), function(index, obj){
-                data[obj.name] = obj.value;
-            });
+            if (currentStep === 'properties-confirmation') {
+                var buff = [];
+                $.each($form.serializeArray(), function(index, obj){
+                    buff.push(obj.value);
+                });
+
+                data['idx'] = buff;
+            } else {
+                $.each($form.serializeArray(), function(index, obj){
+                    data[obj.name] = obj.value;
+                });
+            }
 
             $.ajax({
                 type: 'POST',

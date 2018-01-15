@@ -387,7 +387,7 @@ class Property
     /**
      * @var PropertySettings
      * 
-     * @ORM\OneToOne(targetEntity="\Erp\PropertyBundle\Entity\PropertySettings", inversedBy="property", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="\Erp\PropertyBundle\Entity\PropertySettings", cascade={"persist"})
      * @ORM\JoinColumn(name="settings_id", referencedColumnName="id")
      */
     protected $settings;
