@@ -10,30 +10,33 @@
                 </li>
             {% endfor %}
         </ul>
-        <button
-            class="btn edit-btn"
-            href="{{ path('erp_property_choose_properties') }}"
-            role="back"
-            step="properties-table"
-        >
-                Back
-        </button>
-        <button
-            type="submit"
-            class="btn edit-btn"
-            step="properties-confirmation"
-        >
-            Submit
-        </button>
+
 
     </form>
 
     <div class="table_info">
         Choosen Properties:
+
         <div>{{ entity.dayUntilDue }}</div>
         <div>{{ entity.paymentAmount }}</div>
         <div>{{ entity.allowPartialPayments ? 'Yes' : 'No' }}</div>
         <div>{{ entity.allowCreditCardPayments ? 'Yes' : 'No' }}</div>
         <div>{{ entity.allowAutoDraft ? 'Yes': 'No' }}</div>
     </div>
+
+    <button
+        class="btn edit-btn"
+        href="{{ path('erp_property_choose_properties') }}"
+        role="back"
+        step="properties-table"
+    >
+        Back
+    </button>
+    <button
+        type="submit"
+        class="btn edit-btn"
+        step="properties-confirmation"
+    >
+        Submit
+    </button>
 </div>
