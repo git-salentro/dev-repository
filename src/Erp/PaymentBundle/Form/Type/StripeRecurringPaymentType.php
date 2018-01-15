@@ -91,7 +91,7 @@ class StripeRecurringPaymentType extends AbstractType
                     return $type === StripeRecurringPayment::TYPE_RECURRING;
                 },
                 function ($type) {
-                    return $type ? StripeRecurringPayment::TYPE_RECURRING : StripeRecurringPayment::TYPE_ONE;
+                    return $type ? StripeRecurringPayment::TYPE_RECURRING : StripeRecurringPayment::TYPE_SINGLE;
                 }
             ), true);
     }

@@ -10,18 +10,18 @@
                 </li>
             {% endfor %}
         </ul>
-        <a
-                        class="btn edit-btn"
-                        href="{{ path('erp_property_choose_properties') }}"
-                        role="back"
-                        step="properties-table"
-                >
-                    Back
-                </a>
         <button
-                type="submit"
-                class="btn edit-btn"
-                step="properties-confirmation"
+            class="btn edit-btn"
+            href="{{ path('erp_property_choose_properties') }}"
+            role="back"
+            step="properties-table"
+                >
+                Back
+        </button>
+        <button
+            type="submit"
+            class="btn edit-btn"
+            step="properties-confirmation"
         >
             Submit
         </button>

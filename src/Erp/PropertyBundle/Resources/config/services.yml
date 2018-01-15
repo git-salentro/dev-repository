@@ -1,0 +1,3 @@
+servises:
+    erp_property_checker_property_checker:
+        class: Erp\PropertyBundle\Checker\PropertyChecker

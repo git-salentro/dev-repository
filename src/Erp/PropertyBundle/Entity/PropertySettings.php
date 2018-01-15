@@ -34,7 +34,7 @@ class PropertySettings
      *
      * @ORM\Column(name="day_until_due", type="integer")
      */
-    private $dayUntilDue;
+    private $dayUntilDue = 1;
 
     /**
      * @var float
@@ -48,21 +48,21 @@ class PropertySettings
      *
      * @ORM\Column(name="is_allow_partial_payments", type="boolean")
      */
-    private $allowPartialPayments;
+    private $allowPartialPayments = true;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_allow_credit_card_payments", type="boolean")
      */
-    private $allowCreditCardPayments;
+    private $allowCreditCardPayments = true;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_allow_auto_draft", type="boolean")
      */
-    private $allowAutoDraft;
+    private $allowAutoDraft = false;
 
     /**
      * Get id

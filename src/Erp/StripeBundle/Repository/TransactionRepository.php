@@ -10,7 +10,7 @@ class TransactionRepository extends EntityRepository
     public function getGroupedTransactions(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $qb = $this->createQueryBuilder('t');
-        $qb->select('SUM(t.amount) as gAmount, MONTH(t.created) as gMonth');
+        $qb->select('SUM(t.amount) as gAmount, MONTH(t.created) as gMonth, YEAR(t.created) as gYear');
 
         if ($stripeAccount) {
             $qb->where('t.owner = :owner')
@@ -27,7 +27,8 @@ class TransactionRepository extends EntityRepository
             $qb->setParameter('dateFrom', $dateFrom);
         }
 
-        $qb->groupBy('gMonth');
+        $qb->groupBy('gYear')
+            ->addGroupBy('gMonth');
 
         return $qb->getQuery()->getResult();
     }

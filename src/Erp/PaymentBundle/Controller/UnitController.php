@@ -134,8 +134,7 @@ class UnitController extends BaseController
         $prototype = new Property();
         for ($i=1; $i<=$count; $i++) {
             $property = clone $prototype;
-            $property->setUser($user)
-                ->setStatus(Property::STATUS_DRAFT);
+            $property->setUser($user);
 
             $this->em->persist($property);
         }

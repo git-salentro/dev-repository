@@ -30,7 +30,7 @@ class UserManager
     public function getBankAccount(User $user)
     {
         /** @var StripeCustomer $stripeCustomer */
-        $stripeCustomer = $user->getStripeCustomers()->last();
+        $stripeCustomer = $user->getStripeCustomer();
 
         if (!$stripeCustomer) {
             return;
@@ -41,23 +41,24 @@ class UserManager
         if (!$response->isSuccess()) {
             return;
         }
-        /** @var Customer $customer */
-        $customer = $response->getContent();
-        $response = $this->customerManager->retrieveBankAccount($customer, $stripeCustomer->getBankAccountId());
 
-        if (!$response->isSuccess()) {
-            return;
+        /** @var Customer $content */
+        $content = $response->getContent();
+        $sources = $content->sources;
+
+        foreach ($sources->data as $source) {
+            if ($source instanceof BankAccount) {
+                return $source;
+            }
         }
-        /** @var BankAccount $bankAccount */
-        $bankAccount = $response->getContent();
 
-        return $bankAccount;
+        return null;
     }
 
     public function getCreditCard(User $user)
     {
         /** @var StripeCustomer $stripeCustomer */
-        $stripeCustomer = $user->getStripeCustomers()->last();
+        $stripeCustomer = $user->getStripeCustomer();
 
         if (!$stripeCustomer) {
             return;
@@ -68,16 +69,17 @@ class UserManager
         if (!$response->isSuccess()) {
             return;
         }
-        /** @var Customer $customer */
-        $customer = $response->getContent();
-        $response = $this->customerManager->retrieveCreditCard($customer, $stripeCustomer->getCreditCardId());
 
-        if (!$response->isSuccess()) {
-            return;
+        /** @var Customer $content */
+        $content = $response->getContent();
+        $sources = $content->sources;
+
+        foreach ($sources->data as $source) {
+            if ($source instanceof Card) {
+                return $source;
+            }
         }
-        /** @var Card $creditCard */
-        $creditCard = $response->getContent();
 
-        return $creditCard;
+        return null;
     }
 }

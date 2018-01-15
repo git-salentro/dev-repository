@@ -10,7 +10,8 @@ use Erp\PaymentBundle\Form\Type\StripeRecurringPaymentType;
 use Erp\PaymentBundle\Plaid\Exception\ServiceException;
 use Erp\PaymentBundle\Stripe\Model\CreditCard;
 use Erp\PaymentBundle\Entity\StripeRecurringPayment;
-use Erp\PaymentBundle\Stripe\Model\PaymentTypeInterface;
+use Stripe\BankAccount;
+use Stripe\Card;
 use Erp\StripeBundle\Entity\Invoice;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
@@ -25,19 +26,18 @@ class StripeController extends BaseController
     {
         /** @var User $user */
         $user = $this->getUser();
-//        //TODO Add cache layer (APC or Doctrine)
-//        $stripeUserManager = $this->get('erp.payment.stripe.manager.user_manager');
-//        /** @var BankAccount $bankAccount */
-//        $bankAccount = $stripeUserManager->getBankAccount($user);
-//        /** @var Card $creditCard */
-//        $creditCard = $stripeUserManager->getCreditCard($user);
+        //TODO Add cache layer (APC or Doctrine)
+        $stripeUserManager = $this->get('erp.payment.stripe.manager.user_manager');
+        /** @var BankAccount $bankAccount */
+        $bankAccount = $stripeUserManager->getBankAccount($user);
+        /** @var Card $creditCard */
+        $creditCard = $stripeUserManager->getCreditCard($user);
 
         return $this->render(
             'ErpPaymentBundle:Stripe/Widgets:payment-details.html.twig',
             [
-                'creditCard' => null,
-                'bankAccount' => null,
-                'customer' => $user->getPaySimpleCustomers()->first(),
+                'creditCard' => $creditCard,
+                'bankAccount' => $bankAccount,
             ]
         );
     }
@@ -281,11 +281,23 @@ class StripeController extends BaseController
         if ($form->isValid()) {
             /** @var User $user */
             $user = $this->getUser();
+            $property = $user->getTenantProperty();
             $landlord = $user->getTenantProperty()->getUser();
             $landlordStripeAccount = $landlord->getStripeAccount();
             $tenantStripeCustomer = $user->getStripeCustomer();
 
             if (!$landlordStripeAccount || !$tenantStripeCustomer) {
+                $this->addFlash(
+                    'alert_error',
+                    ''
+                );
+
+                return $this->redirectToRoute('erp_user_profile_dashboard');
+            }
+
+            $propertyChecker = $this->get('erp_property_checker_property_checker');
+
+            if (!$propertyChecker->isPayable($user, $entity)) {
                 $this->addFlash(
                     'alert_error',
                     ''

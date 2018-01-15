@@ -89,10 +89,9 @@
             <div class="row bank-info-row">
                 <div class="col-xs-12">
                     <div class="bank-details">
-                        <div class="bank-title"><span
-                                    class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
-                        <div class="bank-card"><span>{{ bankAccount.account_holder_name }}</span></div>
-                        <div class="bank-card"><span>{{ bankAccount.routing_number }}</span></div>
+                        <div class="bank-title"><span class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
+                        <div class="bank-card"><span>Account Holder Name: {{ bankAccount.account_holder_name }}</span></div>
+                        <div class="bank-card"><span>Routing Number: {{ bankAccount.routing_number }}</span></div>
                     </div>
                     <div class="row edit-row">
                         <button id='verify-ba' class="btn edit-btn">Verify</button>

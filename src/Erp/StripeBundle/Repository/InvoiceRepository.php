@@ -10,7 +10,7 @@ class InvoiceRepository extends EntityRepository
     public function getGroupedInvoices(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $qb = $this->createQueryBuilder('i');
-        $qb->select('COUNT(i.id) as gCount, MONTH(i.created) as gMonth');
+        $qb->select('COUNT(i.id) as gCount, MONTH(i.created) as gMonth, YEAR(i.created) as gYear');
 
         if ($stripeAccount) {
             $qb->where('i.owner = :owner')
@@ -27,7 +27,8 @@ class InvoiceRepository extends EntityRepository
             $qb->setParameter('dateFrom', $dateFrom);
         }
 
-        $qb->groupBy('gMonth');
+        $qb->groupBy('gYear')
+            ->addGroupBy('gMonth');
 
         return $qb->getQuery()->getResult();
     }
