@@ -403,9 +403,6 @@ class Property
         $this->invitedUsers = new ArrayCollection();
         $this->paySimpleHistories = new ArrayCollection();
         $this->propertyRepostRequests = new ArrayCollection();
-
-        $settings = new PropertySettings();
-        $this->setSettings($settings);
     }
 
     public function __clone()

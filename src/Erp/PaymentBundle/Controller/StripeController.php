@@ -167,11 +167,10 @@ class StripeController extends BaseController
             $customer = $response->getContent();
 
             $stripeCustomer = new StripeCustomer();
-            $stripeCustomer->setCustomerId($customer['id']);
+            $stripeCustomer->setCustomerId($customer['id'])
+                ->setUser($user);
 
-            $user->setStripeCustomer($stripeCustomer);
-
-            $this->em->persist($user);
+            $this->em->persist($stripeCustomer);
             // Force flush for saving Stripe customer
             $this->em->flush();
         } else {
@@ -281,7 +280,6 @@ class StripeController extends BaseController
         if ($form->isValid()) {
             /** @var User $user */
             $user = $this->getUser();
-            $property = $user->getTenantProperty();
             $landlord = $user->getTenantProperty()->getUser();
             $landlordStripeAccount = $landlord->getStripeAccount();
             $tenantStripeCustomer = $user->getStripeCustomer();
@@ -338,8 +336,11 @@ class StripeController extends BaseController
         $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
 
-        $transactionRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-        $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+        $items = [];
+        if ($stripeAccount) {
+            $transactionRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
+            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+        }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
         $months = array_keys($labels);
@@ -363,8 +364,11 @@ class StripeController extends BaseController
         $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
 
-        $invoicesRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Invoice::class);
-        $items = $invoicesRepo->getGroupedInvoices($stripeAccount, $sixMonthsAgo, $now);
+        $items = [];
+        if ($stripeAccount) {
+            $invoicesRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Invoice::class);
+            $items = $invoicesRepo->getGroupedInvoices($stripeAccount, $sixMonthsAgo, $now);
+        }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
         $months = array_keys($labels);
@@ -386,8 +390,11 @@ class StripeController extends BaseController
         $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
 
-        $transactionRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Transaction::class);
-        $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+        $items = [];
+        if ($stripeAccount) {
+            $transactionRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Transaction::class);
+            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+        }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
         $months = array_keys($labels);

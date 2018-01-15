@@ -9,6 +9,7 @@ use Erp\PaymentBundle\Entity\Unit;
 use Erp\PaymentBundle\Entity\UnitSettings;
 use Erp\PaymentBundle\Form\Type\UnitType;
 use Erp\PropertyBundle\Entity\Property;
+use Erp\PropertyBundle\Entity\PropertySettings;
 use Erp\UserBundle\Entity\User;
 use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
@@ -135,6 +136,8 @@ class UnitController extends BaseController
         for ($i=1; $i<=$count; $i++) {
             $property = clone $prototype;
             $property->setUser($user);
+
+            $prototype->setSettings(new PropertySettings());
 
             $this->em->persist($property);
         }

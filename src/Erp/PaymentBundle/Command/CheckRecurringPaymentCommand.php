@@ -71,7 +71,11 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
 
             if ($payment->isRecurring()) {
                 $startPaymentAt = (\DateTimeImmutable::createFromMutable($payment->getStartPaymentAt()));
-                $nextPaymentAt = $startPaymentAt->modify('+1 month');
+                if ($status == StripeRecurringPayment::STATUS_SUCCESS) {
+                    $nextPaymentAt = $startPaymentAt->modify('+1 day');
+                } else {
+                    $nextPaymentAt = $startPaymentAt->modify('+1 month');
+                }
                 $payment->setNextPaymentAt((new \DateTime())->setTimestamp($nextPaymentAt->getTimestamp()));
             }
 

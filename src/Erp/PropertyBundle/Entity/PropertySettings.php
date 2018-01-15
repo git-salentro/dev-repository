@@ -39,7 +39,7 @@ class PropertySettings
     /**
      * @var float
      *
-     * @ORM\Column(name="payment_amount", type="float", )
+     * @ORM\Column(name="payment_amount", type="float", nullable=true)
      */
     private $paymentAmount;
 
