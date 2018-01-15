@@ -114,6 +114,7 @@ ul.bank-info {
 }
 .profile .profile-widget-row .profile-widget-item .edit-row {
     margin-top: 15px;
+    margin-bottom: 15px;
 }
 .profile .profile-widget-row .profile-widget-item .bank-info-row {
     margin: 8px 10px;
@@ -141,6 +142,10 @@ ul.bank-info {
     margin-right: 3%;
 }
 
+#tenants-profile.profile .tenants-pay{
+    width: 23%;
+    margin-right: 2%;
+}
 .profile-widget-custom .col-md-5.col-xs-6.profile-widget-item.widget-last:last-child{
     margin: 0 0 0 3%;
 }
@@ -157,6 +162,15 @@ ul.bank-info {
 .modal-dialog .edit-btn:hover {
     color: #fb872b;
 }
+#tenants-profile .tenants-block .tenants-block-item{
+    width: 23%;
+    margin-right: 2%;
+}
+#tenants-profile .tenants-block .tenants-block-middle{
+    width: 47%;
+    margin-right: 3%;
+}
+.tenants-block {}
 @media only screen and (max-width: 667px) {
     .col-md-5.col-xs-6.profile-widget-item.widget-last {
         /*height: 450px !important;*/
@@ -181,4 +195,79 @@ section#rental-form {
 section#rental-form h1 {
     color: #fff;
     text-shadow: none;
+}
+
+@media (max-width: 993px) and (min-width: 768px){
+    #tenants-profile.profile .tenants-pay {
+        width: 47%;
+        margin-right: 2%;
+    }
+    #tenants-profile .tenants-block .tenants-block-item {
+        width: 47%;
+        margin-right: 2%;
+    }
+    #tenants-profile .profile-widget-rows .profile-widget-item.request-item {
+        bottom: auto;
+    }
+    #tenants-profile.profile .tenants-pay{
+        height: 300px;
+        margin-bottom: 10px;
+    }
+    .profile-content-last{
+        width: 47%;
+        margin-right: 2%;
+        float: left;
+        margin-top: 0!important;
+    }
+    .profile-content-last.widget-second{
+        width: 47%!important;
+        right: auto!important;
+        margin-right: 2%;
+    }
+}
+@media (max-width: 767px) and (min-width: 590px){
+    #tenants-profile.profile .tenants-pay {
+        width: 47%;
+        margin-right: 2%;
+    }
+    #tenants-profile .tenants-block .tenants-block-item {
+        width: 47%;
+        margin-right: 2%;
+    }
+    #tenants-profile .profile-widget-rows .profile-widget-item.request-item {
+        bottom: auto;
+    }
+    #tenants-profile.profile .tenants-pay{
+        height: 300px;
+        margin-bottom: 10px;
+    }
+    .profile-content-last{
+        width: 47%;
+        margin-right: 2%;
+        float: left;
+        margin-top: 0!important;
+    }
+    .profile-content-last.widget-second{
+        width: 47%!important;
+        right: auto!important;
+        margin-right: 2%;
+    }
+    .profile .profile-widget-row {
+        height: auto;
+    }
+}
+@media (max-width: 767px) and (min-width: 590px){
+    .profile .profile-widget-row .profile-widget-item.widget-first,
+    #tenants-profile.profile .tenants-pay {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+@media (max-width: 589px){
+    #tenants-profile .tenants-block .tenants-block-middle,
+    #tenants-profile .tenants-block .tenants-block-item,
+    #tenants-profile.profile .tenants-pay {
+        width: 100%;
+        margin-right: 0;
+    }
 }

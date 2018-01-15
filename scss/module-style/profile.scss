@@ -98,6 +98,9 @@
                 width: 23px;
                 vertical-align: middle;
                 display: inline-block;
+                &.dashboard-icon {
+                    background: url(../images/profile/dashboard.png) no-repeat;
+                }
                 &.profile-icon {
                     background: url(../images/profile/profile.png) no-repeat;
                 }

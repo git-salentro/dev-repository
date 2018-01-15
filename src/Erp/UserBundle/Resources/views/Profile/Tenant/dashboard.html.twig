@@ -27,8 +27,8 @@
                 {{ render(controller('ErpPaymentBundle:PaymentWidgets:paymentsPreferences')) }}
             </div>
 
-            <div class="row profile-widget-row profile-widget-rows">
-                <div class="col-md-3 col-xs-6 profile-widget-item widget-last">
+            <div class="row profile-widget-row profile-widget-rows tenants-block">
+                <div class="col-md-3 col-xs-6 profile-widget-item widget-last tenants-block-item">
 
                     {{ render(controller('ErpUserBundle:Profile:renderWidgetMessages')) }}
 
@@ -62,9 +62,9 @@
 
                 {{ render(controller('ErpUserBundle:Profile:renderWidgetServiceRequest')) }}
 
-                <div class="col-md-3 col-xs-6 profile-widget-item login-widget widget-last">
+                <div class="col-md-3 col-xs-12 profile-widget-item login-widget widget-last">
 
-                    <div class="profile-widget-content">
+                    <div class="profile-widget-content profile-content-last">
                         <div class="row widget-title-row">
                             <div class="login-block-title bold-text">Account Login Details</div>
                         </div>
@@ -94,7 +94,7 @@
                         </div>
                     </div>
 
-                    <div class="profile-widget-content widget-second prop-widget">
+                    <div class="profile-widget-content profile-content-last widget-second prop-widget">
                         <div class="row widget-title-row">
                             <div class="login-block-title bold-text">My Property</div>
                         </div>
