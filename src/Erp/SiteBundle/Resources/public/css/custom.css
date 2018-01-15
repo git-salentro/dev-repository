@@ -257,6 +257,7 @@ section#rental-form h1 {
     }
 }
 @media (max-width: 767px) and (min-width: 590px){
+    .profile .profile-widget-row .profile-widget-item.widget-last,
     .profile .profile-widget-row .profile-widget-item.widget-first,
     #tenants-profile.profile .tenants-pay {
         width: 100%;
