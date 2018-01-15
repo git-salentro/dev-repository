@@ -10,7 +10,7 @@
         {{ form_row(form.allowCreditCardPayments) }}
         {{ form_row(form.allowAutoDraft) }}
         <div class="button-wrap">
-            <a
+            <button
                     href="{{ path('erp_property_choose_properties') }}"
                     type="submit"
                     class="btn edit-btn"
@@ -18,7 +18,7 @@
                     role="next"
             >
                 Next
-            </a>
+            </button>
         </div>
     {{ form_end(form) }}
 </div>

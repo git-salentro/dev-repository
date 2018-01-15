@@ -1,8 +1,7 @@
 //TODO Create React form instead
 var PropertiesSettingsController = function () {
-    this.selector = 'a[role="property-settings"]';
-    this.nextSelector = 'a[role="next"]';
-    this.backSelector = 'a[role="back"]';
+    this.nextSelector = 'button[role="next"]';
+    this.backSelector = 'button[role="back"]';
     this.loadedSteps = [];
     this.currentStep = null;
 };
@@ -142,12 +141,12 @@ PropertiesSettingsController.prototype.listenBack = function () {
     $('body').on('click', this.backSelector, function (e) {
         e.preventDefault();
         var $this = $(this);
-        var currentStep = $this.attr('step');
+        var nextStep = $this.attr('step');
 
         $('#' + that.currentStep).hide();
-        $('#' + currentStep).show();
+        $('#' + nextStep).show();
         
-        that.currentStep = currentStep;
+        that.currentStep = nextStep;
     });
 };
 
