@@ -56,7 +56,6 @@ COPY www.conf                /usr/local/etc/php-fpm.d/www.conf
 COPY docker-entrypoint.sh    /usr/local/bin/
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN mkdir -p /var/www/app/logs/supervisor
 RUN mkdir -p /var/run/supervisord
 
 RUN chmod 755 /usr/local/bin/docker-entrypoint.sh

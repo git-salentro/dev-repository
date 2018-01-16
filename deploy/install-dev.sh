@@ -8,6 +8,9 @@ docker-compose -f docker-compose-dev.yml exec php bash -c "php app/console asset
 docker-compose -f docker-compose-dev.yml exec php bash -c "php app/console cache:clear --env=dev"
 docker-compose -f docker-compose-dev.yml exec php bash -c "php app/console doctrine:fixtures:load --append"
 
+docker-compose -f docker-compose-dev.yml exec php bash -c "chown -R www-data:www-data app/cache"
+docker-compose -f docker-compose-dev.yml exec php bash -c "chown -R www-data:www-data app/logs"
+
 result=$?
 
 #curl https://api.stripe.com/v1/plans \

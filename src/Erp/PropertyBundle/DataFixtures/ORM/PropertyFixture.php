@@ -22,7 +22,7 @@ class PropertyFixture extends Fixture
         $object = new Property();
         $object->setTenantUser($tenant)
             ->setUser($landlord)
-            ->setStatus(Property::STATUS_AVAILABLE);
+            ->setStatus(Property::STATUS_DRAFT);
 
         $tenant->setTenantProperty($object);
         $landlord->addProperty($object);
