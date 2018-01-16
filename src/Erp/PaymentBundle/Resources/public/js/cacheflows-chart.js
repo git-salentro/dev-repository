@@ -2,8 +2,8 @@
 (function ($) {
     var ctx = $('#cashflows-chart');
     var labels = ctx.data('labels'),
-        cashIn = ctx.data('cashe-in'),
-        cashOut = ctx.data('cashe-out');
+        cashIn = ctx.data('cash-in'),
+        cashOut = ctx.data('cash-out');
     var chart = new Chart(ctx[0], {
         type: 'bar',
         data: {

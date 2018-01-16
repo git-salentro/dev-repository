@@ -345,12 +345,12 @@ class StripeController extends BaseController
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
         $months = array_keys($labels);
         $labels = array_values($labels);
-        $casheIn = $this->getPreparedItems($items, $months);
-        $casheOut =  $this->getPreparedItems($items, $months);
+        $cashIn = $this->getPreparedItems($items, $months);
+        $cashOut =  $this->getPreparedItems($items, $months);
 
         return $this->render('ErpPaymentBundle:Stripe:cashflows.html.twig', [
-            'cashe_in' => $casheIn,
-            'cashe_out' => $casheOut,
+            'cash_in' => $cashIn,
+            'cash_out' => $cashOut,
             'labels' => $labels,
         ]);
     }
