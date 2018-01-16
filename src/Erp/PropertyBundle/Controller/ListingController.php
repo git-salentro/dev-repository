@@ -769,10 +769,12 @@ class ListingController extends BaseController
         $user = $this->getUser();
 
         if (!$form->isValid()) {
-            return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
-                'form' => $form->createView(),
-                'modalTitle' => 'Set Payment Settings',
-            ]);
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'errors' => $form->getErrors(),
+                ]
+            );
         }
 
         if ($data = json_decode($request->get('data'), true)) {
@@ -784,14 +786,12 @@ class ListingController extends BaseController
         }
 
         if (!$idx && !$allElements) {
-            $properties = $user->getActiveProperties();
-
-            return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
-                'form' => $form->createView(),
-                'properties' => $properties,
-                'modalTitle' => 'Choose properties',
-                'error' => 'Please, select at least one property',
-            ]);
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'errors' => ['Please, chose properties.'],
+                ]
+            );
         }
 
         $propertyRepository = $this->getDoctrine()->getRepository(Property::class);

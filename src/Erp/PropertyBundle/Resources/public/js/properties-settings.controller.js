@@ -10,7 +10,14 @@ var PropertiesSettingsController = function () {
 PropertiesSettingsController.prototype.processResponse = function (response) {
     var that = this;
 
-    $('#erp-settings-popup').find('.modal-body').append(response.html);
+    if (!$('#erp-settings-popup').find('.modal-body').find('#' + that.currentStep).length) {
+        $('#erp-settings-popup').find('.modal-body').append(response.html);
+    }
+
+    if (that.currentStep === 'properties-confirmation') {
+        $('#erp-settings-popup').find('.modal-body').find('#' + that.currentStep).html(response.html);
+    }
+
     $('#erp-settings-popup').find('.modal-title').html(response.modalTitle);
     $('body').trigger('popup-open');
 
@@ -79,7 +86,7 @@ PropertiesSettingsController.prototype.processResponse = function (response) {
 
                     that.loadedSteps.push(currentStep);
                     that.currentStep = currentStep;
-
+                    $('#' + currentStep).show();
                     that.processResponse(response);
                 }
 
@@ -119,12 +126,13 @@ PropertiesSettingsController.prototype.listenNext = function () {
         var $this = $(this);
         var currentStep = $this.attr('step');
 
+        $this.prop('disabled', true);
 
         if (-1 === $.inArray(currentStep, that.loadedSteps)) {
             $.ajax({
                 type: 'GET',
                 cache: false,
-                url: $this.attr('href'),
+                url: $this.attr('url'),
                 dataType: 'json',
                 async: true,
                 success: function (response) {
@@ -134,6 +142,7 @@ PropertiesSettingsController.prototype.listenNext = function () {
                     that.currentStep = currentStep;
 
                     that.processResponse(response);
+                    $this.prop('disabled', false);
                 }
             });
         } else {
@@ -141,6 +150,7 @@ PropertiesSettingsController.prototype.listenNext = function () {
             $('#' + that.currentStep).hide();
 
             that.currentStep = currentStep;
+            $this.prop('disabled', false);
         }
     });
 };
@@ -150,12 +160,15 @@ PropertiesSettingsController.prototype.listenBack = function () {
     $('body').on('click', this.backSelector, function (e) {
         e.preventDefault();
         var $this = $(this);
+        $this.prop('disabled', true);
         var nextStep = $this.attr('step');
 
         $('#' + that.currentStep).hide();
         $('#' + nextStep).show();
         
         that.currentStep = nextStep;
+
+        $this.prop('disabled', false);
     });
 };
 
