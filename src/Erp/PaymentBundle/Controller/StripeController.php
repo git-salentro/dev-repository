@@ -264,7 +264,7 @@ class StripeController extends BaseController
 
             return new JsonResponse(
                 [
-                    'redirect' => $this->redirectToRoute('erp_payment_unit_buy'),
+                    'redirect' => $this->generateUrl('erp_payment_unit_buy'),
                 ]
             );
         }
