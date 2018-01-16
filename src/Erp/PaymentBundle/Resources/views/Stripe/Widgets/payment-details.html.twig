@@ -42,10 +42,7 @@
                             Bank information is not added yet
                         </div>
                         <div class="row edit-row">
-                            <a type="submit" href="{{ path('erp_payment_stripe_verify_bank_account') }}"
-                               class="btn edit-btn">
-                                Verify bank account
-                            </a>
+                            <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
                     {% else %}
                         <div class="bank-details">
@@ -55,8 +52,7 @@
                             <div class="bank-card"><span>{{ bankAccount.routing_number }}</span></div>
                         </div>
                         <div class="row edit-row">
-                            <a type="submit" href="{{ path('erp_payment_stripe_verify_bank_account') }}"
-                               class="btn edit-btn">Verify bank account</a>
+                            <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
 
                     {% endif %}
@@ -77,8 +73,7 @@
                 </div>
                 <div class="col-xs-6">
                     <div class="row edit-row custombutton">
-                        <a type="submit" href="{{ path('erp_payment_stripe_verify_bank_account') }}"
-                           class="btn edit-btn">Verify bank account</a>
+                        <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                     </div>
                 </div>
             </div>
@@ -124,8 +119,9 @@
             </div>
             <hr>
         {% endif %}
-        {% include 'ErpPaymentBundle:Plaid:link.html.twig' %}
     {% endif %}
+
+    {% include 'ErpPaymentBundle:Plaid:link.html.twig' %}
 
     <div class="question-mark">
         {% if app.user.hasRole('ROLE_TENANT') %}

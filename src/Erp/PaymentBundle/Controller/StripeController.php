@@ -261,11 +261,17 @@ class StripeController extends BaseController
                     );
                 }
             }
+
+            return new JsonResponse(
+                [
+                    'redirect' => $this->redirectToRoute('erp_payment_unit_buy'),
+                ]
+            );
         }
 
         return new JsonResponse(
             [
-                'success' => true,
+                'redirect' => $this->generateUrl('erp_user_profile_dashboard'),
             ]
         );
     }
@@ -287,7 +293,7 @@ class StripeController extends BaseController
             if (!$landlordStripeAccount || !$tenantStripeCustomer) {
                 $this->addFlash(
                     'alert_error',
-                    ''
+                    'An occurred error. Please, contact your system administrator.'
                 );
 
                 return $this->redirectToRoute('erp_user_profile_dashboard');
@@ -298,7 +304,7 @@ class StripeController extends BaseController
             if (!$propertyChecker->isPayable($user, $entity)) {
                 $this->addFlash(
                     'alert_error',
-                    ''
+                    'You can\'t pay for this rent.'
                 );
 
                 return $this->redirectToRoute('erp_user_profile_dashboard');
@@ -316,7 +322,7 @@ class StripeController extends BaseController
 
             $this->addFlash(
                 'alert_ok',
-                ''
+                'Success'
             );
 
             return $this->redirectToRoute('erp_user_profile_dashboard');

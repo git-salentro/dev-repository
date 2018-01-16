@@ -15,8 +15,8 @@
                     accountId: metadata.account_id
                 },
                 success: function (response) {
-                    if (response.success) {
-                        window.location = '{{ path("erp_payment_unit_buy") }}';
+                    if (response.redirect) {
+                        window.location = response.redirect;
                     }
                 }
             });
