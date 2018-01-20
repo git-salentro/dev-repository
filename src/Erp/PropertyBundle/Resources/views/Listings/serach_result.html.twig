@@ -1,0 +1,30 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block pageContent %}
+    <div class="page-content">
+        <section id="landlords-listings" class="listings profile">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <td>Select All<input type="checkbox" name="all_elements"></td>
+                                <td>Property</td>
+                                <td>Address</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for property in pagination %}
+                                <tr>
+                                {{ property.name }}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

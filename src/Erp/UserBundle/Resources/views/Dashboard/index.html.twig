@@ -1,0 +1,102 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>#}
+    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/Chart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/cashflows-chart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/invoices-chart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/transactions-chart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/properties-history-chart.js') }}"></script>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+{% endblock %}
+
+{% block pageContent %}
+    {{ parent() }}
+    <section id="landlords-profile" class="profile">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text">Dashboard</h1>
+                </div>
+            </div>
+
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+            <div class="row profile-widget-row">
+                {{ render(controller('ErpUserBundle:Dashboard:showPaymentDetails')) }}
+            </div>
+            <div class="row profile-widget-row profile-widget-custom">
+                {{ render(controller('ErpUserBundle:Dashboard:showCashflows')) }}
+                {{ render(controller('ErpUserBundle:Dashboard:showInvoices')) }}
+            </div>
+            <div class="row profile-widget-row profile-widget-custom">
+                {{ render(controller('ErpUserBundle:Dashboard:showTransactions')) }}
+                {{ render(controller('ErpUserBundle:Dashboard:showProperties')) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript_inline %}
+    <script>
+        (function ($) {
+            var linkHandler = Plaid.create({
+                env: '{{ plaid_env }}',
+                clientName: 'Erentpay',
+                key: '{{ plaid_public_key }}',
+                product: ['auth'],
+                selectAccount: true,
+                onSuccess: function(public_token, metadata) {
+                    $.ajax({
+                        url: '{{ path("erp_payment_stripe_verify_bank_account") }}',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            publicToken: public_token,
+                            accountId: metadata.account_id
+                        },
+                        success: function (response) {
+                            $( '#epr-modal-popup' ).find('.modal-body').html(response.html);
+                            $( '#epr-modal-popup' ).find('.modal-title').html(response.modalTitle);
+                            $('#epr-modal-popup').modal('show');
+
+                            var modalBody = $('#epr-modal-popup').find('.modal-body');
+                            var form = modalBody.find( 'form' );
+
+                            form.submit(function (e) {
+                                var $form = $(this);
+                                $form.find('button[type=submit]').prop('disabled', true);
+
+                                $.ajax({
+                                    type: 'POST',
+                                    cache: false,
+                                    url: form.attr('action'),
+                                    data: form.serialize(),
+                                    async: true,
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.redirect) {
+                                            window.location.href = response.redirect;
+
+                                        }
+                                    }
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                },
+                onExit: function(err, metadata) {
+                    if (err != null) {
+
+                    }
+                }
+            });
+
+            $('#verify-ba').click(function() {
+                linkHandler.open();
+            });
+        })(jQuery);
+    </script>
+{% endblock %}

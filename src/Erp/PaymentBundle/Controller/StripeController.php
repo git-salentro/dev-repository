@@ -10,11 +10,8 @@ use Erp\PaymentBundle\Form\Type\StripeRecurringPaymentType;
 use Erp\PaymentBundle\Plaid\Exception\ServiceException;
 use Erp\PaymentBundle\Stripe\Model\CreditCard;
 use Erp\PaymentBundle\Entity\StripeRecurringPayment;
-use Stripe\BankAccount;
-use Stripe\Card;
-use Erp\StripeBundle\Entity\Invoice;
-use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
+use Erp\StripeBundle\Form\Type\BankAccountVerificationType;
 use Stripe\Account;
 use Stripe\Customer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,26 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StripeController extends BaseController
 {
-    public function showPaymentDetailsAction()
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        //TODO Add cache layer (APC or Doctrine)
-        $stripeUserManager = $this->get('erp.payment.stripe.manager.user_manager');
-        /** @var BankAccount $bankAccount */
-        $bankAccount = $stripeUserManager->getBankAccount($user);
-        /** @var Card $creditCard */
-        $creditCard = $stripeUserManager->getCreditCard($user);
-
-        return $this->render(
-            'ErpPaymentBundle:Stripe/Widgets:payment-details.html.twig',
-            [
-                'creditCard' => $creditCard,
-                'bankAccount' => $bankAccount,
-            ]
-        );
-    }
-
     //TODO Optimize logic
     public function saveCreditCardAction(Request $request)
     {
@@ -146,7 +123,7 @@ class StripeController extends BaseController
         /** @var $user User */
         $user = $this->getUser();
         $stripeCustomer = $user->getStripeCustomer();
-        //TODO Why use ArrayCollection in PaySimple customers?
+
         if (!$stripeCustomer) {
             $response = $customerManager->create(
                 [
@@ -261,19 +238,14 @@ class StripeController extends BaseController
                     );
                 }
             }
-
-            return new JsonResponse(
-                [
-                    'redirect' => $this->generateUrl('erp_payment_unit_buy'),
-                ]
-            );
         }
 
-        return new JsonResponse(
-            [
-                'redirect' => $this->generateUrl('erp_user_profile_dashboard'),
-            ]
-        );
+        $form = $this->createForm(new BankAccountVerificationType());
+
+        return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig',[
+            'form' => $form->createView(),
+            'modalTitle' => 'Continue verification',
+        ]);
     }
 
     public function payRentAction(Request $request)
@@ -333,83 +305,36 @@ class StripeController extends BaseController
         ]);
     }
 
-    public function showCashflowsAction()
+    public function verifyAccountAction(Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
-
-        $now = new \DateTime();
-        $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
 
-        $items = [];
-        if ($stripeAccount) {
-            $transactionRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+        $form = $this->createForm(new BankAccountVerificationType(), $stripeAccount,  ['validation_groups' => 'US']);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $stripeAccount->setTosAcceptanceDate(new \DateTime())
+                ->setTosAcceptanceIp($request->getClientIp());
+
+            \Stripe\Stripe::setApiKey($this->getParameter('stripe.secret_key'));
+
+            $r = \Stripe\Account::update($stripeAccount->getAccountId(), $stripeAccount->toStripe());
+
+            $em = $this->getDoctrine()->getManagerForClass(StripeAccount::class);
+            $em->persist($stripeAccount);
+            $em->flush();
+
+            if ($user->hasRole(User::ROLE_LANDLORD)) {
+                return $this->redirect($this->generateUrl('erp_payment_unit_buy'));
+            } else {
+                return $this->redirect($this->generateUrl('erp_user_profile_dashboard'));
+            }
         }
 
-        $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
-        $months = array_keys($labels);
-        $labels = array_values($labels);
-        $cashIn = $this->getPreparedItems($items, $months);
-        $cashOut =  $this->getPreparedItems($items, $months);
-
-        return $this->render('ErpPaymentBundle:Stripe:cashflows.html.twig', [
-            'cash_in' => $cashIn,
-            'cash_out' => $cashOut,
-            'labels' => $labels,
-        ]);
-    }
-
-    public function showInvoicesAction()
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $now = new \DateTime();
-        $sixMonthsAgo = (new \DateTime())->modify('-5 month');
-        $stripeAccount = $user->getStripeAccount();
-
-        $items = [];
-        if ($stripeAccount) {
-            $invoicesRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Invoice::class);
-            $items = $invoicesRepo->getGroupedInvoices($stripeAccount, $sixMonthsAgo, $now);
-        }
-
-        $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
-        $months = array_keys($labels);
-        $labels = array_values($labels);
-        $invoices = $this->getPreparedItems($items, $months);
-
-        return $this->render('ErpPaymentBundle:Stripe:invoices.html.twig', [
-            'labels' => $labels,
-            'invoices' => $invoices,
-        ]);
-    }
-
-    public function showTransactionsAction()
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $now = new \DateTime();
-        $sixMonthsAgo = (new \DateTime())->modify('-5 month');
-        $stripeAccount = $user->getStripeAccount();
-
-        $items = [];
-        if ($stripeAccount) {
-            $transactionRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Transaction::class);
-            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
-        }
-
-        $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
-        $months = array_keys($labels);
-        $labels = array_values($labels);
-        $transactions = $this->getPreparedItems($items, $months);
-        
-        return $this->render('ErpPaymentBundle:Stripe:transactions.html.twig', [
-            'transactions' => $transactions,
-            'labels' => $labels,
+        return new JsonResponse([
+            'success' => false,
         ]);
     }
 
@@ -433,34 +358,5 @@ class StripeController extends BaseController
         }
 
         return $result['stripe_bank_account_token'];
-    }
-
-    private function getMonthsLabels(\DateTime $dateFrom, \DateTime $dateTo)
-    {
-        $diff = $dateFrom->diff($dateTo);
-        $count = ($diff->format('%y') * 12) + $diff->format('%m') +1;
-
-        $labels = [];
-        for ($i=1; $i<=$count; $i++) {
-            $labels[$dateFrom->format('n')] = $dateFrom->format('F');
-            $dateFrom->modify('+1 month');
-        }
-
-        return $labels;
-    }
-
-    private function getPreparedItems(array $items, array $months)
-    {
-        $results = [];
-        $existingMonth = array_column($items, 'gMonth');
-        foreach ($months as $month) {
-            if (false !== $key = array_search($month, $existingMonth)) {
-                $results[] = $items[$key]['gAmount'];
-            } else {
-                $results[] = 0;
-            }
-        }
-
-        return $results;
     }
 }

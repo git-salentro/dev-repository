@@ -12,12 +12,16 @@
                 data: cashIn,
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255,99,132,1)',
-                borderWidth: 1
+                borderWidth: 1,
+                xValues: [1,2,3,4,5,6],
+                xType: 'cache-in'
             }, {
                 data: cashOut,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                xValues: [1,2,3,4,5,6],
+                xType: 'cache-out'
             }]
         },
         options: {

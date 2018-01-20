@@ -98,3 +98,10 @@ erp_property_property_settings_edit:
     options:
         expose: true
     methods: [GET, POST]
+
+erp_property_listing_search:
+    path:     /properties/search
+    defaults: { _controller: ErpPropertyBundle:Listing:search }
+    options:
+        expose: true
+    methods: [GET, POST]

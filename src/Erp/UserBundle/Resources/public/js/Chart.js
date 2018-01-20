@@ -3913,7 +3913,6 @@ module.exports = function(Chart) {
 		 * Builds a map of scale ID to scale object for future lookup.
 		 */
 		buildScales: function() {
-			// debugger;
 			var me = this;
 			var options = me.options;
 			var scales = me.scales = {};
@@ -10038,7 +10037,7 @@ var helpers = {
 
 		var Surrogate = function() {
 			this.constructor = ChartElement;
-		};
+		}
 
 		Surrogate.prototype = me.prototype;
 		ChartElement.prototype = new Surrogate();

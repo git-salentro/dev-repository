@@ -875,6 +875,35 @@ class ListingController extends BaseController
         ]);
     }
 
+    public function searchAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        //TODO Do more flexible. Create filter model, form
+        $type = $request->query->get('filter[type]', null, true);
+        $interval = $request->query->get('filter[interval]', null, true);
+
+        $dateFrom = \DateTimeImmutable::createFromFormat('Y-n', $interval)->modify('first day of this month')->setTime(0, 0, 0);
+        $dateTo = $dateFrom->modify('+1 month');
+
+        $dateFrom = (new \DateTime())->setTimestamp($dateFrom->getTimestamp());
+        $dateTo = (new \DateTime())->setTimestamp($dateTo->getTimestamp());
+
+        $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $propertiesQuery = $propertyRepository->getPropertiesQuery($user, $dateFrom, $dateTo, $type);
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $propertiesQuery,
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render('ErpPropertyBundle:Listings:serach_result.html.twig', [
+            'user' => $user,
+            'pagination' => $pagination,
+        ]);
+    }
+
     /**
      * Create form for new|existing property
      *

@@ -3,6 +3,7 @@
 namespace Erp\PropertyBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Erp\PropertyBundle\Entity\Property;
@@ -234,6 +235,47 @@ class PropertyRepository extends EntityRepository
         $result = $qb->getQuery()->getOneOrNullResult();
 
         return $result;
+    }
+
+    public function getPropertiesQuery(User $user, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $subQb = $this->_em->createQueryBuilder()
+            ->select('IDENTITY(prhsq.property)')
+            ->from(\Erp\PropertyBundle\Entity\PropertyRentHistory::class, 'prhsq')
+            ->groupBy('prhsq.property');
+
+        if ($dateFrom) {
+            if ($dateTo) {
+                $subQb->andWhere($subQb->expr()->between('prhsq.updatedAt', ':dateFrom', ':dateTo'));
+                $qb->setParameter('dateTo', $dateTo);
+            } else {
+                $subQb->andWhere('prhsq.updatedAt > :dateFrom');
+            }
+            $qb->setParameter('dateFrom', $dateFrom);
+        }
+
+        if ($type) {
+            $qb->andWhere(
+                $qb->expr()->in(
+                    'p.status',
+                    $type
+                )
+            );
+        }
+
+        $qb->select('p')
+            ->join(\Erp\PropertyBundle\Entity\PropertyRentHistory::class, 'prh', Expr\Join::WITH, 'p.id=prh.property')
+            ->where('p.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere(
+                $qb->expr()->in(
+                    'p.id',
+                    $subQb->getDQL()
+                )
+            );
+
+        return $qb->getQuery();
     }
 
     /**

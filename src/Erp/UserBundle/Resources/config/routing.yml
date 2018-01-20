@@ -25,3 +25,7 @@ erp_user_profile_documentation:
 erp_user_profile_forum:
     resource: "@ErpUserBundle/Resources/config/routing/forum.yml"
     prefix:     /profile
+
+erp_payment_dashboard:
+    resource: "@ErpUserBundle/Resources/config/routing/dashboard.yml"
+    prefix:   /
