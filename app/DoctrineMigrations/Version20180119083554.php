@@ -18,7 +18,7 @@ class Version20180119083554 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE stripe_account ADD city VARCHAR(255) DEFAULT NULL, ADD day_of_birth VARCHAR(255) DEFAULT NULL, ADD month_of_birth VARCHAR(255) DEFAULT NULL, ADD year_of_birth VARCHAR(255) DEFAULT NULL, DROP city_id, DROP date_of_birth');
+        $this->addSql('ALTER TABLE stripe_account ADD city VARCHAR(255) DEFAULT NULL, ADD day_of_birth VARCHAR(255) DEFAULT NULL, ADD month_of_birth VARCHAR(255) DEFAULT NULL, ADD year_of_birth VARCHAR(255) DEFAULT NULL, DROP date_of_birth');
     }
 
     /**
