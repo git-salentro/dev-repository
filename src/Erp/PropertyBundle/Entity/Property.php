@@ -393,6 +393,16 @@ class Property
     protected $settings;
 
     /**
+     * @ORM\OneToMany(
+     *      targetEntity="\Erp\PropertyBundle\Entity\PropertyRentHistory",
+     *      mappedBy="property",
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     */
+    protected $history;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -403,6 +413,7 @@ class Property
         $this->invitedUsers = new ArrayCollection();
         $this->paySimpleHistories = new ArrayCollection();
         $this->propertyRepostRequests = new ArrayCollection();
+        $this->history = new ArrayCollection();
     }
 
     public function __clone()
@@ -1140,5 +1151,40 @@ class Property
     public function getSettings()
     {
         return $this->settings;
+    }
+
+    /**
+     * Add history
+     *
+     * @param \Erp\PropertyBundle\Entity\PropertyRentHistory $history
+     *
+     * @return Property
+     */
+    public function addHistory(\Erp\PropertyBundle\Entity\PropertyRentHistory $history)
+    {
+        $history->setProperty($this);
+        $this->history[] = $history;
+
+        return $this;
+    }
+
+    /**
+     * Remove history
+     *
+     * @param \Erp\PropertyBundle\Entity\PropertyRentHistory $history
+     */
+    public function removeHistory(\Erp\PropertyBundle\Entity\PropertyRentHistory $history)
+    {
+        $this->history->removeElement($history);
+    }
+
+    /**
+     * Get history
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHistory()
+    {
+        return $this->history;
     }
 }

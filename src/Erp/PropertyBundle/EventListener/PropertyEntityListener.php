@@ -18,7 +18,7 @@ class PropertyEntityListener
         $this->registry = $registry;
     }
 
-    public function prePersist(Property $property)
+    public function postPersist(Property $property)
     {
         $this->createHistoryRecord($property);
     }
@@ -33,8 +33,9 @@ class PropertyEntityListener
         $em = $this->registry->getManagerForClass(PropertyRentHistory::class);
         $propertyRentHistory = new PropertyRentHistory();
         $propertyRentHistory->setStatus($property->getStatus())
-            ->setCreatedAt(new \DateTime())
-            ->setProperty($property);
+            ->setCreatedAt(new \DateTime());
+
+        $property->addHistory($propertyRentHistory);
 
         $em->persist($propertyRentHistory);
         $em->flush();
