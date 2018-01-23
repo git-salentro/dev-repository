@@ -3,7 +3,9 @@
     var ctx = $('#cashflows-chart');
     var labels = ctx.data('labels'),
         cashIn = ctx.data('cash-in'),
-        cashOut = ctx.data('cash-out');
+        cashOut = ctx.data('cash-out'),
+        listingUrl = ctx.data('listing-url'),
+        xValues = ctx.data('intervals');
     var chart = new Chart(ctx[0], {
         type: 'bar',
         data: {
@@ -13,14 +15,14 @@
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255,99,132,1)',
                 borderWidth: 1,
-                xValues: [1,2,3,4,5,6],
+                xValues: xValues,
                 xType: 'cache-in'
             }, {
                 data: cashOut,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
-                xValues: [1,2,3,4,5,6],
+                xValues: xValues,
                 xType: 'cache-out'
             }]
         },
@@ -39,5 +41,17 @@
                 }]
             }
         }
+    });
+
+    ctx.click(function(e) {
+        var elements = chart.getElementAtEvent(e);
+        if (!elements.length) {
+            return;
+        }
+
+        var month = elements[0]._xValue;
+        var type = elements[0]._xType;
+
+        window.open(listingUrl + '?filter[type]=' + type + '&filter[interval]=' + month, '_blank');
     });
 })(jQuery);

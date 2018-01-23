@@ -10,7 +10,7 @@ class InvoiceRepository extends EntityRepository
     public function getGroupedInvoices(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $qb = $this->createQueryBuilder('i');
-        $qb->select('COUNT(i.id) as gCount, MONTH(i.created) as gMonth, YEAR(i.created) as gYear');
+        $qb->select('COUNT(i.id) as gAmount, MONTH(i.created) as gMonth, YEAR(i.created) as gYear, CONCAT(YEAR(i.created), \'-\', MONTH(i.created)) as interval');
 
         if ($stripeAccount) {
             $qb->where('i.owner = :owner')
@@ -29,6 +29,29 @@ class InvoiceRepository extends EntityRepository
 
         $qb->groupBy('gYear')
             ->addGroupBy('gMonth');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getInvoices(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb->select('i');
+
+        if ($stripeAccount) {
+            $qb->where('i.owner = :owner')
+                ->setParameter('owner', $stripeAccount);
+        }
+
+        if ($dateFrom) {
+            if ($dateTo) {
+                $qb->andWhere($qb->expr()->between('i.created', ':dateFrom', ':dateTo'))
+                    ->setParameter('dateTo', $dateTo);
+            } else {
+                $qb->andWhere('i.created > :dateFrom');
+            }
+            $qb->setParameter('dateFrom', $dateFrom);
+        }
 
         return $qb->getQuery()->getResult();
     }

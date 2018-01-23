@@ -11,6 +11,8 @@
                 data-cash-in="{{ cash_in|json_encode }}"
                 data-cash-out="{{ cash_out|json_encode }}"
                 data-labels="{{ labels|json_encode }}"
+                data-intervals="{{ intervals|json_encode }}"
+                data-listing-url="{{ url('erp_stripe_cashflow_index') }}"
             >
             </canvas>
         </div>

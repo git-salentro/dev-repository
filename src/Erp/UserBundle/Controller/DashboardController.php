@@ -65,7 +65,7 @@ class DashboardController extends BaseController
             'available_properties' => $preparedAvailableProperties,
             'rented_properties' => $preparedRentedProperties,
             'labels' => $labels,
-            'intervals' =>$intervals,
+            'intervals' => $intervals,
         ]);
     }
 
@@ -85,15 +85,16 @@ class DashboardController extends BaseController
         }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
-        $months = array_keys($labels);
+        $intervals = array_keys($labels);
         $labels = array_values($labels);
-        $cashIn = $this->getPreparedItems($items, $months);
-        $cashOut =  $this->getPreparedItems($items, $months);
+        $cashIn = $this->getPreparedItems($items, $intervals);
+        $cashOut =  $this->getPreparedItems($items, $intervals);
 
         return $this->render('ErpUserBundle:Dashboard:cashflows.html.twig', [
             'cash_in' => $cashIn,
             'cash_out' => $cashOut,
             'labels' => $labels,
+            'intervals' => $intervals,
         ]);
     }
 
@@ -113,13 +114,14 @@ class DashboardController extends BaseController
         }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
-        $months = array_keys($labels);
+        $intervals = array_keys($labels);
         $labels = array_values($labels);
-        $invoices = $this->getPreparedItems($items, $months);
+        $invoices = $this->getPreparedItems($items, $intervals);
 
         return $this->render('ErpUserBundle:Dashboard:invoices.html.twig', [
             'labels' => $labels,
             'invoices' => $invoices,
+            'intervals' => $intervals,
         ]);
     }
 
@@ -139,13 +141,14 @@ class DashboardController extends BaseController
         }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
-        $months = array_keys($labels);
+        $intervals = array_keys($labels);
         $labels = array_values($labels);
-        $transactions = $this->getPreparedItems($items, $months);
+        $transactions = $this->getPreparedItems($items, $intervals);
 
         return $this->render('ErpUserBundle:Dashboard:transactions.html.twig', [
             'transactions' => $transactions,
             'labels' => $labels,
+            'intervals' => $intervals,
         ]);
     }
 
@@ -186,12 +189,12 @@ class DashboardController extends BaseController
         return $labels;
     }
 
-    private function getPreparedItems(array $items, array $months)
+    private function getPreparedItems(array $items, array $intervals)
     {
         $results = [];
-        $existingMonth = array_column($items, 'gMonth');
-        foreach ($months as $month) {
-            if (false !== $key = array_search($month, $existingMonth)) {
+        $existingIntervals = array_column($items, 'interval');
+        foreach ($intervals as $interval) {
+            if (false !== $key = array_search($interval, $existingIntervals)) {
                 $results[] = $items[$key]['gAmount'];
             } else {
                 $results[] = 0;
