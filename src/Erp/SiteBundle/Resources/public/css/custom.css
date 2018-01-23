@@ -170,7 +170,12 @@ ul.bank-info {
     width: 47%;
     margin-right: 3%;
 }
-.tenants-block {}
+.profile .profile-widget-row.height_custom,
+.col-md-5.col-xs-6.profile-widget-item.widget-last.height_custom {
+    max-height: 300px!important;
+    height: auto!important;
+}
+#profile-settings .profile-widget-row, .profile .profile-widget-row.
 @media only screen and (max-width: 667px) {
     .col-md-5.col-xs-6.profile-widget-item.widget-last {
         /*height: 450px !important;*/
