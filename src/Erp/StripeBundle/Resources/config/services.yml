@@ -40,3 +40,8 @@ services:
         class: Erp\StripeBundle\EventListener\InvoiceSubscriber
         tags:
             - { name: kernel.event_subscriber }
+
+    erp_stripe_entity_api_manager:
+        class: Erp\StripeBundle\Entity\ApiManager
+        arguments:
+            - '%stripe.secret_key%'

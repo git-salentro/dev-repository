@@ -15,7 +15,7 @@
                 borderColor: 'rgba(255,99,132,1)',
                 borderWidth: 1,
                 xValues: xValues,
-                xType: 'available, rented'
+                xType: 'available, draft'
             }, {
                 data: rentedProperties,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',

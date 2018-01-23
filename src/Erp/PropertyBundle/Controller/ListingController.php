@@ -890,7 +890,7 @@ class ListingController extends BaseController
         $dateTo = (new \DateTime())->setTimestamp($dateTo->getTimestamp());
 
         $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
-        $propertiesQuery = $propertyRepository->getPropertiesQuery($user, $dateFrom, $dateTo, $type);
+        $propertiesQuery = $propertyRepository->getPropertiesQuery($user, $dateFrom, $dateTo, explode(', ',$type));
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(

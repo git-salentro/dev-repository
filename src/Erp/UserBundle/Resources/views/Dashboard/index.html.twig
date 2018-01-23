@@ -4,6 +4,7 @@
     {{ parent() }}
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>#}
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/Chart.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/chart-decorator.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/cashflows-chart.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/invoices-chart.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/transactions-chart.js') }}"></script>
@@ -57,33 +58,8 @@
                             accountId: metadata.account_id
                         },
                         success: function (response) {
-                            $( '#epr-modal-popup' ).find('.modal-body').html(response.html);
-                            $( '#epr-modal-popup' ).find('.modal-title').html(response.modalTitle);
-                            $('#epr-modal-popup').modal('show');
-
-                            var modalBody = $('#epr-modal-popup').find('.modal-body');
-                            var form = modalBody.find( 'form' );
-
-                            form.submit(function (e) {
-                                var $form = $(this);
-                                $form.find('button[type=submit]').prop('disabled', true);
-
-                                $.ajax({
-                                    type: 'POST',
-                                    cache: false,
-                                    url: form.attr('action'),
-                                    data: form.serialize(),
-                                    async: true,
-                                    dataType: 'json',
-                                    success: function (response) {
-                                        if (response.redirect) {
-                                            window.location.href = response.redirect;
-
-                                        }
-                                    }
-                                });
-                                return false;
-                            });
+                            //TODO Prepare backend errors for frontend
+                            processResponse(response);
                         }
                     });
                 },
@@ -93,6 +69,45 @@
                     }
                 }
             });
+
+            function processResponse(response)
+            {
+                if (response.redirect) {
+                    document.location = response.redirect;
+                } else {
+                    var modalBody = $('#epr-modal-popup').find('.modal-body');
+
+                    modalBody.html(response.html);
+                    $('#epr-modal-popup').find('.modal-title').html(response.modalTitle);
+                    $('#epr-modal-popup').modal('show');
+
+                    var form = modalBody.find('form');
+
+                    if (response.error) {
+                        form.find('button[type=submit]').prop('disabled', false);
+                        $('#error').html(response.error);
+                    }
+
+                    form.submit(function (e) {
+                        var $form = $(this);
+                        $form.find('button[type=submit]').prop('disabled', true);
+
+                        $.ajax({
+                            type: 'POST',
+                            cache: false,
+                            url: form.attr('action'),
+                            data: form.serialize(),
+                            async: true,
+                            dataType: 'json',
+                            success: function (response) {
+                                processResponse(response);
+                            }
+                        });
+
+                        return false;
+                    });
+                }
+            }
 
             $('#verify-ba').click(function() {
                 linkHandler.open();

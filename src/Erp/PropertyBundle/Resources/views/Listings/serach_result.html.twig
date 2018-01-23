@@ -1,6 +1,7 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
 {% block pageContent %}
+    {{ parent() }}
     <div class="page-content">
         <section id="landlords-listings" class="listings profile">
             <div class="container">
@@ -9,15 +10,13 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <td>Select All<input type="checkbox" name="all_elements"></td>
                                 <td>Property</td>
-                                <td>Address</td>
                             </tr>
                             </thead>
                             <tbody>
                             {% for property in pagination %}
                                 <tr>
-                                {{ property.name }}
+                                    <td>{{ property.name }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>

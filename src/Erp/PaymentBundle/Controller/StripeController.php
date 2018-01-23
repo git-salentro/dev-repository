@@ -242,7 +242,7 @@ class StripeController extends BaseController
 
         $form = $this->createForm(new BankAccountVerificationType());
 
-        return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig',[
+        return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig', [
             'form' => $form->createView(),
             'modalTitle' => 'Continue verification',
         ]);
@@ -318,23 +318,50 @@ class StripeController extends BaseController
             $stripeAccount->setTosAcceptanceDate(new \DateTime())
                 ->setTosAcceptanceIp($request->getClientIp());
 
-            \Stripe\Stripe::setApiKey($this->getParameter('stripe.secret_key'));
+            $apiManager = $this->get('erp_stripe_entity_api_manager');
+            $arguments = [
+                'id' => $stripeAccount->getAccountId(),
+                'params' => $stripeAccount->toStripe(),
+                'options' => [],
 
-            $r = \Stripe\Account::update($stripeAccount->getAccountId(), $stripeAccount->toStripe());
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Account', 'update', $arguments);
+
+            if (!$response->isSuccess()) {
+                return new JsonResponse([
+                    'success' => false,
+                    'error' => $response->getErrorMessage(),
+                ]);
+            }
+
+            /** @var Account $content */
+            $content = $response->getContent();
+            if ($fieldsNeeded = $content->verification->fields_needed) {
+                //TODO Handle Stripe required verification fields
+                return new JsonResponse([
+                    'success' => false,
+                    'fields_needed' => $fieldsNeeded,
+                ]);
+            }
 
             $em = $this->getDoctrine()->getManagerForClass(StripeAccount::class);
             $em->persist($stripeAccount);
             $em->flush();
 
             if ($user->hasRole(User::ROLE_LANDLORD)) {
-                return $this->redirect($this->generateUrl('erp_payment_unit_buy'));
+                $url = $this->generateUrl('erp_payment_unit_buy');
             } else {
-                return $this->redirect($this->generateUrl('erp_user_profile_dashboard'));
+                $url = $this->generateUrl('erp_user_profile_dashboard');
             }
-        }
 
-        return new JsonResponse([
-            'success' => false,
+            return new JsonResponse([
+                'redirect' => $url,
+            ]);
+        }
+        //TODO Prepare backend errors for frontend
+        return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig', [
+            'form' => $form->createView(),
+            'modalTitle' => 'Continue verification',
         ]);
     }
 

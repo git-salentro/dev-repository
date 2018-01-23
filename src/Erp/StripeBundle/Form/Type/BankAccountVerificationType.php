@@ -20,6 +20,7 @@ class BankAccountVerificationType extends AbstractType
                 'city',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'City',
                 ]
             )
@@ -27,6 +28,7 @@ class BankAccountVerificationType extends AbstractType
                 'line1',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Line 1',
                 ]
             )
@@ -34,6 +36,7 @@ class BankAccountVerificationType extends AbstractType
                 'postalCode',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Postal Code',
                 ]
             )
@@ -41,6 +44,7 @@ class BankAccountVerificationType extends AbstractType
                 'state',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'State',
                 ]
             )
@@ -48,6 +52,7 @@ class BankAccountVerificationType extends AbstractType
                 'businessName',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Business Name',
                 ]
             )
@@ -55,6 +60,7 @@ class BankAccountVerificationType extends AbstractType
                 'businessTaxId',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Business Tax Id',
                 ]
             )
@@ -62,6 +68,7 @@ class BankAccountVerificationType extends AbstractType
                 'dayOfBirth',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Day Of Birth',
                 ]
             )
@@ -69,6 +76,7 @@ class BankAccountVerificationType extends AbstractType
                 'monthOfBirth',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Month Of Birth',
                 ]
             )
@@ -76,6 +84,7 @@ class BankAccountVerificationType extends AbstractType
                 'yearOfBirth',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Year Of Birth',
                 ]
             )
@@ -83,6 +92,7 @@ class BankAccountVerificationType extends AbstractType
                 'firstName',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'First Name',
                 ]
             )
@@ -90,6 +100,7 @@ class BankAccountVerificationType extends AbstractType
                 'lastName',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'Last Name',
                 ]
             )
@@ -97,6 +108,7 @@ class BankAccountVerificationType extends AbstractType
                 'ssnLast4',
                 'text',
                 [
+                    'required' => false,
                     'label' => 'SSN Last 4 digits',
                 ]
             )
@@ -104,6 +116,8 @@ class BankAccountVerificationType extends AbstractType
                 'tosAcceptance',
                 'checkbox',
                 [
+                    'label' => 'Term of use',
+                    'required' => false,
                     'mapped' => false,
                     'constraints' => new IsTrue([
                         'message' => 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy'

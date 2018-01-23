@@ -240,17 +240,18 @@ class PropertyRepository extends EntityRepository
     public function getPropertiesQuery(User $user, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
     {
         $qb = $this->createQueryBuilder('p');
-        $subQb = $this->_em->createQueryBuilder()
-            ->select('IDENTITY(prhsq.property)')
-            ->from(\Erp\PropertyBundle\Entity\PropertyRentHistory::class, 'prhsq')
-            ->groupBy('prhsq.property');
+
+        $qb->select('p')
+            ->join(\Erp\PropertyBundle\Entity\PropertyRentHistory::class, 'prh', Expr\Join::WITH, 'p.id=prh.property')
+            ->where('p.user = :user')
+            ->setParameter('user', $user);
 
         if ($dateFrom) {
             if ($dateTo) {
-                $subQb->andWhere($subQb->expr()->between('prhsq.updatedAt', ':dateFrom', ':dateTo'));
+                $qb->andWhere($qb->expr()->between('prh.createdAt', ':dateFrom', ':dateTo'));
                 $qb->setParameter('dateTo', $dateTo);
             } else {
-                $subQb->andWhere('prhsq.updatedAt > :dateFrom');
+                $qb->andWhere('prh.createdAt > :dateFrom');
             }
             $qb->setParameter('dateFrom', $dateFrom);
         }
@@ -263,17 +264,6 @@ class PropertyRepository extends EntityRepository
                 )
             );
         }
-
-        $qb->select('p')
-            ->join(\Erp\PropertyBundle\Entity\PropertyRentHistory::class, 'prh', Expr\Join::WITH, 'p.id=prh.property')
-            ->where('p.user = :user')
-            ->setParameter('user', $user)
-            ->andWhere(
-                $qb->expr()->in(
-                    'p.id',
-                    $subQb->getDQL()
-                )
-            );
 
         return $qb->getQuery();
     }
