@@ -24,11 +24,12 @@
                                     <td>{{ transaction.type }}</td>
                                     <td>{{ transaction.amount }}</td>
                                     <td>{{ transaction.currency }}</td>
-                                    <td>{{ transaction.created|date('Y\m\d') }}</td>
+                                    <td>{{ transaction.created|date('Y/m/d') }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
+                        {{ knp_pagination_render(pagination) }}
                     </div>
                 </div>
             </div>
