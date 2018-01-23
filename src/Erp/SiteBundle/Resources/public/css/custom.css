@@ -203,6 +203,12 @@ section#rental-form h1 {
 }
 
 @media (max-width: 993px) and (min-width: 768px){
+    .profile-widget-custom .col-md-5.col-xs-6.profile-widget-item.widget-last:last-child {
+        margin: 0;
+    }
+    .profile .profile-widget-row {
+        margin: 0 5px 0px;
+    }
     #tenants-profile.profile .tenants-pay {
         width: 47%;
         margin-right: 2%;
@@ -270,6 +276,14 @@ section#rental-form h1 {
     }
 }
 @media (max-width: 589px){
+    .profile .profile-widget-row {
+        margin: 0 5px 0px;
+    }
+    #landlords-profile .col-md-5.col-xs-6.profile-widget-item.widget-last {
+        margin: 0 0 20px;
+        width: 100%;
+        height: 395px!important;
+    }
     #tenants-profile .tenants-block .tenants-block-middle,
     #tenants-profile .tenants-block .tenants-block-item,
     #tenants-profile.profile .tenants-pay {
