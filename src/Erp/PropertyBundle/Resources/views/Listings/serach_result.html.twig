@@ -11,12 +11,16 @@
                             <thead>
                             <tr>
                                 <td>Property</td>
+                                <td>Tenant</td>
+                                <td>Address</td>
                             </tr>
                             </thead>
                             <tbody>
                             {% for property in pagination %}
                                 <tr>
                                     <td>{{ property.name }}</td>
+                                    <td>{{ property.tenantUser.fullNameWithEmail }}</td>
+                                    <td>{{ property.address }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
