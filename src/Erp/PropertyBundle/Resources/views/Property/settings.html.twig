@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-xs-12 submit-row">
                         <a class="back-dashboard listings-back" href="{{ path('erp_property_listings_all', {'page': page}) }}">Back to Listings</a>
-                        {{ form_widget(form.submit, {'label': 'Submit', 'attr': {'class': 'btn red-btn'}}) }}
+                        <button type="submit" class="btn red-btn">Submit</button>
                     </div>
                     <div class="hide"> {{ form_end(form) }}</div>
                 </div>

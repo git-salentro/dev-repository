@@ -5,7 +5,9 @@ namespace Erp\StripeBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\StripeBundle\Entity\Transaction;
+use Erp\StripeBundle\Form\Type\CashflowFilterType;
 use Erp\UserBundle\Entity\User;
+use Erp\StripeBundle\Guesser\TransactionTypeGuesser;
 
 class CashflowController extends Controller
 {
@@ -21,28 +23,22 @@ class CashflowController extends Controller
             ]);
         }
 
-        //TODO Do more flexible. Create filter model, form
-        $type = $request->query->get('filter[type]', null, true);
-        $interval = $request->query->get('filter[interval]', null, true);
+        $form = $this->createForm(new CashflowFilterType());
+        $form->handleRequest($request);
 
-        $dateFrom = \DateTimeImmutable::createFromFormat('Y-n', $interval)->modify('first day of this month')->setTime(0, 0, 0);
-        $dateTo = $dateFrom->modify('+1 month');
-
-        $dateFrom = (new \DateTime())->setTimestamp($dateFrom->getTimestamp());
-        $dateTo = (new \DateTime())->setTimestamp($dateTo->getTimestamp());
-
+        $data = $form->getData();
+        $transactionTypeGuesser = new TransactionTypeGuesser();
+        $guessedType = $transactionTypeGuesser->guess($data['type']);
         $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-        $query = $repository->getTransactions($stripeAccount, $dateFrom, $dateTo);
+        $query = $repository->getTransactions($stripeAccount, $data['dateFrom'], $data['dateTo'], $guessedType);
 
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1)
-        );
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($query, $request->query->getInt('page', 1));
         //TODO Remove user form all controller. Set user in template
         return $this->render('ErpStripeBundle:Cashflow:index.html.twig', [
             'user' => $user,
             'pagination' => $pagination,
+            'type' => $data['type']
         ]);
     }
 }

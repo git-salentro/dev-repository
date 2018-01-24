@@ -16,14 +16,14 @@
                 borderColor: 'rgba(255,99,132,1)',
                 borderWidth: 1,
                 xValues: xValues,
-                xType: 'cache-in'
+                xType: 'cash-in'
             }, {
                 data: cashOut,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
                 xValues: xValues,
-                xType: 'cache-out'
+                xType: 'cash-out'
             }]
         },
         options: {
@@ -52,6 +52,6 @@
         var month = elements[0]._xValue;
         var type = elements[0]._xType;
 
-        window.open(listingUrl + '?filter[type]=' + type + '&filter[interval]=' + month, '_blank');
+        window.open(listingUrl + '?filter[type]=' + type + '&filter[dateFrom]=' + month, '_blank');
     });
 })(jQuery);

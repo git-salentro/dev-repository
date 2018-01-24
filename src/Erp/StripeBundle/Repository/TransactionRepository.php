@@ -33,7 +33,7 @@ class TransactionRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getTransactions(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
+    public function getTransactions(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t');
@@ -51,6 +51,15 @@ class TransactionRepository extends EntityRepository
                 $qb->andWhere('t.created > :dateFrom');
             }
             $qb->setParameter('dateFrom', $dateFrom);
+        }
+
+        if ($type) {
+            $qb->andWhere(
+                $qb->expr()->in(
+                    't.type',
+                    $type
+                )
+            );
         }
 
         return $qb->getQuery();

@@ -10,6 +10,7 @@ docker-compose -f docker-compose-dev.yml exec php bash -c "php app/console doctr
 
 docker-compose -f docker-compose-dev.yml exec php bash -c "chown -R www-data:www-data app/cache"
 docker-compose -f docker-compose-dev.yml exec php bash -c "chown -R www-data:www-data app/logs"
+docker-compose -f docker-compose-dev.yml exec php bash -c "chown -R www-data:www-data web/uploads"
 
 result=$?
 

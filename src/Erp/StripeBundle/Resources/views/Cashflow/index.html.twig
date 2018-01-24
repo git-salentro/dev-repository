@@ -2,9 +2,25 @@
 
 {% block pageContent %}
     {{ parent() }}
+
+    {% set title %}
+        {% if type == constant('Erp\\StripeBundle\\Entity\\Transaction::CASH_IN') %}
+            (Month) Cash In
+        {% elseif type == constant('Erp\\StripeBundle\\Entity\\Transaction::CASH_OUT') %}
+            (Month) Cash Out
+        {% else %}
+            Cashflows
+        {% endif %}
+    {% endset %}
+
     <div class="page-content">
         <section id="landlords-listings" class="listings profile">
             <div class="container">
+                <div class="row">
+                    <div class="title-block">
+                        <h1 class="bold-text">{{ title }}</h1>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table">

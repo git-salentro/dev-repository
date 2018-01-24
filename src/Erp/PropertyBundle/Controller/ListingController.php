@@ -855,16 +855,23 @@ class ListingController extends BaseController
         }
 
         $page = $request->get('page', 1);
-        $propertySettings = $property->getSettings();
 
-        $form = $this->createForm(new PropertySettingsType(), $propertySettings ?: new PropertySettings());
+        $propertySettings = $property->getSettings() ?: new PropertySettings();
+        $property->setSettings($propertySettings);
+
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->em->persist($property);
             $this->em->flush();
 
-            return $this->redirectToRoute('erp_property_listings_all');
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
+
+            return $this->redirectToRoute('erp_property_property_settings_edit', ['propertyId' => $property->getId()]);
         }
 
         return $this->render('ErpPropertyBundle:Property:settings.html.twig', [

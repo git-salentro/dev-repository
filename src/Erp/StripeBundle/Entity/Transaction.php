@@ -15,6 +15,8 @@ use Erp\PaymentBundle\Entity\StripeAccount;
 class Transaction
 {
     const TYPE_CHARGE = 'charge';
+    const CASH_IN = 'cash-in';
+    const CASH_OUT = 'cash-out';
 
     /**
      * @var integer
