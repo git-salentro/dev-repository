@@ -10,6 +10,7 @@ use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
 use Stripe\BankAccount;
 use Stripe\Card;
+use Symfony\Component\HttpFoundation\Request;
 
 //TODO Refactor preparing chart data
 class DashboardController extends BaseController
@@ -125,30 +126,20 @@ class DashboardController extends BaseController
         ]);
     }
 
-    public function showTransactionsAction()
+    public function showTransactionsAction(Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
-
-        $now = new \DateTime();
-        $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
 
-        $items = [];
-        if ($stripeAccount) {
-            $transactionRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Transaction::class);
-            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
-        }
+        $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
+        $query = $repository->getTransactions($stripeAccount);
 
-        $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
-        $intervals = array_keys($labels);
-        $labels = array_values($labels);
-        $transactions = $this->getPreparedItems($items, $intervals);
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($query, $request->query->getInt('page', 1));
 
         return $this->render('ErpUserBundle:Dashboard:transactions.html.twig', [
-            'transactions' => $transactions,
-            'labels' => $labels,
-            'intervals' => $intervals,
+            'pagination' => $pagination,
         ]);
     }
 

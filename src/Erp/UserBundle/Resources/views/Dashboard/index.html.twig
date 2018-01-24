@@ -7,7 +7,6 @@
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/chart-decorator.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/cashflows-chart.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/invoices-chart.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/erpuser/js/transactions-chart.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/properties-history-chart.js') }}"></script>
     <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 {% endblock %}
@@ -32,8 +31,11 @@
                 {{ render(controller('ErpUserBundle:Dashboard:showInvoices')) }}
             </div>
             <div class="row profile-widget-row profile-widget-custom">
-                {{ render(controller('ErpUserBundle:Dashboard:showTransactions')) }}
+                {{ render(controller('ErpSmartMoveBundle:SmartMove:backgroundCreditCheckWidget')) }}
                 {{ render(controller('ErpUserBundle:Dashboard:showProperties')) }}
+            </div>
+            <div class="row profile-widget-row profile-widget-custom">
+                {{ render(controller('ErpUserBundle:Dashboard:showTransactions')) }}
             </div>
         </div>
     </section>

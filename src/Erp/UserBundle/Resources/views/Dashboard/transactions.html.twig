@@ -1,24 +1,27 @@
-<div class="col-md-5 col-xs-6 profile-widget-item widget-last">
+<div class="col-md-12 col-xs-6 profile-widget-item widget-last">
     <div class="row widget-title-row">
-        <div class="login-block-title bold-text">Transactions</div>
+        <div class="login-block-title bold-text">Payment History</div>
     </div>
-
-    <div class="row bank-info-row">
-        <div class="col-xs-12">
-            <canvas
-                    id="transactions-chart"
-                    width="400"
-                    height="200"
-                    data-transactions="{{ transactions|json_encode }}"
-                    data-intervals="{{ intervals|json_encode }}"
-                    data-labels="{{ labels|json_encode }}"
-                    data-listing-url="{{ url('erp_stripe_transaction_index') }}"
-            ></canvas>
+    <div class="history-block">
+        <div class="payment-history">
+            <ul class="payment-table-title">
+                <li>
+                    <span class="col-xs-2 bold-text">Date</span>
+                    <span class="col-xs-2 bold-text amount-col">User</span>
+                    <span class="col-xs-2 bold-text amount-col">Amount</span>
+                    <span class="col-xs-2 bold-text amount-col">Currency</span>
+                </li>
+            </ul>
+            <ul class="payment-table">
+                {% for transaction in pagination %}
+                    <li>
+                        <span class="col-xs-2">{{ transaction.created|date('Y/m/d') }}</span>
+                        <span class="col-xs-2 amount-col">{{ transaction.owner.user }}</span>
+                        <span class="col-xs-2 amount-col">{{ transaction.amount }}</span>
+                        <span class="col-xs-2 amount-col">{{ transaction.currency }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
-    </div>
-    <hr>
-
-    <div class="question-mark">
-
     </div>
 </div>
