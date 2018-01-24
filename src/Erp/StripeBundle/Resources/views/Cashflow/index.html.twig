@@ -5,9 +5,9 @@
 
     {% set title %}
         {% if type == constant('Erp\\StripeBundle\\Entity\\Transaction::CASH_IN') %}
-            (Month) Cash In
+            {{ date_from|date('F') }} Cash In
         {% elseif type == constant('Erp\\StripeBundle\\Entity\\Transaction::CASH_OUT') %}
-            (Month) Cash Out
+            {{ date_from|date('F') }} Cash Out
         {% else %}
             Cashflows
         {% endif %}

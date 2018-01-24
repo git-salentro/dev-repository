@@ -27,15 +27,15 @@
                 {{ render(controller('ErpUserBundle:Dashboard:showPaymentDetails')) }}
             </div>
             <div class="row profile-widget-row profile-widget-custom">
+                {{ render(controller('ErpUserBundle:Dashboard:showTransactions')) }}
+            </div>
+            <div class="row profile-widget-row profile-widget-custom">
                 {{ render(controller('ErpUserBundle:Dashboard:showCashflows')) }}
                 {{ render(controller('ErpUserBundle:Dashboard:showInvoices')) }}
             </div>
             <div class="row profile-widget-row profile-widget-custom">
                 {{ render(controller('ErpSmartMoveBundle:SmartMove:backgroundCreditCheckWidget')) }}
                 {{ render(controller('ErpUserBundle:Dashboard:showProperties')) }}
-            </div>
-            <div class="row profile-widget-row profile-widget-custom">
-                {{ render(controller('ErpUserBundle:Dashboard:showTransactions')) }}
             </div>
         </div>
     </section>

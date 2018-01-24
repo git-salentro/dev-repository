@@ -38,7 +38,8 @@ class CashflowController extends Controller
         return $this->render('ErpStripeBundle:Cashflow:index.html.twig', [
             'user' => $user,
             'pagination' => $pagination,
-            'type' => $data['type']
+            'type' => $data['type'],
+            'date_from' => $data['dateFrom'],
         ]);
     }
 }
