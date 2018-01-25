@@ -23,7 +23,7 @@ class PropertySettingsType extends AbstractType
                 'dayUntilDue',
                 'choice',
                 [
-                    'label' => 'Day Until Due',
+                    'label' => 'Rent Due Date',
                     'label_attr' => ['class' => 'control-label'],
                     'attr' => ['class' => 'form-control col-xs-4'],
                     'choices' => $months,
@@ -34,7 +34,7 @@ class PropertySettingsType extends AbstractType
                 'paymentAmount',
                 'text',
                 [
-                    'label' => 'Payment Amount',
+                    'label' => 'Rent Amount',
                     'label_attr' => ['class' => 'control-label'],
                     'attr' => ['class' => 'form-control col-xs-4'],
                 ]
