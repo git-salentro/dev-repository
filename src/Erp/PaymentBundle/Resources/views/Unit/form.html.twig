@@ -14,8 +14,8 @@
     <section id="register-form-tenants" class="register-form cc-form-wrap">
         <div class="container">
             <div class="row">
-                <div class="title-block">
-                    <h1 class="bold-text">Buy Units</h1>
+                <div class="title-block title-block_units">
+                    <h1 class="bold-text">Please enter the amount of units you'd like to add.</h1>
                 </div>
             </div>
 
@@ -39,11 +39,16 @@
 
                     {{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
                         <div class="row">
-                            <div class="form-group">
+                            <div class="form-group form-group_units">
                                 <div class="col-xs-12">
-                                    {{ form_label(form.count) }}
-                                    {{ form_widget(form.count, {'id': 'unit-count'}) }}
+                                    <div class="col-xs-6">
+                                        {{ form_label(form.count) }}
+                                    </div>
+                                    <div class="col-xs-6">
+                                        {{ form_widget(form.count, {'id': 'unit-count'}) }}
+                                    </div>
                                     {{ form_custom_errors.widget(form.count) }}
+
                                 </div>
                             </div>
                         </div>

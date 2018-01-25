@@ -19,7 +19,7 @@ class UnitType extends AbstractType
                 'count',
                 'text',
                 [
-                    'label' => 'Count',
+                    'label' => 'Number of units:',
                     'label_attr' => ['class' => 'control-label required-label'],
                     'attr' => ['class' => 'form-control'],
                 ]

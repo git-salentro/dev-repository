@@ -444,3 +444,19 @@
         margin-right: 20px;
     }
 }
+.register-form .title-block_units{
+    max-width: 450px;
+    margin: 0 auto 30px!important;
+    border: 0;
+    padding: 0 20px;
+
+    h1{
+        color: #ca171b;
+        font-size: 32px!important;
+    }
+}
+.register-form .form-horizontal .form-group_units .control-label{
+    padding: 3px 0 0;
+    color: #777;
+    font-size: 20px;
+}
