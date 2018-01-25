@@ -46,6 +46,37 @@ class EventGuesser
         }
     }
 
+    public function guess1($stripeEvent)
+    {
+        $pieces = $this->guessEventPieces($stripeEvent['type']);
+
+        switch ($pieces['kind']) {
+            case 'charge':
+                $disptachingEvent = new ChargeEvent($stripeEvent);
+
+                return [
+                    'type'   => constant(ChargeEvent::class . '::' . $pieces['type']),
+                    'object' => $disptachingEvent,
+                ];
+                break;
+            case 'invoice':
+                $disptachingEvent = new InvoiceEvent($stripeEvent);
+
+                return [
+                    'type'   => constant(InvoiceEvent::class . '::' . $pieces['type']),
+                    'object' => $disptachingEvent,
+                ];
+                break;
+            default:
+                if ($this->debug) {
+                    throw new \RuntimeException('Event type not recognized.');
+                }
+
+                return ['type' => null, 'object' => null];
+        }
+    }
+
+
     public function guessEventPieces($type)
     {
         /*

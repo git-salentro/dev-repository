@@ -78,11 +78,12 @@ class DashboardController extends BaseController
         $now = new \DateTime();
         $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
+        $stripeCustomer = $user->getStripeCustomer();
 
         $items = [];
-        if ($stripeAccount) {
+        if ($stripeAccount || $stripeCustomer) {
             $transactionRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $sixMonthsAgo, $now);
+            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $stripeCustomer, $sixMonthsAgo, $now);
         }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
@@ -131,9 +132,16 @@ class DashboardController extends BaseController
         /** @var User $user */
         $user = $this->getUser();
         $stripeAccount = $user->getStripeAccount();
+        $stripeCustomer = $user->getStripeCustomer();
+
+        if (!$stripeAccount || !$stripeCustomer) {
+            return $this->render('ErpUserBundle:Dashboard:transactions.html.twig', [
+                'pagination' => [],
+            ]);
+        }
 
         $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-        $query = $repository->getTransactions($stripeAccount);
+        $query = $repository->getTransactions($stripeAccount, $stripeCustomer);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($query, $request->query->getInt('page', 1));

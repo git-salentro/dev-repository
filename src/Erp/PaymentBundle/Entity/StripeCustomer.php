@@ -74,10 +74,18 @@ class StripeCustomer
      */
     protected $stripeSubscriptions;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Transaction", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $transactions;
+
     public function __construct()
     {
         $this->stripeSubscriptions = new ArrayCollection();
         $this->recurringPayments = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     /**
@@ -237,5 +245,39 @@ class StripeCustomer
     public function getStripeSubscriptions()
     {
         return $this->stripeSubscriptions;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param \Erp\StripeBundle\Entity\Transaction $transaction
+     *
+     * @return StripeCustomer
+     */
+    public function addTransaction(\Erp\StripeBundle\Entity\Transaction $transaction)
+    {
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove transaction
+     *
+     * @param \Erp\StripeBundle\Entity\Transaction $transaction
+     */
+    public function removeTransaction(\Erp\StripeBundle\Entity\Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
     }
 }

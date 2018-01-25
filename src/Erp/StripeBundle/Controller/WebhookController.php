@@ -17,9 +17,10 @@ class WebhookController extends Controller
 
         $eventManger = $this->get('erp.payment.stripe.manager.event_manager');
         /** @var Event $event */
-        $event = $eventManger->retrieve($content['id']);
+//        $event = $eventManger->retrieve($content['id']);
 
-        $guessedDispatchingEvent = $this->get('erp_stripe.event.event_guesser')->guess($event);
+//        $guessedDispatchingEvent = $this->get('erp_stripe.event.event_guesser')->guess1($event);
+        $guessedDispatchingEvent = $this->get('erp_stripe.event.event_guesser')->guess1($content);
 
         $dispatcher = $this->get('event_dispatcher');
         $dispatcher->dispatch($guessedDispatchingEvent['type'], $guessedDispatchingEvent['object']);

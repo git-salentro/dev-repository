@@ -7,18 +7,33 @@
             <ul class="payment-table-title">
                 <li>
                     <span class="col-xs-2 bold-text">Date</span>
-                    <span class="col-xs-2 bold-text amount-col">User</span>
-                    <span class="col-xs-2 bold-text amount-col">Amount</span>
-                    <span class="col-xs-2 bold-text amount-col">Currency</span>
+                    <span class="col-xs-1 bold-text amount-col">Amount</span>
+                    <span class="col-xs-1 bold-text amount-col">Currency</span>
+                    <span class="col-xs-2 bold-text amount-col">From</span>
+                    <span class="col-xs-2 bold-text amount-col">To</span>
+                    <span class="col-xs-2 bold-text amount-col">Payment Method</span>
                 </li>
             </ul>
             <ul class="payment-table">
                 {% for transaction in pagination %}
+                    {%- set sender -%}
+                        {{ transaction.customer.user.email }}
+                    {%- endset -%}
+
+                    {%- set recipient -%}
+                        {% if transaction.account %}
+                            {{ transaction.account.user.email }}
+                        {% else %}
+                            System
+                        {% endif %}
+                    {%- endset -%}
                     <li>
                         <span class="col-xs-2">{{ transaction.created|date('Y/m/d') }}</span>
-                        <span class="col-xs-2 amount-col">{{ transaction.owner.user }}</span>
-                        <span class="col-xs-2 amount-col">{{ transaction.amount }}</span>
-                        <span class="col-xs-2 amount-col">{{ transaction.currency }}</span>
+                        <span class="col-xs-1 amount-col">{{ transaction.amount }}</span>
+                        <span class="col-xs-1 amount-col">{{ transaction.currency }}</span>
+                        <span class="col-xs-2 amount-col">{{ sender }}</span>
+                        <span class="col-xs-2 amount-col">{{ recipient }}</span>
+                        <span class="col-xs-2 amount-col">{{ transaction.paymentMethod }}</span>
                     </li>
                 {% endfor %}
             </ul>

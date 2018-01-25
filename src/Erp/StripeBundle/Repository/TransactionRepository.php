@@ -4,17 +4,22 @@ namespace Erp\StripeBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Erp\PaymentBundle\Entity\StripeAccount;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 
 class TransactionRepository extends EntityRepository
 {
-    public function getGroupedTransactions(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
+    public function getGroupedTransactions(StripeAccount $stripeAccount = null, StripeCustomer $stripeCustomer = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('SUM(t.amount) as gAmount, MONTH(t.created) as gMonth, YEAR(t.created) as gYear, CONCAT(YEAR(t.created), \'-\', MONTH(t.created)) as interval');
 
         if ($stripeAccount) {
-            $qb->where('t.owner = :owner')
-                 ->setParameter('owner', $stripeAccount);
+            $qb->where('t.account = :account')
+                ->setParameter('account', $stripeAccount);
+            if ($stripeCustomer) {
+                $qb->orWhere('t.customer = :customer')
+                    ->setParameter('customer', $stripeCustomer);
+            }
         }
 
         if ($dateFrom) {
@@ -33,14 +38,17 @@ class TransactionRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getTransactions(StripeAccount $stripeAccount = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
+    public function getTransactions(StripeAccount $stripeAccount = null, StripeCustomer $stripeCustomer = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
     {
         $qb = $this->createQueryBuilder('t');
-        $qb->select('t');
 
         if ($stripeAccount) {
-            $qb->where('t.owner = :owner')
-                ->setParameter('owner', $stripeAccount);
+            $qb->where('t.account = :account')
+                ->setParameter('account', $stripeAccount);
+            if ($stripeCustomer) {
+                $qb->orWhere('t.customer = :customer')
+                    ->setParameter('customer', $stripeCustomer);
+            }
         }
 
         if ($dateFrom) {
