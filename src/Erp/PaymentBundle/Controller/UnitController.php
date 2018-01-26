@@ -13,6 +13,7 @@ use Erp\PropertyBundle\Entity\PropertySettings;
 use Erp\UserBundle\Entity\User;
 use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
+use Erp\StripeBundle\Helper\ApiHelper;
 
 class UnitController extends BaseController
 {
@@ -136,14 +137,14 @@ class UnitController extends BaseController
 
             $arguments = [
                 'params' => [
-                    'amount' => $amount,
+                    'amount' => ApiHelper::convertAmountToStripeFormat($amount),
                     'customer' => $stripeCustomer->getCustomerId(),
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                 ],
                 'options' => null,
             ];
             $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
-            //TODO What if occurred an error but subscription was updated?
+            //TODO What if occurred an error but subscription was updated? Make transactions?
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();
                 return $this->render($template, $templateParams);
