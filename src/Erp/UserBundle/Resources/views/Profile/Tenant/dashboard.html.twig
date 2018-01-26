@@ -1,5 +1,10 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+{% endblock %}
+
 {% block pageContent %}
 
     {{ parent() }}
@@ -115,4 +120,82 @@
                 </div>
             </div>
     </section>
+{% endblock %}
+
+{% block javascript_inline %}
+    {# TODO Refactoring #}
+    <script>
+        (function ($) {
+            var linkHandler = Plaid.create({
+                env: '{{ plaid_env }}',
+                clientName: 'Erentpay',
+                key: '{{ plaid_public_key }}',
+                product: ['auth'],
+                selectAccount: true,
+                onSuccess: function(public_token, metadata) {
+                    $.ajax({
+                        url: '{{ path("erp_payment_stripe_verify_bank_account") }}',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            publicToken: public_token,
+                            accountId: metadata.account_id
+                        },
+                        success: function (response) {
+                            //TODO Prepare backend errors for frontend
+                            processResponse(response);
+                        }
+                    });
+                },
+                onExit: function(err, metadata) {
+                    if (err != null) {
+
+                    }
+                }
+            });
+
+            function processResponse(response)
+            {
+                if (response.redirect) {
+                    document.location = response.redirect;
+                } else {
+                    var modalBody = $('#epr-modal-popup').find('.modal-body');
+
+                    modalBody.html(response.html);
+                    $('#epr-modal-popup').find('.modal-title').html(response.modalTitle);
+                    $('#epr-modal-popup').modal('show');
+
+                    var form = modalBody.find('form');
+
+                    if (response.error) {
+                        form.find('button[type=submit]').prop('disabled', false);
+                        $('#error').html(response.error);
+                    }
+
+                    form.submit(function (e) {
+                        var $form = $(this);
+                        $form.find('button[type=submit]').prop('disabled', true);
+
+                        $.ajax({
+                            type: 'POST',
+                            cache: false,
+                            url: form.attr('action'),
+                            data: form.serialize(),
+                            async: true,
+                            dataType: 'json',
+                            success: function (response) {
+                                processResponse(response);
+                            }
+                        });
+
+                        return false;
+                    });
+                }
+            }
+
+            $('#verify-ba').click(function() {
+                linkHandler.open();
+            });
+        })(jQuery);
+    </script>
 {% endblock %}

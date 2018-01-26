@@ -23,13 +23,12 @@ class ChargeSubscriber extends AbstractSubscriber
     public function onChargeSucceeded(ChargeEvent $event)
     {
         $stripeEvent = $event->getStripeEvent();
+        $stripeCharge = $stripeEvent->data->object;
 
-        /** @var Charge $stripeEvent */
-        if (!$stripeEvent instanceof Charge) {
+        /** @var Charge $stripeCharge */
+        if (!$stripeCharge instanceof Charge) {
             throw new \InvalidArgumentException('ChargeSyncer::syncLocalFromStripe() accepts only Stripe\Charge objects as second parameter.');
         }
-
-        $stripeCharge = $stripeEvent->data->object;
 
         if (!$stripeCharge->customer) {
             return;
@@ -48,7 +47,7 @@ class ChargeSubscriber extends AbstractSubscriber
             $transaction->setAccount($account);
         }
 
-        $customer = $this->getCustomer($stripeCharge->customer->id);
+        $customer = $this->getCustomer($stripeCharge->customer);
         $transaction->setCustomer($customer);
 
         $em = $this->registry->getManagerForClass(Transaction::class);

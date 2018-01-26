@@ -40,7 +40,8 @@ class TransactionRepository extends EntityRepository
 
     public function getTransactions(StripeAccount $stripeAccount = null, StripeCustomer $stripeCustomer = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
     {
-        $qb = $this->createQueryBuilder('t');
+        $qb = $this->createQueryBuilder('t')
+            ->orderBy('t.created', 'DESC');
 
         if ($stripeAccount) {
             $qb->where('t.account = :account')

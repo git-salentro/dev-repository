@@ -18,6 +18,8 @@ class Transaction
     const TYPE_CHARGE = 'charge';
     const CASH_IN = 'cash-in';
     const CASH_OUT = 'cash-out';
+    const BANK_ACCOUNT_PAYMENT_METHOD = 'bank_account';
+    const CREDIT_CARD_PAYMENT_METHOD = 'card';
 
     /**
      * @var integer
