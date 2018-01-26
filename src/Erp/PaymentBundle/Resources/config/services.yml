@@ -23,10 +23,6 @@ services:
         class: Erp\PaymentBundle\Stripe\Manager\PlanManager
         parent: erp.payment.stripe.manager.abstract_manager
 
-    erp.payment.stripe.manager.subscription_manager:
-        class: Erp\PaymentBundle\Stripe\Manager\SubscriptionManager
-        parent: erp.payment.stripe.manager.abstract_manager
-
     erp.payment.stripe.manager.account_manager:
         class: Erp\PaymentBundle\Stripe\Manager\AccountManager
         parent: erp.payment.stripe.manager.abstract_manager
@@ -37,10 +33,6 @@ services:
 
     erp.payment.stripe.manager.charge_manager:
         class: Erp\PaymentBundle\Stripe\Manager\ChargeManager
-        parent: erp.payment.stripe.manager.abstract_manager
-
-    erp.payment.stripe.manager.event_manager:
-        class: Erp\PaymentBundle\Stripe\Manager\EventManager
         parent: erp.payment.stripe.manager.abstract_manager
 
     erp.payment.form.type.stripe_credit_card:
@@ -88,7 +80,7 @@ services:
         class: Erp\PaymentBundle\Consumer\UpdateSubscriptionsConsumer
         arguments:
             - '@doctrine'
-            - '@erp.payment.stripe.manager.subscription_manager'
+            - '@erp_stripe.entity.api_manager'
 
     erp.payment.stripe.provider.bank_account_payment_type_provider:
         class: 'Erp\PaymentBundle\Stripe\Provider\BankAccountPaymentTypeProvider'

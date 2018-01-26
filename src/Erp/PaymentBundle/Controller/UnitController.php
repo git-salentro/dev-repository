@@ -62,12 +62,12 @@ class UnitController extends BaseController
         $unit = $form->getData();
         $userUnitSettingsManager = $this->get('erp.payment.entity.unit_settings_manager');
         $quantity = $userUnitSettingsManager->getQuantity($unit);
-
-        $subscriptionManager = $this->get('erp.payment.stripe.manager.subscription_manager');
+        $apiManager = $this->get('erp_stripe.entity.api_manager');
 
         if (!$hasSubscriptions) {
-            $response = $subscriptionManager->create(
-                [
+            $arguments = [
+                'options' => null,
+                'params' => [
                     'customer' => $stripeCustomer->getCustomerId(),
                     'items' => [
                         [
@@ -75,13 +75,12 @@ class UnitController extends BaseController
                             'quantity' => $quantity,
                         ],
                     ],
-//                    'billing' => StripeCustomer::BILLING_SEND_INVOICE,
-//                    'days_until_due' => StripeCustomer::BILLING_DAYS_UNTIL_DUE,
                     'metadata' => [
                         'unit_count' => $unit->getCount(),
                     ],
-                ]
-            );
+                ],
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Subscription', 'create', $arguments);
 
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();
@@ -99,8 +98,11 @@ class UnitController extends BaseController
         } else {
             /** @var StripeSubscription $stripeSubscription */
             $stripeSubscription = $stripeSubscriptions->last();
-
-            $response = $subscriptionManager->retrieve($stripeSubscription->getSubscriptionId());
+            $arguments =  [
+                'id' => $stripeSubscription->getSubscriptionId(),
+                'options' => null,
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Subscription', 'retrieve', $arguments);
 
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();
@@ -109,19 +111,36 @@ class UnitController extends BaseController
             /** @var Subscription $subscription */
             $subscription = $response->getContent();
 
-            $quantity = $subscription->quantity + $quantity;
-            $count = $subscription->metadata['unit_count'];
+            $newQuantity = $subscription->quantity + $quantity;
+            $count = $subscription->metadata['unit_count'] + $unit->getCount();
 
-            $response = $subscriptionManager->update(
-                $subscription,
-                [
+            $arguments = [
+                'id' => $stripeSubscription->getSubscriptionId(),
+                'params' => [
                     'quantity' => $quantity,
                     'metadata' => [
-                        'unit_count' => $count + $unit->getCount(),
+                        'unit_count' => $count,
                     ],
-                ]
-            );
+                ],
+                'options' => null,
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Subscription', 'update', $arguments);
 
+            if (!$response->isSuccess()) {
+                $templateParams['errors'] = $response->getErrorMessage();
+                return $this->render($template, $templateParams);
+            }
+
+            $arguments = [
+                'params' => [
+                    'amount' => $newQuantity,
+                    'customer' => $stripeCustomer->getCustomerId(),
+                    'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                ],
+                'options' => null,
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+            //TODO What if occurred an error but subscription was updated?
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();
                 return $this->render($template, $templateParams);

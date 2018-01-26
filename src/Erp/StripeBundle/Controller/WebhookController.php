@@ -11,7 +11,7 @@ class WebhookController extends Controller
     public function notifyAction(Request $request)
     {
         $content = json_decode($request->getContent(), true);
-        $apiManger = $this->get('erp_stripe_entity_api_manager');
+        $apiManger = $this->get('erp_stripe.entity.api_manager');
         $arguments = [
             'id' => $content['id'],
             'options' => null,

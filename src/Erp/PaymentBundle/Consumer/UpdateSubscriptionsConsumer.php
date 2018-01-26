@@ -3,7 +3,7 @@
 namespace Erp\PaymentBundle\Consumer;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Erp\PaymentBundle\Stripe\Manager\SubscriptionManager;
+use Erp\StripeBundle\Entity\ApiManager;
 use Erp\PaymentBundle\Entity\StripeSubscription;
 use Erp\PaymentBundle\Entity\UnitSettings;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
@@ -13,7 +13,7 @@ use Stripe\Subscription;
 class UpdateSubscriptionsConsumer implements ConsumerInterface
 {
     /**
-     * @var SubscriptionManager
+     * @var ApiManager
      */
     private $manager;
 
@@ -22,7 +22,7 @@ class UpdateSubscriptionsConsumer implements ConsumerInterface
      */
     private $registry;
 
-    public function __construct(ManagerRegistry $registry, SubscriptionManager $manager)
+    public function __construct(ManagerRegistry $registry, ApiManager $manager)
     {
         $this->registry = $registry;
         $this->manager = $manager;
@@ -48,7 +48,7 @@ class UpdateSubscriptionsConsumer implements ConsumerInterface
 
         /** @var StripeSubscription $subscription */
         foreach ($subscriptions as $subscription) {
-            $response = $this->manager->retrieve($subscription->getSubscriptionId());
+            $response = $this->manager->callStripeApi('\Stripe\Subscription', 'retrieve', ['id' => $subscription->getSubscriptionId()]);
             /** @var Subscription $stripeSubscription */
             $stripeSubscription = $response->getContent();
             $unitCount = $stripeSubscription->metadata['unit_count'];
@@ -56,8 +56,12 @@ class UpdateSubscriptionsConsumer implements ConsumerInterface
              * There quantity = quantityPerUnit * (unitCount - initialUnitCount) + initialQuantity
              */
             $quantity = $quantityPerUnit * ($unitCount - 1) + $initialQuantity;
-
-            $this->manager->update($stripeSubscription, ['quantity' => $quantity]);
+            $arguments = [
+                'id' =>  $subscription->getSubscriptionId(),
+                'params' => ['quantity' => $quantity],
+                'options' => null,
+            ];
+            $this->manager->callStripeApi('\Stripe\Subscription', 'update', $arguments);
         }
     }
 

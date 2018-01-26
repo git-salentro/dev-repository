@@ -20,6 +20,7 @@ class StripeCustomer
     const BILLING_AUTOMATICALLY = 'charge_automatically';
     const BILLING_SEND_INVOICE = 'send_invoice';
     const BILLING_DAYS_UNTIL_DUE = 5;
+    const DEFAULT_CURRENCY = 'usd';
 
     /**
      * @var integer

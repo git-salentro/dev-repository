@@ -14,9 +14,11 @@ class InvoiceController extends Controller
         /** @var User $user */
         $user = $this->getUser();
         $stripeAccount = $user->getStripeAccount();
+        $stripeCustomer = $user->getStripeCustomer();
 
-        if (!$stripeAccount) {
+        if (!$stripeAccount || !$stripeCustomer) {
             return $this->render('ErpStripeBundle:Invoice:index.html.twig',[
+                'user' => $user,
                 'error' => 'Please, verify you bank account.'
             ]);
         }
@@ -30,7 +32,7 @@ class InvoiceController extends Controller
         $dateTo = (new \DateTime())->setTimestamp($dateTo->getTimestamp());
 
         $repository = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Invoice::class);
-        $query = $repository->getInvoices($stripeAccount, $dateFrom, $dateTo);
+        $query = $repository->getInvoices($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(

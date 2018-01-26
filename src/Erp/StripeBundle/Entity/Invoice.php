@@ -4,6 +4,7 @@ namespace Erp\StripeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\StripeAccount;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 
 /**
  * Class Invoice
@@ -33,10 +34,18 @@ class Invoice
     /**
      * @var StripeAccount
      *
-     * @ORM\ManyToOne(targetEntity="\Erp\PaymentBundle\Entity\StripeAccount", inversedBy="invoices")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="\Erp\PaymentBundle\Entity\StripeAccount")
+     * @ORM\JoinColumn(name="account_id", referencedColumnName="id", nullable=true)
      */
-    private $owner;
+    private $account;
+
+    /**
+     * @var StripeCustomer
+     *
+     * @ORM\ManyToOne(targetEntity="\Erp\PaymentBundle\Entity\StripeCustomer")
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=true)
+     */
+    private $customer;
 
     /**
      * @var \DateTime
@@ -183,26 +192,50 @@ class Invoice
     }
 
     /**
-     * Set owner
+     * Set account
      *
-     * @param \Erp\PaymentBundle\Entity\StripeAccount $owner
+     * @param \Erp\PaymentBundle\Entity\StripeAccount $account
      *
      * @return Invoice
      */
-    public function setOwner(\Erp\PaymentBundle\Entity\StripeAccount $owner = null)
+    public function setAccount(\Erp\PaymentBundle\Entity\StripeAccount $account = null)
     {
-        $this->owner = $owner;
+        $this->account = $account;
 
         return $this;
     }
 
     /**
-     * Get owner
+     * Get account
      *
      * @return \Erp\PaymentBundle\Entity\StripeAccount
      */
-    public function getOwner()
+    public function getAccount()
     {
-        return $this->owner;
+        return $this->account;
+    }
+
+    /**
+     * Set customer
+     *
+     * @param \Erp\PaymentBundle\Entity\StripeCustomer $customer
+     *
+     * @return Invoice
+     */
+    public function setCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $customer = null)
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * Get customer
+     *
+     * @return \Erp\PaymentBundle\Entity\StripeCustomer
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
     }
 }

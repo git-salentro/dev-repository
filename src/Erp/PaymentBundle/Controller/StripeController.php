@@ -318,7 +318,7 @@ class StripeController extends BaseController
             $stripeAccount->setTosAcceptanceDate(new \DateTime())
                 ->setTosAcceptanceIp($request->getClientIp());
 
-            $apiManager = $this->get('erp_stripe_entity_api_manager');
+            $apiManager = $this->get('erp_stripe.entity.api_manager');
             $arguments = [
                 'id' => $stripeAccount->getAccountId(),
                 'params' => $stripeAccount->toStripe(),

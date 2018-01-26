@@ -27,7 +27,7 @@ class ChargeSubscriber extends AbstractSubscriber
 
         /** @var Charge $stripeCharge */
         if (!$stripeCharge instanceof Charge) {
-            throw new \InvalidArgumentException('ChargeSyncer::syncLocalFromStripe() accepts only Stripe\Charge objects as second parameter.');
+            throw new \InvalidArgumentException('ChargeSubscriber::onChargeSucceeded() accepts only Stripe\Charge objects as second parameter.');
         }
 
         if (!$stripeCharge->customer) {

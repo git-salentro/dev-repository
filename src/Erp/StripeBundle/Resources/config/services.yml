@@ -41,7 +41,7 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    erp_stripe_entity_api_manager:
+    erp_stripe.entity.api_manager:
         class: Erp\StripeBundle\Entity\ApiManager
         arguments:
             - '%stripe.secret_key%'

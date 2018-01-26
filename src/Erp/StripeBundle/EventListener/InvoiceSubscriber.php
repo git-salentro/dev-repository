@@ -5,6 +5,7 @@ namespace Erp\StripeBundle\EventListener;
 use Erp\StripeBundle\Event\InvoiceEvent;
 use Erp\StripeBundle\Entity\Invoice;
 use Erp\PaymentBundle\Entity\StripeAccount;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 
 class InvoiceSubscriber extends AbstractSubscriber
 {
@@ -21,27 +22,42 @@ class InvoiceSubscriber extends AbstractSubscriber
     public function onChargeCreated(InvoiceEvent $event)
     {
         $stripeEvent = $event->getStripeEvent();
+        $stripeInvoice = $stripeEvent->data->object;
 
         /** @var \Stripe\Invoice $stripeEvent */
-        if (!$stripeEvent instanceof \Stripe\Invoice) {
-            throw new \InvalidArgumentException('InvoiceSyncer::syncLocalFromStripe() accepts only Stripe\Charge objects as second parameter.');
+        if (!$stripeInvoice instanceof \Stripe\Invoice) {
+            throw new \InvalidArgumentException('InvoiceSubscriber::onChargeCreated() accepts only Stripe\Charge objects as second parameter.');
         }
-
-        $stripeInvoice = $stripeEvent->data->object;
 
         $invoice = new Invoice();
         $invoice->setAmount($stripeInvoice->amount_due)
-            ->setCreated(new \DateTime($stripeInvoice->date));
+            ->setCreated((new \DateTime())->setTimestamp($stripeInvoice->date));
 
         if (isset($stripeEvent->account)) {
-            $em = $this->registry->getManagerForClass(StripeAccount::class);
-            $owner = $em->getRepository(StripeAccount::class)->findOneBy(['accountId' => $stripeEvent->account]);
-            $invoice->setOwner($owner);
+            $account = $this->getAccount($stripeEvent->account);
+            $invoice->setAccount($account);
         }
+
+        $customer = $this->getCustomer($stripeInvoice->customer);
+        $invoice->setCustomer($customer);
 
         $em = $this->registry->getManagerForClass(Invoice::class);
 
         $em->persist($invoice);
         $em->flush();
+    }
+
+    private function getAccount($accountId)
+    {
+        $em = $this->registry->getManagerForClass(StripeAccount::class);
+
+        return $em->getRepository(StripeAccount::class)->findOneBy(['accountId' =>$accountId]);
+    }
+
+    private function getCustomer($customerId)
+    {
+        $em = $this->registry->getManagerForClass(StripeCustomer::class);
+
+        return $em->getRepository(StripeCustomer::class)->findOneBy(['customerId' =>$customerId]);
     }
 }

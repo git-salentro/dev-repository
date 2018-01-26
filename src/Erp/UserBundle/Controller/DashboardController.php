@@ -108,11 +108,12 @@ class DashboardController extends BaseController
         $now = new \DateTime();
         $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
+        $stripeCustomer = $user->getStripeCustomer();
 
         $items = [];
-        if ($stripeAccount) {
+        if ($stripeAccount || $stripeCustomer) {
             $invoicesRepo = $this->getDoctrine()->getManagerForClass(Invoice::class)->getRepository(Invoice::class);
-            $items = $invoicesRepo->getGroupedInvoices($stripeAccount, $sixMonthsAgo, $now);
+            $items = $invoicesRepo->getGroupedInvoices($stripeAccount, $stripeCustomer, $sixMonthsAgo, $now);
         }
 
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
