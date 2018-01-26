@@ -60,11 +60,12 @@ class UnitController extends BaseController
         }
         /** @var Unit $unit */
         $unit = $form->getData();
-        $userUnitSettingsManager = $this->get('erp.payment.entity.unit_settings_manager');
-        $quantity = $userUnitSettingsManager->getQuantity($unit);
+        $unitCount = $unit->getCount();
+        $unitSettingsManager = $this->get('erp.payment.entity.unit_settings_manager');
         $apiManager = $this->get('erp_stripe.entity.api_manager');
 
         if (!$hasSubscriptions) {
+            $quantity = $unitSettingsManager->getQuantity($unit);
             $arguments = [
                 'options' => null,
                 'params' => [
@@ -76,7 +77,7 @@ class UnitController extends BaseController
                         ],
                     ],
                     'metadata' => [
-                        'unit_count' => $unit->getCount(),
+                        'unit_count' => $unitCount,
                     ],
                 ],
             ];
@@ -110,16 +111,15 @@ class UnitController extends BaseController
             }
             /** @var Subscription $subscription */
             $subscription = $response->getContent();
-
+            $quantityPerUnit = $unitSettingsManager->getQuantityPerUnit();
+            $quantity = $amount = $quantityPerUnit * $unitCount;
             $newQuantity = $subscription->quantity + $quantity;
-            $count = $subscription->metadata['unit_count'] + $unit->getCount();
-
             $arguments = [
                 'id' => $stripeSubscription->getSubscriptionId(),
                 'params' => [
-                    'quantity' => $quantity,
+                    'quantity' => $newQuantity,
                     'metadata' => [
-                        'unit_count' => $count,
+                        'unit_count' => $subscription->metadata['unit_count'] + $unitCount,
                     ],
                 ],
                 'options' => null,
@@ -131,9 +131,12 @@ class UnitController extends BaseController
                 return $this->render($template, $templateParams);
             }
 
+            $stripeSubscription->setQuantity($newQuantity);
+            $this->em->persist($stripeSubscription);
+
             $arguments = [
                 'params' => [
-                    'amount' => $newQuantity,
+                    'amount' => $amount,
                     'customer' => $stripeCustomer->getCustomerId(),
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                 ],
@@ -147,12 +150,8 @@ class UnitController extends BaseController
             }
         }
 
-        $stripeSubscription->setQuantity($quantity);
-        $this->em->persist($stripeSubscription);
-
-        $count = $unit->getCount();
         $prototype = new Property();
-        for ($i=1; $i<=$count; $i++) {
+        for ($i=1; $i<=$unitCount; $i++) {
             $property = clone $prototype;
             $property->setUser($user);
 
