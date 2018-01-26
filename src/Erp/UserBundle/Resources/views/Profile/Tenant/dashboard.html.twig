@@ -142,8 +142,7 @@
                             accountId: metadata.account_id
                         },
                         success: function (response) {
-                            //TODO Prepare backend errors for frontend
-                            processResponse(response);
+                            {# TODO Prepare backend errors for frontend #}
                         }
                     });
                 },
@@ -153,45 +152,6 @@
                     }
                 }
             });
-
-            function processResponse(response)
-            {
-                if (response.redirect) {
-                    document.location = response.redirect;
-                } else {
-                    var modalBody = $('#epr-modal-popup').find('.modal-body');
-
-                    modalBody.html(response.html);
-                    $('#epr-modal-popup').find('.modal-title').html(response.modalTitle);
-                    $('#epr-modal-popup').modal('show');
-
-                    var form = modalBody.find('form');
-
-                    if (response.error) {
-                        form.find('button[type=submit]').prop('disabled', false);
-                        $('#error').html(response.error);
-                    }
-
-                    form.submit(function (e) {
-                        var $form = $(this);
-                        $form.find('button[type=submit]').prop('disabled', true);
-
-                        $.ajax({
-                            type: 'POST',
-                            cache: false,
-                            url: form.attr('action'),
-                            data: form.serialize(),
-                            async: true,
-                            dataType: 'json',
-                            success: function (response) {
-                                processResponse(response);
-                            }
-                        });
-
-                        return false;
-                    });
-                }
-            }
 
             $('#verify-ba').click(function() {
                 linkHandler.open();

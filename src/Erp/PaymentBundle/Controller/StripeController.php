@@ -238,14 +238,20 @@ class StripeController extends BaseController
                     );
                 }
             }
+
+            $form = $this->createForm(new BankAccountVerificationType());
+
+            return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig', [
+                'form' => $form->createView(),
+                'modalTitle' => 'Continue verification',
+            ]);
         }
 
-        $form = $this->createForm(new BankAccountVerificationType());
-
-        return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig', [
-            'form' => $form->createView(),
-            'modalTitle' => 'Continue verification',
-        ]);
+        return new JsonResponse(
+            [
+                'success' => true,
+            ]
+        );
     }
 
     public function payRentAction(Request $request)
