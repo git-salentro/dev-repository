@@ -5,6 +5,7 @@ namespace Erp\StripeBundle\Controller;
 use Stripe\Event;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class WebhookController extends Controller
 {
@@ -27,5 +28,7 @@ class WebhookController extends Controller
 
         $dispatcher = $this->get('event_dispatcher');
         $dispatcher->dispatch($guessedDispatchingEvent['type'], $guessedDispatchingEvent['object']);
+
+        return new Response();
     }
 }
