@@ -1,11 +1,12 @@
 <?php
 
-namespace Erp\PaymentBundle\Command;
+namespace Erp\StripeBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Erp\PaymentBundle\Entity\StripeRecurringPayment;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 
 class CheckRecurringPaymentCommand extends ContainerAwareCommand
 {
@@ -20,7 +21,7 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('erp:payment:charge')
+            ->setName('erp:payment:check')
             ->setDescription('Charge Tenants');
     }
 
@@ -43,22 +44,23 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
         $logger = $container->get('logger');
-        $chargeManager = $container->get('erp.payment.stripe.manager.charge_manager');
+        $apiManager = $container->get('erp_stripe.entity.api_manager');
         $em = $this->getEntityManager();
 
         $i = 0;
         /** @var StripeRecurringPayment $payment */
         foreach ($payments as $payment) {
-            $response = $chargeManager->create(
-                [
+            $arguments = [
+                'params' => [
                     'amount' => $payment->getAmount(),
-                    'currency' => 'usd',
-                    'source' => $payment->getCustomer()->getId(),
+                    'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                    'customer' => $payment->getCustomer()->getCustomerId(),
                 ],
-                [
-                    'stripe_account' => $payment->getAccount()->getId(),
+                'options' => [
+                    'stripe_account' => $payment->getAccount()->getAccountId()
                 ]
-            );
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
 
             if ($response->isSuccess()) {
                 $status = StripeRecurringPayment::STATUS_FAILURE;

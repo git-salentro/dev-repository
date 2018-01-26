@@ -42,7 +42,7 @@ class StripeController extends BaseController
             $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
 
             $stripeToken = $model->getToken();
-            $requestOptions = ['stripe_account' => $landlordStripeAccountId];
+            $options = ['stripe_account' => $landlordStripeAccountId];
 
             $stripeCustomer = $user->getStripeCustomer();
             $customerManager = $this->get('erp.payment.stripe.manager.customer_manager');
@@ -53,7 +53,7 @@ class StripeController extends BaseController
                         'email' => $user->getEmail(),
                         'source' => $stripeToken,
                     ],
-                    $requestOptions
+                    $options
                 );
 
                 if (!$response->isSuccess()) {
@@ -72,7 +72,7 @@ class StripeController extends BaseController
                 // Force flush for saving Stripe customer
                 $this->em->flush();
             } else {
-                $response = $customerManager->retrieve($stripeCustomer->getCustomerId(), $requestOptions);
+                $response = $customerManager->retrieve($stripeCustomer->getCustomerId(), $options);
 
                 if (!$response->isSuccess()) {
                     $templateParams['errors'] = $response->getErrorMessage();
@@ -86,7 +86,7 @@ class StripeController extends BaseController
                     [
                         'source' => $stripeToken,
                     ],
-                    $requestOptions
+                    $options
                 );
 
                 if (!$response->isSuccess()) {
@@ -124,12 +124,20 @@ class StripeController extends BaseController
         $user = $this->getUser();
         $stripeCustomer = $user->getStripeCustomer();
 
+        $options = null;
+        if ($user->hasRole(User::ROLE_TENANT)) {
+            $landlord = $user->getTenantProperty()->getUser();
+            $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
+            $options = ['stripe_account' => $landlordStripeAccountId];
+        }
+
         if (!$stripeCustomer) {
             $response = $customerManager->create(
                 [
                     'email' => $user->getEmail(),
                     'source' => $stripeBankAccountToken,
-                ]
+                ],
+                $options
             );
 
             if (!$response->isSuccess()) {
@@ -152,7 +160,7 @@ class StripeController extends BaseController
             $this->em->flush();
         } else {
             /** @var StripeCustomer $stripeCustomer */
-            $response = $customerManager->retrieve($stripeCustomer->getCustomerId());
+            $response = $customerManager->retrieve($stripeCustomer->getCustomerId(), $options);
 
             if (!$response->isSuccess()) {
                 return new JsonResponse(
@@ -164,7 +172,7 @@ class StripeController extends BaseController
             }
             /** @var Customer $customer */
             $customer = $response->getContent();
-            $response = $customerManager->update($customer, ['source' => $stripeBankAccountToken]);
+            $response = $customerManager->update($customer, ['source' => $stripeBankAccountToken], $options);
 
             if (!$response->isSuccess()) {
                 return new JsonResponse(

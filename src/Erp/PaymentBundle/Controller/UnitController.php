@@ -92,7 +92,8 @@ class UnitController extends BaseController
             $subscription = $response->getContent();
 
             $stripeSubscription = new StripeSubscription();
-            $stripeSubscription->setSubscriptionId($subscription['id']);
+            $stripeSubscription->setSubscriptionId($subscription['id'])
+                ->setQuantity($quantity);
 
             $stripeCustomer->addStripeSubscription($stripeSubscription);
 
