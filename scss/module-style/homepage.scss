@@ -202,7 +202,24 @@
         }
     }
 }
-
+//aboutus
+.aboutus_title{
+    font-size: 50px;
+    font-family: LatoRegular;
+    color: #fff;
+    margin-bottom: 30px;
+}
+#aboutus{
+    p{
+        margin: 0;
+        color: #fff;
+        font-size: 17px;
+        font-family: NunitoRegular;
+    }
+    a{
+        font-weight: bold;
+    }
+}
 /* Features */
 #features {
     text-align: center;
@@ -326,7 +343,32 @@
         }
     }
 }
+.banner_main{
+    background: #7e7b7c;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
 
+    p{
+        margin: 20px 0;
+        font-size: 22px;
+    }
+    .btn{
+        text-transform: uppercase;
+        border-radius: 10px;
+        font-size: 22px;
+        max-width: 350px;
+        letter-spacing: 2px;
+        width: auto;
+    }
+    a{
+        font-weight: bold;
+    }
+    h2 {
+        font-size: 44px;
+        margin: 18px 0 20px 0;
+    }
+}
 /* Properties */
 #properties {
     padding: 60px 0 90px 0;
