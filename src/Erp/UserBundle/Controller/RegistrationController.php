@@ -79,7 +79,7 @@ class RegistrationController extends BaseController
                 $settings = $this->get('erp.users.user.service')->getSettings();
 
                 $user->setUsername($user->getEmail())
-                    ->setStatus(User::STATUS_PENDING)
+                    ->setStatus(User::STATUS_ACTIVE)
                     ->setSettings(array_keys($settings))
                     ->setPropertyCounter(User::DEFAULT_PROPERTY_COUNTER)
                     ->setApplicationFormCounter(User::DEFAULT_APPLICATION_FORM_COUNTER)
@@ -87,12 +87,13 @@ class RegistrationController extends BaseController
                     ->setIsPrivatePaySimple(0)
                     ->setIsApplicationFormCounterFree(1)
                     ->setIsPropertyCounterFree(1)
+                    ->setEnabled(true)
                 ;
 
                 $userManager->updateUser($user);
                 $isRegisterAccept = true;
-
-                $this->sendRegistrationEmail($user);
+                $this->addFlash('navigation', '');
+//                $this->sendRegistrationEmail($user);
             }
         } else {
             $form->get('email')->setData($request->get('email', null));

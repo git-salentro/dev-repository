@@ -544,6 +544,13 @@ class User extends BaseUser
     protected $isActiveMonthlyFee = false;
 
     /**
+     * @var \Erp\PropertyBundle\Entity\RentPayment
+     *
+     * @ORM\OneToOne(targetEntity="Erp\PropertyBundle\Entity\RentPayment", mappedBy="user", cascade={"persist"})
+     */
+    protected $rentPayment;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1757,5 +1764,29 @@ class User extends BaseUser
             ->where(Criteria::expr()->neq('status', self::STATUS_DELETED));
 
         return $this->properties->matching($criteria);
+    }
+
+    /**
+     * Set rentPayment
+     *
+     * @param \Erp\PropertyBundle\Entity\RentPayment $rentPayment
+     *
+     * @return User
+     */
+    public function setRentPayments(\Erp\PropertyBundle\Entity\RentPayment $rentPayment = null)
+    {
+        $this->rentPayment = $rentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Get rentPayment
+     *
+     * @return \Erp\PropertyBundle\Entity\RentPayment
+     */
+    public function getRentPayment()
+    {
+        return $this->rentPayment;
     }
 }

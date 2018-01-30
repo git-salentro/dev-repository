@@ -336,7 +336,7 @@ class StripeController extends BaseController
             $arguments = [
                 'id' => $stripeAccount->getAccountId(),
                 'params' => $stripeAccount->toStripe(),
-                'options' => [],
+                'options' => null,
 
             ];
             $response = $apiManager->callStripeApi('\Stripe\Account', 'update', $arguments);
@@ -364,6 +364,8 @@ class StripeController extends BaseController
 
             if ($user->hasRole(User::ROLE_LANDLORD)) {
                 $url = $this->generateUrl('erp_payment_unit_buy');
+
+                $this->addFlash('navigation', '');
             } else {
                 $url = $this->generateUrl('erp_user_profile_dashboard');
             }

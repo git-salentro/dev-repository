@@ -37,6 +37,9 @@
                 {{ render(controller('ErpSmartMoveBundle:SmartMove:backgroundCreditCheckWidget')) }}
                 {{ render(controller('ErpUserBundle:Dashboard:showProperties')) }}
             </div>
+            <div class="row profile-widget-row profile-widget-custom">
+                {{ render(controller('ErpUserBundle:Dashboard:showLateRentPayments')) }}
+            </div>
         </div>
     </section>
 {% endblock %}
@@ -115,5 +118,12 @@
                 linkHandler.open();
             });
         })(jQuery);
+
+        {% if app.session.flashBag.has('navigation') %}
+            $(document).ready(function () {
+                $('#epr-modal-popup').find('.modal-body').html("{{ app.session.flashBag.get('navigation')[0] }}");
+                $('#epr-modal-popup').modal('show');
+            });
+        {% endif %}
     </script>
 {% endblock %}

@@ -42,7 +42,7 @@ class PropertyRepository extends EntityRepository
     /**
      * Get QueryBuilder for available properties by updated date
      *
-     * @param int   $cntNeedle
+     * @param int $cntNeedle
      * @param array $notInclude
      *
      * @return array
@@ -127,8 +127,8 @@ class PropertyRepository extends EntityRepository
     /**
      * Get Available properties by user city
      *
-     * @param User  $user
-     * @param int   $cntNeedleBuyCity
+     * @param User $user
+     * @param int $cntNeedleBuyCity
      * @param array $notInclude
      *
      * @return array
@@ -144,9 +144,9 @@ class PropertyRepository extends EntityRepository
     /**
      * Get Available properties by user state
      *
-     * @param User  $user
+     * @param User $user
      * @param array $result
-     * @param int   $cntNeedleBuyCity
+     * @param int $cntNeedleBuyCity
      *
      * @return array
      */
@@ -195,7 +195,7 @@ class PropertyRepository extends EntityRepository
         $prefix = uniqid();
         $sqls = array();
         foreach ($idx as $pos => $id) {
-            $ids     = explode(self::ID_SEPARATOR, $id);
+            $ids = explode(self::ID_SEPARATOR, $id);
 
             $ands = array();
             foreach ($fieldNames as $posName => $name) {
@@ -229,8 +229,7 @@ class PropertyRepository extends EntityRepository
             ->andWhere('pr.user = :user')
             ->setParameter('propertyId', $propertyId)
             ->setParameter('status', Property::STATUS_DELETED)
-            ->setParameter('user', $user)
-        ;
+            ->setParameter('user', $user);
 
         $result = $qb->getQuery()->getOneOrNullResult();
 
@@ -266,6 +265,45 @@ class PropertyRepository extends EntityRepository
         }
 
         return $qb->getQuery();
+    }
+
+    public function getLatePayments(User $user)
+    {
+        //TODO Optimize. Get rid of hydration
+        $qb = $this->getPropertiesForPaymentQueryBuilder();
+        $qb->join('p.user', 'u')
+            ->andWhere('rp.balance <= 0')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    public function getScheduledPropertiesForPayment()
+    {
+        return $this->getPropertiesForPaymentQueryBuilder()
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function getPropertiesForPaymentQueryBuilder()
+    {
+        $yesterday = (new \DateTime())->modify('-1 day');
+        $yesterdayDay = $yesterday->format('j');
+        $yesterdayMonth = $yesterday->format('n');
+
+        $qb = $this->createQueryBuilder('p')
+            ->select('p', 'ps', 'tu')
+            ->join('p.settings', 'ps')
+            ->join('p.tenantUser', 'tu')
+            ->join('tu.rentPayment', 'rp')
+            ->where('ps.dayUntilDue <= :yesterdayDay')
+            ->andWhere('MONTH(rp.lastPaymentAt) != :yesterdayMonth')
+            ->setParameter('yesterdayDay', $yesterdayDay)
+            ->setParameter('yesterdayMonth', $yesterdayMonth);
+
+        return $qb;
     }
 
     /**

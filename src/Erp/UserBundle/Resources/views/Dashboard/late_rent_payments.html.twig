@@ -1,0 +1,25 @@
+<div class="col-md-12 col-xs-6 profile-widget-item widget-last">
+    <div class="row widget-title-row">
+        <div class="login-block-title bold-text">Late Rent Payments</div>
+    </div>
+    <div class="history-block">
+        <div class="payment-history">
+            <ul class="payment-table-title">
+                <li>
+                    <span class="col-xs-4 bold-text">Tenant</span>
+                    <span class="col-xs-4 bold-text amount-col">Address</span>
+                    <span class="col-xs-4 bold-text amount-col">Total owed</span>
+                </li>
+            </ul>
+            <ul class="payment-table">
+                {% for item in items %}
+                    <li>
+                        <span class="col-xs-4">{{ item.tenantUser.fullNameWithEmail }}</span>
+                        <span class="col-xs-4 amount-col">{{ item.address }}</span>
+                        <span class="col-xs-4 amount-col">{{ item.tenantUser.rentPayment.balance }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

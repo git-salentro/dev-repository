@@ -10,6 +10,7 @@ info "Run RabbitMQ"
 php app/console rabbitmq:consumer -m 50
 
 info "Add Cron Job"
-echo '* * * * * root php /var/www/app/console erp:payment:check' >> /etc/crontab
+echo '0 0 * * * root php /var/www/app/console erp:recurring-payment:check' >> /etc/crontab
+echo '0 1 * * * root php /var/www/app/console erp:rent-payment:check' >> /etc/crontab
 
 exec "$@"

@@ -15,7 +15,9 @@ class TransactionTypeGuesser
                 ];
                 break;
             case Transaction::CASH_OUT:
-                return [];
+                return [
+                    Transaction::TYPE_CHARGE,
+                ];
                 break;
         }
     }

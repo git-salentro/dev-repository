@@ -21,7 +21,7 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('erp:payment:check')
+            ->setName('erp:recurring-payment:check')
             ->setDescription('Charge Tenants');
     }
 

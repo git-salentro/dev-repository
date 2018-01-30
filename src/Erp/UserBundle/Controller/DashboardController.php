@@ -11,6 +11,7 @@ use Erp\UserBundle\Entity\User;
 use Stripe\BankAccount;
 use Stripe\Card;
 use Symfony\Component\HttpFoundation\Request;
+use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 
 //TODO Refactor preparing chart data
 class DashboardController extends BaseController
@@ -21,6 +22,18 @@ class DashboardController extends BaseController
         $user = $this->getUser();
         return $this->render('ErpUserBundle:Dashboard:index.html.twig', [
             'user' => $user,
+        ]);
+    }
+
+    public function showLateRentPaymentsAction()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $repository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $items = $repository->getLatePayments($user);
+
+        return $this->render('ErpUserBundle:Dashboard:late_rent_payments.html.twig', [
+            'items' => $items,
         ]);
     }
 
