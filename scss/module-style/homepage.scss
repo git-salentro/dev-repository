@@ -409,9 +409,9 @@
     }
     span {
         display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        //white-space: nowrap;
+        //overflow: hidden;
+        //text-overflow: ellipsis;
         &.prop-price {
             color: #ca171b;
             padding-top: 10px;
