@@ -535,3 +535,22 @@
         }
     }
 }
+.tooltip_btn{
+    padding: 5px;
+    display: block;
+    position: absolute;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #fff;
+    background: #000;
+
+    &:after {
+        content: '';
+        position: absolute;
+        margin-left: 50%;
+        margin-top: 2px;
+        border-style: solid;
+        border-color: #000 transparent transparent;
+        border-width: 12px 10px 0;
+    }
+}
