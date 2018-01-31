@@ -109,7 +109,7 @@ $( document ).ready(function() {
     $( 'body' ).erpPopup();
 
     $('form[name!=contract-form]').on('submit', function () {
-        if ($(this).prop('name') != 'ps_history_export_form') {
+        if ($(this).prop('name') != 'ps_history_export_form' && $(this).prop('name') != 'erp_stripe_transactions_export') {
             $(this).find('button[type=submit]').prop('disabled', true);
         }
     });

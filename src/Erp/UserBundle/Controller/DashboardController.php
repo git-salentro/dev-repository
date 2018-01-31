@@ -155,7 +155,7 @@ class DashboardController extends BaseController
         }
 
         $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-        $query = $repository->getTransactions($stripeAccount, $stripeCustomer);
+        $query = $repository->getTransactionsQuery($stripeAccount, $stripeCustomer);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($query, $request->query->getInt('page', 1));

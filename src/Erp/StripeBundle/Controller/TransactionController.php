@@ -4,8 +4,15 @@ namespace Erp\StripeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
+use Erp\StripeBundle\Form\Type\TransactionsExportType;
+use Erp\StripeBundle\Entity\TransactionsExport;
+use Goodby\CSV\Export\Standard\ExporterConfig;
+use Goodby\CSV\Export\Standard\Exporter;
+use Goodby\CSV\Export\Standard\CsvFileObject;
 
 class TransactionController extends Controller
 {
@@ -14,8 +21,9 @@ class TransactionController extends Controller
         /** @var User $user */
         $user = $this->getUser();
         $stripeAccount = $user->getStripeAccount();
+        $stripeCustomer = $user->getStripeCustomer();
 
-        if (!$stripeAccount) {
+        if (!$stripeAccount || !$stripeCustomer) {
             return $this->render('ErpStripeBundle:Transaction:index.html.twig',[
                 'error' => 'Please, verify you bank account.'
             ]);
@@ -31,7 +39,7 @@ class TransactionController extends Controller
         $dateTo = (new \DateTime())->setTimestamp($dateTo->getTimestamp());
 
         $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-        $query = $repository->getTransactions($stripeAccount, $dateFrom, $dateTo);
+        $query = $repository->getTransactionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -42,6 +50,85 @@ class TransactionController extends Controller
         return $this->render('ErpStripeBundle:Transaction:index.html.twig', [
             'user' => $user,
             'pagination' => $pagination,
+        ]);
+    }
+
+    public function exportAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $stripeAccount = $user->getStripeAccount();
+        $stripeCustomer = $user->getStripeCustomer();
+
+        if (!$stripeAccount || !$stripeCustomer) {
+            return;
+        }
+
+        $transactionsExport = new TransactionsExport();
+        $form = $this->createForm(new TransactionsExportType(), $transactionsExport);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $dateFrom = $transactionsExport->getDateFrom();
+                $dateTo = $transactionsExport->getDateTo();
+
+                $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
+                $transactionsQuery = $repository->getTransactionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
+                $transactions = $transactionsQuery->getResult();
+
+                $filename = 'Transaction_history';
+                //TODO Refactoring. Strategy form CSV/PDF. Decorator Objects or array
+                if ($form->get('pdf_submit')->isClicked()) {
+                    $html = $this->renderView('ErpStripeBundle:Transaction:export.html.twig', [
+                        'transactions' => $transactions,
+                    ]);
+                    $dompdf = $this->get('slik_dompdf');
+                    $dompdf->getpdf($html);
+                    $dompdf->stream(sprintf('%s.pdf', $filename), ['Attachment' => '0']);
+
+                    return new Response(
+                        $dompdf->output(),
+                        200,
+                        [
+                            'Content-Type' => 'application/pdf',
+                            'Content-Disposition' => sprintf('attachment; filename="%s.pdf"', $filename),
+                        ]
+                    );
+                } elseif ($form->get('csv_submit')->isClicked()) {
+                    $i = 0;
+                    $items = [];
+                    foreach ($transactions as $transaction) {
+                        $items[] = [
+                            $i++,
+                            $transaction->getCreated()->format('Y/m/d'),
+                            $transaction->getAmount(),
+                            $transaction->getCurrency(),
+
+                        ];
+                    }
+
+                    $response = new StreamedResponse();
+                    $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+                    $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s.csv"', $filename));
+                    $response->setCallback(
+                        function () use ($items) {
+                            $config = new ExporterConfig();
+                            $config->setDelimiter(';')->setToCharset('UTF-8')->setFileMode(CsvFileObject::FILE_MODE_WRITE);
+                            $exporter = new Exporter($config);
+                            $exporter->export('php://output', $items);
+                        }
+                    );
+
+                    return $response;
+                }
+            } else {
+                //TODO Handle an errors
+            }
+        }
+
+        return $this->render('ErpStripeBundle:Transaction:export_form.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

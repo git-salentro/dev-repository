@@ -6,6 +6,7 @@ use Erp\PropertyBundle\Entity\Property;
 use Erp\PropertyBundle\Entity\PropertyRentHistory;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+
 class PropertyEntityListener
 {
     /**
@@ -32,8 +33,7 @@ class PropertyEntityListener
     {
         $em = $this->registry->getManagerForClass(PropertyRentHistory::class);
         $propertyRentHistory = new PropertyRentHistory();
-        $propertyRentHistory->setStatus($property->getStatus())
-            ->setCreatedAt(new \DateTime());
+        $propertyRentHistory->setStatus($property->getStatus());
 
         $property->addHistory($propertyRentHistory);
 

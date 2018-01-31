@@ -31,7 +31,7 @@ class CashflowController extends Controller
         $transactionTypeGuesser = new TransactionTypeGuesser();
         $guessedType = $transactionTypeGuesser->guess($data['type']);
         $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-        $query = $repository->getTransactions($stripeAccount, $stripeCustomer, $data['dateFrom'], $data['dateTo'], $guessedType);
+        $query = $repository->getTransactionsQuery($stripeAccount, $stripeCustomer, $data['dateFrom'], $data['dateTo'], $guessedType);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($query, $request->query->getInt('page', 1));
