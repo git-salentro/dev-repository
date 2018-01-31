@@ -13,12 +13,15 @@
             margin: 5px 0;
             .logo {
                 display: inline-block;
-                background: url(../images/logo-grey.png) no-repeat;
+                background: url(../images/logo_Zoobdoo.png) contain no-repeat;
+                //background: url(../images/logo-grey.png) no-repeat;
+                background-size: contain;
                 width: 325px;
-                height: 103px;
+                height: 94px;
+                //height: 103px;
             }
             ul {
-                margin-top: 35px;
+                margin-top: 20px;
                 li {
                     text-transform: uppercase;
                     font-family: LatoBold;
@@ -96,9 +99,12 @@
     }
     .logo {
         display: inline-block;
-        background: url(../images/logo.png) no-repeat;
-        width: 345px;
-        height: 140px;
+        background: url(../images/logo_Zoobdoo.png) no-repeat;
+        //background: url(../images/logo-grey.png) no-repeat;
+        background-size: contain;
+        width: 325px;
+        height: 94px;
+        //height: 103px;
     }
 }
 
