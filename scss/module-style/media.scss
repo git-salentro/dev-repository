@@ -4880,6 +4880,17 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         width: 100%;
         overflow: hidden;
     }
+    .banner_main{
+        p{
+            font-size: 16px;
+        }
+        .btn{
+            font-size: 16px;
+        }
+        h2 {
+            font-size: 30px;
+        }
+    }
 }
 
 @media (min-width: 373px) and (max-width: 450px) {
