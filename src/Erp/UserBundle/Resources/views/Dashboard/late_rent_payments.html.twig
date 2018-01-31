@@ -16,7 +16,7 @@
                     <li>
                         <span class="col-xs-4">{{ item.tenantUser.fullNameWithEmail }}</span>
                         <span class="col-xs-4 amount-col">{{ item.address }}</span>
-                        <span class="col-xs-4 amount-col">{{ item.tenantUser.rentPayment.balance }}</span>
+                        <span class="col-xs-4 amount-col">{{ item.tenantUser.rentPayment.balance|money }}</span>
                     </li>
                 {% endfor %}
             </ul>

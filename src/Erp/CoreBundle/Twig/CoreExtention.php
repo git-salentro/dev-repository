@@ -12,6 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CoreExtention extends \Twig_Extension
 {
+    const DEFAULT_CURRENCY_LOCALE = 'en_US';
+    const DEFAULT_CURRENCY = 'USD';
+
     /**
      * @var ContainerInterface
      */
@@ -38,7 +41,22 @@ class CoreExtention extends \Twig_Extension
      */
     public function getFilters()
     {
-        return ['json_decode'   => new \Twig_Filter_Method($this, 'jsonDecode')];
+        return [
+            'json_decode' => new \Twig_Filter_Method($this, 'jsonDecode'),
+            'money' => new \Twig_Filter_Method($this, 'formatAsMoney'),
+        ];
+    }
+
+    public function formatAsMoney($value)
+    {
+        if (!is_int($value)) {
+            return;
+        }
+        // TODO Refactoring
+        $value = $value / 100;
+        $format = new \NumberFormatter(self::DEFAULT_CURRENCY_LOCALE, \NumberFormatter::CURRENCY);
+
+        return $format->formatCurrency($value, self::DEFAULT_CURRENCY);
     }
 
     /**

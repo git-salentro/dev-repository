@@ -47,7 +47,7 @@
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Price</span>
-                        <span class="prop-details prop-price">${{ property.getPrice() }}</span>
+                        <span class="prop-details prop-price">{{ property.settings ? property.settings.paymentAmount|money : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label"># of Beds</span>
@@ -84,12 +84,12 @@
                         Property Settings
                     </div>
                     <div class="prop-info">
-                        <span class="prop-label">Payment Acceptance Date To</span>
+                        <span class="prop-label">Rent Due Date</span>
                         <span class="prop-details">{{ property.settings ? property.settings.dayUntilDue : '' }}</span>
                     </div>
                     <div class="prop-info">
-                        <span class="prop-label">Payment Amount</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.paymentAmount : '' }}</span>
+                        <span class="prop-label">Rent Amount</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.paymentAmount|money : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Allow Partial Payments</span>

@@ -714,7 +714,7 @@ class ListingController extends BaseController
 
         return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
             'form' => $form->createView(),
-            'modalTitle' => 'Set Payment Settings',
+            'modalTitle' => 'Payment Settings',
             'properties' => $properties,
         ]);
     }

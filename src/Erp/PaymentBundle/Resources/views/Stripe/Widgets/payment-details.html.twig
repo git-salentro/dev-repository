@@ -8,6 +8,10 @@
         </div>
     </div>
 
+    {% if app.session.flashBag.has('navigation') %}
+        {{ app.session.flashBag.get('navigation')[0] }}
+    {% endif %}
+
     {#TODO Optimize #}
     {% if app.user.hasRole('ROLE_TENANT') %}
         {% if creditCard or bankAccount %}

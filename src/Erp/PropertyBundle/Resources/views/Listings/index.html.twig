@@ -27,7 +27,7 @@
                                 step="properties-settings"
                                 role="next"
                         >
-                            Set Properties Settings
+                            Payment Settings
                         </button>
                     </div>
                 </div>
@@ -38,7 +38,16 @@
 
                 {% if pagination|length %}
                     {% for property in pagination %}
+                        {% if loop.first %}
+                            <div class="row">
+                        {% endif %}
                         {% include 'ErpPropertyBundle:Listings:property-listing.html.twig' %}
+                        {% if loop.index % 3 == 0 %}
+                            </div><div class="row">
+                        {% endif %}
+                        {% if loop.last %}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <div class="text-center">
