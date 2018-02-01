@@ -206,8 +206,20 @@ section#rental-form h1 {
     color: #fff;
     text-shadow: none;
 }
+#landlords-profile .form-group {
+    margin-bottom: 5px;
+}
+.profile .profile-widget-row .profile-widget-item .payment-calendar .date.date-end {
+    margin: 6px 10px 0 0;
+}
+.profile .profile-widget-row .profile-widget-item .payment-calendar .date.date-start {
+    margin: 6px 10px 0 25px;
+}
 
 @media (max-width: 993px) and (min-width: 768px){
+    .profile .profile-widget-row .profile-widget-item .payment-calendar .edit-row {
+        margin: 10px 0;
+    }
     .profile-widget-custom .col-md-5.col-xs-6.profile-widget-item.widget-last:last-child {
         margin: 0;
     }
