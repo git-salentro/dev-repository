@@ -70,7 +70,8 @@ ul.slider-list li {
 .features {
     display: block;
     text-align: center;
-    margin: 25px 0;
+    padding: 25px 0;
+    background: #fff;
 }
 h3.sli {
     font-size: 21px;
