@@ -560,8 +560,8 @@
     &:after {
         content: '';
         position: absolute;
-        margin-left: 50%;
-        margin-top: 4px;
+        left: 50%;
+        bottom: -9px;
         border-style: solid;
         border-color: #ca171b transparent transparent;
         border-width: 10px 10px 0;
