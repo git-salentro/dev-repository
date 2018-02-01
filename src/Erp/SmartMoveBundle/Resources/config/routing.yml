@@ -18,6 +18,11 @@ erp_smart_move_report_paid:
     defaults: { _controller: ErpSmartMoveBundle:SmartMove:paidReport, smRenterId:null }
     methods: [GET, POST]
 
+erp_smart_move_smart_move_pay_report:
+    path:     /report/pay/{smRenterId}
+    defaults: { _controller: ErpSmartMoveBundle:SmartMove:payReport, smRenterId:null }
+    methods: [GET, POST]
+
 erp_smart_move_personal_form:
     path:     /{token}/personal-form
     defaults: { _controller: ErpSmartMoveBundle:SmartMove:personalForm }

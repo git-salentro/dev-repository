@@ -27,7 +27,7 @@ class Invoice
     /**
      * @var string
      *
-     * @ORM\Column(name="amount", type="string")
+     * @ORM\Column(name="amount", type="integer")
      */
     private $amount;
 
@@ -98,7 +98,7 @@ class Invoice
     /**
      * Set amount
      *
-     * @param string $amount
+     * @param integer $amount
      *
      * @return Invoice
      */
@@ -112,7 +112,7 @@ class Invoice
     /**
      * Get amount
      *
-     * @return string
+     * @return integer
      */
     public function getAmount()
     {
