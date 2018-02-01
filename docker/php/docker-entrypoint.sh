@@ -4,7 +4,17 @@ function info {
     printf "\033[0;36m===> \033[0;33m${1}\033[0m\n"
 }
 
-mkdir -p /var/www/app/logs/supervisor
+if [ ! -d "/var/www/app/logs/supervisor" ]; then
+  mkdir -p /var/www/app/logs/supervisor
+fi
+
+if [ ! -d "/var/www/web/uploads" ]; then
+  mkdir -p /var/www/web/uploads
+  chown -R www-data:www-data /var/www/web/uploads
+fi
+
+chown -R www-data:www-data /var/www/app/cache
+chown -R www-data:www-data /var/www/app/logs
 
 info "Run RabbitMQ"
 php app/console rabbitmq:consumer -m 50
