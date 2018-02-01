@@ -210,13 +210,16 @@
 //    }
 //}
 //aboutus
+
 .aboutus_title{
     font-size: 50px;
     font-family: LatoRegular;
     color: #fff;
     margin-bottom: 30px;
 }
+#services,
 #aboutus{
+    background: #d37d58;
     p{
         margin: 0;
         color: #fff;
@@ -228,7 +231,6 @@
     }
 }
 /* Features */
-#services,
 #features {
     text-align: center;
     .banner-row {
@@ -272,23 +274,25 @@
             height: 94px;
             width: 90px;
             display: inline-block;
+            background-size: contain;
+            background-repeat: no-repeat;
             &.landlord1-icon {
-                background: url(../images/homepage/ico2.png) 50%;
+                background-image: url(../images/homepage/ico2.png) 50%;
             }
             &.landlord2-icon {
-                background: url(../images/homepage/ico3.png) 50%;
+                background-image: url(../images/homepage/ico3.png) 50%;
             }
             &.landlord3-icon {
-                background: url(../images/homepage/ico4.png) 50%;
+                background-image: url(../images/homepage/ico4.png) 50%;
             }
             &.tenant1-icon {
-                background: url(../images/homepage/ico2.png) 50%;
+                background-image: url(../images/homepage/ico2.png) 50%;
             }
             &.tenant2-icon {
-                background: url(../images/homepage/ico3.png) 50%;
+                background-image: url(../images/homepage/ico3.png) 50%;
             }
             &.tenant3-icon {
-                background: url(../images/homepage/ico5.png) 50%;
+                background-image: url(../images/homepage/ico5.png) 50%;
             }
         }
         .text-block-service {
