@@ -134,6 +134,7 @@ ul.bank-info {
     padding-left: 30px;
     font-family: NunitoRegular;
     color: #706e7b;
+    font-size: 20px;
 }
 .col-md-5.col-xs-6.profile-widget-item.widget-last {
     height: 300px !important;
