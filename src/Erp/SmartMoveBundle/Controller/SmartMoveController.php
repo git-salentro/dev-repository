@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 
 class SmartMoveController extends BaseController
 {
@@ -336,6 +337,68 @@ class SmartMoveController extends BaseController
         }
 
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @param $smRenterId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Erp\SmartMoveBundle\Exceptions\SmartMoveManagerException
+     */
+    public function payReportAction(Request $request, $smRenterId)
+    {
+        /** @var $user User */
+        $user = $this->getUser();
+        //TODO Add security role
+        $customer = $user->getStripeCustomer();
+        //TODO use ParamConverter?
+        $smRenter = $this->em->getRepository('ErpSmartMoveBundle:SmartMoveRenter')->find($smRenterId);
+
+        if (!$smRenter || !$customer) {
+            throw $this->createNotFoundException();
+        }
+
+        $amount = $this->get('erp.core.fee.service')->getTenantScreeningFee();
+
+        if ($request->getMethod() === 'POST') {
+            if (!$smRenter->getIsPayed()) {
+                $apiManager = $this->get('erp_stripe.entity.api_manager');
+                $arguments = [
+                    'params' => [
+                        //TODO Add stripe money format
+                        'amount' => $amount*100,
+                        'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                        'customer' => $customer->getCustomerId(),
+                    ],
+                    'options' => null
+                ];
+                $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $this->addFlash('alert_error', $this->get('erp.users.user.service')->getPaySimpleErrorByCode('error'));
+                } else {
+                    $this->em->persist($smRenter->setIsPayed(true));
+                    $this->em->flush();
+
+                    $this->get('erp.smartmove.smartmove_service')->generateRenterReports($smRenter);
+
+                    $msg = 'Please wait for about 30 minutes for your reports to be generated, then select Tenant\'s
+                    email and press GET REPORT button again.';
+                    $this->get('session')->getFlashBag()->add('alert_ok', $msg);
+                }
+            }
+
+            return $this->redirectToRoute('erp_user_profile_dashboard');
+        }
+
+        return $this->render(
+            'ErpCoreBundle:crossBlocks:general-confirmation-popup.html.twig', [
+                'askMsg'    => 'You will be charged $' . $amount . ' for this feature. Do you want to proceed?',
+                'actionBtn' => 'Yes',
+                'actionUrl' => $this->generateUrl('erp_smart_move_smart_move_pay_report', ['smRenterId' => $smRenter->getId()])
+            ]
+        );
     }
 
     /**

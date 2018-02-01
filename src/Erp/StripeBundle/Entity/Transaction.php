@@ -40,7 +40,7 @@ class Transaction
     /**
      * @var float
      *
-     * @ORM\Column(name="amount", type="float", scale=2)
+     * @ORM\Column(name="amount", type="integer")
      */
     private $amount;
 
@@ -133,7 +133,7 @@ class Transaction
     /**
      * Set amount
      *
-     * @param float $amount
+     * @param integer $amount
      *
      * @return Transaction
      */
@@ -147,7 +147,7 @@ class Transaction
     /**
      * Get amount
      *
-     * @return float
+     * @return integer
      */
     public function getAmount()
     {
