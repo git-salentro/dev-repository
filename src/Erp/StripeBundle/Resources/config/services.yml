@@ -46,7 +46,7 @@ services:
         arguments:
             - '%stripe.secret_key%'
 
-    erp_property_event_listener_property_entity_listener:
+    erp_stripe_event_listener_transaction_entity_listener:
         class: 'Erp\StripeBundle\EventListener\TransactionEntityListener'
         arguments:
             - '@doctrine'
