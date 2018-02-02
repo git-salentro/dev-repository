@@ -840,6 +840,13 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 
 
 @media (min-width: 768px) and (max-width: 993px) {
+  .prising_wrap{
+    float: left;
+    width: 200px;
+  }
+  .form_wrap{
+    margin-left: 220px;
+  }
     #tenants-profile {
         .profile-widget-row {
             .profile-widget-item {
@@ -1835,9 +1842,23 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     .aboutus_title {
         font-size: 30px;
     }
+  .prising_wrap{
+    float: left;
+    width: 200px;
+  }
+  .form_wrap{
+    margin-left: 220px;
+  }
 }
 
 @media (min-width: 590px) and (max-width: 767px) {
+  .prising_wrap{
+    float: left;
+    width: 200px;
+  }
+  .form_wrap{
+    margin-left: 220px;
+  }
     .aboutus_title {
         font-size: 30px;
     }
