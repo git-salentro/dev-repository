@@ -219,19 +219,24 @@
 }
 #services,
 #aboutus{
+    position: relative;
     background: #d37d58;
+    text-align: center;
+    padding: 30px 0 40px 0;
     p{
         margin: 0;
         color: #fff;
-        font-size: 17px;
-        font-family: NunitoRegular;
+        font-size: 24px;
+        font-family: LatoRegular;
     }
     a{
         font-weight: bold;
+        font-family: LatoRegular;
     }
 }
 /* Features */
 #features {
+    position: relative;
     text-align: center;
     .banner-row {
         padding-bottom: 20px;
@@ -277,22 +282,22 @@
             background-size: contain;
             background-repeat: no-repeat;
             &.landlord1-icon {
-                background-image: url(../images/homepage/ico2.png) 50%;
+                background-image: url(../images/homepage/ico2.png);
             }
             &.landlord2-icon {
-                background-image: url(../images/homepage/ico3.png) 50%;
+                background-image: url(../images/homepage/ico3.png);
             }
             &.landlord3-icon {
-                background-image: url(../images/homepage/ico4.png) 50%;
+                background-image: url(../images/homepage/ico4.png);
             }
             &.tenant1-icon {
-                background-image: url(../images/homepage/ico2.png) 50%;
+                background-image: url(../images/homepage/ico2.png);
             }
             &.tenant2-icon {
-                background-image: url(../images/homepage/ico3.png) 50%;
+                background-image: url(../images/homepage/ico3.png);
             }
             &.tenant3-icon {
-                background-image: url(../images/homepage/ico5.png) 50%;
+                background-image: url(../images/homepage/ico5.png);
             }
         }
         .text-block-service {
@@ -548,14 +553,20 @@
     }
 }
 .tooltip_btn{
+    font-family: LatoRegular!important;
+    height: 108px;
+    width: 200px;
+    text-align: center!important;
     padding: 4px;
     display: block;
     position: absolute;
-    font-size: 16px;
+    font-size: 16px!important;
+    text-transform: none!important;
     line-height: 1.2;
     color: #fff;
-    background: #ca171b;
+    background: #d37d58;
     border-radius: 6px;
+    bottom: 100%;
 
     &:after {
         content: '';
@@ -563,7 +574,7 @@
         left: 50%;
         bottom: -9px;
         border-style: solid;
-        border-color: #ca171b transparent transparent;
+        border-color: #d37d58 transparent transparent;
         border-width: 10px 10px 0;
     }
 }
