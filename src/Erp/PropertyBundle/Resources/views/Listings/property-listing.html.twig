@@ -89,7 +89,8 @@
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Rent Amount</span>
-                        <span class="prop-details">{{ property.settings ? property.settings.paymentAmount|money : '' }}</span>
+                        {# TODO Refacoring money #}
+                        <span class="prop-details">${{ property.settings ? property.settings.paymentAmount|number_format(2, '.', ',') : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Allow Partial Payments</span>
@@ -100,7 +101,7 @@
                         <span class="prop-details">{{ property.settings ? property.settings.allowCreditCardPayments ? 'Yes' : 'No' : '' }}</span>
                     </div>
                     <div class="prop-info">
-                        <span class="prop-label">Set auto-draft from tenant account?</span>
+                        <span class="prop-label">Set auto-draft from tenant?</span>
                         <span class="prop-details">{{ property.settings ? property.settings.allowAutoDraft ? 'Yes' : 'No' : '' }}</span>
                     </div>
                 </div>
