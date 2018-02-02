@@ -293,6 +293,10 @@ section#rental-form h1 {
     }
 }
 @media (max-width: 589px){
+    #features .text-capabilities .text-block-service {
+     height: auto;
+        padding-bottom: 20px;
+    }
     .profile .profile-widget-row {
         margin: 0 5px 0px;
     }

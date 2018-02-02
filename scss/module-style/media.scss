@@ -1832,9 +1832,15 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
     }
+    .aboutus_title {
+        font-size: 30px;
+    }
 }
 
 @media (min-width: 590px) and (max-width: 767px) {
+    .aboutus_title {
+        font-size: 30px;
+    }
     #landlords-profile .col-md-5.col-xs-6.profile-widget-item.widget-last{
         margin: 0 0 20px 0;
         width: 100%;
@@ -3055,6 +3061,9 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 }
 
 @media (max-width: 589px) {
+    .aboutus_title {
+        font-size: 30px;
+    }
     .row {
         .features {
             &.property-tab {
