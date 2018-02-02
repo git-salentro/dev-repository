@@ -209,7 +209,10 @@
         vertical-align: bottom;
         font-family: LatoBold;
         font-size: 13px;
-        width: 125px;
+        width: 178px;
+        //width: 125px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .prop-details {
         display: inline;
