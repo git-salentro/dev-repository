@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Class RegistrationController
@@ -92,7 +93,12 @@ class RegistrationController extends BaseController
 
                 $userManager->updateUser($user);
                 $isRegisterAccept = true;
-                $this->addFlash('navigation', 'Become a member<br> now and gain access <br>to all of our services!<br> Just verify your<br> bank information here.');
+
+                $this->addFlash('show_navigation_sign_after_register', '');
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+
+                return $this->redirectToRoute('erp_user_dashboard_dashboard');
 //                $this->sendRegistrationEmail($user);
             }
         } else {

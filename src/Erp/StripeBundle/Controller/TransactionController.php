@@ -60,13 +60,15 @@ class TransactionController extends Controller
         $stripeAccount = $user->getStripeAccount();
         $stripeCustomer = $user->getStripeCustomer();
 
-        if (!$stripeAccount || !$stripeCustomer) {
-            return;
-        }
-
         $transactionsExport = new TransactionsExport();
         $form = $this->createForm(new TransactionsExportType(), $transactionsExport);
         $form->handleRequest($request);
+
+        if (!$stripeAccount || !$stripeCustomer) {
+            return $this->render('ErpStripeBundle:Transaction:export_form.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {

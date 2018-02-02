@@ -8,10 +8,6 @@
         </div>
     </div>
 
-    {% if app.session.flashBag.has('navigation') %}
-        {{ app.session.flashBag.get('navigation')[0] }}
-    {% endif %}
-
     {#TODO Optimize #}
     {% if app.user.hasRole('ROLE_TENANT') %}
         {% if creditCard or bankAccount %}
@@ -119,9 +115,11 @@
             <div class="row bank-info-row">
                 <div class="col-xs-12">
                     <div class="row edit-row custombutton">
-                        <button id='verify-ba' class="btn edit-btn" {% if app.session.flashBag.has('navigation') %}style="position: relative"{% endif %}>
-                            {% if app.session.flashBag.has('navigation') %}
-                                <div class="tooltip_btn">{{ app.session.flashBag.get('navigation')[0] }}</div>
+                        <button id='verify-ba' class="btn edit-btn" {% if app.session.flashBag.has('show_navigation_sign_after_register') %}style="position: relative"{% endif %}>
+                            {% if app.session.flashBag.has('show_navigation_sign_after_register') %}
+                                {# TODO Refactoring #}
+                                {{ app.session.flashBag.get('show_navigation_sign_after_register')[0] }}
+                                <div class="tooltip_btn">Become a member<br> now and gain access <br>to all of our services!<br> Just verify your<br> bank information here.</div>
                             {% endif %}
                             Verify
                         </button>
