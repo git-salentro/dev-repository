@@ -89,6 +89,7 @@ doctrine:
                 year: DoctrineExtensions\Query\Mysql\Year
             string_functions:
                 month: DoctrineExtensions\Query\Mysql\Month
+                day: DoctrineExtensions\Query\Mysql\Day
 
     dbal:
         types:

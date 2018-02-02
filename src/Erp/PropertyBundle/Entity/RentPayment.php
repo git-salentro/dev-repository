@@ -10,6 +10,7 @@ use Erp\UserBundle\Entity\User;
  *
  * @ORM\Table(name="rent_payment")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class RentPayment
 {
@@ -43,6 +44,28 @@ class RentPayment
      * @ORM\Column(name="balance", type="integer")
      */
     private $balance;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="debt_start_at", type="date", nullable=true)
+     */
+    private $debtStartAt;
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function checkBalance()
+    {
+        if ($this->balance < 0 && $this->debtStartAt === null) {
+            $this->debtStartAt = new \DateTime();
+        }
+
+        if ($this->balance >= 0) {
+            $this->debtStartAt = null;
+        }
+    }
 
     /**
      * Get id
@@ -126,6 +149,30 @@ class RentPayment
         return $this->balance;
     }
 
+    /**
+     * Set debtStartAt
+     *
+     * @param \DateTime $debtStartAt
+     *
+     * @return RentPayment
+     */
+    public function setDebtStartAt($debtStartAt)
+    {
+        $this->debtStartAt = $debtStartAt;
+
+        return $this;
+    }
+
+    /**
+     * Get debtStartAt
+     *
+     * @return \DateTime
+     */
+    public function getDebtStartAt()
+    {
+        return $this->debtStartAt;
+    }
+
     public function takeMoneyFromBalance($amount)
     {
         $this->balance -= $amount;
@@ -134,5 +181,14 @@ class RentPayment
     public function depositMoneyToBalance($amount)
     {
         $this->balance += $amount;
+    }
+
+    public function getNumberOfDayLate()
+    {
+        if (!$this->debtStartAt) {
+            return;
+        }
+
+        return (new \DateTime())->diff($this->debtStartAt)->format('%a');
     }
 }

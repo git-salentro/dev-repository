@@ -34,11 +34,12 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {#TODO currency, currency to format money#}
                             {% for cashflow in pagination %}
                                 <tr>
                                     <td>{{ cashflow.id }}</td>
                                     <td>{{ cashflow.type }}</td>
-                                    <td>{{ cashflow.amount }}</td>
+                                    <td>{{ cashflow.amount|money }}</td>
                                     <td>{{ cashflow.currency }}</td>
                                     <td>{{ cashflow.created|date('Y/m/d') }}</td>
                                 </tr>

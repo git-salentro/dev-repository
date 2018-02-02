@@ -204,13 +204,16 @@ class DashboardController extends BaseController
 
     private function getPreparedItems(array $items, array $intervals)
     {
+        //TODO Refactoring amount
         $results = [];
         $existingIntervals = array_column($items, 'interval');
+        $format = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);
+
         foreach ($intervals as $interval) {
             if (false !== $key = array_search($interval, $existingIntervals)) {
-                $results[] = $items[$key]['gAmount'];
+                $results[] = $format->formatCurrency($items[$key]['gAmount']/100, 'USD');
             } else {
-                $results[] = 0;
+                $results[] = $format->formatCurrency(0, 'USD');
             }
         }
 

@@ -92,7 +92,7 @@ class RegistrationController extends BaseController
 
                 $userManager->updateUser($user);
                 $isRegisterAccept = true;
-                $this->addFlash('navigation', '');
+                $this->addFlash('navigation', 'Become a member<br> now and gain access <br>to all of our services!<br> Just verify your<br> bank information here.');
 //                $this->sendRegistrationEmail($user);
             }
         } else {

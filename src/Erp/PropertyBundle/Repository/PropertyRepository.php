@@ -269,9 +269,14 @@ class PropertyRepository extends EntityRepository
 
     public function getLatePayments(User $user)
     {
+        //TODO When create record in RentPayment?
         //TODO Optimize. Get rid of hydration
-        $qb = $this->getPropertiesForPaymentQueryBuilder();
-        $qb->join('p.user', 'u')
+        $qb = $this->createQueryBuilder('p')
+            ->select('p', 'ps', 'tu')
+            ->join('p.settings', 'ps')
+            ->join('p.tenantUser', 'tu')
+            ->join('tu.rentPayment', 'rp')
+            ->join('p.user', 'u')
             ->andWhere('rp.balance <= 0')
             ->andWhere('p.user = :user')
             ->setParameter('user', $user);
@@ -289,6 +294,7 @@ class PropertyRepository extends EntityRepository
 
     private function getPropertiesForPaymentQueryBuilder()
     {
+        //TODO Optimize. Get rid of hydration
         $yesterday = (new \DateTime())->modify('-1 day');
         $yesterdayDay = $yesterday->format('j');
         $yesterdayMonth = $yesterday->format('n');

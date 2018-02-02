@@ -22,8 +22,7 @@
                             Cards information is not added yet
                         </div>
                         <div class="row edit-row">
-                            <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
-                               class="btn edit-btn">
+                            <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}" class="btn edit-btn">
                                 add card info
                             </a>
                         </div>
@@ -120,7 +119,12 @@
             <div class="row bank-info-row">
                 <div class="col-xs-12">
                     <div class="row edit-row custombutton">
-                        <button id='verify-ba' class="btn edit-btn">Verify</button>
+                        <button id='verify-ba' class="btn edit-btn" {% if app.session.flashBag.has('navigation') %}style="position: relative"{% endif %}>
+                            {% if app.session.flashBag.has('navigation') %}
+                                <div class="tooltip_btn">{{ app.session.flashBag.get('navigation')[0] }}</div>
+                            {% endif %}
+                            Verify
+                        </button>
                     </div>
                 </div>
             </div>
