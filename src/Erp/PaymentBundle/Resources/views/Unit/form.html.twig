@@ -22,7 +22,17 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
+                <div class="col-md-6 prising_wrap">
+                    <div class="prising_info">
+                        <h2>Prising</h2>
+                        <ol class="prising_list">
+                            <li>1st unit: $125/ annual fee (includes all services)</li>
+                            <li>2nd and other Units: $20 each/annual fee (includes all services)</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="col-md-6 form_wrap">
+                {#<div class="col-md-4 col-md-offset-4">#}
                     {% if errors %}
                         <span class="field-validation-error">{{ errors }}</span>
                     {% endif %}
@@ -42,10 +52,10 @@
                         <div class="row">
                             <div class="form-group form-group_units">
                                 <div class="col-xs-12">
-                                    <div class="col-xs-6">
+                                    <div class="form-group_units_label">
                                         {{ form_label(form.count) }}
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="form-group_units_form">
                                         {{ form_widget(form.count, {'id': 'unit-count'}) }}
                                     </div>
                                     {{ form_custom_errors.widget(form.count) }}
