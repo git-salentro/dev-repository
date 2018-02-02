@@ -27,14 +27,15 @@
                         <span class="field-validation-error">{{ errors }}</span>
                     {% endif %}
 
+                    {# TODO money format on js #}
                     {% if hasSubscriptions %}
-                        <p>Current year price: <span id="current-year-price">{{ currentYearPrice }}</span></p>
-                        <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
-                        <p>Total price: <span id="total-price">{{ totalPrice }}</span></p>
+                        <p>Current year price: $<span id="current-year-price">{{ currentYearPrice }}</span></p>
+                        <p>Additional unit price: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
+                        <p>Total price: $<span id="total-price">{{ totalPrice }}</span></p>
                     {% else %}
-                        <p>Initial unit price: <span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
-                        <p>Additional unit price: <span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
-                        <p>New year price: <span id="total-price">0</span></p>
+                        <p>Initial unit price: $<span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
+                        <p>Additional unit price: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
+                        <p>New year price: $<span id="total-price">0</span></p>
                     {% endif %}
 
                     {{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
