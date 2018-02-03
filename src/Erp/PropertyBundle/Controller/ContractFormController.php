@@ -71,18 +71,7 @@ class ContractFormController extends BaseController
 
         // Cloning contract form, yet if not exists
         if (!$contractForm) {
-            if ($property->getUser()->getContractFormCounter()) {
-                $this->em->persist(
-                    $property->getUser()->setContractFormCounter(
-                        $property->getUser()->getContractFormCounter() - 1
-                    )
-                );
-                $this->em->flush();
-
-                $contractForm = $this->getCloneApplicationForm($property);
-            } else {
-                throw $this->createNotFoundException();
-            }
+            $contractForm = $this->getCloneApplicationForm($property);
         }
 
         $contractSection = new ContractSection();

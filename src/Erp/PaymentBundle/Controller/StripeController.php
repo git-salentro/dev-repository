@@ -285,7 +285,7 @@ class StripeController extends BaseController
                 return $this->redirectToRoute('erp_user_profile_dashboard');
             }
 
-            $propertyChecker = $this->get('erp_property_checker_property_checker');
+            $propertyChecker = $this->get('erp_property.checker.property_checker');
 
             if (!$propertyChecker->isPayable($user, $entity)) {
                 $this->addFlash(

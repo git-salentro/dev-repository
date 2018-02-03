@@ -640,67 +640,36 @@ class ListingController extends BaseController
      */
     public function repostRequestAction(Request $request, $propertyId)
     {
-        /** @var $user \Erp\UserBundle\Entity\User */
+        /** @var $user User */
         $user = $this->getUser();
         if ($user->isReadOnlyUser()) {
             throw $this->createNotFoundException();
         }
 
-        /** @var $property \Erp\PropertyBundle\Entity\Property */
+        /** @var $property Property */
         $property = $this->em->getRepository('ErpPropertyBundle:Property')->find($propertyId);
 
         if (!$property) {
             throw new NotFoundHttpException();
         }
 
-        $amount = $this->get('erp.core.fee.service')->getPostVacancyOnlineFee();
-
         if ($request->getMethod() === 'POST') {
-            // Make one payment
-            $customer = $user->getPaySimpleCustomers()->first();
-            $accountId = $customer->getPrimaryType() === PaySimpleManagerInterface::CREDIT_CARD
-                ? $customer->getCcId()
-                : $customer->getBaId();
-            $paymentModel = new RecurringPaymentModel();
-            $paymentModel->setAmount($amount)
-                ->setCustomer($customer)
-                ->setStartDate(new \DateTime())
-                ->setAccountId($accountId);
+            $repostRequest = new PropertyRepostRequest();
+            $repostRequest->setProperty($property);
+            $repostRequest->setStatus($repostRequest::STATUS_NEW);
 
-            $paymentResponse = $this->get('erp.users.user.service')->makeOnePayment($paymentModel);
+            $this->em->persist($repostRequest);
+            $this->em->flush();
 
-            if (!$paymentResponse['status']) {
-                $this->get('erp.payment.paysimple_service')->sendPaymentEmail($customer);
-                $this->addFlash(
-                    'alert_error',
-                    $this->get('erp.users.user.service')->getPaySimpleErrorByCode('error')
-                );
-            } else {
-                $repostRequest = new PropertyRepostRequest();
-                $repostRequest->setProperty($property);
-                $repostRequest->setStatus($repostRequest::STATUS_NEW);
-
-                $this->em->persist($repostRequest);
-                $this->em->flush();
-
-                $this->addFlash(
-                    'alert_ok',
-                    $this->get('erp.users.user.service')->getPaySimpleErrorByCode('charge_repost_request_ok')
-                );
-            }
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
 
             return $this->redirect($request->headers->get('referer'));
         }
 
-        return $this->render(
-            'ErpCoreBundle:crossBlocks:general-confirmation-popup.html.twig',
-            [
-                'askMsg'    => 'You will be charged $' . $amount . ' for this feature. Do you want to proceed?',
-                'actionBtn' => 'Yes',
-                'cancelBtn' => 'No',
-                'actionUrl' => $this->generateUrl('erp_property_repost_request', ['propertyId' => $propertyId])
-            ]
-        );
+        throw new NotFoundHttpException();
     }
 
     public function chooseSettingsAction()

@@ -51,3 +51,6 @@ services:
     erp.logger:
         class: %erp.logger.class%
         arguments: [@service_container]
+
+    erp_core.formatter.money_formatter:
+        class: Erp\CoreBundle\Formatter\MoneyFormatter

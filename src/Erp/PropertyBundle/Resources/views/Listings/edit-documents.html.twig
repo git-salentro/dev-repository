@@ -88,36 +88,8 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 link-col">
-
-                                {% if not user.isReadOnlyUser() or user.isApplicationFormCounterFree %}
-                                    {% if user.applicationFormCounter == 0 and not user.applicationForm and not user.isApplicationFormCounterFree %}
-                                        {% set applicationFormUrl = path('erp_property_application_form_charge', {'propertyId':property.id}) %}
-                                        {% set applicationFormRole = 'role="popup"' %}
-                                    {% else %}
-                                        {% set applicationFormUrl = path('erp_property_application_form', {'propertyId':property.id}) %}
-                                        {% set applicationFormRole = '' %}
-                                    {% endif %}
-                                    <a href="{{ applicationFormUrl }}" {{ applicationFormRole|raw }} class="red-link">
-                                        {% if user.applicationForm %} Edit {% else %} Create {% endif %} Online Application Form >>
-                                    </a>
-                                {% else %}
-                                    <a class="red-link" href="{{ path('erp_user_profile_read_only_popup') }}" role="popup">Create Online Application Form >></a>
-                                {% endif %}
-
-                                {% if not user.isReadOnlyUser() %}
-                                    {% if user.contractFormCounter == 0 and not property.contractForm %}
-                                        {% set contractFormUrl = path('erp_property_contract_form_charge', {'propertyId':property.id}) %}
-                                        {% set contractFormRole = 'role="popup"' %}
-                                    {% else %}
-                                        {% set contractFormUrl = path('erp_property_contract_form', {'propertyId':property.id}) %}
-                                        {% set contractFormRole = '' %}
-                                    {% endif %}
-                                    <a href="{{ contractFormUrl }}" {{ contractFormRole|raw }} class="red-link">
-                                        {% if property.contractForm %} Edit {% else %} Create {% endif %} Online Contract Form >>
-                                    </a>
-                                {% else %}
-                                    <a class="red-link" href="{{ path('erp_user_profile_read_only_popup') }}" role="popup">Create Online Contract Form >></a>
-                                {% endif %}
+                                <a class="red-link" href="{{ path('erp_property_application_form', {'propertyId':property.id}) }}">Create Online Application Form >></a>
+                                 <a class="red-link" href="{{ path('erp_property_contract_form', {'propertyId':property.id}) }}">Create Online Contract Form >></a>
                             </div>
                         </div>
                     </div>

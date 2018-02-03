@@ -1,8 +1,8 @@
 services:
-    erp_property_checker_property_checker:
+    erp_property.checker.property_checker:
         class: Erp\PropertyBundle\Checker\PropertyChecker
 
-    erp_property_event_listener_property_entity_listener:
+    erp_property.event_listener.property_entity_listener:
         class: 'Erp\PropertyBundle\EventListener\PropertyEntityListener'
         arguments:
             - '@doctrine'

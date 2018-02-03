@@ -90,7 +90,7 @@
                     <div class="prop-info">
                         <span class="prop-label">Rent Amount</span>
                         {# TODO Refacoring money #}
-                        <span class="prop-details">${{ property.settings ? property.settings.paymentAmount|number_format(2, '.', ',') : '' }}</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.paymentAmount|money : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Allow Partial Payments</span>
@@ -188,10 +188,9 @@
                             <a class="btn edit-btn" type="submit" href="{{ path('erp_user_profile_read_only_popup') }}" role="popup">Submit</a>
                         {% else %}
                             {% if (lastPropertyRepostRequest and lastPropertyRepostRequest.status != constant('Erp\\PropertyBundle\\Entity\\PropertyRepostRequest::STATUS_NEW')) or not lastPropertyRepostRequest %}
-                                <a href="{{ path('erp_property_repost_request', {'propertyId':property.id}) }}" role="popup"
-                                   class="btn edit-btn">
-                                    Send Request
-                                </a>
+                                <form method="POST" action="{{ path('erp_property_repost_request', {'propertyId':property.id}) }}">
+                                    <button type="submit" class="btn edit-btn">Send Request</button>
+                                </form>
                             {% endif %}
                         {% endif %}
                     </div>
