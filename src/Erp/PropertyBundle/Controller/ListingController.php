@@ -382,12 +382,12 @@ class ListingController extends BaseController
             $errors = $preValidate['errors'];
 
             $form->handleRequest($request);
-            if ($form->isValid()) {
-                $this->em->persist($property);
-                $this->em->flush();
-            } else {
-                $errors = true;
-            }
+//            if ($form->isValid()) {
+//                $this->em->persist($property);
+//                $this->em->flush();
+//            } else {
+//                $errors = true;
+//            }
 
             if ($errors) {
                 $text = str_replace(
@@ -398,6 +398,9 @@ class ListingController extends BaseController
 
                 $this->addFlash('alert_error', $text);
             }
+
+            $this->em->persist($property);
+            $this->em->flush();
 
             return $this->redirectToRoute(
                 'erp_property_listings_edit_images',

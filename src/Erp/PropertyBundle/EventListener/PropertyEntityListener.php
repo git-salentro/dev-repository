@@ -28,7 +28,7 @@ class PropertyEntityListener
     {
         $this->createHistoryRecord($property);
     }
-
+    //TODO Check if status doesn't change
     private function createHistoryRecord(Property $property)
     {
         $em = $this->registry->getManagerForClass(PropertyRentHistory::class);
