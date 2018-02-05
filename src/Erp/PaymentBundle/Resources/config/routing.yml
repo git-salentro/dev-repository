@@ -5,7 +5,3 @@
 erp_payment_stripe:
     resource: "@ErpPaymentBundle/Resources/config/routing/stripe.yml"
     prefix:   /payment
-
-erp_payment_unit:
-    resource: "@ErpPaymentBundle/Resources/config/routing/unit.yml"
-    prefix:   /unit

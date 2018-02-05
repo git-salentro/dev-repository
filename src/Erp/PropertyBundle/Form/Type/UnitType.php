@@ -1,11 +1,11 @@
 <?php
 
-namespace Erp\PaymentBundle\Form\Type;
+namespace Erp\PropertyBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Erp\PaymentBundle\Entity\Unit;
+use Erp\PropertyBundle\Entity\Unit;
 
 class UnitType extends AbstractType
 {

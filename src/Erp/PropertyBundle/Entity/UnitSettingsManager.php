@@ -1,9 +1,8 @@
 <?php
 
-namespace Erp\PaymentBundle\Entity;
+namespace Erp\PropertyBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Erp\UserBundle\Entity\User;
 
 class UnitSettingsManager
 {

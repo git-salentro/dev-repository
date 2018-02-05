@@ -62,7 +62,7 @@
                     {#{% else %}#}
                         {#<a href="{{ path('erp_property_listings_add_charge_popup') }}" role="popup" class="btn red-btn">&plus; Add Properties{% if not user.isReadOnlyUser() %} ({{ user.propertyCounter }} available){% endif %}</a>#}
                     {#{% endif %}#}
-                    <a href="{{ path('erp_payment_unit_buy') }}" class="btn red-btn">&plus; Add Properties</a>
+                    <a href="{{ path('erp_property_unit_buy') }}" class="btn red-btn">&plus; Add Properties</a>
                 </div>
                 {% include 'ErpPropertyBundle:Listings:properties-import-form.html.twig' %}
                 </div>

@@ -1,19 +1,19 @@
 <?php
 
-namespace Erp\PaymentBundle\Controller;
+namespace Erp\PropertyBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Entity\StripeSubscription;
-use Erp\PaymentBundle\Entity\Unit;
-use Erp\PaymentBundle\Entity\UnitSettings;
-use Erp\PaymentBundle\Form\Type\UnitType;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\PropertyBundle\Entity\PropertySettings;
+use Erp\PropertyBundle\Entity\Unit;
+use Erp\PropertyBundle\Entity\UnitSettings;
+use Erp\PropertyBundle\Form\Type\UnitType;
+use Erp\StripeBundle\Helper\ApiHelper;
 use Erp\UserBundle\Entity\User;
 use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
-use Erp\StripeBundle\Helper\ApiHelper;
 
 class UnitController extends BaseController
 {
@@ -27,7 +27,7 @@ class UnitController extends BaseController
         /** @var UnitSettings $unitSettings */
         $unitSettings = $unitSettingsRepository->getSettings();
 
-        $template = 'ErpPaymentBundle:Unit:form.html.twig';
+        $template = 'ErpPropertyBundle:Unit:form.html.twig';
         $templateParams = [
             'user' => $user,
             'form' => $form->createView(),
