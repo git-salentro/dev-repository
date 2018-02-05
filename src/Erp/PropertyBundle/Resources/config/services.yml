@@ -9,3 +9,8 @@ services:
         tags:
             - { name: doctrine.orm.entity_listener, entity: 'Erp\PropertyBundle\Entity\Property', event: postPersist }
             - { name: doctrine.orm.entity_listener, entity: 'Erp\PropertyBundle\Entity\Property', event: postUpdate }
+
+    erp.payment.entity.unit_settings_manager:
+        class: Erp\PropertyBundle\Entity\UnitSettingsManager
+        arguments:
+            - '@doctrine'

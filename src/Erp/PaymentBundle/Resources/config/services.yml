@@ -71,11 +71,6 @@ services:
             - '@erp.payment.stripe.manager.customer_manager'
             - '@phy_cache'
 
-    erp.payment.entity.unit_settings_manager:
-        class: Erp\PaymentBundle\Entity\UnitSettingsManager
-        arguments:
-            - '@doctrine'
-
     erp.payment.consumer.update_subscriptions:
         class: Erp\PaymentBundle\Consumer\UpdateSubscriptionsConsumer
         arguments:
