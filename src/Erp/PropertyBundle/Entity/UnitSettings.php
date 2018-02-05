@@ -9,7 +9,7 @@ use Erp\UserBundle\Entity\User;
  * Class UnitSettings
  *
  * @ORM\Table(name="unit_settings")
- * @ORM\Entity(repositoryClass="Erp\PaymentBundle\Repository\UnitSettingsRepository")
+ * @ORM\Entity(repositoryClass="Erp\PropertyBundle\Repository\UnitSettingsRepository")
  */
 class UnitSettings
 {
