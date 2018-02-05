@@ -38,8 +38,13 @@ class UnitController extends BaseController
         /** @var StripeCustomer $stripeCustomer */
         $stripeCustomer = $user->getStripeCustomer();
 
+        $form->handleRequest($request);
+
         if (!$stripeCustomer) {
-            $templateParams['errors'] = 'Please, add bank account.';
+            if ($form->isSubmitted()) {
+                $templateParams['errors'] = 'Please, add bank account.';
+            }
+
             return $this->render($template, $templateParams);
         }
 
@@ -53,8 +58,6 @@ class UnitController extends BaseController
             $templateParams['currentYearPrice'] = $stripeSubscription->getQuantity();
             $templateParams['totalPrice'] = $stripeSubscription->getQuantity();
         }
-
-        $form->handleRequest($request);
 
         if (!$form->isValid()) {
             return $this->render($template, $templateParams);
