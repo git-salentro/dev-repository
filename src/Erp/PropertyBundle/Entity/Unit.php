@@ -1,6 +1,6 @@
 <?php
 
-namespace Erp\PaymentBundle\Entity;
+namespace Erp\PropertyBundle\Entity;
 
 class Unit
 {

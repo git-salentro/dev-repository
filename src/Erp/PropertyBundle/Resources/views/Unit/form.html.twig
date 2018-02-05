@@ -8,8 +8,6 @@
 {% endblock %}
 
 {% block pageContent %}
-    {% set ba = constant('Erp\\PaymentBundle\\PaySimple\\Managers\\PaySimpleManagerInterface::BANK_ACCOUNT') %}
-
     {{ parent() }}
     <section id="register-form-tenants" class="register-form cc-form-wrap">
         <div class="container">
@@ -26,7 +24,6 @@
                     <div class="prising_info">
                         <h2>Priсing</h2>
                         <ol class="prising_list">
-                        <ol class="prising_list">
                             <li>1st unit: $99/ annual fee c(includes all services)</li>
                             <li>2 - 29 Units: $20 each/ annual fee (includes all services)</li>
                             <li>30 Units and more: $15 each/ annual fee (includes all services)</li>
@@ -41,13 +38,13 @@
 
                     {# TODO money format on js #}
                     {% if hasSubscriptions %}
-                        <p>Current year price: $<span id="current-year-price">{{ currentYearPrice }}</span></p>
-                        <p>Additional unit price: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
-                        <p>Total price: $<span id="total-price">{{ totalPrice }}</span></p>
+                        <p>Current annual cost: $<span id="current-year-price">{{ currentYearPrice }}</span></p>
+                        <p>Total Additional Units Cost: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
+                        <p>Total New Annual Cost: $<span id="total-price">{{ totalPrice }}</span></p>
                     {% else %}
-                        <p>Initial unit price: $<span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
-                        <p>Additional unit price: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
-                        <p>New year price: $<span id="total-price">0</span></p>
+                        <p>Current annual cost: $<span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
+                        <p>Total Additional Units Cost: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
+                        <p>Total New Annual Cost: $<span id="total-price">0</span></p>
                     {% endif %}
 
                     {{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}

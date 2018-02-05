@@ -1,6 +1,6 @@
 <?php
 
-namespace Erp\PaymentBundle\Entity;
+namespace Erp\PropertyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Erp\UserBundle\Entity\User;
