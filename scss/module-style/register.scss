@@ -129,3 +129,15 @@
         }
     }
 }
+.register-form .form_wrap  p {
+    padding: 0 0 30px;
+    margin: 0;
+}
+.form_wrap{
+    padding-top: 35px;
+}
+.form_wrap .field-validation-error{
+    position: absolute;
+    top: 0;
+    left: 11px;
+}
