@@ -215,6 +215,9 @@ section#rental-form h1 {
 .profile .profile-widget-row .profile-widget-item .payment-calendar .date.date-start {
     margin: 6px 10px 0 25px;
 }
+.form_wrap .register-form p {
+    padding: 0 0 10px;
+}
 @media (max-width: 993px) and (min-width: 768px){
     .profile .profile-widget-row .profile-widget-item .payment-calendar .edit-row {
         margin: 10px 0;
