@@ -12,7 +12,6 @@ class MoneyFormatter
             return $value;
         }
 
-        $value = $value / 100;
         $format = new \NumberFormatter(\Locale::getDefault(), \NumberFormatter::CURRENCY);
 
         return $format->formatCurrency($value, self::DEFAULT_CURRENCY);
