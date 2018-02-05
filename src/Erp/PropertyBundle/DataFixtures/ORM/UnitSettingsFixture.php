@@ -1,8 +1,8 @@
 <?php
 
-namespace Erp\PaymentBundle\DataFixtures\ORM;
+namespace Erp\PropertyBundle\DataFixtures\ORM;
 
-use Erp\PaymentBundle\Entity\UnitSettings;
+use Erp\PropertyBundle\Entity\UnitSettings;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
