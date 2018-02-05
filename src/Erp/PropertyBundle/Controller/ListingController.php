@@ -775,6 +775,9 @@ class ListingController extends BaseController
 
         $em = $this->getDoctrine()->getManagerForClass(Property::class);
 
+
+        //TODO Refactoring
+        $propertySettings->setPaymentAmount($propertySettings->getPaymentAmount() * 100);
         try {
             $i = 0;
             foreach ($qb->getQuery()->iterate() as $object) {
