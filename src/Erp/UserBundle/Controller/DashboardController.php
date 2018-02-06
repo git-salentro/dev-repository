@@ -142,7 +142,7 @@ class DashboardController extends BaseController
 
         return $this->render('ErpUserBundle:Dashboard:invoices.html.twig', [
             'labels' => $labels,
-            'invoices' => $invoices,
+            'invoices' => [],
             'intervals' => $intervals,
         ]);
     }
