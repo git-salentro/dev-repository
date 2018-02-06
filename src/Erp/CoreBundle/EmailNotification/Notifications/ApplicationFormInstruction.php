@@ -24,7 +24,7 @@ class ApplicationFormInstruction extends AbstractEmailNotification
         $eImg = $this->getLogoPath($params);
 
         $message = $params['mailer']->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType('text/html');
 
@@ -36,7 +36,7 @@ class ApplicationFormInstruction extends AbstractEmailNotification
         ];
 
         $body = $contailner->get('templating')->render($template, $emailParams);
-        $message->setSubject('eRentPay - Online Application e-Sign Instruction')->setBody($body);
+        $message->setSubject('Zoobdoo - Online Application e-Sign Instruction')->setBody($body);
         $result = $params['mailer']->send($message);
 
         return $result;

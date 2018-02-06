@@ -656,7 +656,7 @@ class SmartMoveController extends BaseController
     {
         $emailType = EmailNotificationFactory::TYPE_SM_CHECK_USER;
         $token = $smartMoveRenter->getPersonalToken();
-        $title = 'eRentPay - Tenant Screening';
+        $title = 'Zoobdoo - Tenant Screening';
         $text = 'Your Landlord is going to perform tenant screening on your identity.';
         $url = 'erp_smart_move_personal_form';
 
@@ -664,7 +664,7 @@ class SmartMoveController extends BaseController
             $token = $smartMoveRenter->getExamToken();
             $url = 'erp_smart_move_exam_form';
             $text = 'Please pass identity verification exam for tenant screening service.';
-            $title = 'eRentPay - Tenant Screening Exam';
+            $title = 'Zoobdoo - Tenant Screening Exam';
         }
 
         $emailParams = [

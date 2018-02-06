@@ -23,7 +23,7 @@ class AssignTenantUser extends AbstractEmailNotification
         $contailner = $params['container'];
 
         $message = $params['mailer']->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType('text/html');
 
@@ -35,7 +35,7 @@ class AssignTenantUser extends AbstractEmailNotification
         $emailParams['imageErp'] = $message->embed($this->getLogoPath($params));
 
         $body = $contailner->get('templating')->render($template, $emailParams);
-        $message->setSubject('eRentPay - You were registered as Tenant of Property by Landlord')->setBody($body);
+        $message->setSubject('Zoobdoo - You were registered as Tenant of Property by Landlord')->setBody($body);
         $result = $params['mailer']->send($message);
 
         return $result;

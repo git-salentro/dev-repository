@@ -25,7 +25,7 @@ class ApplicationFormToLandlord extends AbstractEmailNotification
         $pdfFile = \Swift_Attachment::fromPath($params['pdfDir'] . '/' . $params['filename']);
 
         $message = $params['mailer']->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setReplyTo($params['replyTo'])
             ->setContentType('text/html');
@@ -39,7 +39,7 @@ class ApplicationFormToLandlord extends AbstractEmailNotification
         ];
 
         $body = $contailner->get('templating')->render($template, $emailParams);
-        $message->setSubject('eRentPay - Potential tenant has completed Rental Application')->setBody($body);
+        $message->setSubject('Zoobdoo - Potential tenant has completed Rental Application')->setBody($body);
         $result = $params['mailer']->send($message);
 
         return $result;

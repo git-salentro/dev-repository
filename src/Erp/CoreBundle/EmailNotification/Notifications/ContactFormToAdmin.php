@@ -21,11 +21,11 @@ class ContactFormToAdmin extends AbstractEmailNotification
     {
         $message = $params['mailer']
             ->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'eRentPay - Message from Contact Form';
+        $subject = 'Zoobdoo - Message from Contact Form';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['url'] = $params['url'];

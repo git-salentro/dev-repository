@@ -951,7 +951,7 @@ class UserService
         $feeService = $this->container->get('erp.core.fee.service');
 
         $hintContent = [
-            'email_options'                      => 'Here you can add and edit Email for notifications from eRentPay.',
+            'email_options'                      => 'Here you can add and edit Email for notifications from Zoobdoo.',
             'account_login_details'              => 'Here you can edit your profile picture, name and password.',
             'my_property'                        => 'Address of Property you have rented.',
             'message_landlord'                   => 'Here you can quickly send a Message to your Landlord.
@@ -960,7 +960,7 @@ class UserService
                 your problem.',
             'ask_a_pro_for_tip'                  => 'Should you have any questions to property management professional,
                 please use this form to submit your ticket.
-                eRentPay  will contact you shortly and provide with information on consultation cost.',
+                Zoobdoo  will contact you shortly and provide with information on consultation cost.',
             'pay_rent'                           => 'Here you can make one-time and recurring payments to your Landlord.
                 Payment will be executed on specified date. All payments made with today\'s date are
                 executed immediately.
@@ -974,7 +974,7 @@ class UserService
                 Once you add valid credit card or bank account, you will be charged recurring fee on a monthly basis.
                 Next recurring payment date: ' . $nextRecDate,
             'payment_preferences'                => 'Please select Primary Account which will be used for
-                all payments at eRentPay. ',
+                all payments at Zoobdoo. ',
             'address_details'                    => 'Please enter your valid address details and phone number.
                 This information will also be used for billing.',
             'background_check_credit_check'      => 'Here you can conduct Tenant screening and get Background Check

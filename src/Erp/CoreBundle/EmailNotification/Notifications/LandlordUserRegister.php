@@ -20,11 +20,11 @@ class LandlordUserRegister extends AbstractEmailNotification
     public function sendEmailNotification($params)
     {
         $message = $params['mailer']->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType('text/html');
 
-        $subject = 'eRentPay - You have registered as Landlord';
+        $subject = 'Zoobdoo - You have registered as Landlord';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['url'] = $params['url'];

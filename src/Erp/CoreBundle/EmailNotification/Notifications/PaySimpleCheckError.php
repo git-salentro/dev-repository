@@ -21,11 +21,11 @@ class PaySimpleCheckError extends AbstractEmailNotification
     {
         $message = $params['mailer']
             ->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'eRentPay - An error has occurred during Payment operation!';
+        $subject = 'Zoobdoo - An error has occurred during Payment operation!';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['customerName'] = $params['customerName'];

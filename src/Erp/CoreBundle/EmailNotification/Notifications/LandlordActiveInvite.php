@@ -21,11 +21,11 @@ class LandlordActiveInvite extends AbstractEmailNotification
     {
         $message = $params['mailer']
             ->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'eRentPay - You have been invited as Landlord';
+        $subject = 'Zoobdoo - You have been invited as Landlord';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['landlordInvite'] = $params['landlordInvite'];
