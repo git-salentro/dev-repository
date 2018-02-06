@@ -16,10 +16,11 @@ class TransactionRepository extends EntityRepository
         if ($stripeAccount) {
             $qb->where('t.account = :account')
                 ->setParameter('account', $stripeAccount);
-            if ($stripeCustomer) {
-                $qb->orWhere('t.customer = :customer')
-                    ->setParameter('customer', $stripeCustomer);
-            }
+        }
+
+        if ($stripeCustomer) {
+            $qb->orWhere('t.customer = :customer')
+                ->setParameter('customer', $stripeCustomer);
         }
 
         if ($dateFrom) {
