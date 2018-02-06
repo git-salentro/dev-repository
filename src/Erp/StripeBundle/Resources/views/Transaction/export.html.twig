@@ -36,7 +36,7 @@
             {#TODO transaction.currency, transaction.currency to format money#}
             <tr>
                 <td>{{ transaction.created|date('Y/m/d') }}</td>
-                <td>{{ transaction.amount|money }}</td>
+                <td>{{ transaction.amount|stripe_money }}</td>
                 <td>{{ transaction.currency|upper }}</td>
                 <td>{{ sender }}</td>
                 <td>{{ recipient }}</td>

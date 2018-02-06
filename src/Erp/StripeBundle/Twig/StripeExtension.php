@@ -22,7 +22,7 @@ class StripeExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            'money' => new \Twig_Filter_Method($this, 'formatMoney'),
+            'stripe_money' => new \Twig_Filter_Method($this, 'formatMoney'),
         ];
     }
 

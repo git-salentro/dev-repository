@@ -39,6 +39,7 @@ class CoreExtention extends \Twig_Extension
     {
         return [
             'json_decode' => new \Twig_Filter_Method($this, 'jsonDecode'),
+            'money' => new \Twig_Filter_Method($this, 'formatMoney'),
         ];
     }
 
@@ -52,5 +53,16 @@ class CoreExtention extends \Twig_Extension
     public function jsonDecode($str)
     {
         return json_decode($str, true);
+    }
+
+    public function formatMoney($value)
+    {
+        if (null === $value || '' === $value) {
+            return $value;
+        }
+
+        $formatter = $this->container->get('erp_core.formatter.money_formatter');
+
+        return $formatter->format($value);
     }
 }

@@ -39,7 +39,7 @@
                                 <tr>
                                     <td>{{ cashflow.id }}</td>
                                     <td>{{ cashflow.type }}</td>
-                                    <td>{{ cashflow.amount|money }}</td>
+                                    <td>{{ cashflow.amount|stripe_money }}</td>
                                     <td>{{ cashflow.currency }}</td>
                                     <td>{{ cashflow.created|date('Y/m/d') }}</td>
                                 </tr>

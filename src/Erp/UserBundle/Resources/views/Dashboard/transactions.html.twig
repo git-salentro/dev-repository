@@ -38,7 +38,7 @@
                     {#TODO transaction.currency, transaction.currency to format money#}
                     <li>
                         <span class="col-xs-2">{{ transaction.created|date('Y/m/d') }}</span>
-                        <span class="col-xs-1">{{ transaction.amount|money }}</span>
+                        <span class="col-xs-1">{{ transaction.amount|stripe_money }}</span>
                         <span class="col-xs-1 amount-col">{{ transaction.currency|upper }}</span>
                         <span class="col-xs-2">{{ sender }}</span>
                         <span class="col-xs-2">{{ recipient }}</span>

@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Erp\PaymentBundle\Entity\StripeRecurringPayment;
 use Erp\PaymentBundle\Entity\StripeCustomer;
+use Erp\StripeBundle\Helper\ApiHelper;
 
 class CheckRecurringPaymentCommand extends ContainerAwareCommand
 {
@@ -52,7 +53,8 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
         foreach ($payments as $payment) {
             $arguments = [
                 'params' => [
-                    'amount' => $payment->getAmount(),
+                    //TODO Refactoring amount in payRentAction form
+                    'amount' => ApiHelper::convertAmountToStripeFormat($payment->getAmount()),
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                     'customer' => $payment->getCustomer()->getCustomerId(),
                 ],

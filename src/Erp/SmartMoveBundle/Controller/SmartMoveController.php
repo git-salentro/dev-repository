@@ -4,6 +4,7 @@ namespace Erp\SmartMoveBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
@@ -11,13 +12,13 @@ use Erp\SmartMoveBundle\Form\Type\SmartMoveEmailFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMoveExamFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMoveGetReportFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMovePersonalFormType;
+use Erp\StripeBundle\Helper\ApiHelper;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Erp\PaymentBundle\Entity\StripeCustomer;
 
 class SmartMoveController extends BaseController
 {
@@ -367,7 +368,7 @@ class SmartMoveController extends BaseController
                 $arguments = [
                     'params' => [
                         //TODO Add stripe money format
-                        'amount' => $amount*100,
+                        'amount' => ApiHelper::convertAmountToStripeFormat($amount),
                         'currency' => StripeCustomer::DEFAULT_CURRENCY,
                         'customer' => $customer->getCustomerId(),
                     ],

@@ -778,9 +778,6 @@ class ListingController extends BaseController
 
         $em = $this->getDoctrine()->getManagerForClass(Property::class);
 
-
-        //TODO Refactoring
-        $propertySettings->setPaymentAmount($propertySettings->getPaymentAmount() * 100);
         try {
             $i = 0;
             foreach ($qb->getQuery()->iterate() as $object) {
@@ -836,8 +833,6 @@ class ListingController extends BaseController
 
         $form = $this->createForm(new PropertySettingsType(), $propertySettings);
         $form->handleRequest($request);
-
-        $propertySettings->setPaymentAmount($propertySettings->getPaymentAmount() * 100);
 
         if ($form->isValid()) {
             $this->em->persist($property);
