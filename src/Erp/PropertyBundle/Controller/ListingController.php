@@ -837,6 +837,8 @@ class ListingController extends BaseController
         $form = $this->createForm(new PropertySettingsType(), $propertySettings);
         $form->handleRequest($request);
 
+        $propertySettings->setPaymentAmount($propertySettings->getPaymentAmount() * 100);
+
         if ($form->isValid()) {
             $this->em->persist($property);
             $this->em->flush();
