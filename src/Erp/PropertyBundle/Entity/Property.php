@@ -230,25 +230,6 @@ class Property
      * @var float
      *
      * @ORM\Column(name="price", type="float", nullable=true)
-     *
-     * @Assert\NotBlank(
-     *      message="Please enter Price",
-     *      groups={"EditProperty"}
-     * )
-     *
-     * @Assert\Type(
-     *      type="float",
-     *      message="Something isn’t right here, check your field",
-     *      groups={"EditProperty"}
-     * )
-     *
-     * @Assert\Range(
-     *      min = 0.01,
-     *      max = 1000000,
-     *      minMessage = "Min price $0.01, Max - $1 000 000",
-     *      maxMessage = "Min price $0.01, Max - $1 000 000",
-     *      groups={"EditProperty"}
-     * )
      */
     protected $price;
 
