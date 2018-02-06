@@ -50,6 +50,6 @@ class UnitSettingsManager
         $initialQuantity = $this->getInitialQuantity();
         $count = $unit->getCount();
 
-        return $initialQuantity + $quantityPerUnit * $count;
+        return $initialQuantity + $quantityPerUnit * ($count - 1);
     }
 }

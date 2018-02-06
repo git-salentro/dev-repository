@@ -92,18 +92,24 @@ class DashboardController extends BaseController
         $sixMonthsAgo = (new \DateTime())->modify('-5 month');
         $stripeAccount = $user->getStripeAccount();
         $stripeCustomer = $user->getStripeCustomer();
+        $transactionRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
 
-        $items = [];
+        $cashOut = [];
         if ($stripeAccount || $stripeCustomer) {
-            $transactionRepo = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $items = $transactionRepo->getGroupedTransactions($stripeAccount, $stripeCustomer, $sixMonthsAgo, $now);
+            $cashOut = $transactionRepo->getGroupedTransactions(null, $stripeCustomer, $sixMonthsAgo, $now);
         }
 
+        $cashIn = [];
+        if ($stripeAccount) {
+            $cashIn = $transactionRepo->getGroupedTransactions($stripeAccount, null, $sixMonthsAgo, $now);
+        }
+
+        //TODO Refactoring this
         $labels = $this->getMonthsLabels($sixMonthsAgo, $now);
         $intervals = array_keys($labels);
         $labels = array_values($labels);
-        $cashIn = $this->getPreparedItems($items, $intervals);
-        $cashOut =  $this->getPreparedItems($items, $intervals);
+        $cashIn = $this->getPreparedItems($cashIn, $intervals);
+        $cashOut =  $this->getPreparedItems($cashOut, $intervals);
 
         return $this->render('ErpUserBundle:Dashboard:cashflows.html.twig', [
             'cash_in' => $cashIn,
@@ -207,13 +213,12 @@ class DashboardController extends BaseController
         //TODO Refactoring amount
         $results = [];
         $existingIntervals = array_column($items, 'interval');
-        $format = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);
 
         foreach ($intervals as $interval) {
             if (false !== $key = array_search($interval, $existingIntervals)) {
-                $results[] = $format->formatCurrency($items[$key]['gAmount']/100, 'USD');
+                $results[] = $items[$key]['gAmount']/100;
             } else {
-                $results[] = $format->formatCurrency(0, 'USD');
+                $results[] = 0;
             }
         }
 

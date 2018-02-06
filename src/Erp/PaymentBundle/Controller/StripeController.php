@@ -11,7 +11,7 @@ use Erp\PaymentBundle\Plaid\Exception\ServiceException;
 use Erp\PaymentBundle\Stripe\Model\CreditCard;
 use Erp\PaymentBundle\Entity\StripeRecurringPayment;
 use Erp\UserBundle\Entity\User;
-use Erp\StripeBundle\Form\Type\BankAccountVerificationType;
+use Erp\StripeBundle\Form\Type\AccountVerificationType;
 use Stripe\Account;
 use Stripe\Customer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -247,7 +247,7 @@ class StripeController extends BaseController
                 }
             }
 
-            $form = $this->createForm(new BankAccountVerificationType());
+            $form = $this->createForm(new AccountVerificationType());
 
             return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig', [
                 'form' => $form->createView(),
@@ -321,11 +321,12 @@ class StripeController extends BaseController
 
     public function verifyAccountAction(Request $request)
     {
+        //TODO Need to verify account if I change BA?
         /** @var User $user */
         $user = $this->getUser();
         $stripeAccount = $user->getStripeAccount();
 
-        $form = $this->createForm(new BankAccountVerificationType(), $stripeAccount,  ['validation_groups' => 'US']);
+        $form = $this->createForm(new AccountVerificationType(), $stripeAccount,  ['validation_groups' => 'US']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -363,9 +364,7 @@ class StripeController extends BaseController
             $em->flush();
 
             if ($user->hasRole(User::ROLE_LANDLORD)) {
-                $url = $this->generateUrl('erp_payment_unit_buy');
-
-                $this->addFlash('navigation', '');
+                $url = $this->generateUrl('erp_property_unit_buy');
             } else {
                 $url = $this->generateUrl('erp_user_profile_dashboard');
             }

@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Erp\PaymentBundle\Entity\StripeAccount;
 
-class BankAccountVerificationType extends AbstractType
+class AccountVerificationType extends AbstractType
 {
     /**
      * @inheritdoc
