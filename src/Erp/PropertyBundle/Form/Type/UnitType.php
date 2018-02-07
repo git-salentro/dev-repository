@@ -16,7 +16,7 @@ class UnitType extends AbstractType
     {
         $builder
             ->add(
-                'count',
+                'quantity',
                 'text',
                 [
                     'label' => 'Number of units:',

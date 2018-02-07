@@ -31,34 +31,26 @@
                     </div>
                 </div>
                 <div class="col-md-6 form_wrap">
-                {#<div class="col-md-4 col-md-offset-4">#}
                     {% if errors %}
                         <span class="field-validation-error">{{ errors }}</span>
                     {% endif %}
 
                     {# TODO money format on js #}
-                    {% if hasSubscriptions %}
-                        <p>Current annual cost: $<span id="current-year-price">{{ currentYearPrice }}</span></p>
-                        <p>Total Additional Units Cost: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
-                        <p>Total New Annual Cost: $<span id="total-price">{{ totalPrice }}</span></p>
-                    {% else %}
-                        <p>Current annual cost: $<span id="initial-unit-price">{{ unitSettings.initialQuantity }}</span></p>
-                        <p>Total Additional Units Cost: $<span id="additional-unit-price">{{ unitSettings.quantityPerUnit }}</span></p>
-                        <p>Total New Annual Cost: $<span id="total-price">0</span></p>
-                    {% endif %}
-
+                    <p>Current annual cost: $<span id="current-year-price">{{ current_year_price }}</span></p>
+                    <p>Total New Annual Cost: $<span id="total-price">{{ total_price }}</span></p>
+                    <input type="hidden" id="existing-unit-count" value="{{ existing_unit_count }}">
+                    <input type="hidden" id="settings" value="{{ settings|json_encode }}">
                     {{ form_start(form, { attr: {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
                         <div class="row">
                             <div class="form-group form-group_units">
                                 <div class="col-xs-12">
                                     <div class="form-group_units_label">
-                                        {{ form_label(form.count) }}
+                                        {{ form_label(form.quantity) }}
                                     </div>
                                     <div class="form-group_units_form">
-                                        {{ form_widget(form.count, {'id': 'unit-count'}) }}
+                                        {{ form_widget(form.quantity, {'id': 'unit-count'}) }}
                                     </div>
-                                    {{ form_custom_errors.widget(form.count) }}
-
+                                    {{ form_custom_errors.widget(form.quantity) }}
                                 </div>
                             </div>
                         </div>

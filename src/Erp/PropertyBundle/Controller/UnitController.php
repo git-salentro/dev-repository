@@ -2,20 +2,19 @@
 
 namespace Erp\PropertyBundle\Controller;
 
-use Erp\CoreBundle\Controller\BaseController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Entity\StripeSubscription;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\PropertyBundle\Entity\PropertySettings;
 use Erp\PropertyBundle\Entity\Unit;
-use Erp\PropertyBundle\Entity\UnitSettings;
 use Erp\PropertyBundle\Form\Type\UnitType;
 use Erp\StripeBundle\Helper\ApiHelper;
 use Erp\UserBundle\Entity\User;
 use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
 
-class UnitController extends BaseController
+class UnitController extends Controller
 {
     public function buyAction(Request $request)
     {
@@ -23,67 +22,94 @@ class UnitController extends BaseController
         /** @var User $user */
         $user = $this->getUser();
 
-        $unitSettingsRepository = $this->getDoctrine()->getManagerForClass(UnitSettings::class)->getRepository(UnitSettings::class);
-        /** @var UnitSettings $unitSettings */
-        $unitSettings = $unitSettingsRepository->getSettings();
-
+        //TODO Store in db
+        $settings = [
+            [
+                'min' => 1,
+                'max' => 1,
+                'amount' => 99,
+            ],
+            [
+                'min' => 2,
+                'max' => 29,
+                'amount' => 20,
+            ],
+            [
+                'min' => 30,
+                'max' => 100000,
+                'amount' => 15,
+            ],
+        ];
         $template = 'ErpPropertyBundle:Unit:form.html.twig';
         $templateParams = [
             'user' => $user,
             'form' => $form->createView(),
             'errors' => null,
-            'hasSubscriptions' => false,
-            'unitSettings' => $unitSettings,
+            'current_year_price' => 0,
+            'total_price' => 0,
+            'existing_unit_count' => 0,
+            'settings' => $settings,
         ];
         /** @var StripeCustomer $stripeCustomer */
         $stripeCustomer = $user->getStripeCustomer();
 
-        $form->handleRequest($request);
-
         if (!$stripeCustomer) {
-            if ($form->isSubmitted()) {
+            if ('POST' === $request->getMethod()) {
                 $templateParams['errors'] = 'Please, add bank account.';
             }
 
             return $this->render($template, $templateParams);
         }
 
-        $stripeSubscriptions = $stripeCustomer->getStripeSubscriptions();
-        $hasSubscriptions = !$stripeSubscriptions->isEmpty();
-        $templateParams['hasSubscriptions'] = $hasSubscriptions;
+        $form->handleRequest($request);
 
-        if ($hasSubscriptions) {
-            /** @var StripeSubscription $stripeSubscription */
-            $stripeSubscription = $stripeSubscriptions->last();
-            $templateParams['currentYearPrice'] = $stripeSubscription->getQuantity();
-            $templateParams['totalPrice'] = $stripeSubscription->getQuantity();
-        }
+        $stripeSubscription = $stripeCustomer->getStripeSubscription();
+        
+        $existingUnitCount = $user->getProperties()->count();
+
+        $templateParams['existing_unit_count'] = $existingUnitCount;
+        $templateParams['current_year_price'] = $stripeSubscription ? $stripeSubscription->getQuantity() : 0;
+        $templateParams['total_price'] = $stripeSubscription ? $stripeSubscription->getQuantity() : 0;
 
         if (!$form->isValid()) {
             return $this->render($template, $templateParams);
         }
+
+        //TODO Refactoring
         /** @var Unit $unit */
         $unit = $form->getData();
-        $unitCount = $unit->getCount();
-        $unitSettingsManager = $this->get('erp.payment.entity.unit_settings_manager');
-        $apiManager = $this->get('erp_stripe.entity.api_manager');
+        $quantity = $unit->getQuantity();
+        $quantity = $quantity + $existingUnitCount;
+        $newPlanQuantity = 0;
+        // TODO Create calculate service.
+        foreach ($settings as $setting) {
+            for ($i = $setting['min']; $i <= $quantity; $i++) {
+                $newPlanQuantity += $setting['amount'];
 
-        if (!$hasSubscriptions) {
-            $quantity = $unitSettingsManager->getQuantity($unit);
+                if ($i == $setting['max']) {
+                    break;
+                }
+            }
+        }
+
+        $apiManager = $this->get('erp_stripe.entity.api_manager');
+        $em = $this->getDoctrine()->getManager();
+
+        if (!$stripeSubscription) {
             $arguments = [
-                'options' => null,
                 'params' => [
                     'customer' => $stripeCustomer->getCustomerId(),
                     'items' => [
                         [
                             'plan' => StripeSubscription::BASE_PLAN_ID,
-                            'quantity' => $quantity,
+                            'quantity' => $newPlanQuantity,
                         ],
                     ],
                     'metadata' => [
-                        'unit_count' => $unitCount,
+                        'unit_quantity' => $quantity,
                     ],
                 ],
+                'options' => null,
             ];
             $response = $apiManager->callStripeApi('\Stripe\Subscription', 'create', $arguments);
 
@@ -96,35 +122,18 @@ class UnitController extends BaseController
 
             $stripeSubscription = new StripeSubscription();
             $stripeSubscription->setSubscriptionId($subscription['id'])
-                ->setQuantity($quantity);
+                ->setQuantity($newPlanQuantity)
+                ->setStripeCustomer($stripeCustomer);
+            $stripeCustomer->setStripeSubscription($stripeSubscription);
 
-            $stripeCustomer->addStripeSubscription($stripeSubscription);
-
-            $this->em->persist($stripeCustomer);
+            $em->persist($stripeCustomer);
         } else {
-            /** @var StripeSubscription $stripeSubscription */
-            $stripeSubscription = $stripeSubscriptions->last();
-            $arguments =  [
-                'id' => $stripeSubscription->getSubscriptionId(),
-                'options' => null,
-            ];
-            $response = $apiManager->callStripeApi('\Stripe\Subscription', 'retrieve', $arguments);
-
-            if (!$response->isSuccess()) {
-                $templateParams['errors'] = $response->getErrorMessage();
-                return $this->render($template, $templateParams);
-            }
-            /** @var Subscription $subscription */
-            $subscription = $response->getContent();
-            $quantityPerUnit = $unitSettingsManager->getQuantityPerUnit();
-            $quantity = $amount = $quantityPerUnit * $unitCount;
-            $newQuantity = $subscription->quantity + $quantity;
             $arguments = [
                 'id' => $stripeSubscription->getSubscriptionId(),
                 'params' => [
-                    'quantity' => $newQuantity,
+                    'quantity' => $newPlanQuantity,
                     'metadata' => [
-                        'unit_count' => $subscription->metadata['unit_count'] + $unitCount,
+                        'unit_quantity' => $quantity,
                     ],
                 ],
                 'options' => null,
@@ -136,9 +145,7 @@ class UnitController extends BaseController
                 return $this->render($template, $templateParams);
             }
 
-            $stripeSubscription->setQuantity($newQuantity);
-            $this->em->persist($stripeSubscription);
-
+            $amount = $newPlanQuantity - $stripeSubscription->getQuantity();
             $arguments = [
                 'params' => [
                     'amount' => ApiHelper::convertAmountToStripeFormat($amount),
@@ -148,24 +155,27 @@ class UnitController extends BaseController
                 'options' => null,
             ];
             $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
-            //TODO What if occurred an error but subscription was updated? Make transactions?
+
             if (!$response->isSuccess()) {
                 $templateParams['errors'] = $response->getErrorMessage();
                 return $this->render($template, $templateParams);
             }
+
+            $stripeSubscription->setQuantity($newPlanQuantity);
+            $em->persist($stripeSubscription);
         }
 
         $prototype = new Property();
-        for ($i=1; $i<=$unitCount; $i++) {
+        for ($i=1; $i<=$quantity; $i++) {
             $property = clone $prototype;
             $property->setUser($user);
 
             $prototype->setSettings(new PropertySettings());
 
-            $this->em->persist($property);
+            $em->persist($property);
         }
 
-        $this->em->flush();
+        $em->flush();
 
         return $this->redirectToRoute('erp_property_listings_all');
     }

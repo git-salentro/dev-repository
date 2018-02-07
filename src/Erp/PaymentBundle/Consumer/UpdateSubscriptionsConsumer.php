@@ -36,33 +36,7 @@ class UpdateSubscriptionsConsumer implements ConsumerInterface
         $body = $msg->getBody();
         $object = unserialize($body);
 
-        if (!$object instanceof UnitSettings) {
-            return;
-        }
-
-        $initialQuantity = $object->getInitialQuantity();
-        $quantityPerUnit = $object->getQuantityPerUnit();
-
-        $repository = $this->getRepository();
-        $subscriptions = $repository->findAll();
-
-        /** @var StripeSubscription $subscription */
-        foreach ($subscriptions as $subscription) {
-            $response = $this->manager->callStripeApi('\Stripe\Subscription', 'retrieve', ['id' => $subscription->getSubscriptionId()]);
-            /** @var Subscription $stripeSubscription */
-            $stripeSubscription = $response->getContent();
-            $unitCount = $stripeSubscription->metadata['unit_count'];
-            /**
-             * There quantity = quantityPerUnit * (unitCount - initialUnitCount) + initialQuantity
-             */
-            $quantity = $quantityPerUnit * ($unitCount - 1) + $initialQuantity;
-            $arguments = [
-                'id' =>  $subscription->getSubscriptionId(),
-                'params' => ['quantity' => $quantity],
-                'options' => null,
-            ];
-            $this->manager->callStripeApi('\Stripe\Subscription', 'update', $arguments);
-        }
+        //TODO Handle settings
     }
 
     private function getRepository()

@@ -1,55 +1,28 @@
 var UnitController =  function () {
-    this.initialUnitPriceSelector = $('#initial-unit-price');
-    this.additionalUnitPriceSelector = $('#additional-unit-price');
     this.totalPriceSelector = $('#total-price');
-    this.currentYearPriceSelector = $('#current-year-price');
     this.countSelector = $('#unit-count');
-    this.totalPrice = parseInt(this.totalPriceSelector.html());
-};
-
-var PricingStrategy = function (type) {
-    this.strategy = this.strategies[type];
-};
-
-PricingStrategy.prototype.strategies = {
-    firstUnit: function (initialUnitPrice, unitCount, additionalUnitPrice) {
-        return initialUnitPrice + (unitCount - 1) * additionalUnitPrice;
-    },
-    moreThanOne: function (initialUnitPrice, unitCount, additionalUnitPrice) {
-        return initialUnitPrice + unitCount * additionalUnitPrice;
-    }
-};
-
-PricingStrategy.prototype.calculate = function (initialUnitPrice, unitCount, additionalUnitPrice) {
-    return this.strategy(initialUnitPrice, unitCount, additionalUnitPrice);
+    this.existingUnitCountSelector = $('#existing-unit-count');
 };
 
 UnitController.prototype.listenCount = function () {
     var that = this;
+    var settings = JSON.parse($('#settings').val());
+
     that.countSelector.keyup(function () {
-        var totalPrice = that.totalPrice;
-        var additionalUnitPrice = parseInt(that.additionalUnitPriceSelector.html());
-        var unitCount = parseInt(that.countSelector.val());
-        var strategy = null;
+        var count = parseInt($(this).val()) + parseInt(that.existingUnitCountSelector.val());
+        var amount = 0;
+        $.each(settings, function (k, setting) {
+            for (var i = setting['min']; i <= count; i++) {
+                amount += setting['amount'];
 
-        if (that.currentYearPriceSelector.length) {
-            if (unitCount >= 30) {
-                //TODO Refactor it
-                additionalUnitPrice = 15;
-            }
-            strategy = new PricingStrategy('moreThanOne');
-            totalPrice = strategy.calculate(totalPrice, unitCount, additionalUnitPrice);
-        } else {
-            var initialUnitPrice = parseInt(that.initialUnitPriceSelector.html());
-            if (unitCount >= 30) {
-                //TODO Refactor it
-                additionalUnitPrice = 15;
-            }
-            strategy = new PricingStrategy('firstUnit');
-            totalPrice = strategy.calculate(initialUnitPrice, unitCount, additionalUnitPrice);
+                if (i === setting['max']) {
+                    break;
+                }
 
-        }
-        that.totalPriceSelector.html(totalPrice);
+            }
+        });
+
+        that.totalPriceSelector.html(amount);
     });
 };
 
@@ -57,7 +30,7 @@ UnitController.prototype.run = function() {
     this.listenCount();
 };
 
-$( function () {
+$(function () {
     var controller = new UnitController();
     controller.run();
 });

@@ -68,12 +68,11 @@ class StripeCustomer
     private $updatedAt;
 
     /**
-     * @var ArrayCollection
+     * @var StripeSubscription
      *
-     * @ORM\OneToMany(targetEntity="Erp\PaymentBundle\Entity\StripeSubscription", mappedBy="stripeCustomer", cascade={"ALL"})
-     * @ORM\OrderBy({"createdAt"="DESC"})
+     * @ORM\OneToOne(targetEntity="Erp\PaymentBundle\Entity\StripeSubscription", mappedBy="stripeCustomer", cascade={"persist"})
      */
-    protected $stripeSubscriptions;
+    protected $stripeSubscription;
 
     /**
      * @var ArrayCollection
@@ -84,7 +83,6 @@ class StripeCustomer
 
     public function __construct()
     {
-        $this->stripeSubscriptions = new ArrayCollection();
         $this->recurringPayments = new ArrayCollection();
         $this->transactions = new ArrayCollection();
     }
@@ -214,38 +212,27 @@ class StripeCustomer
     }
 
     /**
-     * Add stripeSubscription
+     * Set stripeSubscription
      *
-     * @param \Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription
+     * @param string $stripeSubscription
      *
      * @return StripeCustomer
      */
-    public function addStripeSubscription(\Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription)
+    public function setStripeSubscription($stripeSubscription)
     {
-        $stripeSubscription->setStripeCustomer($this);
-        $this->stripeSubscriptions[] = $stripeSubscription;
+        $this->stripeSubscription = $stripeSubscription;
 
         return $this;
     }
 
     /**
-     * Remove stripeSubscription
+     * Get stripeSubscription
      *
-     * @param \Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription
+     * @return StripeSubscription
      */
-    public function removeStripeSubscription(\Erp\PaymentBundle\Entity\StripeSubscription $stripeSubscription)
+    public function getStripeSubscription()
     {
-        $this->stripeSubscriptions->removeElement($stripeSubscription);
-    }
-
-    /**
-     * Get stripeSubscriptions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getStripeSubscriptions()
-    {
-        return $this->stripeSubscriptions;
+        return $this->stripeSubscription;
     }
 
     /**

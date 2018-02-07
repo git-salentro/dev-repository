@@ -7,29 +7,29 @@ class Unit
     /**
      * @var integer
      */
-    private $count;
+    private $quantity;
 
     /**
-     * Set count
+     * Set quantity
      *
-     * @param $count
+     * @param $quantity
      *
      * @return $this
      */
-    public function setCount($count)
+    public function setQuantity($quantity)
     {
-        $this->count = (int) $count;
+        $this->quantity = (int) $quantity;
 
         return $this;
     }
 
     /**
-     * Get count
+     * Get quantity
      *
      * @return integer
      */
-    public function getCount()
+    public function getQuantity()
     {
-        return $this->count;
+        return $this->quantity;
     }
 }

@@ -32,10 +32,7 @@ class StripeSubscription
     /**
      * @var StripeCustomer
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="Erp\PaymentBundle\Entity\StripeCustomer",
-     *     inversedBy="stripeRecurringPayments"
-     * )
+     * @ORM\OneToOne(targetEntity="Erp\PaymentBundle\Entity\StripeCustomer", inversedBy="stripeSubscription")
      * @ORM\JoinColumn(name="stripe_customer_id", referencedColumnName="id")
      */
     private $stripeCustomer;
