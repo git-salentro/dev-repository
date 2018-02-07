@@ -9,7 +9,13 @@ UnitController.prototype.listenCount = function () {
     var settings = JSON.parse($('#settings').val());
 
     that.countSelector.keyup(function () {
-        var count = parseInt($(this).val()) + parseInt(that.existingUnitCountSelector.val());
+        var value = parseInt($(this).val());
+        var existingUnitCount = parseInt(that.existingUnitCountSelector.val());
+        if (isNaN(value)) {
+            return;
+        }
+
+        var count = value + existingUnitCount;
         var amount = 0;
         $.each(settings, function (k, setting) {
             for (var i = setting['min']; i <= count; i++) {

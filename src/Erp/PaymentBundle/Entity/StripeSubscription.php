@@ -45,13 +45,6 @@ class StripeSubscription
     private $subscriptionId;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="quantity", type="integer")
-     */
-    private $quantity;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
@@ -97,30 +90,6 @@ class StripeSubscription
     public function getSubscriptionId()
     {
         return $this->subscriptionId;
-    }
-
-    /**
-     * Set quantity
-     *
-     * @param $quantity
-     *
-     * @return StripeSubscription
-     */
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    /**
-     * Get quantity
-     *
-     * @return integer
-     */
-    public function getQuantity()
-    {
-        return $this->quantity;
     }
 
     /**

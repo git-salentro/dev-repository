@@ -21,8 +21,7 @@ class UnitController extends Controller
         $form = $this->createForm(new UnitType());
         /** @var User $user */
         $user = $this->getUser();
-
-        //TODO Store in db
+        
         $settings = [
             [
                 'min' => 1,
@@ -40,73 +39,55 @@ class UnitController extends Controller
                 'amount' => 15,
             ],
         ];
+
+        $existingUnitQuantity = $user->getProperties()->count();
+
+        $unitPriceCalculator = $this->get('erp_property.calculator.unit_price_calculator');
+        $amount = $unitPriceCalculator->calculate($existingUnitQuantity);
+
         $template = 'ErpPropertyBundle:Unit:form.html.twig';
         $templateParams = [
             'user' => $user,
             'form' => $form->createView(),
             'errors' => null,
-            'current_year_price' => 0,
-            'total_price' => 0,
-            'existing_unit_count' => 0,
+            'current_year_price' => $amount,
+            'total_price' => $amount,
+            'existing_unit_count' => $existingUnitQuantity,
             'settings' => $settings,
         ];
-        /** @var StripeCustomer $stripeCustomer */
-        $stripeCustomer = $user->getStripeCustomer();
-
-        if (!$stripeCustomer) {
-            if ('POST' === $request->getMethod()) {
-                $templateParams['errors'] = 'Please, add bank account.';
-            }
-
-            return $this->render($template, $templateParams);
-        }
 
         $form->handleRequest($request);
-
-        $stripeSubscription = $stripeCustomer->getStripeSubscription();
-        
-        $existingUnitCount = $user->getProperties()->count();
-
-        $templateParams['existing_unit_count'] = $existingUnitCount;
-        $templateParams['current_year_price'] = $stripeSubscription ? $stripeSubscription->getQuantity() : 0;
-        $templateParams['total_price'] = $stripeSubscription ? $stripeSubscription->getQuantity() : 0;
 
         if (!$form->isValid()) {
             return $this->render($template, $templateParams);
         }
 
-        //TODO Refactoring
+        if (!$stripeCustomer = $user->getStripeCustomer()) {
+            if ($form->isSubmitted()) {
+                $templateParams['errors'] = 'Please, add bank account.';
+            }
+
+            return $this->render($template, $templateParams);
+        }
+        
         /** @var Unit $unit */
         $unit = $form->getData();
         $quantity = $unit->getQuantity();
-        $quantity = $quantity + $existingUnitCount;
-        $newPlanQuantity = 0;
-        // TODO Create calculate service.
-        foreach ($settings as $setting) {
-            for ($i = $setting['min']; $i <= $quantity; $i++) {
-                $newPlanQuantity += $setting['amount'];
-
-                if ($i == $setting['max']) {
-                    break;
-                }
-            }
-        }
-
+        $newQuantity = $quantity + $existingUnitQuantity;
+        $amount = $unitPriceCalculator->calculate($newQuantity);
+        
         $apiManager = $this->get('erp_stripe.entity.api_manager');
         $em = $this->getDoctrine()->getManager();
 
-        if (!$stripeSubscription) {
+        if (!$stripeSubscription = $stripeCustomer->getStripeSubscription()) {
             $arguments = [
                 'params' => [
                     'customer' => $stripeCustomer->getCustomerId(),
                     'items' => [
                         [
                             'plan' => StripeSubscription::BASE_PLAN_ID,
-                            'quantity' => $newPlanQuantity,
+                            'quantity' => $amount,
                         ],
-                    ],
-                    'metadata' => [
-                        'unit_quantity' => $quantity,
                     ],
                 ],
                 'options' => null,
@@ -122,8 +103,8 @@ class UnitController extends Controller
 
             $stripeSubscription = new StripeSubscription();
             $stripeSubscription->setSubscriptionId($subscription['id'])
-                ->setQuantity($newPlanQuantity)
                 ->setStripeCustomer($stripeCustomer);
+
             $stripeCustomer->setStripeSubscription($stripeSubscription);
 
             $em->persist($stripeCustomer);
@@ -131,10 +112,7 @@ class UnitController extends Controller
             $arguments = [
                 'id' => $stripeSubscription->getSubscriptionId(),
                 'params' => [
-                    'quantity' => $newPlanQuantity,
-                    'metadata' => [
-                        'unit_quantity' => $quantity,
-                    ],
+                    'quantity' => $amount,
                 ],
                 'options' => null,
             ];
@@ -145,7 +123,7 @@ class UnitController extends Controller
                 return $this->render($template, $templateParams);
             }
 
-            $amount = $newPlanQuantity - $stripeSubscription->getQuantity();
+            $amount = $unitPriceCalculator->calculate($quantity);
             $arguments = [
                 'params' => [
                     'amount' => ApiHelper::convertAmountToStripeFormat($amount),
@@ -160,9 +138,6 @@ class UnitController extends Controller
                 $templateParams['errors'] = $response->getErrorMessage();
                 return $this->render($template, $templateParams);
             }
-
-            $stripeSubscription->setQuantity($newPlanQuantity);
-            $em->persist($stripeSubscription);
         }
 
         $prototype = new Property();
