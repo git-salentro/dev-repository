@@ -47,6 +47,10 @@ services:
             - SYMFONY__PLAID__PUBLIC__KEY=${PLAID_PUBLIC_KEY}
             - SYMFONY__PLAID__SECRET__KEY=${PLAID_SECRET_KEY}
             - SYMFONY__PLAID__ENV=${PLAID_ENV}
+            - SYMFONY__MAILER__HOST=${MAILER_HOST}
+            - SYMFONY__MAILER__USER=${MAILER_USER}
+            - SYMFONY__MAILER__PASSWORD=${MAILER_PASSWORD}
+            - SYMFONY__MAILER__TRANSPORT=${MAILER_TRANSPORT}
 
     rabbitmq:
         image: rabbitmq
