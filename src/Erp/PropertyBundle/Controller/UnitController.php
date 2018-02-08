@@ -157,14 +157,8 @@ class UnitController extends Controller
             $prototype->setSettings(new PropertySettings());
 
             $em->persist($property);
-
-            if ((++$i % 20) == 0) {
-                $em->flush();
-                $em->clear();
-            }
         }
 
         $em->flush();
-        $em->clear();
     }
 }
