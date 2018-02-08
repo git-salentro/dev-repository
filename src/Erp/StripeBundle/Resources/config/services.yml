@@ -59,3 +59,9 @@ services:
             - '@erp_core.formatter.money_formatter'
         tags:
             -  { name: twig.extension }
+
+    erp_stripe.stripe.entity.user_manager:
+        class: Erp\StripeBundle\Entity\UserManager
+        arguments:
+            - '@erp_stripe.entity.api_manager'
+            - '@phy_cache'

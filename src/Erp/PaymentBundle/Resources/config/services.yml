@@ -65,12 +65,6 @@ services:
         arguments:
             - {cc: 'Erp\PaymentBundle\Stripe\Model\CreditCard', ba: 'Erp\PaymentBundle\Stripe\Model\BankAccount'}
 
-    erp.payment.stripe.manager.user_manager:
-        class: Erp\PaymentBundle\Stripe\Manager\UserManager
-        arguments:
-            - '@erp.payment.stripe.manager.customer_manager'
-            - '@phy_cache'
-
     erp.payment.consumer.update_subscriptions:
         class: Erp\PaymentBundle\Consumer\UpdateSubscriptionsConsumer
         arguments:

@@ -1,6 +1,6 @@
 <?php
 
-namespace Erp\PaymentBundle\Stripe\Manager;
+namespace Erp\StripeBundle\Entity;
 
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\UserBundle\Entity\User;
@@ -12,18 +12,18 @@ use Stripe\Card;
 class UserManager
 {
     /**
-     * @var CustomerManager
+     * @var ApiManager
      */
-    private $customerManager;
+    private $apiManager;
 
     /**
      * @var Cache
      */
     private $cache;
 
-    public function __construct(CustomerManager $customerManager, Cache $cache)
+    public function __construct(ApiManager $apiManager, Cache $cache)
     {
-        $this->customerManager = $customerManager;
+        $this->apiManager = $apiManager;
         $this->cache = $cache;
     }
 
@@ -36,7 +36,18 @@ class UserManager
             return;
         }
 
-        $response = $this->customerManager->retrieve($stripeCustomer->getCustomerId());
+        $arguments = [
+            'id' => $stripeCustomer->getCustomerId(),
+            'options' => null,
+        ];
+
+        if ($user->hasRole(User::ROLE_TENANT)) {
+            $landlord = $user->getTenantProperty()->getUser();
+            $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
+            $arguments['options'] = ['stripe_account' => $landlordStripeAccountId];
+        }
+
+        $response = $this->apiManager->callStripeApi('\Stripe\Customer', 'retrieve', $arguments);
 
         if (!$response->isSuccess()) {
             return;
@@ -64,7 +75,18 @@ class UserManager
             return;
         }
 
-        $response = $this->customerManager->retrieve($stripeCustomer->getCustomerId());
+        $arguments = [
+            'id' => $stripeCustomer->getCustomerId(),
+            'options' => null,
+        ];
+
+        if ($user->hasRole(User::ROLE_TENANT)) {
+            $landlord = $user->getTenantProperty()->getUser();
+            $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
+            $arguments['options'] = ['stripe_account' => $landlordStripeAccountId];
+        }
+
+        $response = $this->apiManager->callStripeApi('\Stripe\Customer', 'retrieve', $arguments);
 
         if (!$response->isSuccess()) {
             return;

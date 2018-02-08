@@ -176,7 +176,7 @@ class DashboardController extends BaseController
         /** @var User $user */
         $user = $this->getUser();
         //TODO Add cache layer (APC or Doctrine)
-        $stripeUserManager = $this->get('erp.payment.stripe.manager.user_manager');
+        $stripeUserManager = $this->get('erp_stripe.stripe.entity.user_manager');
         /** @var BankAccount $bankAccount */
         $bankAccount = $stripeUserManager->getBankAccount($user);
         /** @var Card $creditCard */
