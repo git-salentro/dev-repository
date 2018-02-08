@@ -21,18 +21,16 @@ class TransactionEntityListener
 
     public function postPersist(Transaction $entity)
     {
-        if (!$account = $entity->getAccount()) {
+        $user = $entity->getCustomer()->getUser();
+        if (!$user->hasRole(User::ROLE_TENANT)) {
             return;
         }
 
-        //Expect Stripe Customer is Tenant
-        $tenant = $entity->getCustomer()->getUser();
-
-        if (!$tenant->getRentPayment()) {
+        if (!$user->getRentPayment()) {
             $rentPayment = new RentPayment();
-            $rentPayment->setUser($tenant);
+            $rentPayment->setUser($user);
         } else {
-            $rentPayment = $tenant->getRentPayment();
+            $rentPayment = $user->getRentPayment();
         }
 
         $rentPayment->depositMoneyToBalance($entity->getAmount());

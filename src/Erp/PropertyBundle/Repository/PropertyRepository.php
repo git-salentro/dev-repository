@@ -269,7 +269,6 @@ class PropertyRepository extends EntityRepository
 
     public function getLatePayments(User $user)
     {
-        //TODO When create record in RentPayment?
         //TODO Optimize. Get rid of hydration
         $qb = $this->createQueryBuilder('p')
             ->select('p', 'ps', 'tu')
@@ -287,13 +286,6 @@ class PropertyRepository extends EntityRepository
 
     public function getScheduledPropertiesForPayment()
     {
-        return $this->getPropertiesForPaymentQueryBuilder()
-            ->getQuery()
-            ->getResult();
-    }
-
-    private function getPropertiesForPaymentQueryBuilder()
-    {
         //TODO Optimize. Get rid of hydration
         $yesterday = (new \DateTime())->modify('-1 day');
         $yesterdayDay = $yesterday->format('j');
@@ -309,7 +301,23 @@ class PropertyRepository extends EntityRepository
             ->setParameter('yesterdayDay', $yesterdayDay)
             ->setParameter('yesterdayMonth', $yesterdayMonth);
 
-        return $qb;
+        return $qb
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getPropertiesByRentDueDate($rentDueDate)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('tu')
+            ->join('p.settings', 'ps')
+            ->join('p.tenantUser', 'tu')
+            ->join('p.user', 'u')
+            ->where('ps.dayUntilDue = :dayUntilDue')
+            ->setParameter('dayUntilDue', $rentDueDate);
+
+        return $qb->getQuery()
+            ->getResult();
     }
 
     /**

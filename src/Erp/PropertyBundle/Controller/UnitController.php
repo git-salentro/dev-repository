@@ -21,7 +21,8 @@ class UnitController extends Controller
         $form = $this->createForm(new UnitType());
         /** @var User $user */
         $user = $this->getUser();
-        
+
+        //TODO Store in DB
         $settings = [
             [
                 'min' => 1,
@@ -74,7 +75,7 @@ class UnitController extends Controller
         $unit = $form->getData();
         $quantity = $unit->getQuantity();
         $newQuantity = $quantity + $existingUnitQuantity;
-        $amount = $unitPriceCalculator->calculate($newQuantity);
+        $newAmount = $unitPriceCalculator->calculate($newQuantity);
         
         $apiManager = $this->get('erp_stripe.entity.api_manager');
         $em = $this->getDoctrine()->getManager();
@@ -86,7 +87,7 @@ class UnitController extends Controller
                     'items' => [
                         [
                             'plan' => StripeSubscription::BASE_PLAN_ID,
-                            'quantity' => $amount,
+                            'quantity' => $newAmount,
                         ],
                     ],
                 ],
@@ -112,7 +113,7 @@ class UnitController extends Controller
             $arguments = [
                 'id' => $stripeSubscription->getSubscriptionId(),
                 'params' => [
-                    'quantity' => $amount,
+                    'quantity' => $newAmount,
                 ],
                 'options' => null,
             ];
@@ -123,7 +124,7 @@ class UnitController extends Controller
                 return $this->render($template, $templateParams);
             }
 
-            $amount = $unitPriceCalculator->calculate($quantity);
+            $amount = $newAmount - $amount;
             $arguments = [
                 'params' => [
                     'amount' => ApiHelper::convertAmountToStripeFormat($amount),
@@ -140,6 +141,14 @@ class UnitController extends Controller
             }
         }
 
+        $this->addProperties($user, $quantity);
+
+        return $this->redirectToRoute('erp_property_listings_all');
+    }
+
+    private function addProperties(User $user, $quantity)
+    {
+        $em = $this->getDoctrine()->getManagerForClass(Property::class);
         $prototype = new Property();
         for ($i=1; $i<=$quantity; $i++) {
             $property = clone $prototype;
@@ -148,10 +157,14 @@ class UnitController extends Controller
             $prototype->setSettings(new PropertySettings());
 
             $em->persist($property);
+
+            if ((++$i % 20) == 0) {
+                $em->flush();
+                $em->clear();
+            }
         }
 
         $em->flush();
-
-        return $this->redirectToRoute('erp_property_listings_all');
+        $em->clear();
     }
 }

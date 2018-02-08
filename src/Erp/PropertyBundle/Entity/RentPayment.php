@@ -60,6 +60,8 @@ class RentPayment
     {
         if ($this->balance < 0 && $this->debtStartAt === null) {
             $this->debtStartAt = new \DateTime();
+
+            return;
         }
 
         if ($this->balance >= 0) {
