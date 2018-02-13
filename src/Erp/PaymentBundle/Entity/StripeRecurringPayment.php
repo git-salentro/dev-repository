@@ -3,6 +3,7 @@
 namespace Erp\PaymentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Erp\PropertyBundle\Validator\Constraints as Assert;
 
 /**
  * Class StripeRecurringPayment
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="stripe_recurring_payment")
  * @ORM\Entity(repositoryClass="Erp\PaymentBundle\Repository\StripeRecurringPaymentRepository")
  * @ORM\HasLifecycleCallbacks
+ * @Assert\RecurringPaymentClass
  */
 class StripeRecurringPayment
 {
@@ -109,8 +111,6 @@ class StripeRecurringPayment
     {
         $this->updatedAt = new \DateTime();
     }
-
-
 
     /**
      * Get id

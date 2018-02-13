@@ -271,8 +271,7 @@ class PropertyRepository extends EntityRepository
     {
         //TODO Optimize. Get rid of hydration
         $qb = $this->createQueryBuilder('p')
-            ->select('p', 'ps', 'tu')
-            ->join('p.settings', 'ps')
+            ->select('p', 'tu')
             ->join('p.tenantUser', 'tu')
             ->join('tu.rentPayment', 'rp')
             ->join('p.user', 'u')

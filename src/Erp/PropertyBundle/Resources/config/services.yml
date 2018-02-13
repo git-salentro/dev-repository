@@ -19,3 +19,10 @@ services:
         class: Erp\PropertyBundle\Calculator\UnitPriceCalculator
         arguments:
             - '@doctrine'
+
+    erp_property.validator.constraints.recurring_payment_class_validator:
+        class: Erp\PropertyBundle\Validator\Constraints\RecurringPaymentClassValidator
+        arguments:
+            - '@security.token_storage'
+        tags:
+            - { name: validator.constraint_validator }

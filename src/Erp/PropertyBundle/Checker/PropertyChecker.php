@@ -32,6 +32,12 @@ class PropertyChecker
             return false;
         }
 
+        if ($lateRentPaymentSettings = $user->getLateRentPaymentSettings()) {
+            if (!$lateRentPaymentSettings->isAllowRentPayment()) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
