@@ -48,7 +48,7 @@ class ServiceRequestController extends BaseController
         if (!$toUserId) {
             $renderParams = ['user' => $user];
         } elseif (!$toUser
-            || ($user->hasRole(User::ROLE_LANDLORD) && !$user->isTenant($toUser))
+            || ($user->hasRole(User::ROLE_MANAGER) && !$user->isTenant($toUser))
         ) {
             throw $this->createNotFoundException();
         } else {
@@ -75,7 +75,7 @@ class ServiceRequestController extends BaseController
     }
 
     /**
-     * Submit data from tenant to landlord
+     * Submit data from tenant to manager
      *
      * @param Request $request
      *
@@ -85,7 +85,7 @@ class ServiceRequestController extends BaseController
     {
         /** @var User $user - Tenant */
         $user = $this->getUser();
-        /** @var User $toUser - Landlord */
+        /** @var User $toUser - Manager */
         $toUser = $user->getTenantProperty()->getUser();
 
         $serviceRequest = new ServiceRequest();
@@ -165,15 +165,15 @@ class ServiceRequestController extends BaseController
     }
 
     /**
-     * Return list tenants by landlord
+     * Return list tenants by manager
      *
      * @param User $user
      *
      * @return array
      */
-    protected function getTenantsByLandlord(User $user)
+    protected function getTenantsByManager(User $user)
     {
-        $tenants = $this->em->getRepository('ErpUserBundle:ServiceRequest')->getTenantsByLandlord($user);
+        $tenants = $this->em->getRepository('ErpUserBundle:ServiceRequest')->getTenantsByManager($user);
 
         return $tenants;
     }

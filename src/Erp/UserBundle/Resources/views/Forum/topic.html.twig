@@ -11,18 +11,18 @@
     {{ parent() }}
 
     <div class="page-content">
-        <section id="landlord-forum-topic" class="profile forum-page">
+        <section id="manager-forum-topic" class="profile forum-page">
             <div class="container">
                 <div class="row">
                     <div class="title-block">
                         <h1 class="bold-text">{{ topic.name|e }}</h1>
-                        <a href="{{ path('erp_user_profile_forum_index') }}">&#171; &nbsp;Back to Landlord Forum</a>
+                        <a href="{{ path('erp_user_profile_forum_index') }}">&#171; &nbsp;Back to Manager Forum</a>
                     </div>
                 </div>
 
                 <div class="row forum-row">
                     <div class="col-xs-9 forum-message-container">
-                        <div class="landlord-message-block message-block-top">
+                        <div class="manager-message-block message-block-top">
                             <div class="col-xs-3 photo-block">
                                 <div class="account-photo">
                                 {% if topic.user.image %}

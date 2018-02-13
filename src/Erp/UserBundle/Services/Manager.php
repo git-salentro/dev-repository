@@ -3,10 +3,10 @@ namespace Erp\UserBundle\Services;
 
 use Erp\UserBundle\Entity\User;
 
-class Landlord extends UserService
+class Manager extends UserService
 {
     /**
-     * Get Landlord statuses
+     * Get Manager statuses
      *
      * @param bool $withDesc
      *
@@ -30,16 +30,16 @@ class Landlord extends UserService
     }
 
     /**
-     * Check if Landlord`s property has active tenant
+     * Check if Manager`s property has active tenant
      *
-     * @param User $landlord
+     * @param User $manager
      *
      * @return bool
      */
-    public function checkIsLandlordHasTenants(User $landlord)
+    public function checkIsManagerHasTenants(User $manager)
     {
         $result = false;
-        $properties = $landlord->getProperties();
+        $properties = $manager->getProperties();
         /** @var $property \Erp\PropertyBundle\Entity\Property */
         foreach ($properties as $property) {
             if ($property->getTenantUser()) {

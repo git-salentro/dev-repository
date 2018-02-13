@@ -125,7 +125,7 @@ fos_user:
         sender_name: "eRentPay"
     registration:
         form:
-            type: erp_users_landlord_form_registration
+            type: erp_users_manager_form_registration
 
 liip_imagine:
     driver: imagick

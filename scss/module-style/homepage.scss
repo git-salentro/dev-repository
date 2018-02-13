@@ -198,7 +198,7 @@
 //        height: 130px;
 //        width: 131px;
 //        display: inline-block;
-//        &.icon-landlords {
+//        &.icon-managers {
 //            background: url(../images/homepage/circle1.png) 50%;
 //        }
 //        &.icon-tenants {
@@ -281,13 +281,13 @@
             display: inline-block;
             background-size: contain;
             background-repeat: no-repeat;
-            &.landlord1-icon {
+            &.manager1-icon {
                 background-image: url(../images/homepage/ico2.png);
             }
-            &.landlord2-icon {
+            &.manager2-icon {
                 background-image: url(../images/homepage/ico3.png);
             }
-            &.landlord3-icon {
+            &.manager3-icon {
                 background-image: url(../images/homepage/ico4.png);
             }
             &.tenant1-icon {

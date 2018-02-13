@@ -29,7 +29,7 @@
                         <span class="select-container"></span>
                     {% endif %}
                 </button>
-                {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) %}
+                {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}
                     <ul class="companions-list dropdown-menu" aria-labelledby="dropdownMenu2">
                         <li class="doc-accepted" data-status="{{ constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED') }}">
                             <span class="status"><span class="doc-accepted-icon doc-status-icon"></span>Accepted</span>
@@ -40,7 +40,7 @@
         </div>
         <div class="col-xs-3 table-col sign-col">
             {% if not currentCompanion.hasRole(constRoleAnonymous) %}<a role="popup" href="{{ path('erp_esign_form', {'documentId':userDocument.document.id}) }}" class="sign-btn signature-btn">Sign</a>{% endif %}
-            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED')) or user.hasRole(constRoleLandlord) %}
+            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED')) or user.hasRole(constRoleManager) %}
                 <span class="doc-edit" data-is-tenant="{% if user.hasRole(constRoleTenant) %}1{% else %}0{% endif %}"></span>
                 <span class="ok-btn">Ok</span>
                 <a role="popup" href="{{ path('erp_user_document_delete', {'documentId':userDocument.id}) }}" class="doc-delete">×</a>

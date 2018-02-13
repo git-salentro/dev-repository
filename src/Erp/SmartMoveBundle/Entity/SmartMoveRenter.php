@@ -27,9 +27,9 @@ class SmartMoveRenter
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="smartMoveRenters")
-     * @ORM\JoinColumn(name="landlord_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="manager_id", referencedColumnName="id", nullable=false)
      */
-    protected $landlord;
+    protected $manager;
 
     /**
      * @var string
@@ -150,13 +150,13 @@ class SmartMoveRenter
     /**
      * Set tenant
      *
-     * @param User $landlord
+     * @param User $manager
      *
      * @return $this
      */
-    public function setLandlord(User $landlord)
+    public function setManager(User $manager)
     {
-        $this->landlord = $landlord;
+        $this->manager = $manager;
 
         return $this;
     }
@@ -166,9 +166,9 @@ class SmartMoveRenter
      *
      * @return User
      */
-    public function getLandlord()
+    public function getManager()
     {
-        return $this->landlord;
+        return $this->manager;
     }
 
     /**

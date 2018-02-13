@@ -5,12 +5,12 @@ namespace Erp\CoreBundle\EmailNotification\Notifications;
 use Erp\CoreBundle\EmailNotification\AbstractEmailNotification;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 
-class ApplicationFormToLandlord extends AbstractEmailNotification
+class ApplicationFormToManager extends AbstractEmailNotification
 {
     /**
      * @var string
      */
-    protected $type = EmailNotificationFactory::TYPE_APPLICATION_FORM_TO_LANDLORD;
+    protected $type = EmailNotificationFactory::TYPE_APPLICATION_FORM_TO_MANAGER;
 
     /**
      * Send email notification when new Administrator created

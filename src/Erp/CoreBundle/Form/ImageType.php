@@ -30,7 +30,7 @@ class ImageType extends AbstractType
                         'mimeTypes' => Image::$allowedMimeTypes,
                         'groups' => [
                             'TenantDetails',
-                            'LandlordDetails',
+                            'ManagerDetails',
                             'EditProperty'
                         ],
                         'maxSizeMessage' => str_replace(

@@ -190,8 +190,8 @@ class PropertyController extends BaseController
 
             if ($form->isValid()) {
                 $appointment = $form->getData();
-                $landlord = $property->getUser();
-                $isSent = $this->sendAppointmentRequestEmail($appointment, $landlord->getEmail());
+                $manager = $property->getUser();
+                $isSent = $this->sendAppointmentRequestEmail($appointment, $manager->getEmail());
 
                 if ($isSent) {
                     $this->em->persist($appointment);
@@ -248,7 +248,7 @@ class PropertyController extends BaseController
     {
         /** @var $user User */
         $user = $this->getUser();
-        if (!$user || !$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user || !$user->hasRole(User::ROLE_MANAGER)) {
             return $this->redirectToRoute('fos_user_security_login');
         }
         /** @var $property \Erp\PropertyBundle\Entity\Property */
@@ -286,7 +286,7 @@ class PropertyController extends BaseController
                         $this->sendAssignTenantEmail($existUser);
                     } elseif ($existUser instanceof User
                         && !$existUser->isEnabled()
-                        && $existUser->hasRole(User::ROLE_LANDLORD)
+                        && $existUser->hasRole(User::ROLE_MANAGER)
                     ) {
                         $this->get('session')->getFlashBag()
                             ->add('alert_error', 'Email is disabled. Contact Administrator.');

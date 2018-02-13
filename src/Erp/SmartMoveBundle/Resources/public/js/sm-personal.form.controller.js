@@ -81,7 +81,7 @@ SMPersonalFormController.prototype.initTenantScreeningWidget = function () {
                         getReportBtn.hide();
                         $('.paid-report').remove();
                         getReportForm.find('.with-submit-btn').append('<a role="popup" href="' + self.routeReportPaid + '/' + selValue + '" class="btn edit-btn paid-report">GET REPORT</a>');
-                        $('#landlords-profile').erpPopup();
+                        $('#managers-profile').erpPopup();
                     }
                 }
             }

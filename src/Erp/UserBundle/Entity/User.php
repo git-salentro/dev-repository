@@ -32,7 +32,7 @@ use Erp\PropertyBundle\Entity\ApplicationForm;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="Email is already in use",
- *     groups={"AdminCreated", "LandlordCreated", "LandlordRegister", "ChangeEmail"}
+ *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail"}
  * )
  * @ORM\HasLifecycleCallbacks()
  */
@@ -40,7 +40,7 @@ class User extends BaseUser
 {
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     const ROLE_ADMIN       = 'ROLE_ADMIN';
-    const ROLE_LANDLORD    = 'ROLE_LANDLORD';
+    const ROLE_MANAGER    = 'ROLE_MANAGER';
     const ROLE_TENANT      = 'ROLE_TENANT';
     const ROLE_ANONYMOUS   = 'ROLE_ANONYMOUS';
 
@@ -91,7 +91,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your First Name",
-     *     groups={"LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      *
      * @Assert\Length(
@@ -99,7 +99,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="First Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="First name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      */
     protected $firstName;
@@ -111,7 +111,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Last Name",
-     *     groups={"LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      *
      * @Assert\Length(
@@ -119,7 +119,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Last Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="Last Name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      */
     protected $lastName;
@@ -132,7 +132,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Password should have minimum 5 characters and maximum 255 characters",
      *     maxMessage="Password should have minimum 5 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "LandlordRegister", "LandlordDetails", "TenantDetails", "ResetPassword"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails", "ResetPassword"}
      * )
      */
     protected $plainPassword;
@@ -147,7 +147,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Company name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="Company name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister"}
+     *     groups={"ManagerCreated", "ManagerRegister"}
      * )
      */
     protected $companyName;
@@ -159,14 +159,14 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Phone",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      *
      * @Assert\Regex(
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $phone;
@@ -180,7 +180,7 @@ class User extends BaseUser
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"LandlordCreated", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "TenantContactInfo"}
      * )
      */
     protected $workPhone;
@@ -192,14 +192,14 @@ class User extends BaseUser
      *
      * @Assert\Url(
      *     message="Please use link format. Example: http(s)://mysite.com",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=4,
      *     max="255",
      *     minMessage="Website should have minimum 4 characters and maximum 255 characters",
      *     maxMessage="Website should have minimum 4 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $websiteUrl;
@@ -211,14 +211,14 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Address",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=3,
      *     max="255",
      *     minMessage="Address should have minimum 3 characters and maximum 255 characters",
      *     maxMessage="Address should have minimum 3 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $addressOne;
@@ -233,7 +233,7 @@ class User extends BaseUser
      *     max="255",
      *     minMessage="Address should have minimum 3 characters and maximum 255 characters",
      *     maxMessage="Address should have minimum 3 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $addressTwo;
@@ -271,7 +271,7 @@ class User extends BaseUser
      * )
      * @Assert\NotBlank(
      *     message="Please enter your City",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $city;
@@ -283,14 +283,14 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your State",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=2,
      *     max="35",
      *     minMessage="State should have minimum 2 characters and maximum 35 characters",
      *     maxMessage="State should have minimum 2 characters and maximum 35 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $state;
@@ -301,21 +301,21 @@ class User extends BaseUser
      * @ORM\Column(name="postal_code", type="string", length=35, nullable=true)
      * @Assert\NotBlank(
      *     message="Please enter your Zip Code",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      *
      * @Assert\Regex(
      *     pattern="/^[0-9]+$/",
      *     match=true,
      *     message="Zip code must contain numbers",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=5,
      *     max=5,
      *     minMessage="Zip code should have minimum 5 characters and maximum 5 characters",
      *     maxMessage="Zip code should have minimum 5 characters and maximum 5 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $postalCode;
@@ -531,7 +531,7 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Erp\SmartMoveBundle\Entity\SmartMoveRenter", mappedBy="landlord", cascade={"ALL"})
+     * @ORM\OneToMany(targetEntity="Erp\SmartMoveBundle\Entity\SmartMoveRenter", mappedBy="manager", cascade={"ALL"})
      * @ORM\OrderBy({"updatedDate"="DESC"})
      */
     protected $smartMoveRenters;
@@ -1141,7 +1141,7 @@ class User extends BaseUser
      */
     public function isReadOnlyUser()
     {
-        return $this->getStatus() !== self::STATUS_ACTIVE && $this->hasRole(self::ROLE_LANDLORD);
+        return $this->getStatus() !== self::STATUS_ACTIVE && $this->hasRole(self::ROLE_MANAGER);
     }
 
     /**
@@ -1747,7 +1747,7 @@ class User extends BaseUser
      */
     public function hasAccessToPaymentPage()
     {
-        return $this->hasRole(self::ROLE_LANDLORD) && !$this->hasRole(self::ROLE_TENANT);
+        return $this->hasRole(self::ROLE_MANAGER) && !$this->hasRole(self::ROLE_TENANT);
     }
 
     public function hasStripeAccount()

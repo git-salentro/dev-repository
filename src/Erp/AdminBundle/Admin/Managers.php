@@ -13,14 +13,14 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use FOS\UserBundle\Model\UserInterface;
 use Doctrine\ORM\EntityRepository;
 
-class Landlords extends BaseAdmin
+class Managers extends BaseAdmin
 {
-    protected $baseRouteName = 'admin_erpuserbundle_landlors';
+    protected $baseRouteName = 'admin_erpuserbundle_managers';
 
-    protected $baseRoutePattern = 'user-mangement/landlords';
+    protected $baseRoutePattern = 'user-mangement/managers';
 
     protected $formOptions = [
-        'validation_groups' => ['LandlordCreated']
+        'validation_groups' => ['ManagerCreated']
     ];
 
     /**
@@ -48,7 +48,7 @@ class Landlords extends BaseAdmin
         $query = parent::createQuery($context);
         $query->andWhere($query->getRootAliases()[0] . '.roles LIKE :roles')
             ->andWhere($query->getRootAliases()[0] . '.status NOT IN (:statuses)')
-            ->setParameter('roles', '%"' . User::ROLE_LANDLORD . '"%')
+            ->setParameter('roles', '%"' . User::ROLE_MANAGER . '"%')
             ->setParameter('statuses', [User::STATUS_DELETED])
         ;
 
@@ -56,7 +56,7 @@ class Landlords extends BaseAdmin
     }
 
     /**
-     * When new landlord created
+     * When new manager created
      *
      * @param mixed $object
      *
@@ -72,7 +72,7 @@ class Landlords extends BaseAdmin
                     ->getSettings();
 
                 $object->setUsername($object->getEmail())
-                    ->setRoles([User::ROLE_LANDLORD])
+                    ->setRoles([User::ROLE_MANAGER])
                     ->setEnabled(true)
                     ->setStatus(User::STATUS_PENDING)
                     ->setSettings(array_keys($settings))
@@ -103,7 +103,7 @@ class Landlords extends BaseAdmin
     }
 
     /**
-     * When landlord update
+     * When manager update
      *
      * @param mixed $object
      *
@@ -121,7 +121,7 @@ class Landlords extends BaseAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-        $statuses = $this->getConfigurationPool()->getContainer()->get('erp.users.landlor_service')->getStatuses(true);
+        $statuses = $this->getConfigurationPool()->getContainer()->get('erp.users.manager_service')->getStatuses(true);
         $listMapper
             ->add('status', 'choice', ['choices' => $statuses, 'required' => true])
             ->addIdentifier('email')
@@ -143,7 +143,7 @@ class Landlords extends BaseAdmin
         /** @var User $user */
         $user = $this->getSubject();
 
-        $statuses = $this->getConfigurationPool()->getContainer()->get('erp.users.landlor_service')->getStatuses(true);
+        $statuses = $this->getConfigurationPool()->getContainer()->get('erp.users.manager_service')->getStatuses(true);
 
         if ($user->getStatus() == User::STATUS_DISABLED || $user->getStatus() == User::STATUS_REJECTED) {
             $isDisabled = true;
@@ -177,7 +177,7 @@ class Landlords extends BaseAdmin
             null,
             [
                 'label' => 'Free Properties Creation
-                    (this option can be switched only when Landlord has "Active" status)',
+                    (this option can be switched only when Manager has "Active" status)',
                 'disabled' => ($user->isReadOnlyUser() || $isDisabled) ? true : false
             ]
         );
@@ -187,7 +187,7 @@ class Landlords extends BaseAdmin
             null,
             [
                 'label' => 'Free Application Form Creation (this option can be switched
-                    only when Landlord has not created application form yet)',
+                    only when Manager has not created application form yet)',
                 'disabled' => ($user->getApplicationForm() || $isDisabled) ? true : false
             ]
         );
@@ -205,7 +205,7 @@ class Landlords extends BaseAdmin
         ) {
             $isStatusDisabled = true;
             if (!count($user->getPaySimpleCustomers())) {
-                $statusText = ' (The Landlord has not added Bank/Cards information yet)';
+                $statusText = ' (The Manager has not added Bank/Cards information yet)';
             }
         }
 
@@ -234,8 +234,8 @@ class Landlords extends BaseAdmin
             );
 
             if ($user->getStatus() == User::STATUS_ACTIVE and !$this->getIsDisableAllowed($user)) {
-                $text = 'To disable Landlord\'s account you have to remove all Tenants from this Landlord\'s properties
-            and press the appeared "Disable Landlord" button.';
+                $text = 'To disable Manager\'s account you have to remove all Tenants from this Manager\'s properties
+            and press the appeared "Disable Manager" button.';
 
                 $this->formMapper->add(
                     'id',
@@ -261,7 +261,7 @@ class Landlords extends BaseAdmin
             [
                 'disabled' => $issetTenants,
                 'label' => 'Enable Private account'
-                    . (($issetTenants) ? ' (Action is not allowed, because landlord has tenant(-s))': ''),
+                    . (($issetTenants) ? ' (Action is not allowed, because Manager has tenant(-s))': ''),
             ]
         );
         $this->formMapper->add(
@@ -306,10 +306,10 @@ class Landlords extends BaseAdmin
      */
     protected function configureRoutes(RouteCollection $collection)
     {
-        $collection->add('sentIvite', $this->getRouterIdParameter() . '/sent-invitation')
-            ->add('disableLandlord', $this->getRouterIdParameter() . '/disable-landlord')
-            ->add('rejectLandlord', $this->getRouterIdParameter() . '/reject-landlord')
-            ->add('deleteLandlord', $this->getRouterIdParameter() . '/delete-landlord');
+        $collection->add('sentInvite', $this->getRouterIdParameter() . '/sent-invitation')
+            ->add('disableManager', $this->getRouterIdParameter() . '/disable-manager')
+            ->add('rejectManager', $this->getRouterIdParameter() . '/reject-manager')
+            ->add('deleteManager', $this->getRouterIdParameter() . '/delete-manager');
         $collection->remove('export');
         $collection->remove('delete');
     }
@@ -330,7 +330,7 @@ class Landlords extends BaseAdmin
         if (!$user || $action !== 'edit') {
             return;
         }
-        $textAlert = 'To delete Landlord\'s account first you have to disable it or reject Landlord\'s registration.';
+        $textAlert = 'To delete Manager\'s account first you have to disable it or reject Manager\'s registration.';
 
         switch ($user->getStatus()) {
             case User::STATUS_PENDING:
@@ -338,18 +338,18 @@ class Landlords extends BaseAdmin
             case User::STATUS_NOT_CONFIRMED:
                 $menu->addChild(
                     'Send invitation to complete profile',
-                    ['uri' => $this->generateObjectUrl('sentIvite', $user), ['class' => 'btn red-btn']]
+                    ['uri' => $this->generateObjectUrl('sentInvite', $user), ['class' => 'btn red-btn']]
                 );
 
-                $textConfirm = 'Are you sure you want to reject this Landlord\'s registration?';
+                $textConfirm = 'Are you sure you want to reject this Manager\'s registration?';
 
                 $menu->addChild(
-                    'Reject Landlord',
-                    ['uri' => $this->generateObjectUrl('rejectLandlord', $user), 'class' => 'btn red-btn']
+                    'Reject Manager',
+                    ['uri' => $this->generateObjectUrl('rejectManager', $user), 'class' => 'btn red-btn']
                 )->setAttribute('onclick', 'if (!confirm("' . $textConfirm . '")) return false;');
 
                 $menu->addChild(
-                    'Delete Landlord',
+                    'Delete Manager',
                     ['uri' => '#', 'class' => 'btn red-btn']
                 )->setAttribute('onclick', 'alert("' . $textAlert . '"); return false;');
 
@@ -357,18 +357,18 @@ class Landlords extends BaseAdmin
 
             case User::STATUS_ACTIVE:
                 if ($this->getIsDisableAllowed($user)) {
-                    $textConfirm  = 'Are you sure you want to disable this Landlord\'s account? ';
-                    $textConfirm .= 'All postponed and recurring payments of this Landlord ';
+                    $textConfirm  = 'Are you sure you want to disable this Manager\'s account? ';
+                    $textConfirm .= 'All postponed and recurring payments of this Manager ';
                     $textConfirm .= 'will be canceled, pending tenants ';
                     $textConfirm .= 'will be deleted and account will be disabled.';
 
                     $menu->addChild(
-                        'Disable Landlord',
-                        ['uri' => $this->generateObjectUrl('disableLandlord', $user), 'class' => 'btn red-btn']
+                        'Disable Manager',
+                        ['uri' => $this->generateObjectUrl('disableManager', $user), 'class' => 'btn red-btn']
                     )->setAttribute('onclick', 'if (!confirm("' . $textConfirm . '")) return false;');
 
                     $menu->addChild(
-                        'Delete Landlord',
+                        'Delete Manager',
                         ['uri' => '#', 'class' => 'btn red-btn']
                     )->setAttribute('onclick', 'alert("' . $textAlert . '"); return false;');
                 }
@@ -382,8 +382,8 @@ class Landlords extends BaseAdmin
                 $textConfirm .= 'application forms, etc!';
 
                 $menu->addChild(
-                    'Delete Landlord',
-                    ['uri' => $this->generateObjectUrl('deleteLandlord', $user), 'class' => 'btn red-btn']
+                    'Delete Manager',
+                    ['uri' => $this->generateObjectUrl('deleteManager', $user), 'class' => 'btn red-btn']
                 )->setAttribute('onclick', 'if (!confirm("' . $textConfirm . '")) return false;');
 
                 break;
@@ -401,9 +401,9 @@ class Landlords extends BaseAdmin
      */
     protected function getIsDisableAllowed($user)
     {
-        $service = $this->getConfigurationPool()->getContainer()->get('erp.users.landlor_service');
+        $service = $this->getConfigurationPool()->getContainer()->get('erp.users.manager_service');
         $result = false;
-        if (!$service->checkIsLandlordHasTenants($user)) {
+        if (!$service->checkIsManagerHasTenants($user)) {
             $result = true;
         }
 

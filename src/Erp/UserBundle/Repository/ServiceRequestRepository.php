@@ -37,13 +37,13 @@ class ServiceRequestRepository extends EntityRepository
     }
 
     /**
-     * Return tenants by landlord and count messages
+     * Return tenants by manager and count messages
      *
      * @param User $user
      *
      * @return object
      */
-    public function getTenantsByLandlord(User $user)
+    public function getTenantsByManager(User $user)
     {
         $qb = $this->_em->createQueryBuilder()
             ->select('sr, COUNT(sr) as totalServiceRequests')

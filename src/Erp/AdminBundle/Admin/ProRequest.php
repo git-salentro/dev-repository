@@ -132,7 +132,7 @@ class ProRequest extends BaseAdmin
      */
     protected function configureRoutes(RouteCollection $collection)
     {
-        $collection->add('chargeLandlord', $this->getRouterIdParameter().'/charge-landlord');
+        $collection->add('chargeManager', $this->getRouterIdParameter().'/charge-manager');
         $collection->remove('export');
         $collection->remove('create');
     }
@@ -160,8 +160,8 @@ class ProRequest extends BaseAdmin
 
         if ($isApprovedStatus && $isConsultant && $isConsultantFee) {
             $menu->addChild(
-                'Charge Landlord',
-                ['uri' => $this->generateObjectUrl('chargeLandlord', $proRequest), ['class' => 'btn red-btn']]
+                'Charge Manager',
+                ['uri' => $this->generateObjectUrl('chargeManager', $proRequest), ['class' => 'btn red-btn']]
             );
         }
 
@@ -314,7 +314,7 @@ class ProRequest extends BaseAdmin
     {
         return [
             ProRequestEntity::STATUS_IN_PROCESS    => 'Waiting for Consultant Cost',
-            ProRequestEntity::STATUS_APPROVED      => 'Approved by Landlord (Ready to be charged)',
+            ProRequestEntity::STATUS_APPROVED      => 'Approved by Manager (Ready to be charged)',
             ProRequestEntity::STATUS_PAYMENT_OK    => 'Payment Success',
             ProRequestEntity::STATUS_PAYMENT_ERROR => 'Payment Error',
             ProRequestEntity::STATUS_CANCELED      => 'Canceled',

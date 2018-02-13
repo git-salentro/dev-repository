@@ -71,7 +71,7 @@ class InviteTenantController extends BaseController
                             $em->persist($property->setStatus(Property::STATUS_RENTED));
                         } elseif ($existUser instanceof User
                             && !$existUser->isEnabled()
-                            && $existUser->hasRole(User::ROLE_LANDLORD)
+                            && $existUser->hasRole(User::ROLE_MANAGER)
                         ) {
                             $error['message'] = 'Email is disabled. Contact Administrator.';
                         } else {

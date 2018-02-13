@@ -66,7 +66,7 @@
                                                 {% if key %}
                                                     <a href="#" class="btn submit-popup-btn tab-prev">Previous</a>
                                                 {% else %}
-                                                    {% if isLandlord %}
+                                                    {% if isManager %}
                                                         <a href="{{ path('erp_property_application_form', {'propertyId':property.id}) }}" class="btn submit-popup-btn">Back to constructor</a>
                                                     {% else %}
                                                         <a href="{{ path('erp_property_page', {'stateCode': property.city.stateCode, 'cityName': property.city.name, 'name' : property.getName() }) }}" class="btn submit-popup-btn">Back to property</a>

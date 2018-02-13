@@ -5,12 +5,12 @@ namespace Erp\CoreBundle\EmailNotification\Notifications;
 use Erp\CoreBundle\EmailNotification\AbstractEmailNotification;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 
-class LandlordUserRegister extends AbstractEmailNotification
+class ManagerCompleteProfile extends AbstractEmailNotification
 {
     /**
      * @var string
      */
-    protected $type = EmailNotificationFactory::TYPE_LANDLORD_USER_REGISTER;
+    protected $type = EmailNotificationFactory::TYPE_MANAGER_COMPLETE_PROFILE;
 
     /**
      * Send email notification when new Administrator created
@@ -19,12 +19,13 @@ class LandlordUserRegister extends AbstractEmailNotification
      */
     public function sendEmailNotification($params)
     {
-        $message = $params['mailer']->createMessage()
+        $message = $params['mailer']
+            ->createMessage()
             ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
-            ->setContentType('text/html');
+            ->setContentType("text/html");
 
-        $subject = 'Zoobdoo - You have registered as Landlord';
+        $subject = 'Zoobdoo - Please, update your profile';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['url'] = $params['url'];

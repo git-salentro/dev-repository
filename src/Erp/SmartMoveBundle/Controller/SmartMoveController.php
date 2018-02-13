@@ -40,7 +40,7 @@ class SmartMoveController extends BaseController
             return $this->redirectToRoute('fos_user_security_login');
         }
 
-        if (!$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
@@ -102,7 +102,7 @@ class SmartMoveController extends BaseController
 
         $isRoleAccess = false;
         if ($user) {
-            $isRoleAccess = $user->hasRole(User::ROLE_LANDLORD) || $user->hasRole(User::ROLE_SUPER_ADMIN)
+            $isRoleAccess = $user->hasRole(User::ROLE_MANAGER) || $user->hasRole(User::ROLE_SUPER_ADMIN)
                 || $user->hasRole(User::ROLE_ADMIN);
         }
         if (!$smartMoveRenter || $isRoleAccess) {
@@ -147,8 +147,8 @@ class SmartMoveController extends BaseController
             ['examToken' => $token, 'isPersonalComleted' => true]
         );
 
-        $isLandlord = $user && $user->hasRole(User::ROLE_LANDLORD);
-        if (!$smartMoveRenter || $isLandlord || $smartMoveRenter->getIsExamComleted()) {
+        $isManager = $user && $user->hasRole(User::ROLE_MANAGER);
+        if (!$smartMoveRenter || $isManager || $smartMoveRenter->getIsExamComleted()) {
             throw $this->createNotFoundException();
         }
 
@@ -214,12 +214,12 @@ class SmartMoveController extends BaseController
             return $this->redirectToRoute('fos_user_security_login');
         }
 
-        if (!$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
         $smRenters = $this->em->getRepository('ErpSmartMoveBundle:SmartMoveRenter')->findBy(
-            ['landlord' => $user, 'isExamComleted' => true]
+            ['manager' => $user, 'isExamComleted' => true]
         );
         $form = $this->createGetReportForm($smRenters);
 
@@ -272,7 +272,7 @@ class SmartMoveController extends BaseController
     }
 
     /**
-     * Landlord paif for the report
+     * Manager paif for the report
      *
      * @param Request $request
      * @param int     $smRenterId
@@ -283,7 +283,7 @@ class SmartMoveController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        if (!$smRenterId || !$user || !$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$smRenterId || !$user || !$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
@@ -412,7 +412,7 @@ class SmartMoveController extends BaseController
     private function createCheckForm(User $user)
     {
         $smRenter = new SmartMoveRenter();
-        $smRenter->setLandlord($user);
+        $smRenter->setManager($user);
 
         $formOptions = ['action' => $this->generateUrl('erp_smart_move_check'), 'method' => 'POST'];
         $form = $this->createForm(new SmartMoveEmailFormType(), $smRenter, $formOptions);
@@ -658,7 +658,7 @@ class SmartMoveController extends BaseController
         $emailType = EmailNotificationFactory::TYPE_SM_CHECK_USER;
         $token = $smartMoveRenter->getPersonalToken();
         $title = 'Zoobdoo - Tenant Screening';
-        $text = 'Your Landlord is going to perform tenant screening on your identity.';
+        $text = 'Your Manager is going to perform tenant screening on your identity.';
         $url = 'erp_smart_move_personal_form';
 
         if ($isToExam) {
