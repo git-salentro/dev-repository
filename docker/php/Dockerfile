@@ -43,7 +43,7 @@ ARG APP_ENV=dev
 RUN printf "\033[0;36m===> \033[0;33m\$APP_ENV=$APP_ENV\033[0m\n"
 
 RUN if [ "${APP_ENV}" = "dev" ];\
-    then pecl install xdebug && docker-php-ext-enable xdebug;\
+    then pecl channel-update pecl.php.net &&  pecl install xdebug-2.5.5 && docker-php-ext-enable xdebug;\
     else echo "";\
   fi
 
