@@ -305,7 +305,7 @@ class StripeController extends BaseController
             } else {
                 $this->addFlash(
                     'alert_error',
-                    $form->getErrors(true)[0]
+                    $form->getErrors(true)[0]->getMessage()
                 );
 
                 return $this->redirectToRoute('erp_user_profile_dashboard');

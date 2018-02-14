@@ -96,6 +96,13 @@ class StripeRecurringPayment
     private $updatedAt;
 
     /**
+     * @var string
+     * //TODO Create separate table?
+     * @ORM\Column(name="category", type="datetime")
+     */
+    private $category;
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -336,6 +343,30 @@ class StripeRecurringPayment
     public function getAccount()
     {
         return $this->account;
+    }
+
+    /**
+     * Set category
+     *
+     * @param string category
+     *
+     * @return StripeRecurringPayment
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return string
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
 
     public function isRecurring()

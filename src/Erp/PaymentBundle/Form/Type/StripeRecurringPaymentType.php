@@ -72,7 +72,6 @@ class StripeRecurringPaymentType extends AbstractType
                 'choice',
                 [
                     'label' => 'Category',
-                    'mapped' => false,
                     'choices' => [
                         //TODO Refactoring fee, rent tenant payment
                         'rent' => 'Rent Payment',

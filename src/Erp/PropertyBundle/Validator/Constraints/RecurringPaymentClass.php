@@ -9,10 +9,10 @@ use Symfony\Component\Validator\Constraint;
  */
 class RecurringPaymentClass extends Constraint
 {
-    public $dayUntilDueMessage = 'dayUntilDueMessage';
-    public $paymentAmountMessage = 'paymentAmountMessage ';
-    public $allowAutoDraftMessage = 'allowAutoDraftMessage';
-    public $allowRentPaymentMessage = 'allowRentPaymentMessage';
+    public $dayUntilDueMessage = 'Rent due date {{ value }} is not accessible.';
+    public $paymentAmountMessage = 'Payment amount {{ value }} is not accessible.';
+    public $allowAutoDraftMessage = 'Recurring payment is not allowed.';
+    public $allowRentPaymentMessage = 'You can not pay for rent due to indebtedness.';
 
     /**
      * @inheritdoc

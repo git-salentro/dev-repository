@@ -51,14 +51,18 @@ class RecurringPaymentClassValidator extends ConstraintValidator
             throw new \RuntimeException('Property must have the payment settings.');
         }
 
-        $userDayDue = $value->getStartPaymentAt()->format('n');
+        $userDayDue = $value->getStartPaymentAt()->format('j');
         $dayUntilDue = $propertySettings->getDayUntilDue();
         if ($dayUntilDue != $userDayDue) {
             if ($this->context instanceof ExecutionContextInterface) {
                 $this->context->buildViolation($constraint->dayUntilDueMessage)
+                    ->setParameter('{{ value }}', $userDayDue)
+                    ->setInvalidValue($userDayDue)
                     ->addViolation();
             } else {
                 $this->buildViolation($constraint->dayUntilDueMessage)
+                    ->setParameter('{{ value }}', $userDayDue)
+                    ->setInvalidValue($userDayDue)
                     ->addViolation();
             }
         }
@@ -66,9 +70,13 @@ class RecurringPaymentClassValidator extends ConstraintValidator
         if ($value->getAmount() != $propertySettings->getPaymentAmount()) {
             if ($this->context instanceof ExecutionContextInterface) {
                 $this->context->buildViolation($constraint->paymentAmountMessage)
+                    ->setParameter('{{ value }}', $value->getAmount())
+                    ->setInvalidValue($value->getAmount())
                     ->addViolation();
             } else {
                 $this->buildViolation($constraint->paymentAmountMessage)
+                    ->setParameter('{{ value }}', $value->getAmount())
+                    ->setInvalidValue($value->getAmount())
                     ->addViolation();
             }
         }
