@@ -551,6 +551,13 @@ class User extends BaseUser
     protected $rentPayment;
 
     /**
+     * @var LateRentPaymentSettings
+     *
+     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\LateRentPaymentSettings", mappedBy="user", cascade={"persist"})
+     */
+    protected $lateRentPaymentSettings;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1788,5 +1795,51 @@ class User extends BaseUser
     public function getRentPayment()
     {
         return $this->rentPayment;
+    }
+
+    /**
+     * Set rentPayment
+     *
+     * @param \Erp\PropertyBundle\Entity\RentPayment $rentPayment
+     *
+     * @return User
+     */
+    public function setRentPayment(\Erp\PropertyBundle\Entity\RentPayment $rentPayment = null)
+    {
+        $this->rentPayment = $rentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Set lateRentPaymentSettings
+     *
+     * @param \Erp\UserBundle\Entity\LateRentPaymentSettings $lateRentPaymentSettings
+     *
+     * @return User
+     */
+    public function setLateRentPaymentSettings(\Erp\UserBundle\Entity\LateRentPaymentSettings $lateRentPaymentSettings = null)
+    {
+        $this->lateRentPaymentSettings = $lateRentPaymentSettings;
+
+        return $this;
+    }
+
+    /**
+     * Get lateRentPaymentSettings
+     *
+     * @return \Erp\UserBundle\Entity\LateRentPaymentSettings
+     */
+    public function getLateRentPaymentSettings()
+    {
+        return $this->lateRentPaymentSettings;
+    }
+
+    public function hasTenant(User $user)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('tenantUser', $user));
+
+        return $this->properties->matching($criteria)->isEmpty();
     }
 }
