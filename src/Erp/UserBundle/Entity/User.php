@@ -255,7 +255,7 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="paysimple_api_secret_key", type="text")
+     * @ORM\Column(name="paysimple_api_secret_key", type="string", length=255, nullable=true)
      */
     protected $paySimpleApiSecretKey;
 

@@ -26,7 +26,7 @@ class RentPayment
     /**
      * @var User
      *
-     * @ORM\OneToOne(targetEntity="\Erp\UserBundle\Entity\User")
+     * @ORM\OneToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="rentPayment")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
