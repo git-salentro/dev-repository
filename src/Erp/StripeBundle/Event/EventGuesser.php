@@ -42,7 +42,7 @@ class EventGuesser
                     throw new \RuntimeException('Event type not recognized.');
                 }
 
-                return ['type' => null, 'object' => null];
+                return;
         }
     }
 

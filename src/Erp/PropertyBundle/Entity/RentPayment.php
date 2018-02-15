@@ -32,13 +32,6 @@ class RentPayment
     private $user;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="last_payment_at", type="date")
-     */
-    private $lastPaymentAt;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="balance", type="integer")
@@ -77,30 +70,6 @@ class RentPayment
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set lastPaymentAt
-     *
-     * @param \DateTime $lastPaymentAt
-     *
-     * @return RentPayment
-     */
-    public function setLastPaymentAt($lastPaymentAt)
-    {
-        $this->lastPaymentAt = $lastPaymentAt;
-
-        return $this;
-    }
-
-    /**
-     * Get lastPaymentAt
-     *
-     * @return \DateTime
-     */
-    public function getLastPaymentAt()
-    {
-        return $this->lastPaymentAt;
     }
 
     /**
