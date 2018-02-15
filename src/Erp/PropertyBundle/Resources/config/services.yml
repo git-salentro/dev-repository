@@ -1,7 +1,4 @@
 services:
-    erp_property.checker.property_checker:
-        class: Erp\PropertyBundle\Checker\PropertyChecker
-
     erp_property.event_listener.property_entity_listener:
         class: 'Erp\PropertyBundle\EventListener\PropertyEntityListener'
         arguments:
@@ -19,3 +16,10 @@ services:
         class: Erp\PropertyBundle\Calculator\UnitPriceCalculator
         arguments:
             - '@doctrine'
+
+    erp_property.validator.constraints.recurring_payment_class_validator:
+        class: Erp\PropertyBundle\Validator\Constraints\RecurringPaymentClassValidator
+        arguments:
+            - '@security.token_storage'
+        tags:
+            - { name: validator.constraint_validator }

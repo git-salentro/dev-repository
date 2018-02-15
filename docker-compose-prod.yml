@@ -12,13 +12,12 @@ services:
             - MYSQL_DATABASE
             - MYSQL_USER
             - MYSQL_PASSWORD
-        ports:
-            - '3307:3306'
 
     nginx:
         build: ./docker/nginx
         ports:
-          - '85:80'
+          - '80:80'
+          - '443:443'
         volumes:
           - ./log/nginx:/var/log/nginx
           - ./:/var/www/

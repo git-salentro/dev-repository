@@ -11,7 +11,7 @@ use Erp\UserBundle\Entity\User;
 use Stripe\BankAccount;
 use Stripe\Card;
 use Symfony\Component\HttpFoundation\Request;
-use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
+use Erp\UserBundle\Form\Type\LateRentPaymentSettingsType;
 
 //TODO Refactor preparing chart data
 class DashboardController extends BaseController
@@ -32,8 +32,11 @@ class DashboardController extends BaseController
         $repository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
         $items = $repository->getLatePayments($user);
 
+        $form = $this->createForm(new LateRentPaymentSettingsType());
+
         return $this->render('ErpUserBundle:Dashboard:late_rent_payments.html.twig', [
             'items' => $items,
+            'form' => $form->createView(),
         ]);
     }
 

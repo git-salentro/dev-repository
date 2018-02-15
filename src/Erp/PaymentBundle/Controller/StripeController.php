@@ -269,49 +269,47 @@ class StripeController extends BaseController
         $form = $this->createForm(new StripeRecurringPaymentType(), $entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            /** @var User $user */
-            $user = $this->getUser();
-            $manager = $user->getTenantProperty()->getUser();
-            $managerStripeAccount = $manager->getStripeAccount();
-            $tenantStripeCustomer = $user->getStripeCustomer();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                /** @var User $user */
+                $user = $this->getUser();
+                $landlord = $user->getTenantProperty()->getUser();
+                $landlordStripeAccount = $landlord->getStripeAccount();
+                $tenantStripeCustomer = $user->getStripeCustomer();
 
-            if (!$managerStripeAccount || !$tenantStripeCustomer) {
+                if (!$landlordStripeAccount || !$tenantStripeCustomer) {
+                    $this->addFlash(
+                        'alert_error',
+                        'An occurred error. Please, contact your system administrator.'
+                    );
+
+                    return $this->redirectToRoute('erp_user_profile_dashboard');
+                }
+
+                $startPaymentAt = $entity->getStartPaymentAt();
+                $entity
+                    ->setNextPaymentAt($startPaymentAt)
+                    ->setAccount($landlordStripeAccount)
+                    ->setCustomer($tenantStripeCustomer);
+
+                $em = $this->getDoctrine()->getManagerForClass(StripeRecurringPayment::class);
+                $em->persist($entity);
+                $em->flush();
+
+                $this->addFlash(
+                    'alert_ok',
+                    'Success'
+                );
+
+                return $this->redirectToRoute('erp_user_profile_dashboard');
+            } else {
                 $this->addFlash(
                     'alert_error',
-                    'An occurred error. Please, contact your system administrator.'
+                    $form->getErrors(true)[0]->getMessage()
                 );
 
                 return $this->redirectToRoute('erp_user_profile_dashboard');
             }
-
-            $propertyChecker = $this->get('erp_property.checker.property_checker');
-
-            if (!$propertyChecker->isPayable($user, $entity)) {
-                $this->addFlash(
-                    'alert_error',
-                    'You can\'t pay for this rent.'
-                );
-
-                return $this->redirectToRoute('erp_user_profile_dashboard');
-            }
-
-            $startPaymentAt = $entity->getStartPaymentAt();
-            $entity
-                ->setNextPaymentAt($startPaymentAt)
-                ->setAccount($managerStripeAccount)
-                ->setCustomer($tenantStripeCustomer);
-
-            $em = $this->getDoctrine()->getManagerForClass(StripeRecurringPayment::class);
-            $em->persist($entity);
-            $em->flush();
-
-            $this->addFlash(
-                'alert_ok',
-                'Success'
-            );
-
-            return $this->redirectToRoute('erp_user_profile_dashboard');
         }
 
         return $this->render('ErpPaymentBundle:Stripe\Widgets:rental-payment.html.twig', [

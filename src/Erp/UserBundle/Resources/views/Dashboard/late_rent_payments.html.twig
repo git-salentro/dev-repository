@@ -14,8 +14,29 @@
             </ul>
             <ul class="payment-table">
                 {% for item in items %}
+                    {% set title = 'Set Fee' %}
+                    {% set checked = false %}
+                    {% set action = path('erp_user_late_rent_payment_settings_allow_rent_payments_settings', {'user': item.tenantUser.id}) %}
+                    {% set popupUrl = path('erp_user_late_rent_payment_settings_create', {'user': item.tenantUser.id}) %}
+
+                    {%- if item.tenantUser.lateRentPaymentSettings -%}
+                        {% set checked = item.tenantUser.lateRentPaymentSettings.allowRentPayment ? true : false %}
+                        {% if item.tenantUser.lateRentPaymentSettings.fee %}
+                            {% set title = '%s, Change Fee'|format(item.tenantUser.lateRentPaymentSettings.fee) %}
+                        {% endif %}
+
+                        {% set popupUrl = path('erp_user_late_rent_payment_settings_update', {'user': item.tenantUser.id}) %}
+                    {%- endif -%}
+
                     <li>
                         <span class="col-xs-3">{{ item.tenantUser.fullNameWithEmail }}</span>
+                        <span class="col-xs-3">
+                            {{ form_start(form, {'action': action}) }}
+                                {{ form_label(form.allowRentPayment) }}
+                                {{ form_widget(form.allowRentPayment, {'checked': checked}) }}
+                            {{ form_end(form, {'render_rest': false}) }}
+                        </span>
+                        <span class="col-xs-3"><a class="btn edit-btn" href="{{ popupUrl }}" role="popup">{{ title }}</a></span>
                         <span class="col-xs-3 amount-col">{{ item.address }}</span>
                         <span class="col-xs-3 amount-col">{{ item.tenantUser.rentPayment.balance|stripe_money }}</span>
                         <span class="col-xs-3 amount-col">{{ item.tenantUser.rentPayment.numberOfDayLate }}</span>
