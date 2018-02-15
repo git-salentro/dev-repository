@@ -34,7 +34,6 @@ class TransactionEntityListener
         }
 
         $rentPayment->depositMoneyToBalance($entity->getAmount());
-        $rentPayment->setLastPaymentAt(new \DateTime());
 
         $em = $this->registry->getManagerForClass(RentPayment::class);
         $em->persist($rentPayment);
