@@ -3,6 +3,7 @@
 namespace Erp\PaymentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Erp\PropertyBundle\Validator\Constraints as Assert;
 
 /**
  * Class StripeRecurringPayment
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="stripe_recurring_payment")
  * @ORM\Entity(repositoryClass="Erp\PaymentBundle\Repository\StripeRecurringPaymentRepository")
  * @ORM\HasLifecycleCallbacks
+ * @Assert\RecurringPaymentClass
  */
 class StripeRecurringPayment
 {
@@ -94,6 +96,13 @@ class StripeRecurringPayment
     private $updatedAt;
 
     /**
+     * @var string
+     * //TODO Create separate table?
+     * @ORM\Column(name="category", type="datetime")
+     */
+    private $category;
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -109,8 +118,6 @@ class StripeRecurringPayment
     {
         $this->updatedAt = new \DateTime();
     }
-
-
 
     /**
      * Get id
@@ -336,6 +343,30 @@ class StripeRecurringPayment
     public function getAccount()
     {
         return $this->account;
+    }
+
+    /**
+     * Set category
+     *
+     * @param string category
+     *
+     * @return StripeRecurringPayment
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return string
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
 
     public function isRecurring()

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 function info {
-    printf "\033[0;36m===> \033[0;33m${1}\033[0m\n"
+  printf "\033[0;36m===> \033[0;33m${1}\033[0m\n"
 }
 
 if [ ! -d "/var/www/app/logs/supervisor" ]; then
-  mkdir -p /var/www/app/logs/supervisor
+    mkdir -p /var/www/app/logs/supervisor
 fi
 
 if [ ! -d "/var/www/web/uploads" ]; then
-  mkdir -p /var/www/web/uploads
-  chown -R www-data:www-data /var/www/web/uploads
+    mkdir -p /var/www/web/uploads
+    chown -R www-data:www-data /var/www/web/uploads
 fi
 
 chown -R www-data:www-data /var/www/app/cache

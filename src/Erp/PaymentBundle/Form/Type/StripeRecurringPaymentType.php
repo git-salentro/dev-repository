@@ -68,6 +68,18 @@ class StripeRecurringPaymentType extends AbstractType
                 ]
             )
             ->add(
+                'category',
+                'choice',
+                [
+                    'label' => 'Category',
+                    'choices' => [
+                        //TODO Refactoring fee, rent tenant payment
+                        'rent' => 'Rent Payment',
+                        'fee' => 'Late Fees',
+                    ],
+                ]
+            )
+            ->add(
                 'type',
                 'checkbox',
                 [
