@@ -1,0 +1,4 @@
+erp_user_accounting:
+    path:     /accounting
+    defaults: { _controller: ErpUserBundle:Accounting:index }
+    methods: [GET, POST]
