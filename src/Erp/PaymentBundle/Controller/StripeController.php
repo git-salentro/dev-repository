@@ -273,11 +273,11 @@ class StripeController extends BaseController
             if ($form->isValid()) {
                 /** @var User $user */
                 $user = $this->getUser();
-                $landlord = $user->getTenantProperty()->getUser();
-                $landlordStripeAccount = $landlord->getStripeAccount();
+                $manager = $user->getTenantProperty()->getUser();
+                $managerStripeAccount = $manager->getStripeAccount();
                 $tenantStripeCustomer = $user->getStripeCustomer();
 
-                if (!$landlordStripeAccount || !$tenantStripeCustomer) {
+                if (!$managerStripeAccount || !$tenantStripeCustomer) {
                     $this->addFlash(
                         'alert_error',
                         'An occurred error. Please, contact your system administrator.'
@@ -289,7 +289,7 @@ class StripeController extends BaseController
                 $startPaymentAt = $entity->getStartPaymentAt();
                 $entity
                     ->setNextPaymentAt($startPaymentAt)
-                    ->setAccount($landlordStripeAccount)
+                    ->setAccount($managerStripeAccount)
                     ->setCustomer($tenantStripeCustomer);
 
                 $em = $this->getDoctrine()->getManagerForClass(StripeRecurringPayment::class);
