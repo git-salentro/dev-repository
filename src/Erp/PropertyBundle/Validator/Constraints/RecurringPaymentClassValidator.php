@@ -95,7 +95,7 @@ class RecurringPaymentClassValidator extends ConstraintValidator
 
         $rentPayment = $user->getRentPayment();
         //TODO Refactoring fee, rent tenant payment
-        if ($rentPayment->getBalance() < 0) {
+        if ($rentPayment && $rentPayment->getBalance() < 0) {
             if ($lateRentPaymentSettings = $user->getLateRentPaymentSettings()) {
                 if ($value->getCategory() == 'rent' && !$lateRentPaymentSettings->isAllowRentPayment()) {
                     if ($this->context instanceof ExecutionContextInterface) {
