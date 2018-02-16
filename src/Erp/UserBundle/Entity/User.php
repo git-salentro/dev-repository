@@ -40,6 +40,7 @@ class User extends BaseUser
 {
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     const ROLE_ADMIN       = 'ROLE_ADMIN';
+    const ROLE_LANDLORD    = 'ROLE_LANDLORD';
     const ROLE_MANAGER    = 'ROLE_MANAGER';
     const ROLE_TENANT      = 'ROLE_TENANT';
     const ROLE_ANONYMOUS   = 'ROLE_ANONYMOUS';

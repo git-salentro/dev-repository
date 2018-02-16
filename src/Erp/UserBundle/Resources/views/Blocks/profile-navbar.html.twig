@@ -3,6 +3,8 @@
         <div class="container-fluid">
             {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}
                 {% include 'ErpUserBundle:Blocks/cross:manager-navbar.html.twig' %}
+            {% elseif user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) %}
+                {% include 'ErpUserBundle:Blocks/cross:landlord-navbar.html.twig' %}
             {% else %}
                 {% include 'ErpUserBundle:Blocks/cross:tenant-navbar.html.twig' %}
             {% endif %}

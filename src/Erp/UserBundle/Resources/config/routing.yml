@@ -33,3 +33,7 @@ erp_user_dashboard:
 erp_user_late_rent_payment_settings:
     resource: "@ErpUserBundle/Resources/config/routing/late_rent_settings.yml"
     prefix:   /
+
+erp_user_accounting:
+    resource: "@ErpUserBundle/Resources/config/routing/accounting.yml"
+    prefix:   /
