@@ -30,16 +30,18 @@
 
                     <li>
                         <span class="col-xs-3">{{ item.tenantUser.fullNameWithEmail }}</span>
-                        <span class="col-xs-3">
+                        <span class="col-xs-3 amount-col">{{ item.address }}</span>
+                        <span class="col-xs-3 amount-col">{{ item.tenantUser.rentPayment.balance|stripe_money }}</span>
+                        <span class="col-xs-3 amount-col">{{ item.tenantUser.rentPayment.numberOfDayLate }}</span>
+                        <div class="payment-table_note">
+                            <span class="col-xs-3">
                             {{ form_start(form, {'action': action}) }}
                                 {{ form_label(form.allowRentPayment) }}
                                 {{ form_widget(form.allowRentPayment, {'checked': checked}) }}
                             {{ form_end(form, {'render_rest': false}) }}
-                        </span>
-                        <span class="col-xs-3"><a class="btn edit-btn" href="{{ popupUrl }}" role="popup">{{ title }}</a></span>
-                        <span class="col-xs-3 amount-col">{{ item.address }}</span>
-                        <span class="col-xs-3 amount-col">{{ item.tenantUser.rentPayment.balance|stripe_money }}</span>
-                        <span class="col-xs-3 amount-col">{{ item.tenantUser.rentPayment.numberOfDayLate }}</span>
+                            </span>
+                            <span class="col-xs-3"><a href="{{ popupUrl }}" role="popup">{{ title }}</a></span>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
