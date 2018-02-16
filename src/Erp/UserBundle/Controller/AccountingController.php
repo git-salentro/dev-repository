@@ -15,7 +15,7 @@ class AccountingController extends BaseController
 
         //TODO: accounting page
         return $this->render('ErpUserBundle:Dashboard:accounting.html.twig', [
-            'user'=>$user,
+            'user' => $user,
         ]);
     }
 }

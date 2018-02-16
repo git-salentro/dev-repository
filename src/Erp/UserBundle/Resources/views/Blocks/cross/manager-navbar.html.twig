@@ -13,6 +13,10 @@
             <a href="{{ path('erp_user_dashboard_dashboard') }}">Dashboard</a>
             <span class="secondary-menu-icon dashboard-icon"></span>
         </li>
+        <li class="menu-item{{ currentRoute == 'erp_user_accounting' ? ' current' : ''}}">
+            <a href="{{ path('erp_user_accounting') }}">Accounting</a>
+            <span class="secondary-menu-icon accounting-icon"></span>
+        </li>
         <li class="menu-item{{ currentRoute == 'fos_user_profile_show' ? ' current' : ''}}">
             <a href="{{ path('erp_user_profile_dashboard') }}">Profile</a>
             <span class="secondary-menu-icon profile-icon"></span>

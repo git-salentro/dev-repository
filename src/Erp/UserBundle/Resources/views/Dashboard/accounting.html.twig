@@ -2,14 +2,32 @@
 {% block pageContent %}
 
     {{ parent() }}
+    <section id="managers-accounting" class="listings profile">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text">Accounting</h1>
+                </div>
+            </div>
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+            <div class="row profile-widget-row profile-widget-custom">
+                <div class="row">
+                    <div class="title-block">
+                        <button
+                                class="btn red-btn"
+                                type="submit"
+                                {#url="{{ path('erp_property_choose_settings') }}"#}
+                                role="popup"
+                        >
+                            Landlord profiles
+                        </button>
+                    </div>
+                </div>
 
-    <div class="page-content">
-        <section id="accounting-listings" class="listings profile">
-            <div class="container">
-                {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
                 <div class="col-md-12 col-xs-6 profile-widget-item widget-last">
                     <div class="row widget-title-row">
-                        <div class="login-block-title bold-text">Accounting</div>
+                        <div class="login-block-title bold-text">Accounting Ledger</div>
                     </div>
                     <div class="accounting-block">
                         <div class="accounting">
@@ -19,11 +37,16 @@
                                     <span class="col-xs-4 bold-text">Expense</span>
                                     <span class="col-xs-4 bold-text">Balance</span>
                                 </li>
+                                <li>
+                                    <span class="col-xs-4">1</span>
+                                    <span class="col-xs-4">2</span>
+                                    <span class="col-xs-4">3</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 {% endblock %}
