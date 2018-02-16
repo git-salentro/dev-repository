@@ -1,11 +1,10 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
-
 {% block pageContent %}
 
     {{ parent() }}
 
     <div class="page-content">
-        <section id="managers-listings" class="listings profile">
+        <section id="accounting-listings" class="listings profile">
             <div class="container">
                 {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
                 <div class="col-md-12 col-xs-6 profile-widget-item widget-last">
@@ -23,13 +22,6 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-
-                    <div class="text-center">
-                        Block for messages
-                    </div>
-                <div class="col-xs-12 text-center">
-
                 </div>
             </div>
         </section>
