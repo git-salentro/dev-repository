@@ -34,7 +34,7 @@ class Invoice
     /**
      * @var StripeAccount
      *
-     * @ORM\ManyToOne(targetEntity="\Erp\PaymentBundle\Entity\StripeAccount")
+     * @ORM\ManyToOne(targetEntity="\Erp\PaymentBundle\Entity\StripeAccount", inversedBy="invoices")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id", nullable=true)
      */
     private $account;
@@ -42,7 +42,7 @@ class Invoice
     /**
      * @var StripeCustomer
      *
-     * @ORM\ManyToOne(targetEntity="\Erp\PaymentBundle\Entity\StripeCustomer")
+     * @ORM\ManyToOne(targetEntity="\Erp\PaymentBundle\Entity\StripeCustomer", inversedBy="invoices")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=true)
      */
     private $customer;

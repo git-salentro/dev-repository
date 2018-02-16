@@ -35,7 +35,7 @@ class InviteTenantUser extends AbstractEmailNotification
         $emailParams['imageErp'] = $message->embed($this->getLogoPath($params));
 
         $body = $contailner->get('templating')->render($template, $emailParams);
-        $message->setSubject('Zoobdoo - You were registered as Tenant of Property by Landlord')->setBody($body);
+        $message->setSubject('Zoobdoo - You were registered as Tenant of Property by Manager')->setBody($body);
         $result = $params['mailer']->send($message);
 
         return $result;

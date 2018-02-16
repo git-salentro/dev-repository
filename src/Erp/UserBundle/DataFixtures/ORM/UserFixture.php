@@ -13,20 +13,20 @@ class UserFixture extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $this->createLandlord();
+        $this->createManager();
         $this->createTenant();
     }
 
-    private function createLandlord()
+    private function createManager()
     {
         $userManager = $this->container->get('fos_user.user_manager');
         $settings = $this->container->get('erp.users.user.service')->getSettings();
 
         /** @var User $user */
         $user = $userManager->createUser();
-        $user->addRole(User::ROLE_LANDLORD);
+        $user->addRole(User::ROLE_MANAGER);
         $user
-            ->setCompanyName('My landlord Company')
+            ->setCompanyName('My manager Company')
             ->setFirstName('Tony')
             ->setLastName('Stark')
             ->setPhone('555-555-5555')

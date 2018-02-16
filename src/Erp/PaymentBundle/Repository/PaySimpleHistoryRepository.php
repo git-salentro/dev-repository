@@ -14,7 +14,7 @@ use Erp\UserBundle\Entity\User;
 class PaySimpleHistoryRepository extends EntityRepository
 {
     /**
-     * Get Landlord payment history
+     * Get Manager payment history
      *
      * @param User           $user
      * @param null|\DateTime $startDate
@@ -22,7 +22,7 @@ class PaySimpleHistoryRepository extends EntityRepository
      *
      * @return array
      */
-    public function getLandlordHistory(User $user, $startDate = null, $endDate = null)
+    public function getManagerHistory(User $user, $startDate = null, $endDate = null)
     {
         $properties = $user->getProperties()->toArray();
         $qb = $this->_em->createQueryBuilder()

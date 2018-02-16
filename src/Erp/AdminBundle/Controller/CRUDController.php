@@ -19,12 +19,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class CRUDController extends BaseController
 {
     /**
-     * Send email to landlord with invitation to complete profile
+     * Send email to manager with invitation to complete profile
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Erp\CoreBundle\Exception\UserNotFoundExceptionct
      */
-    public function sentIviteAction()
+    public function sentInviteAction()
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->admin->getSubject();
@@ -44,7 +44,7 @@ class CRUDController extends BaseController
             'sendTo' => $user->getEmail(),
             'url'    => $this->generateUrl('fos_user_security_login', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
-        $emailType = EmailNotificationFactory::TYPE_LANDLORD_COMPLETE_PROFILE;
+        $emailType = EmailNotificationFactory::TYPE_MANAGER_COMPLETE_PROFILE;
         $isSent = $this->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
         if ($isSent) {
@@ -53,15 +53,15 @@ class CRUDController extends BaseController
             $this->addFlash('sonata_flash_error', 'An error occurred while sending a message. Please, try again later');
         }
 
-        return $this->redirect($this->generateUrl('admin_erpuserbundle_landlors_list'));
+        return $this->redirect($this->generateUrl('admin_erpuserbundle_managers_list'));
     }
 
     /**
-     * Charge landlord for Pro Request
+     * Charge manager for Pro Request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function chargeLandlordAction()
+    public function chargeManagerAction()
     {
         /** @var $proRequest \Erp\UserBundle\Entity\ProRequest */
         $proRequest = $this->admin->getSubject();
@@ -99,7 +99,7 @@ class CRUDController extends BaseController
             if ($proRequest->getIsRefferal()) {
                 $this->addToReport($proRequest, $currentDate);
             }
-            $this->addFlash('sonata_flash_ps_success', 'Landlord was charged successfully');
+            $this->addFlash('sonata_flash_ps_success', 'Manager was charged successfully');
         }
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -122,23 +122,23 @@ class CRUDController extends BaseController
     }
 
     /**
-     * Delete landlord
+     * Delete manager
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteLandlordAction()
+    public function deleteManagerAction()
     {
         $this->deleteUser();
 
-        return $this->redirect($this->generateUrl('admin_erpuserbundle_landlors_list'));
+        return $this->redirect($this->generateUrl('admin_erpuserbundle_managers_list'));
     }
 
     /**
-     * Disable Landlord
+     * Disable Manager
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function disableLandlordAction()
+    public function disableManagerAction()
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->admin->getSubject();
@@ -146,7 +146,7 @@ class CRUDController extends BaseController
             throw $this->createNotFoundException();
         }
 
-        $isTenants = $this->get('erp.users.landlor_service')->checkIsLandlordHasTenants($user);
+        $isTenants = $this->get('erp.users.manager_service')->checkIsManagerHasTenants($user);
         if ($isTenants) {
             throw $this->createNotFoundException();
         }
@@ -203,11 +203,11 @@ class CRUDController extends BaseController
     }
 
     /**
-     * Reject Landlord
+     * Reject Manager
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function rejectLandlordAction()
+    public function rejectManagerAction()
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->admin->getSubject();
@@ -258,7 +258,7 @@ class CRUDController extends BaseController
     }
 
     /**
-     * Add landlord to report
+     * Add manager to report
      *
      * @param ProRequest $proRequest
      * @param \DateTime  $date

@@ -3,7 +3,7 @@
 namespace Erp\SmartMoveBundle\Managers;
 
 use Erp\SmartMoveBundle\Exceptions\SmartMoveManagerException;
-use Erp\SmartMoveBundle\Managers\API\LandlordAPIManager;
+use Erp\SmartMoveBundle\Managers\API\ManagerAPIManager;
 use Erp\SmartMoveBundle\Managers\API\RenterAPIManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,7 +15,7 @@ class SmartMoveManagerFactory
      * @param string             $type
      * @param ContainerInterface $container
      *
-     * @return LandlordAPIManager|RenterAPIManager
+     * @return ManagerAPIManager|RenterAPIManager
      * @throws SmartMoveManagerException
      */
     public static function getInstance($type, ContainerInterface $container)
@@ -24,13 +24,13 @@ class SmartMoveManagerFactory
             case SmartMoveManagerInterface::TYPE_RENTER:
                 $manager = new RenterAPIManager($container);
                 break;
-            case SmartMoveManagerInterface::TYPE_LANDLORD:
-                $manager = new LandlordAPIManager($container);
+            case SmartMoveManagerInterface::TYPE_MANAGER:
+                $manager = new ManagerAPIManager($container);
                 break;
             default:
                 $available = [
                     SmartMoveManagerInterface::TYPE_RENTER,
-                    SmartMoveManagerInterface::TYPE_LANDLORD
+                    SmartMoveManagerInterface::TYPE_MANAGER
                 ];
                 throw new SmartMoveManagerException(
                     sprintf(

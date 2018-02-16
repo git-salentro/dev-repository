@@ -308,7 +308,7 @@ class ApplicationFormController extends BaseController
 
                 $this->get('erp.signature.docusign.service')->createEnvelopeFromDocument($document, $emailTenant);
 
-                // sending email for landlord
+                // sending email for manager
                 $this->sendApplicationFormToEmail([
                     'sendTo' => $property->getUser()->getEmail(),
                     'replyTo' => $emailTenant,
@@ -318,7 +318,7 @@ class ApplicationFormController extends BaseController
 
                 $this->addFlash(
                     'alert_ok',
-                    'Payment was successful. Your Rental Application is sent to Landlord and a copy to you.
+                    'Payment was successful. Your Rental Application is sent to Manager and a copy to you.
                      Instruction how to sign your application and link to e-signature service were sent to your email.
                      Please read instruction first then proceed to online e-signature.'
                 );
@@ -366,10 +366,10 @@ class ApplicationFormController extends BaseController
         );
         $breadcrumbs->addItem('Online Rental Application');
 
-        if ($this->getUser() && $this->getUser()->hasRole(User::ROLE_LANDLORD)) {
-            $isLandlord = true;
+        if ($this->getUser() && $this->getUser()->hasRole(User::ROLE_MANAGER)) {
+            $isManager = true;
         } else {
-            $isLandlord = false;
+            $isManager = false;
         }
 
         return $this->render(
@@ -378,7 +378,7 @@ class ApplicationFormController extends BaseController
                 'data'              => $data,
                 'psData'            => $psData,
                 'property'          => $property,
-                'isLandlord'        => $isLandlord,
+                'isManager'        => $isManager,
                 'psCcAnonymousForm' => $psCcAnonymousForm->createView()
             ]
         );
@@ -544,7 +544,7 @@ class ApplicationFormController extends BaseController
         $propertyRepository = $this->em->getRepository('ErpPropertyBundle:Property');
 
         /** @var Property $property */
-        $property = ($user instanceof User and $user->hasRole(User::ROLE_LANDLORD))
+        $property = ($user instanceof User and $user->hasRole(User::ROLE_MANAGER))
             ? $propertyRepository->findOneBy(['id' => $propertyId, 'user' => $user])
             : $propertyRepository->find($propertyId);
 
@@ -728,7 +728,7 @@ class ApplicationFormController extends BaseController
             'url' => $url,
         ];
 
-        $emailType = EmailNotificationFactory::TYPE_APPLICATION_FORM_TO_LANDLORD;
+        $emailType = EmailNotificationFactory::TYPE_APPLICATION_FORM_TO_MANAGER;
         $sentStatus = $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
         return $sentStatus;

@@ -16,7 +16,7 @@
 
     {{ parent() }}
 
-    {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) %}
+    {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}
         <section id="documentation-page" class="profile documentation-section">
     {% else %}
         <section id="documentation-page" class="profile documentation-section tenant-documentation">
@@ -55,7 +55,7 @@
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                                     data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="true">
-                                Select {{ user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) ? 'Tenant' : 'Landlord' }}
+                                Select {{ user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) ? 'Tenant' : 'Manager' }}
                                 <span class="select-container"></span>
                             </button>
                             <ul class="companions-list dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -105,9 +105,9 @@
                                 <div>
                                     <p>
                                         All changes made to files (add/delete/edit) will also be reflected for your
-                                        {{ user.hasRole(constRoleLandlord) ? 'Tenant' : 'Landlord' }}
+                                        {{ user.hasRole(constRoleManager) ? 'Tenant' : 'Manager' }}
                                     </p>
-                                    {% if user.hasRole(constRoleLandlord) %}
+                                    {% if user.hasRole(constRoleManager) %}
                                         <p>Note: when your Tenant signs document online you will be charged ${{ esignFee }} fee for each transaction.</p>
                                     {% endif %}
                                 </div>

@@ -25,7 +25,7 @@ class PaySimpleBankAccount extends AbstractEmailNotification
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'Zoobdoo - Landlord Contact';
+        $subject = 'Zoobdoo - Manager Contact';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['customerName'] = $params['customerName'];

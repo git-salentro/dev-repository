@@ -16,3 +16,7 @@ Run command `bash deploy/instal-[dev|prod].sh`.
 
 # Updating
 Run command `bash deploy/update-[dev|prod].sh`.
+
+Test login:
+Login: tonystark@test.com
+Pass: qweASD123

@@ -52,7 +52,7 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="menu-home" class="active"><a href="{{ path('erp_site_homepage') }}">home</a></li>
                                 <li><a href="{{ path('erp_site_static_page', {'slug':'about'}) }}">about</a></li>
-                                <li><a href="{{ path('erp_site_static_page', {'slug':'landlord-features'}) }}">features</a></li>
+                                <li><a href="{{ path('erp_site_static_page', {'slug':'manager-features'}) }}">features</a></li>
                                 <li><a href="{{ path('erp_site_static_page', {'slug':'faq'}) }}">faq</a></li>
                                 <li class="contact"><a href="{{ path('erp_site_static_page', {'slug':'contact'}) }}">contact</a></li>
                                 {% if app.user is null or not is_granted("IS_AUTHENTICATED_REMEMBERED") %}

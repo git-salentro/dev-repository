@@ -26,17 +26,10 @@ class RentPayment
     /**
      * @var User
      *
-     * @ORM\OneToOne(targetEntity="\Erp\UserBundle\Entity\User")
+     * @ORM\OneToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="rentPayment")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="last_payment_at", type="date")
-     */
-    private $lastPaymentAt;
 
     /**
      * @var integer
@@ -77,30 +70,6 @@ class RentPayment
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set lastPaymentAt
-     *
-     * @param \DateTime $lastPaymentAt
-     *
-     * @return RentPayment
-     */
-    public function setLastPaymentAt($lastPaymentAt)
-    {
-        $this->lastPaymentAt = $lastPaymentAt;
-
-        return $this;
-    }
-
-    /**
-     * Get lastPaymentAt
-     *
-     * @return \DateTime
-     */
-    public function getLastPaymentAt()
-    {
-        return $this->lastPaymentAt;
     }
 
     /**

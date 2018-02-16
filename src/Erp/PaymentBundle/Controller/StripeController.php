@@ -38,11 +38,11 @@ class StripeController extends BaseController
         ];
 
         if ($form->isValid()) {
-            $landlord = $user->getTenantProperty()->getUser();
-            $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
+            $manager = $user->getTenantProperty()->getUser();
+            $managerStripeAccountId = $manager->getStripeAccount()->getAccountId();
 
             $stripeToken = $model->getToken();
-            $options = ['stripe_account' => $landlordStripeAccountId];
+            $options = ['stripe_account' => $managerStripeAccountId];
 
             $stripeCustomer = $user->getStripeCustomer();
             $customerManager = $this->get('erp.payment.stripe.manager.customer_manager');
@@ -126,9 +126,9 @@ class StripeController extends BaseController
 
         $options = null;
         if ($user->hasRole(User::ROLE_TENANT)) {
-            $landlord = $user->getTenantProperty()->getUser();
-            $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
-            $options = ['stripe_account' => $landlordStripeAccountId];
+            $manager = $user->getTenantProperty()->getUser();
+            $managerStripeAccountId = $manager->getStripeAccount()->getAccountId();
+            $options = ['stripe_account' => $managerStripeAccountId];
         }
 
         if (!$stripeCustomer) {
@@ -195,7 +195,7 @@ class StripeController extends BaseController
             );
         }
 
-        if ($user->hasRole(User::ROLE_LANDLORD)) {
+        if ($user->hasRole(User::ROLE_MANAGER)) {
             if (!$user->hasStripeAccount()) {
                 $response = $accountManager->create([
                     'country' => StripeAccount::DEFAULT_ACCOUNT_COUNTRY,
@@ -273,11 +273,11 @@ class StripeController extends BaseController
             if ($form->isValid()) {
                 /** @var User $user */
                 $user = $this->getUser();
-                $landlord = $user->getTenantProperty()->getUser();
-                $landlordStripeAccount = $landlord->getStripeAccount();
+                $manager = $user->getTenantProperty()->getUser();
+                $managerStripeAccount = $manager->getStripeAccount();
                 $tenantStripeCustomer = $user->getStripeCustomer();
 
-                if (!$landlordStripeAccount || !$tenantStripeCustomer) {
+                if (!$managerStripeAccount || !$tenantStripeCustomer) {
                     $this->addFlash(
                         'alert_error',
                         'An occurred error. Please, contact your system administrator.'
@@ -289,7 +289,7 @@ class StripeController extends BaseController
                 $startPaymentAt = $entity->getStartPaymentAt();
                 $entity
                     ->setNextPaymentAt($startPaymentAt)
-                    ->setAccount($landlordStripeAccount)
+                    ->setAccount($managerStripeAccount)
                     ->setCustomer($tenantStripeCustomer);
 
                 $em = $this->getDoctrine()->getManagerForClass(StripeRecurringPayment::class);
@@ -311,7 +311,6 @@ class StripeController extends BaseController
                 return $this->redirectToRoute('erp_user_profile_dashboard');
             }
         }
-
 
         return $this->render('ErpPaymentBundle:Stripe\Widgets:rental-payment.html.twig', [
             'form' => $form->createView(),
@@ -362,7 +361,7 @@ class StripeController extends BaseController
             $em->persist($stripeAccount);
             $em->flush();
 
-            if ($user->hasRole(User::ROLE_LANDLORD)) {
+            if ($user->hasRole(User::ROLE_MANAGER)) {
                 $url = $this->generateUrl('erp_property_unit_buy');
             } else {
                 $url = $this->generateUrl('erp_user_profile_dashboard');

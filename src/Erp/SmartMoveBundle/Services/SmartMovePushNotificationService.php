@@ -92,13 +92,13 @@ class SmartMovePushNotificationService
     {
         $email = 'push-'. (new \DateTime())->format('Y-m-d-H-i-s').'@mail.com';
         $lastSMRenter = $this->getEntityManager()->getRepository('ErpSmartMoveBundle:SmartMoveRenter')
-            ->getLastLandlord();
+            ->getLastManager();
 
         $smRenter = new SmartMoveRenter();
         $smRenter->setEmail($email)
             ->setInfo($requestBody)
             ->setPersonalToken($requestParams)
-            ->setLandlord($lastSMRenter->getLandlord());
+            ->setManager($lastSMRenter->getManager());
         $this->getEntityManager()->persist($smRenter);
         $this->getEntityManager()->flush();
 
@@ -144,7 +144,7 @@ class SmartMovePushNotificationService
     private function onRenterAccept(SmartMoveRenter $smartMoveRenter, $eventText)
     {
         $emailParams = [
-            'sendTo' => $smartMoveRenter->getLandlord()->getEmail(),
+            'sendTo' => $smartMoveRenter->getManager()->getEmail(),
             'text'   => $eventText,
             'title'  => 'Renter accept application'
         ];
@@ -162,7 +162,7 @@ class SmartMovePushNotificationService
     private function onRenterDecline(SmartMoveRenter $smartMoveRenter, $eventText)
     {
         $emailParams = [
-            'sendTo' => $smartMoveRenter->getLandlord()->getEmail(),
+            'sendTo' => $smartMoveRenter->getManager()->getEmail(),
             'text'   => $eventText,
             'title'  => 'Renter decline application'
         ];
@@ -180,13 +180,11 @@ class SmartMovePushNotificationService
     private function onApplicationComplete(SmartMoveRenter $smartMoveRenter, $eventText)
     {
         $emailParams = [
-            'sendTo' => $smartMoveRenter->getLandlord()->getEmail(),
+            'sendTo' => $smartMoveRenter->getManager()->getEmail(),
             'text'   => $eventText,
-            'title'  => 'Renter compplete IDMA exams'
+            'title'  => 'Renter complete IDMA exams'
         ];
         $this->sendEmailNotification($emailParams);
-
-        return $this;
 
         return $this;
     }

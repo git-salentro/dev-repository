@@ -77,14 +77,22 @@ class StripeCustomer
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Transaction", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Invoice", mappedBy="customer", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $invoices;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Transaction", mappedBy="customer", cascade={"persist"}, orphanRemoval=true)
      */
     private $transactions;
 
     public function __construct()
     {
-        $this->recurringPayments = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->recurringPayments = new ArrayCollection();
     }
 
     /**
@@ -268,4 +276,40 @@ class StripeCustomer
     {
         return $this->transactions;
     }
+
+
+    /**
+     * Add invoice
+     *
+     * @param \Erp\StripeBundle\Entity\Invoice $invoice
+     *
+     * @return StripeCustomer
+     */
+    public function addInvoice(\Erp\StripeBundle\Entity\Invoice $invoice)
+    {
+        $this->invoices[] = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * Remove invoice
+     *
+     * @param \Erp\StripeBundle\Entity\Invoice $invoice
+     */
+    public function removeInvoice(\Erp\StripeBundle\Entity\Invoice $invoice)
+    {
+        $this->invoices->removeElement($invoice);
+    }
+
+    /**
+     * Get invoices
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInvoices()
+    {
+        return $this->invoices;
+    }
+
 }

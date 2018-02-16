@@ -14,7 +14,7 @@ use Erp\UserBundle\Entity\ProRequest;
 class ProRequestRepository extends EntityRepository
 {
     /**
-     * Get consultants with count refferal landlords by month
+     * Get consultants with count refferal managers by month
      *
      * @return array
      */
@@ -24,7 +24,7 @@ class ProRequestRepository extends EntityRepository
             ->from($this->getEntityName(), 'pr')
             ->innerJoin('pr.proConsultant', 'pc', 'pr.proConsultant = pc.id')
             ->addSelect('pc.email')
-            ->addSelect('COUNT(pr.id) as count_landlords')
+            ->addSelect('COUNT(pr.id) as count_managers')
             ->addSelect('DATE_FORMAT(pr.approvedDate, \'%M\') as month_name')
             ->where('pr.isRefferal = 1')
             ->andWhere('pr.approvedDate IS NOT NULL')

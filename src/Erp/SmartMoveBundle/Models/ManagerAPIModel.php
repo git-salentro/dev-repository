@@ -6,16 +6,16 @@ use Erp\UserBundle\Entity\User;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
 
 /**
- * Class LandlordAPIModel
+ * Class ManagerAPIModel
  *
  * @package Erp\SmartMoveBundle\Models
  */
-class LandlordAPIModel implements SmartMoveModelInterface
+class ManagerAPIModel implements SmartMoveModelInterface
 {
     /**
      * @var User
      */
-    protected $landlord = null;
+    protected $manager = null;
 
     /**
      * @var SmartMoveRenter
@@ -30,13 +30,13 @@ class LandlordAPIModel implements SmartMoveModelInterface
     /**
      * Set tenant
      *
-     * @param User $landlord
+     * @param User $manager
      *
      * @return $this
      */
-    public function setLandlord(User $landlord)
+    public function setManager(User $manager)
     {
-        $this->landlord = $landlord;
+        $this->manager = $manager;
 
         return $this;
     }
@@ -46,9 +46,9 @@ class LandlordAPIModel implements SmartMoveModelInterface
      *
      * @return User|null
      */
-    public function getLandlord()
+    public function getManager()
     {
-        return $this->landlord;
+        return $this->manager;
     }
 
     /**

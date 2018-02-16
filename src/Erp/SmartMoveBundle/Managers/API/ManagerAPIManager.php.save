@@ -4,7 +4,7 @@ namespace Erp\SmartMoveBundle\Managers\API;
 
 use Erp\SmartMoveBundle\Exceptions\SmartMoveManagerException;
 use Erp\SmartMoveBundle\Managers\SmartMoveAbstractManager;
-use Erp\SmartMoveBundle\Models\LandlordAPIModel;
+use Erp\SmartMoveBundle\Models\ManagerAPIModel;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
 
@@ -13,7 +13,7 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
  *
  * @package Erp\SmartMoveBundle\SmartMove\Managers\SmartMoveManagers
  */
-class LandlordAPIManager extends SmartMoveAbstractManager
+class ManagerAPIManager extends SmartMoveAbstractManager
 {
     /**
      * Process API request
@@ -25,11 +25,11 @@ class LandlordAPIManager extends SmartMoveAbstractManager
      */
     public function proccess($method = '')
     {
-        if (!$this->model instanceof LandlordAPIModel) {
-            throw new InvalidArgumentException('Model must be instance of LandlordAPIModel class');
+        if (!$this->model instanceof ManagerAPIModel) {
+            throw new InvalidArgumentException('Model must be instance of ManagerAPIModel class');
         }
 
-        self::$apiEndpoint .= '/LandlordApi/v1';
+        self::$apiEndpoint .= '/ManagerApi/v1';
 
         switch ($method) {
             case self::METHOD_PROPERTY_ADD:
@@ -78,6 +78,13 @@ class LandlordAPIManager extends SmartMoveAbstractManager
         $header = [$this->getHeader(), 'Content-Type: application/json', 'Content-Length: ' . strlen($params)];
 
         $response = $this->curl->setHeaders($header)->setPostParams($params)->execute($url);
+echo "<pre>";        
+print_r($url)
+;
+print_r($params);
+print_r($response);
+echo "</pre>";
+die;
         $response = $this->proccessResponce($response);
 
         return $response;
@@ -114,7 +121,7 @@ class LandlordAPIManager extends SmartMoveAbstractManager
         $smRenter = $this->model->getSMRenter();
         if (!$smRenter) {
             throw new InvalidArgumentException(
-                'SmartMoveRenter entity not found. Use setSMRenter() in LandlordAPIModel class'
+                'SmartMoveRenter entity not found. Use setSMRenter() in ManagerAPIModel class'
             );
         }
         $url = '/Applicant/Add?ApplicationId=' . $smRenter->getSmApplicationId() . '&Email=' . $smRenter->getEmail();
@@ -159,20 +166,20 @@ class LandlordAPIManager extends SmartMoveAbstractManager
      */
     private function prepareNewPropertyParams()
     {
-        /** @var $landlord \Erp\UserBundle\Entity\User */
-        $landlord = $this->model->getSMRenter()->getLandlord();
-        $property = $landlord->getProperties()->first();
+        /** @var $manager \Erp\UserBundle\Entity\User */
+        $manager = $this->model->getSMRenter()->getManager();
+        $property = $manager->getProperties()->first();
         $now = new \DateTime();
         $name = $property
             ? $property->getName()
-            : $landlord->getFirstName() . ' ' . $landlord->getLastName() . ' Property('. $now->format('YmdHis') . ')';
+            : $manager->getFirstName() . ' ' . $manager->getLastName() . ' Property('. $now->format('YmdHis') . ')';
 
         $name = substr($name, 0, 50); // limit to 50 symbols
 
-        $city = $property ? $property->getCity()->getName() : $landlord->getCity()->getName();
-        $state = $property ? $property->getStateCode() : $landlord->getState();
-        $street = $property ? $property->getAddress() : $landlord->getAddressOne();
-        $zip = $property ? $property->getZip() : $landlord->getPostalCode();
+        $city = $property ? $property->getCity()->getName() : $manager->getCity()->getName();
+        $state = $property ? $property->getStateCode() : $manager->getState();
+        $street = $property ? $property->getAddress() : $manager->getAddressOne();
+        $zip = $property ? $property->getZip() : $manager->getPostalCode();
 
         for ($i = 1; $i < 6; $i++) {
             $questions[] = [
@@ -193,9 +200,9 @@ class LandlordAPIManager extends SmartMoveAbstractManager
             'IR'                         => '0',
             'IsFcraAgreementAccepted'    => true,
             'Name'                       => $name,
-            'FirstName'                  => $landlord->getFirstName(),
-            'LastName'                   => $landlord->getLastName(),
-            'Phone'                      => $landlord->getPhoneDigitsOnly(),
+            'FirstName'                  => $manager->getFirstName(),
+            'LastName'                   => $manager->getLastName(),
+            'Phone'                      => $manager->getPhoneDigitsOnly(),
             'State'                      => $state,
             'Street'                     => $street,
             'Zip'                        => $zip,
@@ -214,7 +221,7 @@ class LandlordAPIManager extends SmartMoveAbstractManager
             'Deposit'           => '300',
             'Rent'              => '100',
             'LeaseTermInMonths' => '12',
-            'LandlordPays'      => true,
+            'ManagerPays'      => true,
             'ProductBundle'     => 'PackageCorePlusEviction',
             'Applicants'        => [$this->model->getSMRenter()->getEmail()]
         ];

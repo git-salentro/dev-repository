@@ -5,18 +5,18 @@
 {% endblock %}
 
 {% set currentRequestUrl = app.request.requestUri %}
-{% set landlordFeaturesRouteUrl = path('erp_site_static_page', {'slug':'landlord-features'}) %}
+{% set managerFeaturesRouteUrl = path('erp_site_static_page', {'slug':'manager-features'}) %}
 {% set tenantFeaturesRouteUrl = path('erp_site_static_page', {'slug':'tenant-features'}) %}
 
 {% block pageContent %}
     <div class="page-content">
 
-        <section id="landlord-features" class="features profile">
+        <section id="manager-features" class="features profile">
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 features-tab-col">
-                        <a class="btn red-btn tab-btn{% if currentRequestUrl == landlordFeaturesRouteUrl %} active{% endif %}" 
-                        href="{{ landlordFeaturesRouteUrl }}">Manager Features</a>
+                        <a class="btn red-btn tab-btn{% if currentRequestUrl == managerFeaturesRouteUrl %} active{% endif %}"
+                        href="{{ managerFeaturesRouteUrl }}">Manager Features</a>
                         <a class="btn red-btn tab-btn{% if currentRequestUrl == tenantFeaturesRouteUrl %} active{% endif %}" 
                         href="{{ tenantFeaturesRouteUrl }}">Tenant Features</a>
                     </div>
@@ -30,7 +30,7 @@
                 <div class="butn-row row">
                     <div class="col-xs-12 btn-col">
                         {% if app.request.attributes.get('slug') == 'tenant-features' %}
-                            <a role="popup" href="{{ path('erp_site_send_invite_to_landlord') }}" class="gradient-btn btn">Invite a Property Manager</a>
+                            <a role="popup" href="{{ path('erp_site_send_invite_to_manager') }}" class="gradient-btn btn">Invite a Property Manager</a>
                         {% else %}
                             <a href="{{ path('fos_user_registration_register') }}" class="gradient-btn btn">Register</a>
                         {% endif %}

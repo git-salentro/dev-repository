@@ -8,7 +8,7 @@ use Erp\SiteBundle\Entity\StaticPage;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Erp\SiteBundle\Form\Type\LandlordInviteFormType;
+use Erp\SiteBundle\Form\Type\ManagerInviteFormType;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -110,16 +110,16 @@ class IndexController extends BaseController
     }
 
     /**
-     * Popup - send invite to landlord
+     * Popup - send invite to manager
      *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function sendInviteToLandlordAction(Request $request)
+    public function sendInviteToManagerAction(Request $request)
     {
-        $type = new LandlordInviteFormType();
-        $action = $this->generateUrl('erp_site_send_invite_to_landlord');
+        $type = new ManagerInviteFormType();
+        $action = $this->generateUrl('erp_site_send_invite_to_manager');
 
         $formOptions = ['action' => $action, 'method' => 'POST'];
         $form = $this->createForm($type, null, $formOptions);
@@ -131,27 +131,27 @@ class IndexController extends BaseController
                 $formData = $request->request->all()[$form->getName()];
 
                 $emailParams = [
-                    'sendTo' => $formData['landlordEmail'],
-                    'landlordInvite' => $formData,
+                    'sendTo' => $formData['managerEmail'],
+                    'managerInvite' => $formData,
                 ];
 
                 /** @var User $toUser */
-                $landlord =
-                    $this->em->getRepository('ErpUserBundle:User')->findOneBy(['email' => $formData['landlordEmail']]);
+                $manager =
+                    $this->em->getRepository('ErpUserBundle:User')->findOneBy(['email' => $formData['managerEmail']]);
 
-                if ($landlord) {
-                    if ($landlord->getStatus() == User::STATUS_DISABLED
-                        or $landlord->getStatus() == User::STATUS_REJECTED
+                if ($manager) {
+                    if ($manager->getStatus() == User::STATUS_DISABLED
+                        or $manager->getStatus() == User::STATUS_REJECTED
                     ) {
                         // show error on contact page
 
-                        $error = 'Invite to this Landlord cannot be sent. Contact Administrator for details.';
+                        $error = 'Invite to this Manager cannot be sent. Contact Administrator for details.';
 
                         $this->get('session')->getFlashBag()->add('alert_error', $error);
 
                         return $this->redirectToRoute('erp_site_contact_page');
                     } else {
-                        $emailType = EmailNotificationFactory::TYPE_LANDLORD_ACTIVE_INVITE;
+                        $emailType = EmailNotificationFactory::TYPE_MANAGER_ACTIVE_INVITE;
 
                         $emailParams['url'] = $this->generateUrl(
                             'fos_user_security_login',
@@ -160,7 +160,7 @@ class IndexController extends BaseController
                         );
                     }
                 } else {
-                    $emailType = EmailNotificationFactory::TYPE_LANDLORD_INVITE;
+                    $emailType = EmailNotificationFactory::TYPE_MANAGER_INVITE;
 
                     $emailParams['url'] = $this->generateUrl(
                         'fos_user_registration_register',
@@ -177,7 +177,7 @@ class IndexController extends BaseController
         }
 
         return $this->render(
-            'ErpSiteBundle:Form:send-invite-to-landlord-form.html.twig',
+            'ErpSiteBundle:Form:send-invite-to-manager-form.html.twig',
             [
                 'modalTitle' => 'Invite Your Property Manager to Join!',
                 'form' => $form->createView()

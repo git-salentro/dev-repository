@@ -172,7 +172,7 @@ class Properties extends Admin
     {
         $datagridMapper->add('name')
             ->add('tenantUser', null, [], null, ['expanded' => false, 'multiple' => true])
-            ->add('user.email', null, ['label' => 'Landlord Email']);
+            ->add('user.email', null, ['label' => 'Manager Email']);
     }
 
     /**
@@ -319,18 +319,18 @@ class Properties extends Admin
             'user',
             'entity',
             [
-                'label' => 'Landlord',
+                'label' => 'Manager',
                 'class' => 'Erp\UserBundle\Entity\User',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->where('u.roles LIKE :roles')
-                        ->setParameter('roles', '%"' . User::ROLE_LANDLORD . '"%')
+                        ->setParameter('roles', '%"' . User::ROLE_MANAGER . '"%')
                         ->orderBy('u.username', 'ASC');
                 },
                 'disabled'     => $readonly
             ],
             [
-                'admin_code' => 'sonata.page.admin.landlords'
+                'admin_code' => 'sonata.page.admin.managers'
             ]
         );
 
