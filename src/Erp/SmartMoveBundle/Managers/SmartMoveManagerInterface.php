@@ -15,7 +15,7 @@ interface SmartMoveManagerInterface
     const STATUS_ERROR = 'error';
 
     const TYPE_RENTER   = 'smart_move_renter';
-    const TYPE_LANDLORD = 'smart_move_landlord';
+    const TYPE_MANAGER = 'smart_move_manager';
 
     const METHOD_PROPERTY_ADD    = 'method_property_create';
     const METHOD_APPLICATION_ADD = 'method_application_create';

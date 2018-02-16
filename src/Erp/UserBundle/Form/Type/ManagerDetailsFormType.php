@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
-class LandlordDetailsFormType extends TenantDetailsFormType
+class ManagerDetailsFormType extends TenantDetailsFormType
 {
     /**
      * @var FormBuilderInterface
@@ -22,7 +22,7 @@ class LandlordDetailsFormType extends TenantDetailsFormType
      */
     public function __construct()
     {
-        $this->validationGroup = 'LandlordDetails';
+        $this->validationGroup = 'ManagerDetails';
     }
 
     /**
@@ -54,7 +54,7 @@ class LandlordDetailsFormType extends TenantDetailsFormType
      */
     public function getName()
     {
-        return 'erp_users_landlord_form_details';
+        return 'erp_users_manager_form_details';
     }
 
     /**

@@ -12,24 +12,24 @@ class PropertyFixture extends Fixture
     /**
      * @inheritdoc
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $objectManager)
     {
         /** @var User $tenant */
         $tenant = $this->getReference('peterparker@test.com');
-        /** @var User $landlord */
-        $landlord = $this->getReference('tonystark@test.com');
+        /** @var User $manager */
+        $manager = $this->getReference('tonystark@test.com');
 
         $object = new Property();
         $object->setTenantUser($tenant)
             ->setName('Test Property')
-            ->setUser($landlord)
+            ->setUser($manager)
             ->setStatus(Property::STATUS_DRAFT);
 
         $tenant->setTenantProperty($object);
-        $landlord->addProperty($object);
+        $manager->addProperty($object);
 
-        $manager->persist($tenant);
-        $manager->persist($object);
-        $manager->flush();
+        $objectManager->persist($tenant);
+        $objectManager->persist($object);
+        $objectManager->flush();
     }
 }

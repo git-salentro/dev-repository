@@ -41,7 +41,7 @@ class DocumentController extends BaseController
         $toUser = $companions[(int)$toUserId];
 
         if (!$toUser
-            || ($user->hasRole(User::ROLE_LANDLORD)
+            || ($user->hasRole(User::ROLE_MANAGER)
                 && !$user->isTenant($toUser)
                 && !$toUser->hasRole(User::ROLE_ANONYMOUS)
             )
@@ -92,7 +92,7 @@ class DocumentController extends BaseController
                 'currentCompanion' => $toUser,
                 'userDocuments' => $userDocuments,
                 'constRoleTenant' => User::ROLE_TENANT,
-                'constRoleLandlord' => User::ROLE_LANDLORD,
+                'constRoleManager' => User::ROLE_MANAGER,
                 'constRoleAnonymous' => User::ROLE_ANONYMOUS,
                 'esignFee' => $esignFee,
             ];
@@ -171,7 +171,7 @@ class DocumentController extends BaseController
                 'hideActionBtn' => true,
                 'cancelBtn' => 'Ok'
             ];
-        } elseif (!$user->hasRole(User::ROLE_LANDLORD) && $userDocument->getFromUser()->getId() != $user->getId()) {
+        } elseif (!$user->hasRole(User::ROLE_MANAGER) && $userDocument->getFromUser()->getId() != $user->getId()) {
             $renderOptions = [
                 'askMsg' => 'Not permissions',
                 'hideActionBtn' => true,
@@ -272,7 +272,7 @@ class DocumentController extends BaseController
     {
         $companions = [];
 
-        if ($user->hasRole(User::ROLE_LANDLORD)) {
+        if ($user->hasRole(User::ROLE_MANAGER)) {
             // For anonymous area
             $companions[0] = (new User())
                 ->setId(0)

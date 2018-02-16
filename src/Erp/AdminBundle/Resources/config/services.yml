@@ -11,10 +11,10 @@ services:
             - [ setTemplate, [list, ErpAdminBundle:UserManagement:list.html.twig]]
             - [ setTemplate, [edit, ErpAdminBundle:UserManagement:edit.html.twig]]
 
-    sonata.page.admin.landlords:
-        class: Erp\AdminBundle\Admin\Landlords
+    sonata.page.admin.managers:
+        class: Erp\AdminBundle\Admin\Managers
         tags:
-            - { name: sonata.admin, manager_type: orm, group: "User management", label: "Landlords" }
+            - { name: sonata.admin, manager_type: orm, group: "User management", label: "Managers" }
         arguments:
             - ~
             - Erp\UserBundle\Entity\User

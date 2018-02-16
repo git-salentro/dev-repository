@@ -48,7 +48,7 @@ class PaySimpleController extends BaseController
                 $model = $form->getData();
 
                 // Sent bank account data to admin
-                if ($user->hasRole(User::ROLE_LANDLORD) && $model instanceof BankAccountModel) {
+                if ($user->hasRole(User::ROLE_MANAGER) && $model instanceof BankAccountModel) {
                     $this->get('erp.payment.paysimple_service')->sendBankAccountToEmail($model, $user);
                 }
 
@@ -76,7 +76,7 @@ class PaySimpleController extends BaseController
                 'errors'     => $errors,
                 'amount'     => $amount,
                 'psCustomer' => $user->getPaySimpleCustomers()->first(),
-                'isLandlord' => $user->hasRole(User::ROLE_LANDLORD),
+                'isManager' => $user->hasRole(User::ROLE_MANAGER),
                 'checkPaymentAmount' => $this->get('erp.core.fee.service')->getCheckPaymentFee(),
             ]
         );
@@ -103,7 +103,7 @@ class PaySimpleController extends BaseController
         $errors = null;
         $isHasReccuring = (bool)$psCustomer->getPsRecurringPayments()->first();
 
-        if ($isHasReccuring or $this->getUser()->hasRole(User::ROLE_LANDLORD)) {
+        if ($isHasReccuring or $this->getUser()->hasRole(User::ROLE_MANAGER)) {
             $recurringPayment = $this->createPaySimplePaymentRecurring($psCustomer, $amount);
             if (!$recurringPayment instanceof PaySimpleRecurringPayment) {
                 $errors = $this->getErrorsFromPSResponse($recurringPayment);
@@ -154,7 +154,7 @@ class PaySimpleController extends BaseController
     protected function checkAccessToPaymentPage(User $user = null)
     {
         $result = null;
-        if (!$user || (!$user->hasRole(User::ROLE_LANDLORD) && !$user->hasRole(User::ROLE_TENANT))) {
+        if (!$user || (!$user->hasRole(User::ROLE_MANAGER) && !$user->hasRole(User::ROLE_TENANT))) {
             $result = new AccessDeniedException;
         }
 
@@ -189,18 +189,18 @@ class PaySimpleController extends BaseController
                 $issetRecurring = $this->em->getRepository('ErpPaymentBundle:PaySimpleCustomer')
                     ->getLastActiveRecurring($psCustomer);
                 $isPrimaryType = $psCustomer->getPrimaryType() == $type;
-                $isLandWithoutRecurring = !$issetRecurring && $user->hasRole(User::ROLE_LANDLORD);
+                $isLandWithoutRecurring = !$issetRecurring && $user->hasRole(User::ROLE_MANAGER);
                 $isTenantWithRecurring = $user->hasRole(User::ROLE_TENANT) && $issetRecurring;
-                $isLandlordNeedUpdate = $user->hasRole(User::ROLE_LANDLORD) && $issetRecurring && $isPrimaryType;
+                $isManagerNeedUpdate = $user->hasRole(User::ROLE_MANAGER) && $issetRecurring && $isPrimaryType;
                 $isTenantNeedUpdate = $isPrimaryType && $isTenantWithRecurring;
 
-                if (($isLandWithoutRecurring || $isLandlordNeedUpdate || $isTenantNeedUpdate)
+                if (($isLandWithoutRecurring || $isManagerNeedUpdate || $isTenantNeedUpdate)
                     && $user->getIsActiveMonthlyFee()
                 ) {
                     $recurringPayment = $this->createPaySimplePaymentRecurring($psCustomer, $amount);
                     $isStatusActive = $user->getStatus() == User::STATUS_ACTIVE;
 
-                    if (!$issetRecurring && $user->hasRole(User::ROLE_LANDLORD) && !$isStatusActive) {
+                    if (!$issetRecurring && $user->hasRole(User::ROLE_MANAGER) && !$isStatusActive) {
                         $this->em->persist($user->setStatus(User::STATUS_NOT_CONFIRMED));
                         $this->em->flush();
                     }

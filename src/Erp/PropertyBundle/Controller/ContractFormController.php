@@ -30,7 +30,7 @@ class ContractFormController extends BaseController
     const PDF_WIDTH_BALANCER = 9;
     const PDF_FONT_SIZE_PARAM = '8';
     const PDF_FONT_NAME_PARAM = 'Times New Roman';
-    const PDF_FOOTER_RIGHT = 'Landlord ____________ Tenant ____________    [page] / [topage]  ';
+    const PDF_FOOTER_RIGHT = 'Manager ____________ Tenant ____________    [page] / [topage]  ';
 
     /** @var string */
     protected $pdfDir = '/cache/pdf_files';
@@ -164,7 +164,7 @@ class ContractFormController extends BaseController
 
         $contractFormRepository = $this->em->getRepository('ErpPropertyBundle:ContractForm');
 
-        if ($user->hasRole(User::ROLE_LANDLORD)) {
+        if ($user->hasRole(User::ROLE_MANAGER)) {
             $contractForm = $contractFormRepository->findOneBy(['property' => $property]);
         } else {
             $contractForm = $contractFormRepository->findOneBy(['property' => $property, 'isPublished' => true]);
@@ -208,7 +208,7 @@ class ContractFormController extends BaseController
                 'user'          => $property->getUser(),
                 'property'      => $property,
                 'sections'      => $sections,
-                'isLandlord'    => $user->hasRole(User::ROLE_LANDLORD),
+                'isManager'     => $user->hasRole(User::ROLE_MANAGER),
             ]
         );
     }
@@ -416,7 +416,7 @@ class ContractFormController extends BaseController
         $propertyRepository = $this->em->getRepository('ErpPropertyBundle:Property');
 
         /** @var Property $property */
-        $property = ($user instanceof User and $user->hasRole(User::ROLE_LANDLORD))
+        $property = ($user instanceof User and $user->hasRole(User::ROLE_MANAGER))
             ? $propertyRepository->findOneBy(['id' => $propertyId, 'user' => $user])
             : $propertyRepository->find($propertyId);
 
@@ -651,7 +651,7 @@ class ContractFormController extends BaseController
         } else {
             $this->addFlash(
                 'alert_error',
-                'An error occurred while trying to sign a document. Please contact your Landlord.'
+                'An error occurred while trying to sign a document. Please contact your Manager.'
             );
         }
 

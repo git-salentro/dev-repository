@@ -5,12 +5,12 @@ namespace Erp\CoreBundle\EmailNotification\Notifications;
 use Erp\CoreBundle\EmailNotification\AbstractEmailNotification;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 
-class LandlordInvite extends AbstractEmailNotification
+class ManagerActiveInvite extends AbstractEmailNotification
 {
     /**
      * @var string
      */
-    protected $type = EmailNotificationFactory::TYPE_LANDLORD_INVITE;
+    protected $type = EmailNotificationFactory::TYPE_MANAGER_ACTIVE_INVITE;
 
     /**
      * Send email notification when new Administrator created
@@ -25,10 +25,10 @@ class LandlordInvite extends AbstractEmailNotification
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'Zoobdoo - You have been invited to register as Landlord';
+        $subject = 'Zoobdoo - You have been invited as Manager';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
-        $emailParams['landlordInvite'] = $params['landlordInvite'];
+        $emailParams['managerInvite'] = $params['managerInvite'];
         $emailParams['url'] = $params['url'];
         $emailParams['imageErp'] = $message->embed($this->getLogoPath($params));
 

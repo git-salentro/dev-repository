@@ -77,11 +77,11 @@ class ApplicationForms extends Admin
                 'toUser.lastName',
                 null,
                 [
-                    'label' => 'Landlord',
+                    'label' => 'Manager',
                     'template' => 'ErpAdminBundle:ApplicationForm:list_field_to_user.html.twig',
                 ]
             )
-            ->add('toUser.email', null, ['label' => 'Landlord\'s Email'])
+            ->add('toUser.email', null, ['label' => 'Manager\'s Email'])
             ->add(
                 'document.originalName',
                 null,
@@ -102,8 +102,8 @@ class ApplicationForms extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('toUser.lastName', null, ['label' => 'Landlord\'s Last Name'])
-            ->add('toUser.email', null, ['label' => 'Landlord\'s Email'])
+            ->add('toUser.lastName', null, ['label' => 'Manager\'s Last Name'])
+            ->add('toUser.email', null, ['label' => 'Manager\'s Email'])
             ->add('createdDate', 'doctrine_orm_date_range')
         ;
     }

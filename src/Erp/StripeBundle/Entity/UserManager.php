@@ -42,9 +42,9 @@ class UserManager
         ];
 
         if ($user->hasRole(User::ROLE_TENANT)) {
-            $landlord = $user->getTenantProperty()->getUser();
-            $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
-            $arguments['options'] = ['stripe_account' => $landlordStripeAccountId];
+            $manager = $user->getTenantProperty()->getUser();
+            $managerStripeAccountId = $manager->getStripeAccount()->getAccountId();
+            $arguments['options'] = ['stripe_account' => $managerStripeAccountId];
         }
 
         $response = $this->apiManager->callStripeApi('\Stripe\Customer', 'retrieve', $arguments);
@@ -81,9 +81,9 @@ class UserManager
         ];
 
         if ($user->hasRole(User::ROLE_TENANT)) {
-            $landlord = $user->getTenantProperty()->getUser();
-            $landlordStripeAccountId = $landlord->getStripeAccount()->getAccountId();
-            $arguments['options'] = ['stripe_account' => $landlordStripeAccountId];
+            $manager = $user->getTenantProperty()->getUser();
+            $managerStripeAccountId = $manager->getStripeAccount()->getAccountId();
+            $arguments['options'] = ['stripe_account' => $managerStripeAccountId];
         }
 
         $response = $this->apiManager->callStripeApi('\Stripe\Customer', 'retrieve', $arguments);

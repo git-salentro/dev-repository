@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
 
-class LandlordInviteFormType extends AbstractType
+class ManagerInviteFormType extends AbstractType
 {
     /**
      * @var FormBuilderInterface
@@ -20,7 +20,7 @@ class LandlordInviteFormType extends AbstractType
      */
     public function __construct()
     {
-        $this->validationGroup = 'LandlordInvite';
+        $this->validationGroup = 'ManagerInvite';
     }
 
     /**
@@ -31,9 +31,9 @@ class LandlordInviteFormType extends AbstractType
     {
         $this->formBuilder = $builder;
         $this
-            ->addLandlordFirstName()
-            ->addLandlordLastName()
-            ->addLandlordEmail()
+            ->addManagerFirstName()
+            ->addManagerLastName()
+            ->addManagerEmail()
             ->addTenantEmail()
             ->addMessage()
         ;
@@ -48,10 +48,10 @@ class LandlordInviteFormType extends AbstractType
     /**
      * @return $this
      */
-    public function addLandlordFirstName()
+    public function addManagerFirstName()
     {
         $this->formBuilder->add(
-            'landlordFirstName',
+            'managerFirstName',
             'text',
             [
                 'label' => 'Property Manager First Name',
@@ -83,10 +83,10 @@ class LandlordInviteFormType extends AbstractType
     /**
      * @return $this
      */
-    public function addLandlordLastName()
+    public function addManagerLastName()
     {
         $this->formBuilder->add(
-            'landlordLastName',
+            'managerLastName',
             'text',
             [
                 'label' => 'Property Manager Last Name',
@@ -118,10 +118,10 @@ class LandlordInviteFormType extends AbstractType
     /**
      * @return $this
      */
-    public function addLandlordEmail()
+    public function addManagerEmail()
     {
         $this->formBuilder->add(
-            'landlordEmail',
+            'managerEmail',
             'email',
             [
                 'label' => 'Property Manager Email',
@@ -244,6 +244,6 @@ class LandlordInviteFormType extends AbstractType
      */
     public function getName()
     {
-        return 'erp_site_send_invite_to_landlord_form';
+        return 'erp_site_send_invite_to_manager_form';
     }
 }

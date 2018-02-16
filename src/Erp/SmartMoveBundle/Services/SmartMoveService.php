@@ -5,7 +5,7 @@ namespace Erp\SmartMoveBundle\Services;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
 use Erp\SmartMoveBundle\Managers\SmartMoveManagerFactory;
 use Erp\SmartMoveBundle\Managers\SmartMoveManagerInterface;
-use Erp\SmartMoveBundle\Models\LandlordAPIModel;
+use Erp\SmartMoveBundle\Models\ManagerAPIModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Erp\SmartMoveBundle\Exceptions\SmartMoveManagerException;
 
@@ -45,10 +45,10 @@ class SmartMoveService
         $smartMoveRenter = $this->getRenterForAPI($smartMoveRenter);
 
         if ($smartMoveRenter->getSmApplicationId()) {
-            $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+            $apiModel = $this->getManagerAPIModel($smartMoveRenter);
 
             $smManager = SmartMoveManagerFactory::getInstance(
-                SmartMoveManagerInterface::TYPE_LANDLORD,
+                SmartMoveManagerInterface::TYPE_MANAGER,
                 $this->container
             );
             $response = $smManager->setModel($apiModel)->proccess(SmartMoveManagerInterface::METHOD_APPLICANT_ADD);
@@ -64,10 +64,10 @@ class SmartMoveService
             }
 
         } elseif ($smartMoveRenter->getSmPropertyId()) {
-            $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+            $apiModel = $this->getManagerAPIModel($smartMoveRenter);
 
             $smManager = SmartMoveManagerFactory::getInstance(
-                SmartMoveManagerInterface::TYPE_LANDLORD,
+                SmartMoveManagerInterface::TYPE_MANAGER,
                 $this->container
             );
             $response = $smManager->setModel($apiModel)->proccess(SmartMoveManagerInterface::METHOD_APPLICATION_ADD);
@@ -98,7 +98,7 @@ class SmartMoveService
     {
         $result['status'] = false;
 
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
         $smManager = SmartMoveManagerFactory::getInstance(
             SmartMoveManagerInterface::TYPE_RENTER,
             $this->container
@@ -127,7 +127,7 @@ class SmartMoveService
     {
         $result['status'] = false;
 
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
         $smManager = SmartMoveManagerFactory::getInstance(
             SmartMoveManagerInterface::TYPE_RENTER,
             $this->container
@@ -156,7 +156,7 @@ class SmartMoveService
     {
         $result['status'] = false;
 
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
         $smManager = SmartMoveManagerFactory::getInstance(
             SmartMoveManagerInterface::TYPE_RENTER,
             $this->container
@@ -189,7 +189,7 @@ class SmartMoveService
     {
         $result['status'] = false;
 
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
         $smManager = SmartMoveManagerFactory::getInstance(
             SmartMoveManagerInterface::TYPE_RENTER,
             $this->container
@@ -225,7 +225,7 @@ class SmartMoveService
     {
         $result['status'] = false;
 
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
         $smManager = SmartMoveManagerFactory::getInstance(
             SmartMoveManagerInterface::TYPE_RENTER,
             $this->container
@@ -254,9 +254,9 @@ class SmartMoveService
     {
         $result['status'] = false;
 
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
         $smManager = SmartMoveManagerFactory::getInstance(
-            SmartMoveManagerInterface::TYPE_LANDLORD,
+            SmartMoveManagerInterface::TYPE_MANAGER,
             $this->container
         );
         $response = $smManager->setModel($apiModel)->proccess(SmartMoveManagerInterface::METHOD_GET_REPORTS);
@@ -309,7 +309,7 @@ class SmartMoveService
     {
         $result['status'] = false;
 
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
         $smManager = SmartMoveManagerFactory::getInstance(
             SmartMoveManagerInterface::TYPE_RENTER,
             $this->container
@@ -344,7 +344,7 @@ class SmartMoveService
         if (!$smartMoveRenter->getSmPropertyId() && !$smartMoveRenter->getSmApplicationId()) {
             /** @var $existSMRenter \Erp\SmartMoveBundle\Entity\SmartMoveRenter */
             $existSMRenter = $this->em->getRepository('ErpSmartMoveBundle:SmartMoveRenter')
-                ->getByLandlord($smartMoveRenter->getLandlord());
+                ->getByManager($smartMoveRenter->getManager());
 
             if ($existSMRenter) {
                 $smartMoveRenter->setSmPropertyId($existSMRenter->getSmPropertyId())
@@ -370,9 +370,9 @@ class SmartMoveService
      */
     public function createSmartMoveProperty(SmartMoveRenter $smartMoveRenter)
     {
-        $apiModel = $this->getLandlordAPIModel($smartMoveRenter);
+        $apiModel = $this->getManagerAPIModel($smartMoveRenter);
 
-        $smManager = SmartMoveManagerFactory::getInstance(SmartMoveManagerInterface::TYPE_LANDLORD, $this->container);
+        $smManager = SmartMoveManagerFactory::getInstance(SmartMoveManagerInterface::TYPE_MANAGER, $this->container);
         $responce = $smManager->setModel($apiModel)->proccess(SmartMoveManagerInterface::METHOD_PROPERTY_ADD);
 
         $result['status'] = true;
@@ -395,18 +395,18 @@ class SmartMoveService
     }
 
     /**
-     * Get LandlordAPIModel
+     * Get ManagerAPIModel
      *
      * @param SmartMoveRenter $smartMoveRenter
      *
-     * @return LandlordAPIModel
+     * @return ManagerAPIModel
      */
-    public function getLandlordAPIModel(SmartMoveRenter $smartMoveRenter)
+    public function getManagerAPIModel(SmartMoveRenter $smartMoveRenter)
     {
-        $apiModel = new LandlordAPIModel();
+        $apiModel = new ManagerAPIModel();
         $apiModel->setSMRenter($smartMoveRenter)
             ->setEmail($smartMoveRenter->getEmail())
-            ->setLandlord($smartMoveRenter->getLandlord());
+            ->setManager($smartMoveRenter->getManager());
 
         return $apiModel;
     }

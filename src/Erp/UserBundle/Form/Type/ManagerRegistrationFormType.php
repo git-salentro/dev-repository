@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 use Doctrine\ORM\EntityRepository;
 
-class LandlordRegistrationFormType extends AbstractType
+class ManagerRegistrationFormType extends AbstractType
 {
     /**
      * @var string
@@ -47,7 +47,7 @@ class LandlordRegistrationFormType extends AbstractType
         $this->request = $request;
         $this->states = $states;
         $this->invitedUser = $invitedUser;
-        $this->validationGroup = 'LandlordRegister';
+        $this->validationGroup = 'ManagerRegister';
     }
 
     /**
@@ -87,14 +87,14 @@ class LandlordRegistrationFormType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class'        => 'Erp\UserBundle\Entity\User',
-                'validation_groups' => ['LandlordRegister']
+                'validation_groups' => ['ManagerRegister']
             ]
         );
     }
 
     public function getName()
     {
-        return 'erp_users_landlord_form_registration';
+        return 'erp_users_manager_form_registration';
     }
 
     /**

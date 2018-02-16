@@ -8,7 +8,7 @@ use Erp\UserBundle\Form\Type\AddressDetailsFormType;
 use Erp\UserBundle\Form\Type\AskProFormType;
 use Erp\UserBundle\Form\Type\DashboardServiceRequestFormType;
 use Erp\UserBundle\Form\Type\EmailOptionsFormType;
-use Erp\UserBundle\Form\Type\LandlordDetailsFormType;
+use Erp\UserBundle\Form\Type\ManagerDetailsFormType;
 use Erp\UserBundle\Form\Type\TenantContactInfoFormType;
 use Erp\UserBundle\Form\Type\TenantDetailsFormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -55,7 +55,7 @@ class ProfileController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        $templateName = $user->hasRole(User::ROLE_LANDLORD) ? 'Landlord' : 'Tenant';
+        $templateName = $user->hasRole(User::ROLE_MANAGER) ? 'Manager' : 'Tenant';
 
         if (!$user->getIsTermOfUse()) {
             return $this->redirectToRoute('erp_user_term_of_use');
@@ -81,7 +81,7 @@ class ProfileController extends BaseController
         $tenantProperty = $user->getTenantProperty();
 
         if (!$tenantProperty) {
-            throw new NotFoundHttpException('Tenant not relations with landlord');
+            throw new NotFoundHttpException('Tenant not relations with manager');
         }
 
         $form = $this->createFormMessageForm($tenantProperty->getUser());
@@ -121,7 +121,7 @@ class ProfileController extends BaseController
     public function detailsAction(Request $request)
     {
         $user = $this->getUser();
-        $type = $user->hasRole(User::ROLE_LANDLORD) ? new LandlordDetailsFormType() : new TenantDetailsFormType();
+        $type = $user->hasRole(User::ROLE_MANAGER) ? new ManagerDetailsFormType() : new TenantDetailsFormType();
         $action = $this->generateUrl('erp_user_details');
 
         $formOptions = ['action' => $action, 'method' => 'POST'];
@@ -402,7 +402,7 @@ class ProfileController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        if (!$user || !$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user || !$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
@@ -468,7 +468,7 @@ class ProfileController extends BaseController
     }
 
     /**
-     * Display info message in the cases if landlord's account Read Only
+     * Display info message in the cases if manager's account Read Only
      *
      * @return Response
      */

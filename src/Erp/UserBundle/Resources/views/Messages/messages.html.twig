@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-xs-6 companions-col mobile-companions-col">
                             <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) %}Select Tenant{% else %}Select Property Manager{% endif %}
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}Select Tenant{% else %}Select Property Manager{% endif %}
                                     <span class="select-container"></span></button>
                                 <ul class="companions-list dropdown-menu" aria-labelledby="dropdownMenu1">
                                     {% if companions %}
@@ -80,7 +80,7 @@
                                 {% else %}
                                     <div class="text-center">
                                         You haven't received Messages from
-                                        {{ user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) ? ' this Tenant' : ' your Manager' }}
+                                        {{ user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) ? ' this Tenant' : ' your Manager' }}
                                         yet
                                     </div>
                                 {% endif %}

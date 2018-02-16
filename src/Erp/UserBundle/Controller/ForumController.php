@@ -217,7 +217,7 @@ class ForumController extends BaseController
     }
 
     /**
-     * Sent email to landlords with comments in current topic about a new comment in topic
+     * Sent email to managers with comments in current topic about a new comment in topic
      *
      * @param ForumTopic $forumTopic
      * @param User $user
@@ -228,18 +228,18 @@ class ForumController extends BaseController
     {
         $comments = $forumTopic->getForumComments();
 
-        $landlords = array();
+        $managers = array();
 
         foreach ($comments as $comment) {
-            if ($comment->getUser()->getId() != $user->getId() and $comment->getUser()->hasRole(User::ROLE_LANDLORD)) {
-                $landlords[$comment->getUser()->getId()] = $comment->getUser();
+            if ($comment->getUser()->getId() != $user->getId() and $comment->getUser()->hasRole(User::ROLE_MANAGER)) {
+                $managers[$comment->getUser()->getId()] = $comment->getUser();
             }
         }
 
-        if ($landlords) {
-            foreach ($landlords as $landlord) {
+        if ($managers) {
+            foreach ($managers as $manager) {
                 $event = new EmailNotificationEvent(
-                    $landlord,
+                    $manager,
                     EmailNotification::SETTING_FORUM_TOPICS,
                     [
                         '#url#' => $this->generateUrl(

@@ -8,7 +8,7 @@
     {% set ba = constant('Erp\\PaymentBundle\\PaySimple\\Managers\\PaySimpleManagerInterface::BANK_ACCOUNT') %}
     {% set psCustomer = user.getPaySimpleCustomers()|length ? user.getPaySimpleCustomers().first : null %}
 
-    <section id="landlords-profile" class="profile">
+    <section id="managers-profile" class="profile">
         <div class="container">
             <div class="row">
                 <div class="title-block">

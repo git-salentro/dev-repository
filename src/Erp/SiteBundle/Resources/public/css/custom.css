@@ -206,7 +206,7 @@ section#rental-form h1 {
     color: #fff;
     text-shadow: none;
 }
-#landlords-profile .form-group {
+#managers-profile .form-group {
     margin-bottom: 5px;
 }
 .profile .profile-widget-row .profile-widget-item .payment-calendar .date.date-end {
@@ -300,7 +300,7 @@ section#rental-form h1 {
     .profile .profile-widget-row {
         margin: 0 5px 0px;
     }
-    #landlords-profile .col-md-5.col-xs-6.profile-widget-item.widget-last {
+    #managers-profile .col-md-5.col-xs-6.profile-widget-item.widget-last {
         margin: 0 0 20px;
         width: 100%;
         height: 395px!important;
