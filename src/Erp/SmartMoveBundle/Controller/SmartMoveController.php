@@ -72,7 +72,7 @@ class SmartMoveController extends BaseController
                 $this->get('session')->getFlashBag()->add('alert_error', $teml . $errors);
             }
 
-            return $this->redirectToRoute('erp_user_profile_dashboard');
+            return $this->redirectToRoute('erp_user_dashboard_dashboard');
         }
 
 
