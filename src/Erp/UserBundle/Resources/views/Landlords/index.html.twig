@@ -7,14 +7,20 @@
         <div class="col-xs-12">
             {% if pagination|length %}
                 <ul class="accounting-table-title">
-                {% for landlord in pagination %}
-                                <li>
-                                    <span class="col-xs-3 bold-text">{{ landlord.firstname }} {{ landlord.lastname }}</span>
-                                    <span class="col-xs-3 bold-text">{{ landlord.phone }}</span>
-                                    <span class="col-xs-3 bold-text">{{ landlord.email }}</span>
-                                    <span class="col-xs-3 bold-text">{{ landlord.addressOne }}</span>
-                                </li>
-                {% endfor %}
+                    <li>
+                        <span class="col-xs-3 bold-text">Name</span>
+                        <span class="col-xs-3 bold-text">Phone</span>
+                        <span class="col-xs-3 bold-text">Email</span>
+                        <span class="col-xs-3 bold-text">Address one</span>
+                    </li>
+                    {% for landlord in pagination %}
+                        <li>
+                            <span class="col-xs-3 text">{{ landlord.firstname }} {{ landlord.lastname }}</span>
+                            <span class="col-xs-3 text">{{ landlord.phone }}</span>
+                            <span class="col-xs-3 text">{{ landlord.email }}</span>
+                            <span class="col-xs-3 text">{{ landlord.addressOne }}</span>
+                        </li>
+                    {% endfor %}
                 </ul>
             {% else %}
                 <div class="text-center">
