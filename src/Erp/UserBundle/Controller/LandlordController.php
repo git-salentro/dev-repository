@@ -14,7 +14,6 @@ class LandlordController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        $limitPerPage = $request->get('limitPerPage') ? $request->get('limitPerPage') : 10;
         $qb = $this->em->getRepository('ErpUserBundle:Landlord')->getByManagerQB($this->getUser());
         $pagination = $this->get('knp_paginator')->paginate(
             $qb,
@@ -24,8 +23,7 @@ class LandlordController extends BaseController
 
         return $this->render('ErpUserBundle:Landlords:index.html.twig', [
             'user' => $user,
-            'pagination' => $pagination,
-            'limitPerPage' => $limitPerPage,
+            'pagination' => $pagination
         ]);
     }
 
