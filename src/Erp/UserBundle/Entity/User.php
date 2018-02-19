@@ -559,6 +559,19 @@ class User extends BaseUser
     protected $lateRentPaymentSettings;
 
     /**
+     * @var User Manager
+     * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="landlords")
+     */
+    protected $manager;
+
+    /**
+     * @var User Landlords
+     *
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\User", mappedBy="manager")
+     */
+    protected $landlords;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -572,6 +585,7 @@ class User extends BaseUser
         $this->paySimpleHistory = new ArrayCollection();
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
+        $this->landlords = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
     }
 
@@ -1843,4 +1857,56 @@ class User extends BaseUser
 
         return $this->properties->matching($criteria)->isEmpty();
     }
+
+
+    /**
+     * Add landlord
+     *
+     * @param User $landlord
+     *
+     * @return User
+     */
+    public function addLandlord(User $landlord)
+    {
+        $this->landlords[] = $landlord;
+
+        return $this;
+    }
+
+    /**
+     * Remove landlord
+     *
+     * @param User $landlord
+     */
+    public function removeLandlord(User $landlord)
+    {
+        $this->landlords->removeElement($landlord);
+    }
+
+    /**
+     * Get landlords
+     *
+     * @return Collection
+     */
+    public function getLandlords()
+    {
+        return $this->landlords;
+    }
+
+    /**
+     * @return User
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * @param User $manager
+     */
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
+    }
+
 }

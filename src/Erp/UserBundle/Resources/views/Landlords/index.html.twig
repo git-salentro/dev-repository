@@ -1,0 +1,34 @@
+<div class="col-md-5 col-xs-6 profile-widget-item widget-last">
+    <div class="row widget-title-row">
+        <div class="login-block-title bold-text">Landlords</div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if pagination|length %}
+                <ul class="accounting-table-title">
+                {% for landlord in pagination %}
+                                <li>
+                                    <span class="col-xs-3 bold-text">{{ landlord.firstname }} {{ landlord.lastname }}</span>
+                                    <span class="col-xs-3 bold-text">{{ landlord.phone }}</span>
+                                    <span class="col-xs-3 bold-text">{{ landlord.email }}</span>
+                                    <span class="col-xs-3 bold-text">{{ landlord.addressOne }}</span>
+                                </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <div class="text-center">
+                    You have no landlords yet.
+                </div>
+            {% endif %}
+            <div class="col-xs-12 text-center">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="question-mark">
+
+    </div>
+</div>

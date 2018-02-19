@@ -37,3 +37,7 @@ erp_user_late_rent_payment_settings:
 erp_user_accounting:
     resource: "@ErpUserBundle/Resources/config/routing/accounting.yml"
     prefix:   /
+
+erp_user_landlords:
+    resource: "@ErpUserBundle/Resources/config/routing/landlords.yml"
+    prefix:   /

@@ -1,0 +1,9 @@
+erp_user_landlords:
+    path:     /landlords
+    defaults: { _controller: ErpUserBundle:Landlord:index }
+    methods: [GET, POST]
+
+erp_user_landlords_create:
+    path:     /landlords/create
+    defaults: { _controller: ErpUserBundle:Landlord:create }
+    methods: [GET, POST]

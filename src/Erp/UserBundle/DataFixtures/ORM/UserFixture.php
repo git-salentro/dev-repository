@@ -14,6 +14,7 @@ class UserFixture extends Fixture
     public function load(ObjectManager $manager)
     {
         $this->createManager();
+        $this->createLandlord();
         $this->createTenant();
     }
 
@@ -49,6 +50,40 @@ class UserFixture extends Fixture
         $userManager->updateUser($user);
 
         $this->addReference('tonystark@test.com', $user);
+    }
+
+    private function createLandlord()
+    {
+        $userManager = $this->container->get('fos_user.user_manager');
+        $settings = $this->container->get('erp.users.user.service')->getSettings();
+
+        /** @var User $user */
+        $user = $userManager->createUser();
+        $user->addRole(User::ROLE_LANDLORD);
+        $user
+            ->setCompanyName('My Landlord Company')
+            ->setFirstName('John')
+            ->setLastName('Doe')
+            ->setPhone('111-111-1111')
+            ->setAddressOne('Address One')
+            ->setPostalCode('11111')
+            ->setEmail('johndoe@test.com')
+            ->setPlainPassword('qweASD123')
+            ->setEnabled(true)
+            ->setUsername($user->getEmail())
+            ->setStatus(User::STATUS_ACTIVE)
+            ->setSettings(array_keys($settings))
+            ->setPropertyCounter(User::DEFAULT_PROPERTY_COUNTER)
+            ->setApplicationFormCounter(User::DEFAULT_APPLICATION_FORM_COUNTER)
+            ->setContractFormCounter(User::DEFAULT_CONTRACT_FORM_COUNTER)
+            ->setIsPrivatePaySimple(0)
+            ->setIsApplicationFormCounterFree(1)
+            ->setIsPropertyCounterFree(1)
+            ->setIsTermOfUse(true);
+
+        $userManager->updateUser($user);
+
+        $this->addReference('johndoe@test.com', $user);
     }
 
     private function createTenant()
