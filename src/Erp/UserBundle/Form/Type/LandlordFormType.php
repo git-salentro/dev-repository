@@ -14,10 +14,10 @@ class LandlordFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', ['required' => true, 'attr' => ['placeholder' => 'First and Last name', 'class' => 'form-control']])
+            ->add('firstname', 'text', ['required' => true, 'attr' => ['placeholder' => 'First name', 'class' => 'form-control']])
             ->add('phone', 'text', ['required' => true, 'attr' => ['placeholder' => 'Phone', 'class' => 'form-control']])
             ->add('email', 'text', ['required' => true, 'attr' => ['placeholder' => 'Email', 'class' => 'form-control']])
-            ->add('address', 'text', ['required' => false, 'attr' => ['placeholder' => 'Email', 'class' => 'form-control']])
+            ->add('addressOne', 'text', ['required' => false, 'attr' => ['placeholder' => 'Email', 'class' => 'form-control']])
             ->add('save','submit', ['label' => 'Save', 'attr' => ['class' => 'btn edit-btn']]
             );
     }

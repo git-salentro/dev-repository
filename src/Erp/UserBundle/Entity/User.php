@@ -559,16 +559,15 @@ class User extends BaseUser
     protected $lateRentPaymentSettings;
 
     /**
-     * @var User Managers
-     *
-     * @ORM\ManyToMany(targetEntity="Erp\UserBundle\Entity\User", mappedBy="landlords", orphanRemoval=true)
+     * @var User Manager
+     * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="landlords")
      */
-    protected $managers;
+    protected $manager;
 
     /**
      * @var User Landlords
      *
-     * @ORM\ManyToMany(targetEntity="Erp\UserBundle\Entity\User", inversedBy="managers", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\User", mappedBy="manager")
      */
     protected $landlords;
 
@@ -587,7 +586,6 @@ class User extends BaseUser
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
         $this->landlords = new ArrayCollection();
-        $this->managers = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
     }
 
@@ -1860,40 +1858,6 @@ class User extends BaseUser
         return $this->properties->matching($criteria)->isEmpty();
     }
 
-    /**
-     * Add manager
-     *
-     * @param User $manager
-     *
-     * @return User
-     */
-    public function addManager(User $manager)
-    {
-        $this->managers[] = $manager;
-
-        return $this;
-    }
-
-    /**
-     * Remove manager
-     *
-     * @param User $manager
-     */
-    public function removeManager(User $manager)
-    {
-        $this->managers->removeElement($manager);
-    }
-
-    /**
-     * Get managers
-     *
-     * @return Collection
-     */
-    public function getManagers()
-    {
-        return $this->managers;
-    }
-
 
     /**
      * Add landlord
@@ -1927,6 +1891,22 @@ class User extends BaseUser
     public function getLandlords()
     {
         return $this->landlords;
+    }
+
+    /**
+     * @return User
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * @param User $manager
+     */
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
     }
 
 }

@@ -14,7 +14,7 @@ class LandlordController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        $qb = $this->em->getRepository('ErpUserBundle:User')->findByManagers($this->getUser());
+        $qb = $this->em->getRepository('ErpUserBundle:User')->findBy(['manager' => $this->getUser()]);
         $pagination = $this->get('knp_paginator')->paginate(
             $qb,
             $this->get('request')->query->get('page', 1) /*page number*/,
@@ -38,7 +38,8 @@ class LandlordController extends BaseController
         $form = $this->createForm(new LandlordFormType(), $landlord);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $landlord->addManager($user);
+            $landlord->setManager($user);
+            $landlord->setUsername($landlord->getEmail());
             $this->em->persist($landlord);
             $this->em->flush();
         }
