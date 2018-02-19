@@ -34,4 +34,15 @@ class UserRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findByManagers($managers)
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('u')
+            ->andWhere('u.managers IN (:managers)')
+            ->setParameter('managers', $managers);
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

@@ -14,7 +14,7 @@ class LandlordController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        $qb = $this->em->getRepository('ErpUserBundle:Landlord')->getByManagerQB($this->getUser());
+        $qb = $this->em->getRepository('ErpUserBundle:User')->findByManagers($this->getUser());
         $pagination = $this->get('knp_paginator')->paginate(
             $qb,
             $this->get('request')->query->get('page', 1) /*page number*/,

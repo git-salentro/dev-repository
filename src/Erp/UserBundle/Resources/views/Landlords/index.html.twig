@@ -9,13 +9,13 @@
                 <ul class="accounting-table-title">
                 {% for landlord in pagination %}
                                 <li>
-                                    <span class="col-xs-3 bold-text">{{ landlord.name }}</span>
+                                    <span class="col-xs-3 bold-text">{{ landlord.firstname }} {{ landlord.lastname }}</span>
                                     <span class="col-xs-3 bold-text">{{ landlord.phone }}</span>
                                     <span class="col-xs-3 bold-text">{{ landlord.email }}</span>
-                                    <span class="col-xs-3 bold-text">{{ landlord.address }}</span>
+                                    <span class="col-xs-3 bold-text">{{ landlord.addressOne }}</span>
                                 </li>
                 {% endfor %}
-                </div>
+                </ul>
             {% else %}
                 <div class="text-center">
                     You have no landlords yet.
