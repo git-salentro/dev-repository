@@ -559,6 +559,20 @@ class User extends BaseUser
     protected $lateRentPaymentSettings;
 
     /**
+     * @var User Managers
+     *
+     * @ORM\ManyToMany(targetEntity="Erp\UserBundle\Entity\User", mappedBy="landlords", orphanRemoval=true)
+     */
+    protected $managers;
+
+    /**
+     * @var User Landlords
+     *
+     * @ORM\ManyToMany(targetEntity="Erp\UserBundle\Entity\User", inversedBy="managers", orphanRemoval=true)
+     */
+    protected $landlords;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -572,6 +586,8 @@ class User extends BaseUser
         $this->paySimpleHistory = new ArrayCollection();
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
+        $this->landlords = new ArrayCollection();
+        $this->managers = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
     }
 
@@ -1843,4 +1859,74 @@ class User extends BaseUser
 
         return $this->properties->matching($criteria)->isEmpty();
     }
+
+    /**
+     * Add manager
+     *
+     * @param User $manager
+     *
+     * @return User
+     */
+    public function addManager(User $manager)
+    {
+        $this->managers[] = $manager;
+
+        return $this;
+    }
+
+    /**
+     * Remove manager
+     *
+     * @param User $manager
+     */
+    public function removeManager(User $manager)
+    {
+        $this->managers->removeElement($manager);
+    }
+
+    /**
+     * Get managers
+     *
+     * @return Collection
+     */
+    public function getManagers()
+    {
+        return $this->managers;
+    }
+
+
+    /**
+     * Add landlord
+     *
+     * @param User $landlord
+     *
+     * @return User
+     */
+    public function addLandlord(User $landlord)
+    {
+        $this->landlords[] = $landlord;
+
+        return $this;
+    }
+
+    /**
+     * Remove landlord
+     *
+     * @param User $landlord
+     */
+    public function removeLandlord(User $landlord)
+    {
+        $this->landlords->removeElement($landlord);
+    }
+
+    /**
+     * Get landlords
+     *
+     * @return Collection
+     */
+    public function getLandlords()
+    {
+        return $this->landlords;
+    }
+
 }

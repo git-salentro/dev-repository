@@ -2,6 +2,8 @@
 
 namespace Erp\UserBundle\Controller;
 
+use Erp\UserBundle\Entity\User;
+use Erp\UserBundle\Form\Type\LandlordFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\CoreBundle\Controller\BaseController;
 
@@ -12,20 +14,40 @@ class LandlordController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
+        $limitPerPage = $request->get('limitPerPage') ? $request->get('limitPerPage') : 10;
+        $qb = $this->em->getRepository('ErpUserBundle:Landlord')->getByManagerQB($this->getUser());
+        $pagination = $this->get('knp_paginator')->paginate(
+            $qb,
+            $this->get('request')->query->get('page', 1) /*page number*/,
+            10/*limit per page*/
+        );
 
         return $this->render('ErpUserBundle:Landlords:index.html.twig', [
             'user' => $user,
+            'pagination' => $pagination,
+            'limitPerPage' => $limitPerPage,
         ]);
     }
 
-    //add new landlord and assign to current manager
+
     public function createAction(Request $request)
     {
+
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
 
+        $landlord = new User();
+        $form = $this->createForm(new LandlordFormType(), $landlord);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $landlord->addManager($user);
+            $this->em->persist($landlord);
+            $this->em->flush();
+        }
+
         return $this->render('ErpUserBundle:Landlords:create.html.twig', [
             'user' => $user,
+            'form' => $form->createView()
         ]);
     }
 
