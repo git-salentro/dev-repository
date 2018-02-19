@@ -16,7 +16,15 @@
                         <button
                                 class="btn red-btn"
                                 type="submit"
-                                {#url="{{ path('erp_property_choose_settings') }}"#}
+                                url="{{ path('erp_user_landlords_create') }}"
+                                role="popup"
+                        >
+                            Add landlord
+                        </button>
+                        <button
+                                class="btn red-btn"
+                                type="submit"
+                                url="{{ path('erp_user_landlords') }}"
                                 role="popup"
                         >
                             Landlord profiles

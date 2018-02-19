@@ -11,8 +11,6 @@ class AccountingController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-
-
         //TODO: accounting page
         return $this->render('ErpUserBundle:Dashboard:accounting.html.twig', [
             'user' => $user,
