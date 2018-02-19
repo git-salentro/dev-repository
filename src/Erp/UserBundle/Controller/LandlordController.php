@@ -44,6 +44,10 @@ class LandlordController extends BaseController
             $landlord->setIsPrivatePaySimple(false);
             $this->em->persist($landlord);
             $this->em->flush();
+
+            $this->addFlash('alert_ok', 'Success!');
+
+            return $this->redirect($this->generateUrl('erp_user_accounting'));
         }
 
         return $this->render('ErpUserBundle:Landlords:create.html.twig', [
