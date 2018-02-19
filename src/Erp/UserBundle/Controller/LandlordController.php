@@ -40,6 +40,8 @@ class LandlordController extends BaseController
         if ($form->isValid()) {
             $landlord->setManager($user);
             $landlord->setUsername($landlord->getEmail());
+            $landlord->setPlainPassword('12345');
+            $landlord->setIsPrivatePaySimple(false);
             $this->em->persist($landlord);
             $this->em->flush();
         }
