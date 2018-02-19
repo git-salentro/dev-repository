@@ -18,7 +18,7 @@ class LandlordFormType extends AbstractType
             ->add('phone', 'text', ['required' => true, 'attr' => ['placeholder' => '', 'class' => 'form-control']])
             ->add('email', 'text', ['required' => true, 'attr' => ['placeholder' => '', 'class' => 'form-control']])
             ->add('addressOne', 'text', ['required' => false, 'attr' => ['placeholder' => '', 'class' => 'form-control']])
-            ->add('save','submit', ['label' => 'Save', 'attr' => ['class' => 'btn edit-btn']]
+            ->add('save','submit', ['label' => 'Save', 'attr' => ['class' => 'btn edit-btn btn-space']]
             );
     }
 
