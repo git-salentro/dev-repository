@@ -32,7 +32,7 @@ use Erp\PropertyBundle\Entity\ApplicationForm;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="Email is already in use",
- *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail"}
+ *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail", "Default"}
  * )
  * @ORM\HasLifecycleCallbacks()
  */
@@ -112,7 +112,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Last Name",
-     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails", "Default"}
      * )
      *
      * @Assert\Length(
@@ -120,7 +120,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Last Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="Last Name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails", "Default"}
      * )
      */
     protected $lastName;
@@ -181,7 +181,7 @@ class User extends BaseUser
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"ManagerCreated", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "TenantContactInfo", "Default"}
      * )
      */
     protected $workPhone;
