@@ -1,36 +1,30 @@
-<div>
-{#<div class="col-md-5 col-xs-6 profile-widget-item widget-last">#}
-    <div class="row widget-title-row">
-        <div class="login-block-title bold-text">Landlords</div>
-    </div>
-
-    <div class="row">
-        <div class="col-xs-12">
-            {% if pagination|length %}
-                <ul class="accounting-table-title">
-                    <li>
-                        <span class="col-xs-3 bold-text">Name</span>
-                        <span class="col-xs-3 bold-text">Phone</span>
-                        <span class="col-xs-3 bold-text">Email</span>
-                        <span class="col-xs-3 bold-text">Address one</span>
-                    </li>
-                    {% for landlord in pagination %}
-                        <li>
-                            <span class="col-xs-3 text">{{ landlord.firstname }} {{ landlord.lastname }}</span>
-                            <span class="col-xs-3 text">{{ landlord.phone }}</span>
-                            <span class="col-xs-3 text">{{ landlord.email }}</span>
-                            <span class="col-xs-3 text">{{ landlord.addressOne }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <div class="text-center">
-                    You have no landlords yet.
-            {% endif %}
+<div class="row">
+    <div class="col-xs-12">
+        {% if pagination|length %}
+        <ul class="accounting-table-title">
+            <li>
+                <span class="col-xs-3 bold-text">Name</span>
+                <span class="col-xs-3 bold-text">Phone</span>
+                <span class="col-xs-3 bold-text">Email</span>
+                <span class="col-xs-3 bold-text">Address one</span>
+            </li>
+            {% for landlord in pagination %}
+                <li>
+                    <span class="col-xs-3 text">{{ landlord.firstname }} {{ landlord.lastname }}</span>
+                    <span class="col-xs-3 text">{{ landlord.phone }}</span>
+                    <span class="col-xs-3 text">{{ landlord.email }}</span>
+                    <span class="col-xs-3 text">{{ landlord.addressOne }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="text-center">
+            You have no landlords yet.
             <div class="col-xs-12 text-center">
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
+        {% endif %}
     </div>
     <hr>
 
@@ -38,3 +32,4 @@
 
     </div>
 </div>
+

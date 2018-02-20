@@ -23,7 +23,8 @@ class LandlordController extends BaseController
 
         return $this->render('ErpUserBundle:Landlords:index.html.twig', [
             'user' => $user,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'modalTitle'=> 'Landlords management'
         ]);
     }
 
@@ -45,7 +46,7 @@ class LandlordController extends BaseController
             $this->em->persist($landlord);
             $this->em->flush();
 
-            $this->addFlash('alert_ok', 'Success!');
+            $this->addFlash('alert_ok', 'Landlord has been added successfully!');
 
             return $this->redirect($this->generateUrl('erp_user_accounting'));
         }
