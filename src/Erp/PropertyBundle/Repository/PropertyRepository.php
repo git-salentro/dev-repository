@@ -275,7 +275,7 @@ class PropertyRepository extends EntityRepository
             ->join('p.tenantUser', 'tu')
             ->join('tu.rentPayment', 'rp')
             ->join('p.user', 'u')
-            ->andWhere('rp.balance <= 0')
+            ->andWhere('rp.balance < 0')
             ->andWhere('p.user = :user')
             ->setParameter('user', $user);
 

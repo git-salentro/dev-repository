@@ -1909,4 +1909,25 @@ class User extends BaseUser
         $this->manager = $manager;
     }
 
+    public function getFullName()
+    {
+        return sprintf('%s %s', $this->firstName, $this->lastName);
+    }
+
+    // TODO Refactor balance calculation
+    public function getLateRentPaymentBalance()
+    {
+        if (!$rentPayment = $this->rentPayment) {
+            return;
+        }
+
+        $fee = 0;
+        if ($lateRentPaymentSettings = $this->lateRentPaymentSettings) {
+            if ($lateRentPaymentSettings->getFee()) {
+                $fee = $lateRentPaymentSettings->getFee() * 100;
+            }
+        }
+
+        return $rentPayment->getBalance() - $fee;
+    }
 }
