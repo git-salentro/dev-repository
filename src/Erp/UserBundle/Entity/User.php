@@ -32,7 +32,7 @@ use Erp\PropertyBundle\Entity\ApplicationForm;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="Email is already in use",
- *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail", "Default"}
+ *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail", "LandlordDetails"}
  * )
  * @ORM\HasLifecycleCallbacks()
  */
@@ -112,7 +112,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Last Name",
-     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails", "Default"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      *
      * @Assert\Length(
@@ -120,13 +120,13 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Last Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="Last Name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails", "Default"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      */
     protected $lastName;
 
     /**
-     * @var srting
+     * @var string
      *
      * @Assert\Length(
      *     min=5,
@@ -159,15 +159,15 @@ class User extends BaseUser
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      *
      * @Assert\NotBlank(
-     *     message="Please enter your Phone",
-     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
+     *     message="Please enter Phone number",
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo", "LandlordDetails"}
      * )
      *
      * @Assert\Regex(
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo", "LandlordDetails"}
      * )
      */
     protected $phone;
@@ -181,7 +181,7 @@ class User extends BaseUser
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"ManagerCreated", "TenantContactInfo", "Default"}
+     *     groups={"ManagerCreated", "TenantContactInfo", "LandlordDetails"}
      * )
      */
     protected $workPhone;
