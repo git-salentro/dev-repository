@@ -92,7 +92,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your First Name",
-     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails", "LandlordDetails"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      *
      * @Assert\Length(
@@ -100,7 +100,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="First Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="First name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails", "LandlordDetails"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      */
     protected $firstName;
@@ -112,7 +112,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Last Name",
-     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails", "LandlordDetails"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      *
      * @Assert\Length(
@@ -120,13 +120,13 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Last Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="Last Name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails", "LandlordDetails"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      */
     protected $lastName;
 
     /**
-     * @var srting
+     * @var string
      *
      * @Assert\Length(
      *     min=5,
@@ -159,7 +159,7 @@ class User extends BaseUser
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      *
      * @Assert\NotBlank(
-     *     message="Please enter your Phone",
+     *     message="Please enter Phone number",
      *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo", "LandlordDetails"}
      * )
      *
