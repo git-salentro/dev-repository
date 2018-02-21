@@ -492,7 +492,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .modal {
         .modal-dialog {
-            width: 600px !important;
+            min-width: 600px !important;
+            max-width: 60em;
         }
     }
     .header-navbar {
@@ -871,7 +872,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .modal {
         .modal-dialog {
-            width: 600px !important;
+            min-width: 600px !important;
+            max-width: 60em;
         }
     }
     .appointment-request {
