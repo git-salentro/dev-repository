@@ -58,10 +58,6 @@ html {
                 outline: none;
             }
         }
-        .btn-space {
-            margin: 20px 0 0 0;
-            text-align: center;
-        }
         textarea {
             resize: none;
         }
@@ -559,4 +555,14 @@ footer {
             text-decoration: none;
         }
     }
+}
+.container_popup{
+    width: auto!important;
+}
+.popup_btn_align {
+    margin-top: 20px;
+    text-align: center;
+}
+.btn_padding{
+    padding-top: 20px;
 }
