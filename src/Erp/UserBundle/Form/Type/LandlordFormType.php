@@ -2,8 +2,10 @@
 
 namespace Erp\UserBundle\Form\Type;
 
+use Erp\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LandlordFormType extends AbstractType
 {
@@ -21,6 +23,17 @@ class LandlordFormType extends AbstractType
             ->add('addressOne', 'text', ['label' => 'Address', 'required' => false, 'attr' => ['class' => 'form-control']])
             ->add('submit', 'submit', ['label' => 'Save', 'attr' => ['class' => 'btn edit-btn btn-space']]
             );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'validation_groups' => ['LandlordDetails']
+        ]);
     }
 
     public function getName()
