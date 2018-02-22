@@ -1,11 +1,13 @@
 <div class="container-fluid">
-    <div class="row">
+    <div class="row text-right">
+        <form id="form-charge" onsubmit="void(0);return false;">
         {% if pagination|length %}
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th class="col-xs-1"></th>
                     <th class="col-xs-3">Name</th>
-                    <th class="col-xs-3">Phone</th>
+                    <th class="col-xs-2">Phone</th>
                     <th class="col-xs-2">Email</th>
                     <th class="col-xs-4">Address</th>
                 </tr>
@@ -13,14 +15,21 @@
                 <tbody>
                 {% for landlord in pagination %}
                     <tr>
-                        <td>{{ landlord.firstname }} {{ landlord.lastname }}</td>
-                        <td>{{ landlord.phone }}</td>
-                        <td>{{ landlord.email }}</td>
-                        <td>{{ landlord.addressOne }}</td>
+                        <td>
+                            <div class="checkbox">
+                            <input type="checkbox" name="{{ landlord.id }}" id="landlord{{ landlord.id }}" value="{{ landlord.id }}"/>
+                            </div>
+                        </td>
+                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</label></td>
+                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.phone }}</label></td>
+                        <td><label for="landlord{{ landlord.id }}">{{ landlord.email }}</label></td>
+                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.addressOne }}</label></td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+            <input type="submit" value="Charge" class="btn red-btn btn-space">
+        </form>
         {% else %}
             <div class="text-center">
                 You have no landlords yet.
