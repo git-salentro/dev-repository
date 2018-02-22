@@ -18,6 +18,7 @@ use Erp\CoreBundle\Entity\Image;
 use Erp\CoreBundle\Entity\City;
 use Erp\UserBundle\Entity\UserDocument;
 use Erp\UserBundle\Entity\ForumTopic;
+use Erp\UserBundle\Entity\Charge;
 use Erp\PaymentBundle\Entity\PaySimpleHistory;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
 use Erp\PropertyBundle\Entity\ApplicationForm;
@@ -572,6 +573,18 @@ class User extends BaseUser
     protected $landlords;
 
     /**
+     * @var Charge
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="manager")
+     */
+    protected $chargeOutgoings; //sent
+
+    /**
+     * @var Charge
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="landlord")
+     */
+    protected $chargeIncomings; //received
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -586,6 +599,8 @@ class User extends BaseUser
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
         $this->landlords = new ArrayCollection();
+        $this->chargeOutgoings = new ArrayCollection();
+        $this->chargeIncomings = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
     }
 
@@ -1929,5 +1944,76 @@ class User extends BaseUser
         }
 
         return $rentPayment->getBalance() - $fee;
+    }
+
+
+
+    /**
+     * Add chargeOutgoing
+     *
+     * @param Charge $chargeOutgoing
+     *
+     * @return Charge
+     */
+    public function addChargeOutgoing(Charge $chargeOutgoing)
+    {
+        $this->chargeOutgoings[] = $chargeOutgoing;
+
+        return $chargeOutgoing;
+    }
+
+    /**
+     * Remove chargeOutgoing
+     *
+     * @param Charge $chargeOutgoing
+     */
+    public function removeChargeOutgoing(Charge $chargeOutgoing)
+    {
+        $this->chargeOutgoings->removeElement($chargeOutgoing);
+    }
+
+    /**
+     * Get chargeOutgoings
+     *
+     * @return Collection
+     */
+    public function getChargeOutgoings()
+    {
+        return $this->chargeOutgoings;
+    }
+
+
+    /**
+     * Add chargeIncoming
+     *
+     * @param Charge $chargeIncoming
+     *
+     * @return Charge
+     */
+    public function addChargeIncoming(Charge $chargeIncoming)
+    {
+        $this->chargeIncomings[] = $chargeIncoming;
+
+        return $chargeIncoming;
+    }
+
+    /**
+     * Remove chargeIncoming
+     *
+     * @param Charge $chargeIncoming
+     */
+    public function removeChargeIncoming(Charge $chargeIncoming)
+    {
+        $this->chargeIncomings->removeElement($chargeIncoming);
+    }
+
+    /**
+     * Get chargeIncomings
+     *
+     * @return Collection
+     */
+    public function getChargeIncomings()
+    {
+        return $this->chargeIncomings;
     }
 }
