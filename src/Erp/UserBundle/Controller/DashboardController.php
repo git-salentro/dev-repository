@@ -8,10 +8,11 @@ use Erp\PropertyBundle\Entity\Property;
 use Erp\StripeBundle\Entity\Invoice;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
+use Erp\UserBundle\Entity\LateRentPayment;
 use Stripe\BankAccount;
 use Stripe\Card;
 use Symfony\Component\HttpFoundation\Request;
-use Erp\UserBundle\Form\Type\LateRentPaymentSettingsType;
+use Erp\UserBundle\Form\Type\UserLateRentPaymentType;
 
 //TODO Refactor preparing chart data
 class DashboardController extends BaseController
@@ -29,10 +30,10 @@ class DashboardController extends BaseController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $repository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $repository = $this->getDoctrine()->getManagerForClass(LateRentPayment::class)->getRepository(LateRentPayment::class);
         $items = $repository->getLatePayments($user);
 
-        $form = $this->createForm(new LateRentPaymentSettingsType());
+        $form = $this->createForm(new UserLateRentPaymentType());
 
         return $this->render('ErpUserBundle:Dashboard:late_rent_payments.html.twig', [
             'items' => $items,

@@ -40,13 +40,6 @@ class StripeCustomer
     private $user;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="StripeRecurringPayment", mappedBy="customer", cascade={"persist"})
-     */
-    private $recurringPayments;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="customer_id", type="string")
@@ -92,7 +85,6 @@ class StripeCustomer
     {
         $this->invoices = new ArrayCollection();
         $this->transactions = new ArrayCollection();
-        $this->recurringPayments = new ArrayCollection();
     }
 
     /**

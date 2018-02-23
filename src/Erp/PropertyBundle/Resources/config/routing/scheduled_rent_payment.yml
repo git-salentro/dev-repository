@@ -1,0 +1,4 @@
+erp_property_scheduled_rent_payment_rent:
+    path:     /pay-rent
+    defaults: { _controller: PropertyBundle:ScheduledRentPayment:payRent }
+    methods: [POST]

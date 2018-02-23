@@ -1,6 +1,6 @@
 var LateRentPaymentController = function () {
-    this.allowRentPaymentSelector = '[name="erp_user_late_rent_payment[allowRentPayment]"]';
-    this.allowRentPaymentForm = '[name="erp_user_late_rent_payment"]';
+    this.allowRentPaymentSelector = '[name="erp_user_user_late_rent_payment[allowRentPayment]"]';
+    this.allowRentPaymentForm = '[name="erp_user_user_late_rent_payment"]';
 };
 
 LateRentPaymentController.prototype.listenAllowFullAmountPayment = function () {

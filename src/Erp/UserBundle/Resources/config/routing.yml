@@ -30,8 +30,12 @@ erp_user_dashboard:
     resource: "@ErpUserBundle/Resources/config/routing/dashboard.yml"
     prefix:   /
 
-erp_user_late_rent_payment_settings:
-    resource: "@ErpUserBundle/Resources/config/routing/late_rent_settings.yml"
+erp_user_late_rent_payment:
+    resource: "@ErpUserBundle/Resources/config/routing/late_rent_payment.yml"
+    prefix:   /
+
+erp_user_user:
+    resource: "@ErpUserBundle/Resources/config/routing/user.yml"
     prefix:   /
 
 erp_user_accounting:
@@ -41,7 +45,3 @@ erp_user_accounting:
 erp_user_landlords:
     resource: "@ErpUserBundle/Resources/config/routing/landlords.yml"
     prefix:   /
-
-erp_user_rent_payment:
-    resource: "@ErpUserBundle/Resources/config/routing/rent_payment.yml"
-    prefix:   /rent-payment

@@ -545,18 +545,25 @@ class User extends BaseUser
     protected $isActiveMonthlyFee = false;
 
     /**
-     * @var \Erp\PropertyBundle\Entity\RentPayment
+     * @var \Erp\UserBundle\Entity\LateRentPayment[]|Collection
      *
-     * @ORM\OneToOne(targetEntity="Erp\PropertyBundle\Entity\RentPayment", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\LateRentPayment", mappedBy="user", cascade={"persist"})
      */
-    protected $rentPayment;
+    protected $lateRentPayments;
 
     /**
-     * @var LateRentPaymentSettings
+     * @var RentPaymentBalance
      *
-     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\LateRentPaymentSettings", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\RentPaymentBalance", mappedBy="user", cascade={"persist"})
      */
-    protected $lateRentPaymentSettings;
+    protected $rentPaymentBalance;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_allow_rent_payment", type="boolean", nullable=true)
+     */
+    protected $allowRentPayment;
 
     /**
      * @var User Manager
@@ -587,6 +594,7 @@ class User extends BaseUser
         $this->tenants = new ArrayCollection();
         $this->landlords = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
+        $this->lateRentPayments = new ArrayCollection();
     }
 
     /**
@@ -1788,68 +1796,6 @@ class User extends BaseUser
         return $this->properties->matching($criteria);
     }
 
-    /**
-     * Set rentPayment
-     *
-     * @param \Erp\PropertyBundle\Entity\RentPayment $rentPayment
-     *
-     * @return User
-     */
-    public function setRentPayments(\Erp\PropertyBundle\Entity\RentPayment $rentPayment = null)
-    {
-        $this->rentPayment = $rentPayment;
-
-        return $this;
-    }
-
-    /**
-     * Get rentPayment
-     *
-     * @return \Erp\PropertyBundle\Entity\RentPayment
-     */
-    public function getRentPayment()
-    {
-        return $this->rentPayment;
-    }
-
-    /**
-     * Set rentPayment
-     *
-     * @param \Erp\PropertyBundle\Entity\RentPayment $rentPayment
-     *
-     * @return User
-     */
-    public function setRentPayment(\Erp\PropertyBundle\Entity\RentPayment $rentPayment = null)
-    {
-        $this->rentPayment = $rentPayment;
-
-        return $this;
-    }
-
-    /**
-     * Set lateRentPaymentSettings
-     *
-     * @param \Erp\UserBundle\Entity\LateRentPaymentSettings $lateRentPaymentSettings
-     *
-     * @return User
-     */
-    public function setLateRentPaymentSettings(\Erp\UserBundle\Entity\LateRentPaymentSettings $lateRentPaymentSettings = null)
-    {
-        $this->lateRentPaymentSettings = $lateRentPaymentSettings;
-
-        return $this;
-    }
-
-    /**
-     * Get lateRentPaymentSettings
-     *
-     * @return \Erp\UserBundle\Entity\LateRentPaymentSettings
-     */
-    public function getLateRentPaymentSettings()
-    {
-        return $this->lateRentPaymentSettings;
-    }
-
     public function hasTenant(User $user)
     {
         $criteria = Criteria::create();
@@ -1914,20 +1860,108 @@ class User extends BaseUser
         return sprintf('%s %s', $this->firstName, $this->lastName);
     }
 
-    // TODO Refactor balance calculation
-    public function getLateRentPaymentBalance()
+    /**
+     * Add lateRentPayment
+     *
+     * @param \Erp\UserBundle\Entity\LateRentPayment $lateRentPayment
+     *
+     * @return User
+     */
+    public function addLateRentPayment(\Erp\UserBundle\Entity\LateRentPayment $lateRentPayment)
     {
-        if (!$rentPayment = $this->rentPayment) {
+        $this->lateRentPayments[] = $lateRentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Remove lateRentPayment
+     *
+     * @param \Erp\UserBundle\Entity\LateRentPayment $lateRentPayment
+     */
+    public function removeLateRentPayment(\Erp\UserBundle\Entity\LateRentPayment $lateRentPayment)
+    {
+        $this->lateRentPayments->removeElement($lateRentPayment);
+    }
+
+    /**
+     * Get lateRentPayments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLateRentPayments()
+    {
+        return $this->lateRentPayments;
+    }
+
+    /**
+     * Set rentPaymentBalance
+     *
+     * @param \Erp\UserBundle\Entity\RentPaymentBalance $rentPaymentBalance
+     *
+     * @return User
+     */
+    public function setRentPaymentBalance(\Erp\UserBundle\Entity\RentPaymentBalance $rentPaymentBalance = null)
+    {
+        $this->rentPaymentBalance = $rentPaymentBalance;
+
+        return $this;
+    }
+
+    /**
+     * Get rentPaymentBalance
+     *
+     * @return \Erp\UserBundle\Entity\RentPaymentBalance
+     */
+    public function getRentPaymentBalance()
+    {
+        return $this->rentPaymentBalance;
+    }
+
+    /**
+     * Set allowRentPayment
+     *
+     * @param boolean $allowRentPayment
+     *
+     * @return User
+     */
+    public function setAllowRentPayment($allowRentPayment)
+    {
+        $this->allowRentPayment = (bool) $allowRentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Get allowRentPayment
+     *
+     * @return boolean
+     */
+    public function getAllowRentPayment()
+    {
+        return $this->allowRentPayment;
+    }
+
+    public function isAllowRentPayment()
+    {
+        return $this->allowRentPayment;
+    }
+
+    public function getTotalAmount()
+    {
+        if (!$this->hasRole(User::ROLE_TENANT)) {
             return;
         }
 
-        $fee = 0;
-        if ($lateRentPaymentSettings = $this->lateRentPaymentSettings) {
-            if ($lateRentPaymentSettings->getFee()) {
-                $fee = $lateRentPaymentSettings->getFee() * 100;
-            }
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('paid', 0));
+        $lateRentPayments = $this->lateRentPayments->matching($criteria);
+
+        $totalAmount = 0;
+        foreach ($lateRentPayments as $lateRentPayment) {
+            $totalAmount += $lateRentPayment->getAmount();
         }
 
-        return $rentPayment->getBalance() - $fee;
+        return $totalAmount;
     }
 }

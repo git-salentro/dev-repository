@@ -40,9 +40,9 @@ class StripeAccount
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="StripeRecurringPayment", mappedBy="account", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Erp\PropertyBundle\Entity\ScheduledRentPayment", mappedBy="account", cascade={"persist"})
      */
-    private $recurringPayments;
+    private $scheduledRentPayments;
 
     /**
      * @var ArrayCollection
@@ -681,40 +681,6 @@ class StripeAccount
     }
 
     /**
-     * Add recurringPayment
-     *
-     * @param \Erp\PaymentBundle\Entity\StripeRecurringPayment $recurringPayment
-     *
-     * @return StripeAccount
-     */
-    public function addRecurringPayment(\Erp\PaymentBundle\Entity\StripeRecurringPayment $recurringPayment)
-    {
-        $this->recurringPayments[] = $recurringPayment;
-
-        return $this;
-    }
-
-    /**
-     * Remove recurringPayment
-     *
-     * @param \Erp\PaymentBundle\Entity\StripeRecurringPayment $recurringPayment
-     */
-    public function removeRecurringPayment(\Erp\PaymentBundle\Entity\StripeRecurringPayment $recurringPayment)
-    {
-        $this->recurringPayments->removeElement($recurringPayment);
-    }
-
-    /**
-     * Get recurringPayments
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRecurringPayments()
-    {
-        return $this->recurringPayments;
-    }
-
-    /**
      * Add invoice
      *
      * @param \Erp\StripeBundle\Entity\Invoice $invoice
@@ -804,5 +770,39 @@ class StripeAccount
     public function getCity()
     {
         return $this->city;
+    }
+
+    /**
+     * Add scheduledRentPayment
+     *
+     * @param \Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment
+     *
+     * @return StripeAccount
+     */
+    public function addScheduledRentPayment(\Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment)
+    {
+        $this->scheduledRentPayments[] = $scheduledRentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Remove scheduledRentPayment
+     *
+     * @param \Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment
+     */
+    public function removeScheduledRentPayment(\Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment)
+    {
+        $this->scheduledRentPayments->removeElement($scheduledRentPayment);
+    }
+
+    /**
+     * Get scheduledRentPayments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getScheduledRentPayments()
+    {
+        return $this->scheduledRentPayments;
     }
 }
