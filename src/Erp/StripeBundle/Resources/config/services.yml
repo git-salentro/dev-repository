@@ -65,3 +65,13 @@ services:
         arguments:
             - '@erp_stripe.entity.api_manager'
             - '@phy_cache'
+
+    erp_stripe.registry.form_registry1:
+        class: Erp\StripeBundle\Registry\FormRegistry
+        arguments:
+            - {cc: '@erp_stripe.form.credit_card', ba: '@erp_stripe.form.stripe_plaid_bank_account'}
+
+    erp_stripe.registry.model_registry1:
+        class: Erp\StripeBundle\Registry\ModelRegistry
+        arguments:
+            - {cc: 'Erp\StripeBundle\Entity\CreditCard', ba: 'Erp\StripeBundle\Entity\PlaidBankAccount'}

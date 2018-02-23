@@ -1,0 +1,55 @@
+{% extends '::base.html.twig' %}
+
+{% set headerWhiteClass = true %}
+
+{% block headerBannerTitle %}
+    Confirm Charge
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+{% endblock %}
+
+{% block pageContent %}
+    {{ parent() }}
+    <section id="managers-profile" class="profile">
+        <div class="container">
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+            <div class="row">
+                <div class="col-xs-4">
+                    <button id='verify-ba' class="btn edit-btn">Verify</button>
+                    {{ form_start(form) }}
+                        {{ form(form) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript_inline %}
+    <script>
+        (function ($) {
+            var linkHandler = Plaid.create({
+                env: '{{ plaid_env }}',
+                clientName: 'Zoobdoo',
+                key: '{{ plaid_public_key }}',
+                product: ['auth'],
+                selectAccount: true,
+                onSuccess: function(public_token, metadata) {
+
+                },
+                onExit: function(err, metadata) {
+                    if (err != null) {
+
+                    }
+                }
+            });
+
+            $('#verify-ba').click(function() {
+                linkHandler.open();
+            });
+        })(jQuery);
+    </script>
+{% endblock %}

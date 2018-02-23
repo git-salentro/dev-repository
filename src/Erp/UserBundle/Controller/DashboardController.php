@@ -186,13 +186,10 @@ class DashboardController extends BaseController
         /** @var Card $creditCard */
         $creditCard = $stripeUserManager->getCreditCard($user);
 
-        return $this->render(
-            'ErpPaymentBundle:Stripe/Widgets:payment-details.html.twig',
-            [
-                'creditCard' => $creditCard,
-                'bankAccount' => $bankAccount,
-            ]
-        );
+        return $this->render('ErpPaymentBundle:Stripe/Widgets:payment-details.html.twig', [
+            'creditCard' => $creditCard,
+            'bankAccount' => $bankAccount,
+        ]);
     }
 
     private function getMonthsLabels(\DateTime $dateFrom, \DateTime $dateTo)

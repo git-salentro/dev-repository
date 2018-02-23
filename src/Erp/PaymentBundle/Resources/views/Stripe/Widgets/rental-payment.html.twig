@@ -11,7 +11,7 @@
     <div class="row widget-title-row">
         <div class="login-block-title bold-text">Pay Rent</div>
     </div>
-    {{ form_start(form, {'action': path('erp_payment_stripe_pay_rent'), 'attr': {'class': 'pay-widget'}}) }}
+    {{ form_start(form, {'action': path('erp_property_scheduled_rent_payment_rent'), 'attr': {'class': 'pay-widget'}}) }}
         <div class="form-group col-xs-7">
             {{ form_widget(form.amount) }}
         </div>

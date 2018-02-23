@@ -1,7 +1,7 @@
 <?php
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
@@ -42,6 +42,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Erp\StripeBundle\ErpStripeBundle(),
+            new Erp\PlaidBundle\ErpPlaidBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

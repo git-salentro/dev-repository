@@ -7,3 +7,14 @@ erp_user_landlords_create:
     path:     /landlords/create
     defaults: { _controller: ErpUserBundle:Landlord:create }
     methods: [GET, POST]
+
+erp_user_landlords_confirm_charge:
+    path:     /charge/confirm/{type}/{token}
+    defaults: { _controller: ErpUserBundle:Landlord:confirmCharge }
+    methods: [GET, POST]
+
+erp_user_landlords_charge:
+    path:     /charge/confirm/{token}
+    defaults: { _controller: ErpUserBundle:Landlord:charge }
+    methods: [GET]
+

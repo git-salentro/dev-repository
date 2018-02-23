@@ -1,13 +1,13 @@
 <?php
 
-namespace Erp\StripeBundle\DependencyInjection;
+namespace Erp\PlaidBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-class ErpStripeExtension extends Extension
+class ErpPlaidExtension extends Extension
 {
     /**
      * @inheritdoc
@@ -16,6 +16,5 @@ class ErpStripeExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        $loader->load('form.yml');
     }
 }
