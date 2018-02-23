@@ -1884,6 +1884,7 @@ class User extends BaseUser
      */
     public function addLateRentPayment(\Erp\UserBundle\Entity\LateRentPayment $lateRentPayment)
     {
+        $lateRentPayment->setUser($this);
         $this->lateRentPayments[] = $lateRentPayment;
 
         return $this;

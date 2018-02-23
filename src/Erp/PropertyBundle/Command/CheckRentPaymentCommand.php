@@ -40,6 +40,7 @@ class CheckRentPaymentCommand extends ContainerAwareCommand
 
             if (!$rentPaymentBalance = $tenant->getRentPaymentBalance()) {
                 $rentPaymentBalance = new RentPaymentBalance();
+                $tenant->setRentPaymentBalance($rentPaymentBalance);
             }
 
             $propertySettings = $property->getSettings();

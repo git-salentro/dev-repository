@@ -12,7 +12,7 @@ use Erp\CoreBundle\Entity\DatesAwareTrait;
  *
  * @ORM\Table(name="rent_payment_balance")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  */
 class RentPaymentBalance implements DatesAwareInterface
 {
@@ -41,6 +41,23 @@ class RentPaymentBalance implements DatesAwareInterface
      * @ORM\Column(name="balance", type="integer")
      */
     private $balance = 0;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     /**
      * Get id

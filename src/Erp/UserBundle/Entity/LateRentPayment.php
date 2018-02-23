@@ -52,7 +52,7 @@ class LateRentPayment implements DatesAwareInterface
      *
      * @ORM\Column(name="type", type="string")
      */
-    private $type;
+    private $type = self::LATE_RENT_PAYMENT_TYPE;
 
     /**
      * @var string
