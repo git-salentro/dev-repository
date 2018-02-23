@@ -8,49 +8,51 @@
                 <li>
                     <span class="col-xs-3 bold-text">Tenant</span>
                     <span class="col-xs-3 bold-text amount-col">Address</span>
-                    <span class="col-xs-3 bold-text amount-col">Total Owed</span>
-                    <span class="col-xs-3 bold-text amount-col">Days Late</span>
+                    <span class="col-xs-2 bold-text amount-col">Type</span>
+                    <span class="col-xs-2 bold-text amount-col">Owed</span>
+                    <span class="col-xs-2 bold-text amount-col">Days Late</span>
                 </li>
             </ul>
             <ul class="payment-table">
-                {# TODO Refactor balance calculation #}
-                {% for item in items %}
-                    {% set title = 'Set Fee' %}
-                    {% set checked = false %}
-                    {% set action = path('erp_user_late_rent_payment_settings_allow_rent_payments_settings', {'user': item.tenantUser.id}) %}
-                    {% set popupUrl = path('erp_user_late_rent_payment_settings_create', {'user': item.tenantUser.id}) %}
+            {% for item in items %}
+                {% set checked = false %}
+                {% set action = path('erp_user_user_allow_rent_payment', {'user': item.user.id}) %}
+                {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': item.user.id}) %}
 
-                    {%- if item.tenantUser.lateRentPaymentSettings -%}
-                        {% set checked = item.tenantUser.lateRentPaymentSettings.allowRentPayment ? true : false %}
-                        {% set popupUrl = path('erp_user_late_rent_payment_settings_update', {'user': item.tenantUser.id}) %}
-
-                        {% if item.tenantUser.lateRentPaymentSettings.fee %}
-                            {% set title = '%s, Change Fee'|format(item.tenantUser.lateRentPaymentSettings.fee|money) %}
-                        {% endif %}
-                    {%- endif -%}
-
-                    <li>
-                        <span class="col-xs-3">
-                            {{ item.tenantUser.fullName }}
-                            <form action="{{ path('erp_user_rent_payment_remove', {'id': item.tenantUser.rentPayment.id }) }}" method="POST">
-                                <button>Remove</button>
-                            </form>
-                        </span>
-                        <span class="col-xs-3 amount-col">{{ item.address }}</span>
-                        <span class="col-xs-3 amount-col">{{ item.tenantUser.lateRentPaymentBalance|stripe_money }}</span>
-                        <span class="col-xs-2 amount-col">{{ item.tenantUser.rentPayment.numberOfDayLate }}</span>
+                <li>
+                    <span class="col-xs-3">
+                    {% if loop.first %}
+                        {{ item.user.fullName }}
+                    {% endif %}
+                    <form method="POST" action="{{ path('erp_user_late_rent_payment_remove', {'id': item.id }) }}" style="display: inline">
+                        <button type="submit">Remove</button>
+                    </form>
+                    </span>
+                    <span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>
+                    <span class="col-xs-2 amount-col">{{ item.type }}</span>
+                    <span class="col-xs-2 amount-col">{{ item.amount|money }}</span>
+                    <span class="col-xs-2 amount-col">{{ item.dayLate }}</span>
+                    {% if loop.first %}
                         <div class="payment-table_note">
                             <span class="col-xs-3">
-                            {{ form_start(form, {'action': action}) }}
-                                {{ form_label(form.allowRentPayment) }}
-                                <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if checked %}checked="checked"{% endif %}>
-                            {{ form_end(form, {'render_rest': false}) }}
-
+                                {{ form_start(form, {'action': action}) }}
+                                    {{ form_label(form.allowRentPayment) }}
+                                    <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if checked %}checked="checked"{% endif %}>
+                                {{ form_end(form, {'render_rest': false}) }}
                             </span>
-                            <span class="col-xs-3"><a href="{{ popupUrl }}" role="popup">{{ title }}</a></span>
+                            <span class="col-xs-3"><a href="{{ path('erp_user_late_rent_payment_create', {'user': item.user.id}) }}" role="popup">Add Fee</a></span>
                         </div>
-                    </li>
-                {% endfor %}
+                    {% endif %}
+                    {% if loop.last %}
+                        <span class="col-xs-3"></span>
+                        <span class="col-xs-3"></span>
+                        <span class="col-xs-2 amount-col">Total</span>
+                        {# TODO Refactoring item.user.totalAmount #}
+                        <span class="col-xs-2 amount-col">{{ item.user.totalAmount|money }}</span>
+                        <span class="col-xs-2"></span>
+                    {% endif %}
+                </li>
+            {% endfor %}
             </ul>
         </div>
     </div>

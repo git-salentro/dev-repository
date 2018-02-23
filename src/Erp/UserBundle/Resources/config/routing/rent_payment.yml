@@ -1,4 +1,0 @@
-erp_user_rent_payment_remove:
-    path: /rmeove/{id}
-    defaults: { _controller: ErpUserBundle:RentPayment:remove }
-    methods: [POST]

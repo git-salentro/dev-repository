@@ -1,20 +1,16 @@
 <?php
 
-namespace Erp\StripeBundle\Command;
+namespace Erp\PropertyBundle\Command;
 
+use Erp\UserBundle\Entity\LateRentPayment;
+use Erp\UserBundle\Entity\RentPaymentBalance;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Erp\PropertyBundle\Entity\Property;
-use Erp\PropertyBundle\Entity\RentPayment;
 
 class CheckRentPaymentCommand extends ContainerAwareCommand
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $em;
-
     /**
      * @inheritdoc
      */
@@ -30,7 +26,7 @@ class CheckRentPaymentCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getEntityManager();
+        $em = $this->getContainer()->get('doctrine')->getManager();
         $repository = $em->getRepository(Property::class);
         $properties = $repository->getScheduledPropertiesForPayment();
 
@@ -42,16 +38,29 @@ class CheckRentPaymentCommand extends ContainerAwareCommand
                 continue;
             }
 
-            $propertySettings = $property->getSettings();
-            $rentPayment = $tenant->getRentPayment();
-            if (!$rentPayment) {
-                $rentPayment = new RentPayment();
-                $rentPayment->setUser($tenant);
+            if (!$rentPaymentBalance = $tenant->getRentPaymentBalance()) {
+                $rentPaymentBalance = new RentPaymentBalance();
             }
 
-            $rentPayment->takeMoneyFromBalance($propertySettings->getPaymentAmount());
+            $propertySettings = $property->getSettings();
 
-            $em->persist($rentPayment);
+            $paymentAmount = $propertySettings->getPaymentAmount();
+            $rentPaymentBalanceAmount = $rentPaymentBalance->getBalance();
+            $cashBalance = $rentPaymentBalanceAmount - $paymentAmount;
+            $lateRentPayment = null;
+
+            if ($rentPaymentBalanceAmount > 0 && $cashBalance < 0) {
+                $lateRentPayment = new LateRentPayment();
+                $lateRentPayment->setAmount($cashBalance);
+            } elseif ($cashBalance < 0) {
+                $lateRentPayment = new LateRentPayment();
+                $lateRentPayment->setAmount($paymentAmount);
+            }
+
+            $tenant->addLateRentPayment($lateRentPayment);
+
+            $rentPaymentBalance->takeMoneyFromBalance($paymentAmount);
+            $em->persist($tenant);
 
             if ((++$i % 20) == 0) {
                 $em->flush();
@@ -61,15 +70,5 @@ class CheckRentPaymentCommand extends ContainerAwareCommand
 
         $em->flush();
         $em->clear();
-    }
-
-    private function getEntityManager()
-    {
-        if (!$this->em) {
-            $container = $this->getContainer();
-            $this->em = $container->get('doctrine')->getManagerForClass(Property::class);
-        }
-
-        return $this->em;
     }
 }

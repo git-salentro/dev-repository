@@ -1,19 +1,19 @@
 <?php
 
-namespace Erp\PaymentBundle\Entity;
+namespace Erp\PropertyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PropertyBundle\Validator\Constraints as Assert;
 
 /**
- * Class StripeRecurringPayment
+ * Class ScheduledRentPayment
  *
- * @ORM\Table(name="stripe_recurring_payment")
- * @ORM\Entity(repositoryClass="Erp\PaymentBundle\Repository\StripeRecurringPaymentRepository")
+ * @ORM\Table(name="scheduled_rent_payment")
+ * @ORM\Entity(repositoryClass="Erp\PaymentBundle\Repository\ScheduledRentPaymentRepository")
  * @ORM\HasLifecycleCallbacks
- * @Assert\RecurringPaymentClass
+ * @Assert\ScheduledRentPaymentClass
  */
-class StripeRecurringPayment
+class ScheduledRentPayment
 {
     const TYPE_SINGLE = 'single';
     const TYPE_RECURRING = 'recurring';
@@ -31,17 +31,17 @@ class StripeRecurringPayment
     private $id;
 
     /**
-     * @var StripeCustomer
+     * @var \Erp\PaymentBundle\Entity\StripeCustomer
      *
-     * @ORM\ManyToOne(targetEntity="StripeCustomer", inversedBy="recurringPayments")
+     * @ORM\ManyToOne(targetEntity="Erp\PaymentBundle\Entity\StripeCustomer", inversedBy="recurringPayments")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      */
     private $customer;
 
     /**
-     * @var StripeAccount
+     * @var \Erp\PaymentBundle\Entity\StripeCustomer
      *
-     * @ORM\ManyToOne(targetEntity="StripeAccount", inversedBy="recurringPayments")
+     * @ORM\ManyToOne(targetEntity="Erp\PaymentBundle\Entity\StripeAccount", inversedBy="recurringPayments")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
      */
     private $account;
@@ -97,7 +97,6 @@ class StripeRecurringPayment
 
     /**
      * @var string
-     * //TODO Create separate table?
      * @ORM\Column(name="category", type="datetime")
      */
     private $category;
@@ -134,7 +133,7 @@ class StripeRecurringPayment
      *
      * @param float $amount
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setAmount($amount)
     {
@@ -158,7 +157,7 @@ class StripeRecurringPayment
      *
      * @param string $type
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setType($type)
     {
@@ -182,7 +181,7 @@ class StripeRecurringPayment
      *
      * @param string $status
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setStatus($status)
     {
@@ -206,7 +205,7 @@ class StripeRecurringPayment
      *
      * @param \DateTime $startPaymentAt
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setStartPaymentAt($startPaymentAt)
     {
@@ -230,7 +229,7 @@ class StripeRecurringPayment
      *
      * @param \DateTime $nextPaymentAt
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setNextPaymentAt($nextPaymentAt)
     {
@@ -254,7 +253,7 @@ class StripeRecurringPayment
      *
      * @param \DateTime $createdAt
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setCreatedAt($createdAt)
     {
@@ -278,7 +277,7 @@ class StripeRecurringPayment
      *
      * @param \DateTime $updatedAt
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -302,7 +301,7 @@ class StripeRecurringPayment
      *
      * @param \Erp\PaymentBundle\Entity\StripeCustomer $customer
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setCustomer(\Erp\PaymentBundle\Entity\StripeCustomer $customer = null)
     {
@@ -326,7 +325,7 @@ class StripeRecurringPayment
      *
      * @param \Erp\PaymentBundle\Entity\StripeAccount $account
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setAccount(\Erp\PaymentBundle\Entity\StripeAccount $account = null)
     {
@@ -350,7 +349,7 @@ class StripeRecurringPayment
      *
      * @param string category
      *
-     * @return StripeRecurringPayment
+     * @return ScheduledRentPayment
      */
     public function setCategory($category)
     {

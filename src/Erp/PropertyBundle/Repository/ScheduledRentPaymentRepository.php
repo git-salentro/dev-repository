@@ -3,16 +3,16 @@
 namespace Erp\PaymentBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Erp\PaymentBundle\Entity\StripeRecurringPayment;
+use Erp\PropertyBundle\Entity\ScheduledRentPayment;
 
-class StripeRecurringPaymentRepository extends EntityRepository
+class ScheduledRentPaymentRepository extends EntityRepository
 {
     public function getScheduledRecurringPayments()
     {
         $qb = $this->getScheduledQueryBuilder();
         $qb->select('srp')
             ->andWhere('srp.type = :type')
-            ->setParameter('type', StripeRecurringPayment::TYPE_RECURRING);
+            ->setParameter('type', ScheduledRentPayment::TYPE_RECURRING);
 
         return $qb->getQuery()->getResult();
     }
@@ -23,8 +23,8 @@ class StripeRecurringPaymentRepository extends EntityRepository
         $qb->select('srp')
             ->andWhere('srp.type = :type')
             ->andWhere('srp.status = :status')
-            ->setParameter('type', StripeRecurringPayment::TYPE_SINGLE)
-            ->setParameter('status', StripeRecurringPayment::STATUS_PENDING);
+            ->setParameter('type', ScheduledRentPayment::TYPE_SINGLE)
+            ->setParameter('status', ScheduledRentPayment::STATUS_PENDING);
 
         return $qb->getQuery()->getResult();
     }

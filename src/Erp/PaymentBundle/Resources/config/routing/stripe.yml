@@ -18,11 +18,6 @@ erp_payment_stripe_verify_bank_account:
     defaults: { _controller: ErpPaymentBundle:Stripe:verifyBankAccount }
     methods: [POST]
 
-erp_payment_stripe_pay_rent:
-    path:     /pay-rent
-    defaults: { _controller: ErpPaymentBundle:Stripe:payRent }
-    methods: [POST]
-
 erp_payment_stripe_verify_account:
     path:     /account/ba/verify
     defaults: { _controller: ErpPaymentBundle:Stripe:verifyAccount }

@@ -267,22 +267,6 @@ class PropertyRepository extends EntityRepository
         return $qb->getQuery();
     }
 
-    public function getLatePayments(User $user)
-    {
-        //TODO Optimize. Get rid of hydration
-        $qb = $this->createQueryBuilder('p')
-            ->select('p', 'tu')
-            ->join('p.tenantUser', 'tu')
-            ->join('tu.rentPayment', 'rp')
-            ->join('p.user', 'u')
-            ->andWhere('rp.balance < 0')
-            ->andWhere('p.user = :user')
-            ->setParameter('user', $user);
-
-        return $qb->getQuery()
-            ->getResult();
-    }
-
     public function getScheduledPropertiesForPayment()
     {
         //TODO Optimize. Get rid of hydration

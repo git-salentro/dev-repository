@@ -5,9 +5,9 @@ namespace Erp\UserBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Erp\UserBundle\Entity\LateRentPaymentSettings;
+use Erp\UserBundle\Entity\User;
 
-class LateRentPaymentSettingsType extends AbstractType
+class UserLateRentPaymentType extends AbstractType
 {
     /**
      * @inheritdoc
@@ -16,29 +16,10 @@ class LateRentPaymentSettingsType extends AbstractType
     {
         $builder
             ->add(
-                'fee',
-                'money',
-                [
-                    'label' => 'Fee',
-                    'currency' => false,
-                ]
-            )
-            ->add(
                 'allowRentPayment',
                 'checkbox',
                 [
                     'label' => 'Allow Rent Payment',
-                ]
-            )
-            ->add(
-                'category',
-                'choice',
-                [
-                    'label' => 'Category',
-                    'choices' => [
-                        //TODO Refactoring fee tenant payment
-                        'fee' => 'Late Fees',
-                    ]
                 ]
             );
     }
@@ -49,7 +30,7 @@ class LateRentPaymentSettingsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => LateRentPaymentSettings::class,
+            'data_class' => User::class,
             'csrf_protection' => false,
         ]);
     }
@@ -59,6 +40,6 @@ class LateRentPaymentSettingsType extends AbstractType
      */
     public function getName()
     {
-        return 'erp_user_late_rent_payment';
+        return 'erp_user_user_late_rent_payment';
     }
 }

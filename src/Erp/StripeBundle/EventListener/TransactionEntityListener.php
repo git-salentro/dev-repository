@@ -3,7 +3,7 @@
 namespace Erp\StripeBundle\EventListener;
 
 use Erp\StripeBundle\Entity\Transaction;
-use Erp\PropertyBundle\Entity\RentPayment;
+use Erp\UserBundle\Entity\LateRentPayment;
 use Erp\UserBundle\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
@@ -26,17 +26,20 @@ class TransactionEntityListener
             return;
         }
 
-        if (!$user->getRentPayment()) {
-            $rentPayment = new RentPayment();
-            $rentPayment->setUser($user);
-        } else {
-            $rentPayment = $user->getRentPayment();
+        $metadata = $entity->getMetadata();
+
+        if (isset($metadata[LateRentPayment::RENT_PAYMENT_METADATA_KEY])) {
+            $em = $this->registry->getManagerForClass(LateRentPayment::class);
+            $repository = $em->getRepository(LateRentPayment::class);
+            $rentPayment = $repository->find($metadata[LateRentPayment::RENT_PAYMENT_METADATA_KEY]);
+
+            if ($rentPayment) {
+                $rentPayment->addTransaction($entity);
+                $em->persist($rentPayment);
+                $em->flush();
+            }
         }
 
-        $rentPayment->depositMoneyToBalance($entity->getAmount());
-
-        $em = $this->registry->getManagerForClass(RentPayment::class);
-        $em->persist($rentPayment);
         $em->flush();
     }
 }

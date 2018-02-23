@@ -5,11 +5,11 @@ namespace Erp\StripeBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Erp\PaymentBundle\Entity\StripeRecurringPayment;
+use Erp\PropertyBundle\Entity\ScheduledRentPayment;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\StripeBundle\Helper\ApiHelper;
 
-class CheckRecurringPaymentCommand extends ContainerAwareCommand
+class CheckScheduledPaymentCommand extends ContainerAwareCommand
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -22,7 +22,7 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('erp:recurring-payment:check')
+            ->setName('erp:scheduled-payment:check')
             ->setDescription('Charge Tenants');
     }
 
@@ -32,12 +32,12 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->getEntityManager();
-        $recurringPaymentRepository = $em->getRepository(StripeRecurringPayment::class);
+        $recurringPaymentRepository = $em->getRepository(ScheduledRentPayment::class);
 
-        $scheduledRecurringPayments = $recurringPaymentRepository->getScheduledRecurringPayments();
-        $scheduledSinglePayments = $recurringPaymentRepository->getScheduledRecurringPayments();
+        $scheduledRentPayments = $recurringPaymentRepository->getScheduledRecurringPayments();
+        $scheduledSinglePayments = $recurringPaymentRepository->getScheduledSinglePayments();
 
-        $this->makePayment($scheduledRecurringPayments);
+        $this->makePayment($scheduledRentPayments);
         $this->makePayment($scheduledSinglePayments);
     }
 
@@ -49,7 +49,7 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
         $em = $this->getEntityManager();
 
         $i = 0;
-        /** @var StripeRecurringPayment $payment */
+        /** @var ScheduledRentPayment $payment */
         foreach ($payments as $payment) {
             $arguments = [
                 'params' => [
@@ -65,17 +65,17 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
             $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
 
             if ($response->isSuccess()) {
-                $status = StripeRecurringPayment::STATUS_FAILURE;
+                $status = ScheduledRentPayment::STATUS_FAILURE;
                 $logger->warning(json_encode($response->getErrorMessage()));
             } else {
-                $status = StripeRecurringPayment::STATUS_SUCCESS;
+                $status = ScheduledRentPayment::STATUS_SUCCESS;
             }
 
             $payment->setStatus($status);
 
             if ($payment->isRecurring()) {
                 $startPaymentAt = (\DateTimeImmutable::createFromMutable($payment->getStartPaymentAt()));
-                if ($status == StripeRecurringPayment::STATUS_SUCCESS) {
+                if ($status == ScheduledRentPayment::STATUS_SUCCESS) {
                     $nextPaymentAt = $startPaymentAt->modify('+1 day');
                 } else {
                     $nextPaymentAt = $startPaymentAt->modify('+1 month');
@@ -99,7 +99,7 @@ class CheckRecurringPaymentCommand extends ContainerAwareCommand
     {
         if (!$this->em) {
             $container = $this->getContainer();
-            $this->em = $container->get('doctrine')->getManagerForClass(StripeRecurringPayment::class);
+            $this->em = $container->get('doctrine')->getManagerForClass(ScheduledRentPayment::class);
         }
 
         return $this->em;

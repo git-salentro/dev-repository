@@ -5,6 +5,7 @@ namespace Erp\StripeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
+use  Erp\CoreBundle\Entity\CreatedAtAwareTrait;
 
 /**
  * Class Transaction
@@ -15,6 +16,8 @@ use Erp\PaymentBundle\Entity\StripeCustomer;
  */
 class Transaction
 {
+    use CreatedAtAwareTrait;
+
     const TYPE_CHARGE = 'charge';
     const CASH_IN = 'cash-in';
     const CASH_OUT = 'cash-out';
@@ -82,11 +85,11 @@ class Transaction
     private $paymentMethod;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="metadata", type="array", nullable=true)
      */
-    private $createdAt;
+    private $metadata;
 
     /**
      * @ORM\PrePersist
@@ -227,30 +230,6 @@ class Transaction
     }
 
     /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Transaction
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
      * Set account
      *
      * @param \Erp\PaymentBundle\Entity\StripeAccount $account
@@ -296,5 +275,29 @@ class Transaction
     public function getCustomer()
     {
         return $this->customer;
+    }
+
+    /**
+     * Set metadata
+     *
+     * @param array $metadata
+     *
+     * @return Transaction
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * Get metadata
+     *
+     * @return array
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
     }
 }

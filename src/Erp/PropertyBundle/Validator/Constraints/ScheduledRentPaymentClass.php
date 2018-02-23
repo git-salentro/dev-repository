@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class RecurringPaymentClass extends Constraint
+class ScheduledRentPaymentClass extends Constraint
 {
     public $dayUntilDueMessage = 'Rent due date {{ value }} is not accessible.';
     public $paymentAmountMessage = 'Payment amount {{ value }} is not accessible.';

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
-class RecurringPaymentClassValidator extends ConstraintValidator
+class ScheduledRentPaymentClassValidator extends ConstraintValidator
 {
     /**
      * @var TokenStorageInterface
@@ -93,20 +93,10 @@ class RecurringPaymentClassValidator extends ConstraintValidator
             }
         }
 
-        $rentPayment = $user->getRentPayment();
+        $rentPaymentBalance = $user->getRentPaymentBalance();
         //TODO Refactoring fee, rent tenant payment
-        if ($rentPayment && $rentPayment->getBalance() < 0) {
-            if ($lateRentPaymentSettings = $user->getLateRentPaymentSettings()) {
-                if ($value->getCategory() == 'rent' && !$lateRentPaymentSettings->isAllowRentPayment()) {
-                    if ($this->context instanceof ExecutionContextInterface) {
-                        $this->context->buildViolation($constraint->allowRentPaymentMessage)
-                            ->addViolation();
-                    } else {
-                        $this->buildViolation($constraint->allowRentPaymentMessage)
-                            ->addViolation();
-                    }
-                }
-            } else {
+        if ($rentPaymentBalance && $rentPaymentBalance->getBalance() < 0) {
+            if ($value->getCategory() == 'rent' && !$user->isAllowRentPayment()) {
                 if ($this->context instanceof ExecutionContextInterface) {
                     $this->context->buildViolation($constraint->allowRentPaymentMessage)
                         ->addViolation();

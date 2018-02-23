@@ -6,10 +6,8 @@ use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Form\Type\StripeCreditCardType;
-use Erp\PaymentBundle\Form\Type\StripeRecurringPaymentType;
 use Erp\PaymentBundle\Plaid\Exception\ServiceException;
 use Erp\PaymentBundle\Stripe\Model\CreditCard;
-use Erp\PaymentBundle\Entity\StripeRecurringPayment;
 use Erp\UserBundle\Entity\User;
 use Erp\StripeBundle\Form\Type\AccountVerificationType;
 use Stripe\Account;
@@ -260,61 +258,6 @@ class StripeController extends BaseController
                 'success' => true,
             ]
         );
-    }
-
-    public function payRentAction(Request $request)
-    {
-        $entity = new StripeRecurringPayment();
-
-        $form = $this->createForm(new StripeRecurringPaymentType(), $entity);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                /** @var User $user */
-                $user = $this->getUser();
-                $manager = $user->getTenantProperty()->getUser();
-                $managerStripeAccount = $manager->getStripeAccount();
-                $tenantStripeCustomer = $user->getStripeCustomer();
-
-                if (!$managerStripeAccount || !$tenantStripeCustomer) {
-                    $this->addFlash(
-                        'alert_error',
-                        'An occurred error. Please, contact your system administrator.'
-                    );
-
-                    return $this->redirectToRoute('erp_user_profile_dashboard');
-                }
-
-                $startPaymentAt = $entity->getStartPaymentAt();
-                $entity
-                    ->setNextPaymentAt($startPaymentAt)
-                    ->setAccount($managerStripeAccount)
-                    ->setCustomer($tenantStripeCustomer);
-
-                $em = $this->getDoctrine()->getManagerForClass(StripeRecurringPayment::class);
-                $em->persist($entity);
-                $em->flush();
-
-                $this->addFlash(
-                    'alert_ok',
-                    'Success'
-                );
-
-                return $this->redirectToRoute('erp_user_profile_dashboard');
-            } else {
-                $this->addFlash(
-                    'alert_error',
-                    $form->getErrors(true)[0]->getMessage()
-                );
-
-                return $this->redirectToRoute('erp_user_profile_dashboard');
-            }
-        }
-
-        return $this->render('ErpPaymentBundle:Stripe\Widgets:rental-payment.html.twig', [
-            'form' => $form->createView(),
-        ]);
     }
 
     public function verifyAccountAction(Request $request)
