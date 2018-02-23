@@ -9,22 +9,19 @@
 {% block pageContent %}
     {{ parent() }}
     <section id="managers-profile" class="profile">
-        <div class="container">
-            <a style="color: black" class="btn btn-red" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}) }}">Credit Card</a>
-            <a style="color: black" class="btn btn-red" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'ba', 'token': token}) }}">Bank Account</a>
+        <div class="container-fluid">
+            <div class="row text-right">
+                <h1 class="text-center bold-text">Charge following landlords</h1>
+                <div class="row text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        {{ form_start(form,{'method': 'POST','action': path('erp_user_landlords_charge') }) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}
 
-<div class="container-fluid">
-    <div class="row text-right">
-        <h1 class="text-center bold-text">Charge following landlords</h1>
-        <div class="row text-center">
-            <div class="col-md-8 col-md-offset-2">
-                {{ form_start(form,{'method': 'POST','action': path('erp_user_landlords_charge') }) }}
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
-</div>
+
 

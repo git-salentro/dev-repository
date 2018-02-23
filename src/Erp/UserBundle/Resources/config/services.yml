@@ -39,3 +39,14 @@ services:
     erp.users.user.service:
         class: %erp.users.user.class%
         arguments: [@service_container]
+
+    erp_user.mailer.abstract_processor:
+        class: Erp\UserBundle\Mailer\BaseProcessor
+        abstract: true
+        arguments:
+            - '@mailer'
+            - '@templating'
+
+    erp_user.mailer.processor:
+        class: Erp\UserBundle\Mailer\Processor
+        parent: erp_user.mailer.abstract_processor

@@ -38,7 +38,8 @@
                 product: ['auth'],
                 selectAccount: true,
                 onSuccess: function(public_token, metadata) {
-
+                    $('[name="erp_stripe_plaid_bank_account[accountId]"]').val(metadata.account_id);
+                    $('[name="erp_stripe_plaid_bank_account[publicToken]"]').val(public_token);
                 },
                 onExit: function(err, metadata) {
                     if (err != null) {

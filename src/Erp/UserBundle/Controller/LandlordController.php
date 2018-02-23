@@ -70,27 +70,31 @@ class LandlordController extends BaseController
 
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        $landlordId = $request->attributes->get('landlordId');
+        $landlordId = $request->get('landlordId');
         $landlord = $this->em->getRepository('ErpUserBundle:User')->findOneBy(['id' => $landlordId]);
         if ($landlord instanceof User) {
             /** @var $user \Erp\UserBundle\Entity\User */
             $charge = new Charge();
             $form = $this->createForm(new ChargeFormType(), $charge);
             $form->handleRequest($request);
-            if ($form->isValid()) {
+//            if ($form->isValid()) {
 
                 $charge->setManager($user);
                 $charge->setLandlord($landlord);
+                $charge->setDescription('test');
+                // TODO Fake Remove it
+                $charge->setAmount(5000);
                 $this->em->persist($charge);
                 $this->em->flush();
 
+                $this->get('erp_user.mailer.processor')->sendChargeEmail($charge);
                 //manager charge landlord Step 2 - complete
 
                 return $this->render('ErpUserBundle:Landlords:chargeComplete.html.twig', [
                     'charge' => $charge,
                     'modalTitle' => 'Sent'
                 ]);
-            }
+//            }
         } else {
             //back to landlords list to select
             return $this->redirect($this->generateUrl('erp_user_landlords'));
@@ -100,34 +104,42 @@ class LandlordController extends BaseController
             'form' => $form,
             'modalTitle' => 'Charge complete'
         ]);
-
-
-
-
     }
 
-    public function chargeAction($token)
+    /**
+     * @param $token
+     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function chooseChargeTypeAction($token)
     {
-//        /** @var User $user */
-//        $user = $this->get('user_manager')->findUserByChargeToken($token);
-//
-//        if (!$user) {
-//            return $this->createNotFoundException();
-//        }
+        $repository = $this->getDoctrine()->getManagerForClass(Charge::class)->getRepository(Charge::class);
+        /** @var Charge $charge */
+        $charge = $repository->find($token);
 
-        return $this->render('ErpUserBundle:Landlords:charge.html.twig', [
+        if (!$charge) {
+            return $this->createNotFoundException();
+        }
+
+        return $this->render('ErpUserBundle:Landlords:choose_charge_type.html.twig', [
             'token' => $token,
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param $type
+     * @param $token
+     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function confirmChargeAction(Request $request, $type, $token)
     {
-//        /** @var User $user */
-//        $user = $this->get('user_manager')->findUserByChargeToken($token);
-//
-//        if (!$user) {
-//            return $this->createNotFoundException();
-//        }
+        $repository = $this->getDoctrine()->getManagerForClass(Charge::class)->getRepository(Charge::class);
+        /** @var Charge $charge */
+        $charge = $repository->find($token);
+
+        if (!$charge) {
+            return $this->createNotFoundException();
+        }
 
         /** @var PaymentTypeInterface $model */
         $model = $this->get('erp_stripe.registry.model_registry1')->getModel($type);
@@ -146,7 +158,7 @@ class LandlordController extends BaseController
                 $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
                 $arguments = [
                     'options' => [
-                        'amount' => $amount,
+                        'amount' => $charge->getAmount(),
                         'currency' => StripeCustomer::DEFAULT_CURRENCY,
                         'source' => $model->getSourceToken(),
                     ],

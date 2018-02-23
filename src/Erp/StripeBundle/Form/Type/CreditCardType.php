@@ -119,7 +119,7 @@ class CreditCardType extends AbstractType
                 [
                     'label' => 'Submit',
                     'attr' => [
-                        'class' => 'btn submit-popup-btn'
+                        'class' => 'btn red-btn',
                     ]
                 ]
             )

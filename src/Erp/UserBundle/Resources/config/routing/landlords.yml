@@ -18,8 +18,8 @@ erp_user_landlords_confirm_charge:
     defaults: { _controller: ErpUserBundle:Landlord:confirmCharge }
     methods: [GET, POST]
 
-erp_user_landlords_charge:
-    path:     /charge/confirm/{token}
-    defaults: { _controller: ErpUserBundle:Landlord:charge }
+erp_user_landlords_choose_charge_type:
+    path:     /charge/{token}
+    defaults: { _controller: ErpUserBundle:Landlord:chooseChargeType }
     methods: [GET]
 

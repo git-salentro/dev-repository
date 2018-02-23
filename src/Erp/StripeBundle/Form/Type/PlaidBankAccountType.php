@@ -54,6 +54,16 @@ class PlaidBankAccountType extends AbstractType
                         new Assert\NotBlank(['message' => 'Please enter an expiry year']),
                     ],
                 ]
+            )
+            ->add(
+                'submit',
+                'submit',
+                [
+                    'label' => 'Submit',
+                    'attr' => [
+                        'class' => 'btn red-btn',
+                    ]
+                ]
             );
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'postSubmit']);

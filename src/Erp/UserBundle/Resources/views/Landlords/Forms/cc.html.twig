@@ -19,25 +19,16 @@
     {{ parent() }}
     <section id="register-form-tenants" class="register-form cc-form-wrap">
         <div class="container">
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     {{ form_start(form, {'action': path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}), 'attr': {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}}) }}
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-xs-12">
-                                    {{ form_label(form.amount) }}
-                                    {{ form_widget(form.amount) }}
-                                    {{ form_custom_errors.widget(form.amount) }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="col-xs-12">
-                                    {{ form_label(form.creditCard.number) }}
-                                    {{ form_widget(form.creditCard.number) }}
-                                    {{ form_custom_errors.widget(form.creditCard.number) }}
+                                    {{ form_label(form.number) }}
+                                    {{ form_widget(form.number) }}
+                                    {{ form_custom_errors.widget(form.number) }}
                                 </div>
                             </div>
                         </div>
@@ -45,25 +36,25 @@
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-xs-4">
-                                    {{ form_label(form.creditCard.expMonth) }}
+                                    {{ form_label(form.expMonth) }}
                                     <div class="select-container">
-                                        {{ form_widget(form.creditCard.expMonth) }}
+                                        {{ form_widget(form.expMonth) }}
                                     </div>
-                                    {{ form_custom_errors.widget(form.creditCard.expMonth) }}
+                                    {{ form_custom_errors.widget(form.expMonth) }}
                                 </div>
                                 <div class="col-xs-4">
-                                    {{ form_label(form.creditCard.expYear) }}
+                                    {{ form_label(form.expYear) }}
                                     <div class="select-container">
-                                        {{ form_widget(form.creditCard.expYear) }}
+                                        {{ form_widget(form.expYear) }}
                                     </div>
-                                    {{ form_custom_errors.widget(form.creditCard.expYear) }}
+                                    {{ form_custom_errors.widget(form.expYear) }}
                                 </div>
                                 <div class="col-xs-4">
-                                    {{ form_label(form.creditCard.cvc) }}
+                                    {{ form_label(form.cvc) }}
                                     <div class="select-containear">
-                                        {{ form_widget(form.creditCard.cvc) }}
+                                        {{ form_widget(form.cvc) }}
                                     </div>
-                                    {{ form_custom_errors.widget(form.creditCard.cvc) }}
+                                    {{ form_custom_errors.widget(form.cvc) }}
                                 </div>
                             </div>
                         </div>
@@ -72,7 +63,7 @@
                             <div class="form-group">
                                 <div class="col-xs-12 cc-form-footer">
                                     <br/>
-                                    {{ form_widget(form.creditCard.submit) }}
+                                    {{ form_widget(form.submit) }}
                                 </div>
                             </div>
                         </div>
@@ -94,7 +85,7 @@
                 if (status < 200 || status >= 300) {
                     return false;
                 } else {
-                    $('#{{ form.creditCard.token.vars.id }}').val(response['id']);
+                    $('#{{ form.token.vars.id }}').val(response['id']);
                     form.get(0).submit();
                 }
             }
