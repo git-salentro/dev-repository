@@ -18,6 +18,7 @@ use Erp\CoreBundle\Entity\Image;
 use Erp\CoreBundle\Entity\City;
 use Erp\UserBundle\Entity\UserDocument;
 use Erp\UserBundle\Entity\ForumTopic;
+use Erp\UserBundle\Entity\Charge;
 use Erp\PaymentBundle\Entity\PaySimpleHistory;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
 use Erp\PropertyBundle\Entity\ApplicationForm;
@@ -32,7 +33,7 @@ use Erp\PropertyBundle\Entity\ApplicationForm;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="Email is already in use",
- *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail"}
+ *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail", "LandlordDetails"}
  * )
  * @ORM\HasLifecycleCallbacks()
  */
@@ -126,7 +127,7 @@ class User extends BaseUser
     protected $lastName;
 
     /**
-     * @var srting
+     * @var string
      *
      * @Assert\Length(
      *     min=5,
@@ -159,15 +160,15 @@ class User extends BaseUser
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      *
      * @Assert\NotBlank(
-     *     message="Please enter your Phone",
-     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
+     *     message="Please enter Phone number",
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo", "LandlordDetails"}
      * )
      *
      * @Assert\Regex(
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo", "LandlordDetails"}
      * )
      */
     protected $phone;
@@ -181,7 +182,7 @@ class User extends BaseUser
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"ManagerCreated", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "TenantContactInfo", "LandlordDetails"}
      * )
      */
     protected $workPhone;
@@ -579,6 +580,18 @@ class User extends BaseUser
     protected $landlords;
 
     /**
+     * @var Charge
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="manager")
+     */
+    protected $chargeOutgoings; //sent
+
+    /**
+     * @var Charge
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="landlord")
+     */
+    protected $chargeIncomings; //received
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -593,6 +606,8 @@ class User extends BaseUser
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
         $this->landlords = new ArrayCollection();
+        $this->chargeOutgoings = new ArrayCollection();
+        $this->chargeIncomings = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
         $this->lateRentPayments = new ArrayCollection();
     }
@@ -1963,5 +1978,76 @@ class User extends BaseUser
         }
 
         return $totalAmount;
+    }
+
+
+
+    /**
+     * Add chargeOutgoing
+     *
+     * @param Charge $chargeOutgoing
+     *
+     * @return Charge
+     */
+    public function addChargeOutgoing(Charge $chargeOutgoing)
+    {
+        $this->chargeOutgoings[] = $chargeOutgoing;
+
+        return $chargeOutgoing;
+    }
+
+    /**
+     * Remove chargeOutgoing
+     *
+     * @param Charge $chargeOutgoing
+     */
+    public function removeChargeOutgoing(Charge $chargeOutgoing)
+    {
+        $this->chargeOutgoings->removeElement($chargeOutgoing);
+    }
+
+    /**
+     * Get chargeOutgoings
+     *
+     * @return Collection
+     */
+    public function getChargeOutgoings()
+    {
+        return $this->chargeOutgoings;
+    }
+
+
+    /**
+     * Add chargeIncoming
+     *
+     * @param Charge $chargeIncoming
+     *
+     * @return Charge
+     */
+    public function addChargeIncoming(Charge $chargeIncoming)
+    {
+        $this->chargeIncomings[] = $chargeIncoming;
+
+        return $chargeIncoming;
+    }
+
+    /**
+     * Remove chargeIncoming
+     *
+     * @param Charge $chargeIncoming
+     */
+    public function removeChargeIncoming(Charge $chargeIncoming)
+    {
+        $this->chargeIncomings->removeElement($chargeIncoming);
+    }
+
+    /**
+     * Get chargeIncomings
+     *
+     * @return Collection
+     */
+    public function getChargeIncomings()
+    {
+        return $this->chargeIncomings;
     }
 }

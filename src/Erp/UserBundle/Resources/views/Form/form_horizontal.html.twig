@@ -1,3 +1,17 @@
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            <div class="errors text-center">
+                {% for error in errors %}
+                    <span>
+                        {{ error.message }}
+                    </span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
 {% block form_start %}
     {% spaceless %}
         {% set method = method|upper %}
@@ -6,23 +20,23 @@
         {% else %}
             {% set form_method = "POST" %}
         {% endif %}
-        <form method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+        <form
+        method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
         {% if form_method != method %}
-            <input type="hidden" name="_method" value="{{ method }}" />
+            <input type="hidden" name="_method" value="{{ method }}"/>
         {% endif %}
     {% endspaceless %}
 {% endblock form_start %}
 
 {% block form_row %}
     {% spaceless %}
-        <div class="form-group">
+        <div class="form-group text-left">
             {{ form_label(form) }}
             {{ form_widget(form) }}
             {{ form_errors(form) }}
         </div>
     {% endspaceless %}
 {% endblock form_row %}
-
 
 {% block form_label %}
     {% spaceless %}
@@ -58,3 +72,4 @@
         <input type="{{ type }}" {{ block('widget_attributes') }} />
     {% endspaceless %}
 {% endblock file_widget %}
+

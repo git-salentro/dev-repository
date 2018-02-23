@@ -1,40 +1,43 @@
-<div>
-{#<div class="col-md-5 col-xs-6 profile-widget-item widget-last">#}
-    <div class="row widget-title-row">
-        <div class="login-block-title bold-text">Landlords</div>
-    </div>
-
-    <div class="row">
-        <div class="col-xs-12">
-            {% if pagination|length %}
-                <ul class="accounting-table-title">
-                    <li>
-                        <span class="col-xs-3 bold-text">Name</span>
-                        <span class="col-xs-3 bold-text">Phone</span>
-                        <span class="col-xs-3 bold-text">Email</span>
-                        <span class="col-xs-3 bold-text">Address one</span>
-                    </li>
-                    {% for landlord in pagination %}
-                        <li>
-                            <span class="col-xs-3 text">{{ landlord.firstname }} {{ landlord.lastname }}</span>
-                            <span class="col-xs-3 text">{{ landlord.phone }}</span>
-                            <span class="col-xs-3 text">{{ landlord.email }}</span>
-                            <span class="col-xs-3 text">{{ landlord.addressOne }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <div class="text-center">
-                    You have no landlords yet.
-            {% endif %}
-            <div class="col-xs-12 text-center">
-                {{ knp_pagination_render(pagination) }}
+<div class="container-fluid">
+    <div class="row text-right">
+        <form id="form-charge" onsubmit="void(0);return false;">
+        {% if pagination|length %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="col-xs-1"></th>
+                    <th class="col-xs-3">Name</th>
+                    <th class="col-xs-2">Phone</th>
+                    <th class="col-xs-2">Email</th>
+                    <th class="col-xs-4">Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for landlord in pagination %}
+                    <tr>
+                        <td>
+                            <div class="checkbox">
+                            <input type="checkbox" name="{{ landlord.id }}" id="landlord{{ landlord.id }}" value="{{ landlord.id }}"/>
+                            </div>
+                        </td>
+                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</label></td>
+                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.phone }}</label></td>
+                        <td><label for="landlord{{ landlord.id }}">{{ landlord.email }}</label></td>
+                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.addressOne }}</label></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <input type="submit" value="Charge" class="btn red-btn btn-space">
+        </form>
+        {% else %}
+            <div class="text-center">
+                You have no landlords yet.
+                <div class="col-xs-12 text-center">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
             </div>
-        </div>
-    </div>
-    <hr>
-
-    <div class="question-mark">
-
+        {% endif %}
     </div>
 </div>
+

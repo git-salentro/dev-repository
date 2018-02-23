@@ -131,9 +131,9 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             li {
                 a {
                     display: inline-block;
-                    padding: 0 4px 0 10px;
+                    padding: 0 2px 0 4px;
                     //padding: 0 10px 0 16px;
-                    font-size: 15px;
+                    font-size: 14px;
                 }
             }
         }
@@ -492,7 +492,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .modal {
         .modal-dialog {
-            width: 600px !important;
+            min-width: 600px !important;
+            max-width: 60em;
         }
     }
     .header-navbar {
@@ -532,15 +533,14 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             li {
                 a {
                     display: inline-block;
-                    padding: 0 4px 0 10px;
+                    padding: 0 2px 0 4px;
                     //padding: 0 10px 0 16px;
-                    font-size: 15px;
+                    font-size: 14px;
                 }
             }
 
         }
     }
-
     .profile {
         .profile-widget-row {
             .profile-widget-item {
@@ -871,7 +871,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .modal {
         .modal-dialog {
-            width: 600px !important;
+            min-width: 600px !important;
+            max-width: 60em;
         }
     }
     .appointment-request {
