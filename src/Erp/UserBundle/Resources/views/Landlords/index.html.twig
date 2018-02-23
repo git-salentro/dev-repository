@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div class="row text-right">
-        <form id="form-charge" onsubmit="void(0);return false;">
+        <section id="form-section">
+        <form id="form-charge" method="post" action="{{ path('erp_user_landlords_charge') }}" role="form">
         {% if pagination|length %}
             <table class="table table-striped">
                 <thead>
@@ -17,7 +18,7 @@
                     <tr>
                         <td>
                             <div class="checkbox">
-                            <input type="checkbox" name="{{ landlord.id }}" id="landlord{{ landlord.id }}" value="{{ landlord.id }}"/>
+                            <input type="radio" name="landlordId" id="landlord{{ landlord.id }}" value="{{ landlord.id }}"/>
                             </div>
                         </td>
                         <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</label></td>
@@ -28,8 +29,9 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <input type="submit" value="Charge" class="btn red-btn btn-space">
+            <button type="submit" value="Charge" class="btn red-btn btn-space" role="button">Charge</button>
         </form>
+        </section>
         {% else %}
             <div class="text-center">
                 You have no landlords yet.
