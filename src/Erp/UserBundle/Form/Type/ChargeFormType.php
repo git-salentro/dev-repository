@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class ChargeFormType extends AbstractType
 {
@@ -24,11 +25,17 @@ class ChargeFormType extends AbstractType
                             'message' => 'Please enter amount to charge',
                             'groups' => ['LandlordCharge']
                         ]
+                    ),
+                    new Regex([
+                            'pattern' => '/^[0-9]\d*$/',
+                            'message' => 'Please use only positive numbers',
+                            'groups' => ['LandlordCharge']
+                        ]
                     )
                 ]
             ])
-            ->add('description', 'text', ['label' => 'Description', 'required' => false, 'attr' => ['class' => 'form-control']])
-            ->add('submit', 'submit', ['label' => 'Complete charge &amp; send URL by email', 'attr' => ['class' => 'btn edit-btn btn-space']]);
+            ->add('description', 'textarea', ['label' => 'Description', 'required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('button', 'submit', ['label' => 'Send charge', 'attr' => ['class' => 'btn red-btn btn-space', 'value' => 'Send charge']]);
     }
 
     /**

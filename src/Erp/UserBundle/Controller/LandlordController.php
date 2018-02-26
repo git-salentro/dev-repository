@@ -65,46 +65,62 @@ class LandlordController extends BaseController
 
     public function chargeAction(Request $request)
     {
-        //manager charge landlord Step 2 (choose payment type and amount)
         //TODO: fetch landlords ids (multiple selection)
 
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
         $landlordId = $request->get('landlordId');
         $landlord = $this->em->getRepository('ErpUserBundle:User')->findOneBy(['id' => $landlordId]);
+
         if ($landlord instanceof User) {
+            //Second step
+
             /** @var $user \Erp\UserBundle\Entity\User */
             $charge = new Charge();
             $form = $this->createForm(new ChargeFormType(), $charge);
             $form->handleRequest($request);
-//            if ($form->isValid()) {
+
+            /** @var $manager \Erp\UserBundle\Entity\User */
+            $manager = $landlord->getManager();
+
+            if ($manager->getId() == $user->getId() && $form->isValid()) {
+                //Third (Final) step
 
                 $charge->setManager($user);
                 $charge->setLandlord($landlord);
-                $charge->setDescription('test');
-                // TODO Fake Remove it
-                $charge->setAmount(5000);
                 $this->em->persist($charge);
                 $this->em->flush();
 
                 $this->get('erp_user.mailer.processor')->sendChargeEmail($charge);
-                //manager charge landlord Step 2 - complete
 
                 return $this->render('ErpUserBundle:Landlords:chargeComplete.html.twig', [
                     'charge' => $charge,
-                    'modalTitle' => 'Sent'
+                    'modalTitle' => 'Sent',
+                    'user' => $user,
+                    'landlord' => $landlord
                 ]);
-//            }
+
+            }
+            return $this->render('ErpUserBundle:Landlords:charge.html.twig', [
+                'charge' => $charge,
+                'user' => $user,
+                'landlord' => $landlord,
+                'form' => $form->createView()
+            ]);
+
         } else {
             //back to landlords list to select
-            return $this->redirect($this->generateUrl('erp_user_landlords'));
+            $this->addFlash('alert_error', 'Choose any landlord to charge');
+            return $this->forward('ErpUserBundle:Landlord:index');
+
         }
 
-        return $this->render('ErpUserBundle:Landlords:chargeComplete.html.twig', [
-            'form' => $form,
-            'modalTitle' => 'Charge complete'
-        ]);
     }
+
+
+
+
+
 
     /**
      * @param $token
@@ -147,7 +163,7 @@ class LandlordController extends BaseController
         $form->setData($model);
         $form->handleRequest($request);
 
-        $template =sprintf('ErpUserBundle:Landlords/Forms:%s.html.twig', $type);
+        $template = sprintf('ErpUserBundle:Landlords/Forms:%s.html.twig', $type);
         $params = [
             'token' => $token,
             'form' => $form->createView(),
