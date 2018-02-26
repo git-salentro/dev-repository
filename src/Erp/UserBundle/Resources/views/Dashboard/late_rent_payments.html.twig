@@ -26,7 +26,8 @@
                         {{ item.user.fullName }}
                     {% endif %}
                         <form method="POST" action="{{ path('erp_user_late_rent_payment_remove', {'id': item.id }) }}" style="display: inline">
-                        <button type="submit">Remove</button>
+                            <a href=""></a>
+                        <button class="btn edit-btn payment-table_btn" type="submit">Remove</button>
                     </form>
                     </span>
                         <span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>
@@ -45,12 +46,14 @@
                             </div>
                         {% endif %}
                         {% if loop.last %}
-                            <span class="col-xs-3"></span>
-                            <span class="col-xs-3"></span>
-                            <span class="col-xs-2 amount-col">Total</span>
-                            {# TODO Refactoring item.user.totalAmount #}
-                            <span class="col-xs-2 amount-col">{{ item.user.totalAmount|money }}</span>
-                            <span class="col-xs-2"></span>
+                            <div class="payment-table_note">
+                                <span class="col-xs-3"></span>
+                                <span class="col-xs-3"></span>
+                                <span class="col-xs-2 amount-col"><b>Total</b></span>
+                                {# TODO Refactoring item.user.totalAmount #}
+                                <span class="col-xs-2 amount-col">{{ item.user.totalAmount|money }}</span>
+                                <span class="col-xs-2"></span>
+                            </div>
                         {% endif %}
                     </li>
                 {% endfor %}

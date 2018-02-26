@@ -539,9 +539,9 @@ footer {
 .payment-table_note {
     float: left;
     width: 100%;
-    border-bottom: 1px solid #e3e1e1;
+    //border-bottom: 1px solid #e3e1e1;
     margin: 10px 0 ;
-    padding: 0 0 10px 0;
+    //padding: 0 0 10px 0;
 
     input[type=checkbox]{
         vertical-align: top;
@@ -555,4 +555,7 @@ footer {
             text-decoration: none;
         }
     }
+}
+.payment-table_btn{
+    margin-left: 20px;
 }
