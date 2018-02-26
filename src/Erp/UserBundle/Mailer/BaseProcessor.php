@@ -23,23 +23,19 @@ abstract class BaseProcessor
     }
 
     /**
-     * @param $renderedTemplate
+     * @param $rendered
+     * @param $subject
      * @param $fromEmail
      * @param $toEmail
      * @return int
      */
-    protected function sendEmailMessage($renderedTemplate, $fromEmail, $toEmail)
+    protected function sendEmail($rendered, $subject, $fromEmail, $toEmail)
     {
-        // Render the email, use the first line as the subject, and the rest as the body
-        $renderedLines = explode("\n", trim($renderedTemplate));
-        $subject = $renderedLines[0];
-        $body = implode("\n", array_slice($renderedLines, 1));
-
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($fromEmail)
             ->setTo($toEmail)
-            ->setBody($body);
+            ->setBody($rendered);
 
         return $this->mailer->send($message);
     }

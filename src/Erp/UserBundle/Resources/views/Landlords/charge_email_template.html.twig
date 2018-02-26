@@ -1,3 +1,5 @@
-{% block body %}
+{% extends 'ErpUserBundle:Mail:layout.html.twig' %}
+
+{% block content %}
     {{ url('erp_user_landlords_choose_charge_type', {'token': charge.id}) }}
 {% endblock %}

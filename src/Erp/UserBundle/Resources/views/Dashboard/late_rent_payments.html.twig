@@ -14,44 +14,46 @@
                 </li>
             </ul>
             <ul class="payment-table">
-            {% for item in items %}
+            {% for id, items in prepared %}
                 {% set checked = false %}
-                {% set action = path('erp_user_user_allow_rent_payment', {'user': item.user.id}) %}
-                {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': item.user.id}) %}
+                {% set action = path('erp_user_user_allow_rent_payment', {'user': id}) %}
+                {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': id}) %}
 
-                <li>
+                {% for item in items %}
+                    <li>
                     <span class="col-xs-3">
                     {% if loop.first %}
                         {{ item.user.fullName }}
                     {% endif %}
-                    <form method="POST" action="{{ path('erp_user_late_rent_payment_remove', {'id': item.id }) }}" style="display: inline">
+                        <form method="POST" action="{{ path('erp_user_late_rent_payment_remove', {'id': item.id }) }}" style="display: inline">
                         <button type="submit">Remove</button>
                     </form>
                     </span>
-                    <span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>
-                    <span class="col-xs-2 amount-col">{{ item.type }}</span>
-                    <span class="col-xs-2 amount-col">{{ item.amount|money }}</span>
-                    <span class="col-xs-2 amount-col">{{ item.dayLate }}</span>
-                    {% if loop.first %}
-                        <div class="payment-table_note">
+                        <span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.type }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.amount|money }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.dayLate }}</span>
+                        {% if loop.first %}
+                            <div class="payment-table_note">
                             <span class="col-xs-3">
                                 {{ form_start(form, {'action': action}) }}
-                                    {{ form_label(form.allowRentPayment) }}
-                                    <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if checked %}checked="checked"{% endif %}>
+                                {{ form_label(form.allowRentPayment) }}
+                                <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if checked %}checked="checked"{% endif %}>
                                 {{ form_end(form, {'render_rest': false}) }}
                             </span>
-                            <span class="col-xs-3"><a href="{{ path('erp_user_late_rent_payment_create', {'user': item.user.id}) }}" role="popup">Add Fee</a></span>
-                        </div>
-                    {% endif %}
-                    {% if loop.last %}
-                        <span class="col-xs-3"></span>
-                        <span class="col-xs-3"></span>
-                        <span class="col-xs-2 amount-col">Total</span>
-                        {# TODO Refactoring item.user.totalAmount #}
-                        <span class="col-xs-2 amount-col">{{ item.user.totalAmount|money }}</span>
-                        <span class="col-xs-2"></span>
-                    {% endif %}
-                </li>
+                                <span class="col-xs-3"><a href="{{ path('erp_user_late_rent_payment_create', {'user': item.user.id}) }}" role="popup">Add Fee</a></span>
+                            </div>
+                        {% endif %}
+                        {% if loop.last %}
+                            <span class="col-xs-3"></span>
+                            <span class="col-xs-3"></span>
+                            <span class="col-xs-2 amount-col">Total</span>
+                            {# TODO Refactoring item.user.totalAmount #}
+                            <span class="col-xs-2 amount-col">{{ item.user.totalAmount|money }}</span>
+                            <span class="col-xs-2"></span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
             {% endfor %}
             </ul>
         </div>

@@ -32,11 +32,12 @@ class DashboardController extends BaseController
         $user = $this->getUser();
         $repository = $this->getDoctrine()->getManagerForClass(LateRentPayment::class)->getRepository(LateRentPayment::class);
         $items = $repository->getLatePayments($user);
+        $prepared = $this->prepareLateRentPaymentsItems($items);
 
         $form = $this->createForm(new UserLateRentPaymentType());
 
         return $this->render('ErpUserBundle:Dashboard:late_rent_payments.html.twig', [
-            'items' => $items,
+            'prepared' => $prepared,
             'form' => $form->createView(),
         ]);
     }
@@ -224,5 +225,16 @@ class DashboardController extends BaseController
         }
 
         return $results;
+    }
+
+    private function prepareLateRentPaymentsItems(array $items)
+    {
+        $preparedItems = [];
+        /** @var LateRentPayment $item */
+        foreach ($items as $item) {
+            $preparedItems[$item->getUser()->getId()][] = $item;
+        }
+
+        return $preparedItems;
     }
 }

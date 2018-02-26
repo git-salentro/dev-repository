@@ -17,7 +17,7 @@ class CheckRentPaymentCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('erp:rent-payment:check')
+            ->setName('erp:property:check-rent-payment')
             ->setDescription('Check rent payment');
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Erp\StripeBundle\Command;
+namespace Erp\PropertyBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,7 +22,7 @@ class CheckScheduledPaymentCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('erp:scheduled-payment:check')
+            ->setName('erp:property:check-scheduled-payment')
             ->setDescription('Charge Tenants');
     }
 

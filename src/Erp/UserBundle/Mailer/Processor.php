@@ -3,8 +3,6 @@
 namespace Erp\UserBundle\Mailer;
 
 use Erp\UserBundle\Entity\Charge;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 class Processor extends BaseProcessor
 {
@@ -12,11 +10,12 @@ class Processor extends BaseProcessor
 
     public function sendChargeEmail(Charge $charge)
     {
-        $rendered = $this->templating->render(self::CHARGE_EMAIL_TEMPLATE, array(
+        $rendered = $this->templating->render(self::CHARGE_EMAIL_TEMPLATE, [
             'user' => $charge->getLandlord(),
             'charge' => $charge,
-        ));
+        ]);
 
-        return $this->sendEmailMessage($rendered, 'support@zoobdoo.com', $charge->getLandlord()->getEmail());
+        // TODO From Email retrieve from db
+        return $this->sendEmail($rendered, 'Confirm Charge', 'support@zoobdoo.com', $charge->getLandlord()->getEmail());
     }
 }
