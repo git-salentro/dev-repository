@@ -1,6 +1,6 @@
 <?php
 
-namespace Erp\PaymentBundle\Repository;
+namespace Erp\PropertyBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Erp\PropertyBundle\Entity\ScheduledRentPayment;

@@ -26,7 +26,7 @@ class ScheduledRentPaymentClassValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof RecurringPaymentClass) {
+        if (!$constraint instanceof ScheduledRentPaymentClass) {
             throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\Length');
         }
 

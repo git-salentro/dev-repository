@@ -1981,8 +1981,6 @@ class User extends BaseUser
         return $totalAmount;
     }
 
-
-
     /**
      * Add chargeOutgoing
      *

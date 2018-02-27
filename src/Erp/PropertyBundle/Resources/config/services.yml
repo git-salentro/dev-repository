@@ -18,7 +18,7 @@ services:
             - '@doctrine'
 
     erp_property.validator.constraints.recurring_payment_class_validator:
-        class: Erp\PropertyBundle\Validator\Constraints\RecurringPaymentClassValidator
+        class: Erp\PropertyBundle\Validator\Constraints\ScheduledRentPaymentClassValidator
         arguments:
             - '@security.token_storage'
         tags:

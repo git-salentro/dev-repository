@@ -9,7 +9,7 @@ use Erp\PropertyBundle\Validator\Constraints as Assert;
  * Class ScheduledRentPayment
  *
  * @ORM\Table(name="scheduled_rent_payment")
- * @ORM\Entity(repositoryClass="Erp\PaymentBundle\Repository\ScheduledRentPaymentRepository")
+ * @ORM\Entity(repositoryClass="Erp\PropertyBundle\Repository\ScheduledRentPaymentRepository")
  * @ORM\HasLifecycleCallbacks
  * @Assert\ScheduledRentPaymentClass
  */
@@ -39,7 +39,7 @@ class ScheduledRentPayment
     private $customer;
 
     /**
-     * @var \Erp\PaymentBundle\Entity\StripeCustomer
+     * @var \Erp\PaymentBundle\Entity\StripeAccount
      *
      * @ORM\ManyToOne(targetEntity="Erp\PaymentBundle\Entity\StripeAccount", inversedBy="recurringPayments")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
@@ -97,7 +97,7 @@ class ScheduledRentPayment
 
     /**
      * @var string
-     * @ORM\Column(name="category", type="datetime")
+     * @ORM\Column(name="category", type="string")
      */
     private $category;
 
