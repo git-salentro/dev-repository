@@ -10,12 +10,10 @@ class Processor extends BaseProcessor
 
     public function sendChargeEmail(Charge $charge)
     {
-        $rendered = $this->templating->render(self::CHARGE_EMAIL_TEMPLATE, [
-            'user' => $charge->getLandlord(),
-            'charge' => $charge,
-        ]);
+        $rendered = $this->templating->render(self::CHARGE_EMAIL_TEMPLATE, ['charge' => $charge]);
+        $subject = 'Charge request from '. $charge->getManager()->getFirstName() .''.$charge->getManager()->getLastName().' to '.$charge->getLandlord()->getFirstName().' '.$charge->getLandlord()->getFirstName();
+        $result = $this->sendEmail($rendered, $subject, 'support@zoobdoo.com', $charge->getLandlord()->getEmail(), 'text/html');
 
-        // TODO From Email retrieve from db
-        return $this->sendEmail($rendered, 'Confirm Charge', 'support@zoobdoo.com', $charge->getLandlord()->getEmail());
+        return $result;
     }
 }
