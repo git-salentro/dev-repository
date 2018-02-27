@@ -561,3 +561,11 @@ footer {
 .payment-table_btn{
     margin-left: 20px;
 }
+.confirm-align_btn{
+    text-align: center;
+    //padding: 20px 0;
+
+    .btn{
+        margin: 20px 10px;
+    }
+}

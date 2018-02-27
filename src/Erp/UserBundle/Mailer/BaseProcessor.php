@@ -27,15 +27,16 @@ abstract class BaseProcessor
      * @param $subject
      * @param $fromEmail
      * @param $toEmail
+     * @param $contextType
      * @return int
      */
-    protected function sendEmail($rendered, $subject, $fromEmail, $toEmail)
+    protected function sendEmail($rendered, $subject, $fromEmail, $toEmail, $contextType = 'text/plain')
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($fromEmail)
             ->setTo($toEmail)
-            ->setBody($rendered);
+            ->setBody($rendered, $contextType);
 
         return $this->mailer->send($message);
     }
