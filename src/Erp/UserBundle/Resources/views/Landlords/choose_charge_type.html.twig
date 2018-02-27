@@ -10,8 +10,12 @@
     {{ parent() }}
     <section id="managers-profile" class="profile">
         <div class="container">
-            <a style="color: black" class="btn btn-red" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}) }}">Credit Card</a>
-            <a style="color: black" class="btn btn-red" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'ba', 'token': token}) }}">Bank Account</a>
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn red-btn" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}) }}">Credit Card</a>
+                    <a class="btn red-btn" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'ba', 'token': token}) }}">Bank Account</a>
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}
