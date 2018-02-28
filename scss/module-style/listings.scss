@@ -405,9 +405,12 @@
 }
 .modal-body {
     input[type=checkbox], input[type=radio] {
-        display: inline-block;
+        margin: 0 5px;
+        cursor: pointer;
+        line-height: 30px;
+        height: 15px;
+        width: 15px;
         vertical-align: middle;
-        margin: 0;
     }
     label {
         padding: 10px 5px 5px 0;
