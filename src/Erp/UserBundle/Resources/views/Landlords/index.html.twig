@@ -22,10 +22,10 @@
                             <input type="radio" name="landlordId" id="landlord{{ landlord.id }}" value="{{ landlord.id }}"/>
                             </div>
                         </td>
-                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</label></td>
-                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.phone }}</label></td>
-                        <td><label for="landlord{{ landlord.id }}">{{ landlord.email }}</label></td>
-                        <td nowrap><label for="landlord{{ landlord.id }}">{{ landlord.addressOne }}</label></td>
+                        <td class="text-left" nowrap><label for="landlord{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</label></td>
+                        <td class="text-left" nowrap><label for="landlord{{ landlord.id }}">{{ landlord.phone }}</label></td>
+                        <td class="text-left"><label for="landlord{{ landlord.id }}">{{ landlord.email }}</label></td>
+                        <td class="text-left" nowrap><label for="landlord{{ landlord.id }}">{{ landlord.addressOne }}</label></td>
                     </tr>
                 {% endfor %}
                 </tbody>
