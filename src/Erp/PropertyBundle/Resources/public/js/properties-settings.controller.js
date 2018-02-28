@@ -56,13 +56,13 @@ PropertiesSettingsController.prototype.processResponse = function (response) {
 
             if (currentStep === 'properties-confirmation') {
                 var buff = [];
-                $.each($form.serializeArray(), function(index, obj){
+                $.each($form.serializeArray(), function(index, obj) {
                     buff.push(obj.value);
                 });
 
                 data['idx'] = buff;
             } else {
-                $.each($form.serializeArray(), function(index, obj){
+                $.each($form.serializeArray(), function(index, obj) {
                     data[obj.name] = obj.value;
                 });
             }

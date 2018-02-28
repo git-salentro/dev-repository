@@ -36,7 +36,6 @@ class LandlordController extends BaseController
 
     public function createAction(Request $request)
     {
-
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
 
@@ -44,10 +43,11 @@ class LandlordController extends BaseController
         $form = $this->createForm(new LandlordFormType(), $landlord);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $landlord->setManager($user);
-            $landlord->setUsername($landlord->getEmail());
-            $landlord->setPlainPassword('12345');
-            $landlord->setIsPrivatePaySimple(false);
+            $landlord->setManager($user)
+                ->setUsername($landlord->getEmail())
+                ->setPlainPassword('12345')
+                ->setIsPrivatePaySimple(false);
+
             $this->em->persist($landlord);
             $this->em->flush();
 
@@ -117,11 +117,6 @@ class LandlordController extends BaseController
 
     }
 
-
-
-
-
-
     /**
      * @param $token
      * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
@@ -138,6 +133,7 @@ class LandlordController extends BaseController
 
         return $this->render('ErpUserBundle:Landlords:choose_charge_type.html.twig', [
             'token' => $token,
+            'charge' => $charge,
         ]);
     }
 
@@ -149,12 +145,20 @@ class LandlordController extends BaseController
      */
     public function confirmChargeAction(Request $request, $type, $token)
     {
-        $repository = $this->getDoctrine()->getManagerForClass(Charge::class)->getRepository(Charge::class);
+        $em = $this->getDoctrine()->getManagerForClass(Charge::class);
+        $repository = $em->getRepository(Charge::class);
         /** @var Charge $charge */
         $charge = $repository->find($token);
 
         if (!$charge) {
             return $this->createNotFoundException();
+        }
+
+        if ($charge->isPaid()) {
+            return $this->render('ErpUserBundle:Landlords:choose_charge_type.html.twig', [
+                'token' => $token,
+                'charge' => $charge,
+            ]);
         }
 
         /** @var PaymentTypeInterface $model */
@@ -169,37 +173,36 @@ class LandlordController extends BaseController
             'form' => $form->createView(),
         ];
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
-                $arguments = [
-                    'options' => [
-                        'amount' => $charge->getAmount(),
-                        'currency' => StripeCustomer::DEFAULT_CURRENCY,
-                        'source' => $model->getSourceToken(),
-                    ],
-                ];
-                $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
+            $arguments = [
+                'options' => [
+                    'amount' => $charge->getAmount(),
+                    'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                    'source' => $model->getSourceToken(),
+                ],
+            ];
+            $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
 
-                if (!$response->isSuccess()) {
-                    $this->addFlash(
-                        'alert_error',
-                        $response->getErrorMessage()
-                    );
-
-                    return $this->render($template, $params);
-                }
-
-                $this->addFlash(
-                    'alert_ok',
-                    'Success'
-                );
-            } else {
+            if (!$response->isSuccess()) {
                 $this->addFlash(
                     'alert_error',
-                    'Error'
+                    $response->getErrorMessage()
                 );
+
+                return $this->render($template, $params);
             }
+
+            $charge->setStatus(Charge::STATUS_PAID);
+            $em->persist($charge);
+            $em->flush();
+
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
+
+            return $this->redirect('/');
         }
 
         return $this->render($template, $params);
