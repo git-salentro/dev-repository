@@ -1,5 +1,7 @@
-<div id="properties-table">
-    <form name="erp_property_payment_settings_properties" action="{{ path('erp_property_confirm_settings') }}">
+<form name="erp_property_payment_settings_properties" action="{{ path('erp_property_confirm_settings') }}">
+    <div class="container-fluid">
+
+
         <table class="table">
             <thead>
             <tr>
@@ -18,24 +20,24 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="col-md-12">
+            <button
+                    class="btn edit-btn"
+                    step="properties-settings"
+                    role="back"
+            >
+                Back
+            </button>
+            <button
+                    url="{{ path('erp_property_confirm_settings') }}"
+                    type="submit"
+                    class="btn edit-btn"
+                    step="properties-confirmation"
+            >
+                Next
+            </button>
+        </div>
+    </div>
 
-        <button
-            class="btn edit-btn"
-            step="properties-settings"
-            role="back"
-        >
-            Back
-        </button>
-        <button
-            url="{{ path('erp_property_confirm_settings') }}"
-            type="submit"
-            class="btn edit-btn"
-            step="properties-confirmation"
-        >
-            Next
-        </button>
-
-    </form>
-
-</div>
+</form>
 
