@@ -18,6 +18,10 @@ services:
         class: %erp.core.location.class%
         arguments: [@service_container]
 
+    app.core.email_notification.manager:
+        class:        Erp\CoreBundle\Managers\EmailNotificationManager
+        arguments:    [@doctrine.orm.entity_manager]
+
     erp.core.fee.service:
         class: %erp.core.fee_option.service.class%
         arguments: [@doctrine.orm.entity_manager]
