@@ -3,7 +3,7 @@
         <table class="table">
             <thead>
             <tr>
-                <td>Select All<input type="checkbox" name="all_elements"></td>
+                <td><label for="checkAll">Select All<input id="checkAll" type="checkbox" name="all_elements"></label></td>
                 <td>Property</td>
                 <td>Address</td>
             </tr>
@@ -11,7 +11,7 @@
             <tbody>
             {% for property in properties %}
                 <tr>
-                    <td><input type="checkbox" name="idx[]" value="{{ property.id }}"></td>
+                    <td><input type="checkbox" name="idx[]" class="check" value="{{ property.id }}"></td>
                     <td>{{ property.name }}</td>
                     <td>{{ property.address }}</td>
                 </tr>
@@ -37,4 +37,10 @@
         </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    $("#checkAll").click(function () {
+        $(".check").prop('checked', $(this).prop('checked'));
+    });
+</script>
 
