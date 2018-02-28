@@ -97,6 +97,7 @@ class ScheduledRentPayment
 
     /**
      * @var string
+     *
      * @ORM\Column(name="category", type="string")
      */
     private $category;

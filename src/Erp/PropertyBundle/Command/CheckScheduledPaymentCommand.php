@@ -64,7 +64,7 @@ class CheckScheduledPaymentCommand extends ContainerAwareCommand
             ];
             $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
 
-            if ($response->isSuccess()) {
+            if (!$response->isSuccess()) {
                 $status = ScheduledRentPayment::STATUS_FAILURE;
                 $logger->warning(json_encode($response->getErrorMessage()));
             } else {
@@ -75,11 +75,10 @@ class CheckScheduledPaymentCommand extends ContainerAwareCommand
 
             if ($payment->isRecurring()) {
                 $startPaymentAt = (\DateTimeImmutable::createFromMutable($payment->getStartPaymentAt()));
-                if ($status == ScheduledRentPayment::STATUS_SUCCESS) {
-                    $nextPaymentAt = $startPaymentAt->modify('+1 day');
-                } else {
-                    $nextPaymentAt = $startPaymentAt->modify('+1 month');
-                }
+                $nextPaymentAt = $status === ScheduledRentPayment::STATUS_FAILURE ?
+                    $startPaymentAt->modify('+1 day') :
+                    $nextPaymentAt =$startPaymentAt->modify('+1 month');
+
                 $payment->setNextPaymentAt((new \DateTime())->setTimestamp($nextPaymentAt->getTimestamp()));
             }
 
