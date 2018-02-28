@@ -1,46 +1,52 @@
 {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 <div class="container-fluid">
-    <div class="row text-right">
+    <p class="row text-right">
         <section id="form-section">
-        <form id="form-charge" method="post" action="{{ path('erp_user_landlords_charge') }}" role="form">
-        {% if pagination|length %}
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th class="col-xs-1"></th>
-                    <th class="col-xs-3">Name</th>
-                    <th class="col-xs-2">Phone</th>
-                    <th class="col-xs-2">Email</th>
-                    <th class="col-xs-4">Address</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for landlord in pagination %}
+            <form id="form-charge" method="post" action="{{ path('erp_user_landlords_charge') }}" role="form">
+                {% if pagination|length %}
+                <table class="table table-striped">
+                    <thead>
                     <tr>
-                        <td>
-                            <div class="checkbox">
-                            <input type="radio" name="landlordId" id="landlord{{ landlord.id }}" value="{{ landlord.id }}"/>
-                            </div>
-                        </td>
-                        <td class="text-left" nowrap><label for="landlord{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</label></td>
-                        <td class="text-left" nowrap><label for="landlord{{ landlord.id }}">{{ landlord.phone }}</label></td>
-                        <td class="text-left"><label for="landlord{{ landlord.id }}">{{ landlord.email }}</label></td>
-                        <td class="text-left" nowrap><label for="landlord{{ landlord.id }}">{{ landlord.addressOne }}</label></td>
+                        <th class="col-xs-1"></th>
+                        <th class="col-xs-3">Name</th>
+                        <th class="col-xs-2">Phone</th>
+                        <th class="col-xs-2">Email</th>
+                        <th class="col-xs-4">Address</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <button type="submit" value="Charge" class="btn red-btn btn-space" role="button">Charge</button>
-        </form>
+                    </thead>
+                    <tbody>
+                    {% for landlord in pagination %}
+                        <tr>
+                            <td>
+                                <div class="checkbox">
+                                    <input type="radio" name="landlordId" id="landlord{{ landlord.id }}"
+                                           value="{{ landlord.id }}"/>
+                                </div>
+                            </td>
+                            <td class="text-left" nowrap><label
+                                        for="landlord{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</label>
+                            </td>
+                            <td class="text-left" nowrap><label
+                                        for="landlord{{ landlord.id }}">{{ landlord.phone }}</label></td>
+                            <td class="text-left"><label for="landlord{{ landlord.id }}">{{ landlord.email }}</label>
+                            </td>
+                            <td class="text-left" nowrap><label
+                                        for="landlord{{ landlord.id }}">{{ landlord.addressOne }}</label></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit" value="Charge" class="btn red-btn btn-space" role="button">Charge</button>
+            </form>
         </section>
-        {% else %}
-            <div class="text-center">
-                You have no landlords yet.
-                <div class="col-xs-12 text-center">
-                    {{ knp_pagination_render(pagination) }}
-                </div>
-            </div>
-        {% endif %}
+    <div class="col-xs-12 text-center">
+        {{ knp_pagination_render(pagination) }}
     </div>
+    {% else %}
+        <p class="text-center">
+            You have no landlords yet.
+        </p>
+    {% endif %}
+</div>
 </div>
 
