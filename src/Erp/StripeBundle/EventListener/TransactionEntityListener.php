@@ -5,6 +5,7 @@ namespace Erp\StripeBundle\EventListener;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\LateRentPayment;
 use Erp\UserBundle\Entity\User;
+use Erp\UserBundle\Entity\RentPaymentBalance;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class TransactionEntityListener
@@ -38,8 +39,16 @@ class TransactionEntityListener
                 $em->persist($rentPayment);
                 $em->flush();
             }
+
+            return;
         }
 
+        $em = $this->registry->getManagerForClass(RentPaymentBalance::class);
+
+        $rentPaymentBalance = $user->getRentPaymentBalance();
+        $rentPaymentBalance->depositMoneyToBalance($entity->getAmount());
+
+        $em->persist($rentPaymentBalance);
         $em->flush();
     }
 }
