@@ -1,0 +1,40 @@
+{% form_theme form _self %}
+
+{%- block date_widget -%}
+    {% set type = 'text' %}
+    {{ block('form_widget_simple') }}
+{%- endblock date_widget -%}
+
+<div class="col-md-12 col-xs-6 profile-widget-item widget-last">
+    <div class="row widget-title-row">
+        <div class="login-block-title bold-text">Accounting Ledger</div>
+    </div>
+    {{ form_start(form) }}
+        {{ form_label(form.dateFrom) }}
+        {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control col-xs-3 date'}, 'label_attr': {'class': 'control-label'}}) }}
+        {{ form_label(form.dateTo) }}
+        {{ form_widget(form.dateTo, {'attr': {'class': 'form-control col-xs-3 date'}, 'label_attr': {'class': 'control-label'}}) }}
+        {{ form_label(form.landlord) }}
+        {{ form_widget(form.landlord, {'attr': {'class': 'form-control col-xs-3'}, 'label_attr': {'class': 'control-label'}}) }}
+        {{ form_label(form.tenant) }}
+        {{ form_widget(form.tenant, {'attr': {'class': 'form-control col-xs-3'}, 'label_attr': {'class': 'control-label'}}) }}
+        <button type="submit">Filter</button>
+    {{ form_end(form) }}
+    <div class="accounting-block">
+        <div class="accounting">
+            <ul class="accounting-table-title">
+                <li>
+                    <span class="col-xs-3 bold-text">Landlord</span>
+                    <span class="col-xs-3 bold-text">Income</span>
+                    <span class="col-xs-3 bold-text">Expense</span>
+                    <span class="col-xs-3 bold-text">Balance</span>
+                </li>
+                <li>
+                    {% for item in pagination %}
+                        <span class="col-xs-3"></span>
+                    {% endfor %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

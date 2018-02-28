@@ -35,7 +35,7 @@ class CreditCard implements PaymentTypeInterface
     protected $token;
 
     /**
-     * SetcartHolderFullName
+     * Set cartHolderFullName
      *
      * @param $cartHolderFullName
      *
