@@ -18,8 +18,8 @@ services:
         class: %erp.core.location.class%
         arguments: [@service_container]
 
-    app.extractor.notification_event:
-        class:        Erp\CoreBundle\Services\EmailNotificationManager
+    app.core.email_notification.manager:
+        class:        Erp\CoreBundle\Managers\EmailNotificationManager
         arguments:    [@doctrine.orm.entity_manager]
 
     erp.core.fee.service:

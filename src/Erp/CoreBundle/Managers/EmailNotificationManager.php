@@ -1,5 +1,5 @@
 <?php
-namespace ERP\CoreBundle\Services;
+namespace Erp\CoreBundle\Managers;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Erp\CoreBundle\Entity\EmailNotification;
