@@ -1855,6 +1855,8 @@ class User extends BaseUser
     }
 
     /**
+     * Get manager
+     *
      * @return User
      */
     public function getManager()
@@ -1863,11 +1865,17 @@ class User extends BaseUser
     }
 
     /**
+     * Set manager
+     *
      * @param User $manager
+     *
+     * @return User
      */
     public function setManager($manager)
     {
         $this->manager = $manager;
+
+        return $this;
     }
 
     public function getFullName()

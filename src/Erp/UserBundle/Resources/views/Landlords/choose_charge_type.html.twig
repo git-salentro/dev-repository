@@ -10,10 +10,14 @@
     {{ parent() }}
     <section id="managers-profile" class="profile">
         <div class="container">
-            <div class="confirm-align_btn">
-                <a class="btn edit-btn" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}) }}">Credit Card</a>
-                <a class="btn edit-btn" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'ba', 'token': token}) }}">Bank Account</a>
-            </div>
+            {% if charge.isPaid %}
+                Charge already paid.
+            {% else %}
+                <div class="confirm-align_btn">
+                    <a class="btn edit-btn" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}) }}">Credit Card</a>
+                    <a class="btn edit-btn" href="{{ path('erp_user_landlords_confirm_charge', {'type': 'ba', 'token': token}) }}">Bank Account</a>
+                </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

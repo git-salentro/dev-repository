@@ -10,7 +10,7 @@ for f in "$CERTS_FOLDER/default.crt" "$CERTS_FOLDER/default.key" "$CERTS_FOLDER/
     fi
 done
 
-mkdir mkdir /etc/nginx/sites-enabled
+mkdir /etc/nginx/sites-enabled
 
 if [ "$NUMBER_OF_NECESSARY_CERTS" -eq "3" ]; then
     mkdir /etc/nginx/certs

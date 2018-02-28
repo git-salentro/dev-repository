@@ -3,7 +3,8 @@
 namespace Erp\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Erp\CoreBundle\Entity\DatesAwareInterface;
+use Erp\CoreBundle\Entity\DatesAwareTrait;
 
 /**
  * Charge
@@ -12,8 +13,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
-class Charge
+class Charge implements DatesAwareInterface
 {
+    use DatesAwareTrait;
+
+    const STATUS_PAID = 'paid';
+    const STATUS_PENDING = 'pending';
+    const STATUS_FAILURE = 'failure';
+
     /**
      * @var integer
      *
@@ -24,25 +31,11 @@ class Charge
     protected $id;
 
     /**
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(name="status", type="boolean")
+     * @ORM\Column(name="status", type="string")
      */
-    protected $status = false;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_date", type="datetime")
-     */
-    protected $createdDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_date", type="datetime")
-     */
-    protected $updatedDate;
+    protected $status = self::STATUS_PENDING;
 
     /**
      * @var string
@@ -50,7 +43,6 @@ class Charge
      * @ORM\Column(name="amount", type="string", length=255)
      */
     protected $amount;
-
 
     /**
      * @var string
@@ -72,9 +64,26 @@ class Charge
     protected $landlord; //receiver
 
     /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
      * Get id
      *
-     * @return integer
+     * @return string
      */
     public function getId()
     {
@@ -84,7 +93,7 @@ class Charge
     /**
      * Set status
      *
-     * @param boolean $status
+     * @param string $status
      *
      * @return Charge
      */
@@ -98,51 +107,11 @@ class Charge
     /**
      * Get status
      *
-     * @return boolean
+     * @return string
      */
     public function getStatus()
     {
         return $this->status;
-    }
-    /**
-     * Set createdDate
-     *
-     * @ORM\PrePersist
-     */
-    public function setCreatedDate()
-    {
-        $this->createdDate = new \DateTime();
-    }
-
-    /**
-     * Get createdDate
-     *
-     * @return \DateTime
-     */
-    public function getCreatedDate()
-    {
-        return $this->createdDate;
-    }
-
-    /**
-     * Set updatedDate
-     *
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setUpdatedDate()
-    {
-        $this->updatedDate = new \DateTime();
-    }
-
-    /**
-     * Get updatedDate
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedDate()
-    {
-        return $this->updatedDate;
     }
 
     /**
@@ -194,7 +163,23 @@ class Charge
     }
 
     /**
-     * @return User
+     * Set manager
+     *
+     * @param \Erp\UserBundle\Entity\User $manager
+     *
+     * @return Charge
+     */
+    public function setManager(\Erp\UserBundle\Entity\User $manager = null)
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    /**
+     * Get manager
+     *
+     * @return \Erp\UserBundle\Entity\User
      */
     public function getManager()
     {
@@ -202,15 +187,23 @@ class Charge
     }
 
     /**
-     * @param User $manager
+     * Set landlord
+     *
+     * @param \Erp\UserBundle\Entity\User $landlord
+     *
+     * @return Charge
      */
-    public function setManager($manager)
+    public function setLandlord(\Erp\UserBundle\Entity\User $landlord = null)
     {
-        $this->manager = $manager;
+        $this->landlord = $landlord;
+
+        return $this;
     }
 
     /**
-     * @return User
+     * Get landlord
+     *
+     * @return \Erp\UserBundle\Entity\User
      */
     public function getLandlord()
     {
@@ -218,11 +211,10 @@ class Charge
     }
 
     /**
-     * @param User $landlord
+     * @return bool
      */
-    public function setLandlord($landlord)
+    public function isPaid()
     {
-        $this->landlord = $landlord;
+        return $this->status === self::STATUS_PAID;
     }
 }
-
