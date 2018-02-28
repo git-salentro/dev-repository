@@ -1,6 +1,6 @@
 {% set entity = form.vars.value %}
 
-<div id="properties-confirmation">
+<div id="properties-confirmation" class="col-md-12">
     Chosen Properties:
     <form action="{{ path('erp_property_save_settings') }}">
         <input type="hidden" name="data" value="{{ data|json_encode }}">

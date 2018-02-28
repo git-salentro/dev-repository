@@ -1,3 +1,8 @@
+<script type="text/javascript">
+    //force redirect if opened in new tab
+    var pageLocation = "{{ absolute_url(path('erp_site_send_invite_to_manager')) }}";
+    if (location == pageLocation) document.location = "{{ path('erp_site_homepage') }}";
+</script>
 {% import '::widgets/form_errors.html.twig' as form_custom_errors %}
 
 {{ form_start(form, { attr: {'class': 'form-horizontal'}, 'enctype': form_enctype(form)}) }}
