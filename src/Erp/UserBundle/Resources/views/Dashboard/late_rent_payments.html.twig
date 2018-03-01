@@ -18,37 +18,35 @@
                 {% set checked = false %}
                 {% set action = path('erp_user_user_allow_rent_payment', {'user': id}) %}
                 {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': id}) %}
-
+                <li>
+                    <span class="col-xs-3">
+                        {{ items[0].user.fullName }}
+                    </span>
+                    <span class="col-xs-3 amount-col"></span>
+                    <span class="col-xs-2 amount-col"></span>
+                    <span class="col-xs-2 amount-col"></span>
+                    <span class="col-xs-2 amount-col"></span>
+                    <div class="payment-table_note">
+                        <span class="col-xs-3">
+                            {{ form_start(form, {'action': action}) }}
+                            {{ form_label(form.allowRentPayment) }}
+                            <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if checked %}checked="checked"{% endif %}>
+                            {{ form_end(form, {'render_rest': false}) }}
+                        </span>
+                        <span class="col-xs-3"><a href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a></span>
+                    </div>
+                </li>
                 {% for item in items %}
                     <li>
                         <span class="col-xs-3">
-                        {% if loop.first %}
-                            {{ item.user.fullName }}
-                        {% endif %}
-
-                        {% if loop.first == false %}
                             <form method="POST" action="{{ path('erp_user_late_rent_payment_remove', {'id': item.id }) }}" style="display: inline">
                                 <button class="btn edit-btn payment-table_btn" type="submit">Remove</button>
                             </form>
-                        {% endif %}
-
                         </span>
-                        <span class="col-xs-3 amount-col">{% if loop.first == false %}{{ item.user.tenantProperty.address }}{% endif %}</span>
-                        <span class="col-xs-2 amount-col">{% if loop.first == false %}{{ item.type }}{% endif %}</span>
-                        <span class="col-xs-2 amount-col">{% if loop.first == false %}{{ item.amount|money }}{% endif %}</span>
-                        <span class="col-xs-2 amount-col">{% if loop.first == false %}{{ item.dayLate }}{% endif %}</span>
-                        {% if loop.first %}
-                            <div class="payment-table_note">
-                            <span class="col-xs-3">
-                                {{ form_start(form, {'action': action}) }}
-                                {{ form_label(form.allowRentPayment) }}
-                                <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if checked %}checked="checked"{% endif %}>
-                                {{ form_end(form, {'render_rest': false}) }}
-                            </span>
-                                <span class="col-xs-3"><a href="{{ path('erp_user_late_rent_payment_create', {'user': item.user.id}) }}" role="popup">Add Fee</a></span>
-                            </div>
-                        {% endif %}
-
+                        <span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.type }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.amount|money }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.dayLate }}</span>
                         {% if loop.last %}
                             <div class="payment-table_note">
                                 <span class="col-xs-3"></span>
