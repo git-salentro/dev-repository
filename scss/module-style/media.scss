@@ -2258,7 +2258,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
         .profile-widget-row {
-            height: 300px;
+            min-height: 300px;
             //height: 260px;
             margin: 0 5px 30px;
             position: relative;
@@ -3786,7 +3786,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             .profile-widget-item {
                 margin-right: 20px;
                 margin-bottom: 30px;
-                height: 100%;
                 width: 100%;
                 &:last-child {
                     margin-right: 20px;

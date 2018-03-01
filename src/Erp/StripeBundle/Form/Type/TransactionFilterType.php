@@ -61,7 +61,7 @@ class TransactionFilterType extends AbstractFilterType
                             ->setParameter('manager', $user);
                         return $qb;
                     },
-                    'attr' => ['placeholder'=>'Landlord','class' => 'form-control']
+                    'attr' => ['class' => 'form-control']
 
                 ]
             )
