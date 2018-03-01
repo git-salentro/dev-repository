@@ -33,15 +33,17 @@ class TransactionFilterType extends AbstractFilterType
                     'label' => 'Date From',
                     'widget' => 'single_text',
                     'format' => 'MM/dd/yyyy',
+                    'attr' => ['placeholder' => 'Date From', 'class' => 'form-control date']
                 ]
             )
             ->add(
                 'dateTo',
                 'date',
                 [
-                    'label' => 'Date From',
+                    'label' => 'Date To',
                     'widget' => 'single_text',
                     'format' => 'MM/dd/yyyy',
+                    'attr' => ['placeholder' => 'Date To', 'class' => 'form-control date']
                 ]
             )
             ->add(
@@ -49,40 +51,23 @@ class TransactionFilterType extends AbstractFilterType
                 'entity',
                 [
                     'class' => User::class,
+                    'label' => 'Landlord',
+                    'empty_data' => null,
+                    'property' => 'FullName',
+                    'required' => false,
                     'query_builder' => function (EntityRepository $repository) {
                         $user = $this->tokenStorage->getToken()->getUser();
-
                         $qb = $repository->createQueryBuilder('u')
                             ->where('u.manager = :manager')
                             ->setParameter('manager', $user);
-
                         return $qb;
                     },
-                    'label' => 'Landlord',
+                    'attr' => ['class' => 'form-control']
+
                 ]
             )
-           /* ->add(
-                'tenant',
-                'entity',
-                [
-                    'class' => User::class,
-                    'query_builder' => function (EntityRepository $repository) {
-                        $user = $this->tokenStorage->getToken()->getUser();
-
-                        $qb = $repository->createQueryBuilder('u');
-                        $qb = $qb
-                            ->join('u.properties', 'p')
-                            ->where('p.user = :user')
-                            ->andWhere(
-                                $qb->expr()->isNotNull('p.tenantUser')
-                            )
-                            ->setParameter('user', $user);
-
-                        return $qb;
-                    },
-                    'label' => 'Tenant',
-                ]
-            )*/;
+            ->add('button', 'submit', ['label' => 'Filter', 'attr' => ['class' => 'btn red-btn', 'value' => 'Filter']]);
+        ;
     }
 
     /**
