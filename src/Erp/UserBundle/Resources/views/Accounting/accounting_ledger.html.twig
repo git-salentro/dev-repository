@@ -10,24 +10,25 @@
         <div class="login-block-title bold-text">Accounting Ledger</div>
     </div>
     {{ form_start(form) }}
-    <div class="form-group row">
+    <div class="form-group">
         <div class="col-xs-2">
-            {{ form_label(form.dateFrom) }}
+            {#{{ form_label(form.dateFrom) }}#}
             {{ form_widget(form.dateFrom) }}
         </div>
         <div class="col-xs-2">
-            {{ form_label(form.dateTo) }}
+            {#{{ form_label(form.dateTo) }}#}
             {{ form_widget(form.dateTo) }}
         </div>
         <div class="col-xs-3">
-            {{ form_label(form.landlord) }}
+            {#{{ form_label(form.landlord) }}#}
             {{ form_widget(form.landlord) }}
         </div>
+        <div class="col-xs-4">
+            {#{{ form_label(form.button) }}#}
+            {{ form_widget(form.button) }}
+        </div>
     </div>
-    <div class="col-xs-4">
-        {{ form_label(form.button) }}
-        {{ form_widget(form.button) }}
-    </div>
+
     {{ form_end(form) }}
 
     <table class="table table-striped">
