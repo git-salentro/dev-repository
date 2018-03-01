@@ -235,7 +235,11 @@ class LateRentPayment implements DatesAwareInterface
     public function getDayLate()
     {
         $now = new \DateTime();
+        $createdAt = \DateTimeImmutable::createFromMutable($this->createdAt)->modify('-1 day');
 
-        return $now->diff($this->createdAt)->format('%a');
+        $createdAt->setTime(0, 0);
+        $now->setTime(0, 0);
+
+        return $now->diff($createdAt)->format('%a');
     }
 }
