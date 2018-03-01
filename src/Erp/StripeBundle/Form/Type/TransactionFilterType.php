@@ -52,7 +52,8 @@ class TransactionFilterType extends AbstractFilterType
                 [
                     'class' => User::class,
                     'label' => 'Landlord',
-                   // 'property' => 'lastName',
+                    'empty_data' => null,
+                    'property' => 'FullName',
                     'required' => false,
                     'query_builder' => function (EntityRepository $repository) {
                         $user = $this->tokenStorage->getToken()->getUser();

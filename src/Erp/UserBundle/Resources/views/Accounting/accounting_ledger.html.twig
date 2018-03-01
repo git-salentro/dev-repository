@@ -12,19 +12,15 @@
     {{ form_start(form) }}
     <div class="form-group">
         <div class="col-xs-2">
-            {#{{ form_label(form.dateFrom) }}#}
             {{ form_widget(form.dateFrom) }}
         </div>
         <div class="col-xs-2">
-            {#{{ form_label(form.dateTo) }}#}
             {{ form_widget(form.dateTo) }}
         </div>
         <div class="col-xs-3">
-            {#{{ form_label(form.landlord) }}#}
             {{ form_widget(form.landlord) }}
         </div>
         <div class="col-xs-4">
-            {#{{ form_label(form.button) }}#}
             {{ form_widget(form.button) }}
         </div>
     </div>
@@ -41,34 +37,13 @@
         </tr>
         </thead>
         <tbody>
-        {#<tr>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left">3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-        {#</tr>        <tr>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left">3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-        {#</tr>        <tr>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left">3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-        {#</tr>        <tr>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-            {#<td class="text-left">3424234</td>#}
-            {#<td class="text-left" nowrap>3424234</td>#}
-        {#</tr>#}
         {% if (pagination|length) %}
         {% for item in pagination %}
             <tr>
-                <td class="text-left" nowrap>{{ item.landlord }}</td>
-                <td class="text-left" nowrap>{{ item.income }}</td>
-                <td class="text-left">{{ item.expense }}</td>
-                <td class="text-left" nowrap>{{ item.balance }}</td>
+                <td class="text-left">{{ item.account.user.fullName }}</td>
+                <td class="text-left">{{ item.amount }}</td>
+                <td class="text-left">{{ (95*item.amount/100) }}</td>
+                <td class="text-left">{{ (5*item.amount/100) }}</td>
             </tr>
         {% endfor %}
         {% else %}
