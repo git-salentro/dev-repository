@@ -12,7 +12,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     libmagickwand-dev \
     mysql-client \
-    cron
+    cron \
+    xvfb \
+    libfontconfig \
+    wkhtmltopdf \
+    xauth
 
 RUN apt-get install -y supervisor
 

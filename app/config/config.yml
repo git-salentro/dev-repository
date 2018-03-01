@@ -218,6 +218,9 @@ trsteel_ckeditor:
 
 knp_snappy:
     temporary_folder: %kernel.cache_dir%/snappy
+    pdf:
+        enabled:    true
+        binary:     'xvfb-run -- wkhtmltopdf'
 
 old_sound_rabbit_mq:
     connections:

@@ -66,7 +66,7 @@ class CheckScheduledPaymentCommand extends ContainerAwareCommand
 
             if (!$response->isSuccess()) {
                 $status = ScheduledRentPayment::STATUS_FAILURE;
-                $logger->warning(json_encode($response->getErrorMessage()));
+                $logger->critical(json_encode($response->getErrorMessage()));
             } else {
                 $status = ScheduledRentPayment::STATUS_SUCCESS;
             }
@@ -74,12 +74,10 @@ class CheckScheduledPaymentCommand extends ContainerAwareCommand
             $payment->setStatus($status);
 
             if ($payment->isRecurring()) {
-                $startPaymentAt = (\DateTimeImmutable::createFromMutable($payment->getStartPaymentAt()));
-                $nextPaymentAt = $status === ScheduledRentPayment::STATUS_FAILURE ?
-                    $startPaymentAt->modify('+1 day') :
-                    $nextPaymentAt =$startPaymentAt->modify('+1 month');
-
-                $payment->setNextPaymentAt((new \DateTime())->setTimestamp($nextPaymentAt->getTimestamp()));
+                $nextPaymentAt = $payment->getNextPaymentAt();
+                $status === ScheduledRentPayment::STATUS_FAILURE ?
+                    $nextPaymentAt->modify('+1 day') :
+                    $nextPaymentAt->modify('+1 month');
             }
 
             $em->persist($payment);

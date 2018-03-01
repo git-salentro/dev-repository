@@ -1971,7 +1971,7 @@ class User extends BaseUser
         return $this->allowRentPayment;
     }
 
-    public function getTotalAmount()
+    public function getTotalLateRentpaymentAmount()
     {
         if (!$this->hasRole(User::ROLE_TENANT)) {
             return;
