@@ -3,10 +3,12 @@
 namespace Erp\UserBundle\Controller;
 
 use Erp\StripeBundle\Entity\Transaction;
+use Erp\StripeBundle\Repository\TransactionRepository;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\StripeBundle\Form\Type\TransactionFilterType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class AccountingController extends BaseController
 {
@@ -22,6 +24,7 @@ class AccountingController extends BaseController
 
     public function showAccountingLedgerAction(Request $request)
     {
+        /** @var TokenStorage $tokenStorage */
         $tokenStorage = $this->get('security.token_storage');
         /** @var User $user */
         $user = $tokenStorage->getToken()->getUser();
@@ -37,6 +40,8 @@ class AccountingController extends BaseController
 
         $pagination = [];
         if ($stripeAccount) {
+
+            /** @var TransactionRepository $repository */
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
             $query = $repository->getTransactionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
 

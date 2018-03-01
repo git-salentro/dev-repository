@@ -33,15 +33,17 @@ class TransactionFilterType extends AbstractFilterType
                     'label' => 'Date From',
                     'widget' => 'single_text',
                     'format' => 'MM/dd/yyyy',
+                    'attr' => ['placeholder'=>'Date From']
                 ]
             )
             ->add(
                 'dateTo',
                 'date',
                 [
-                    'label' => 'Date From',
+                    'label' => 'Date To',
                     'widget' => 'single_text',
                     'format' => 'MM/dd/yyyy',
+                    'attr' => ['placeholder'=>'Date To']
                 ]
             )
             ->add(
@@ -51,7 +53,6 @@ class TransactionFilterType extends AbstractFilterType
                     'class' => User::class,
                     'query_builder' => function (EntityRepository $repository) {
                         $user = $this->tokenStorage->getToken()->getUser();
-
                         $qb = $repository->createQueryBuilder('u')
                             ->where('u.manager = :manager')
                             ->setParameter('manager', $user);
@@ -60,29 +61,7 @@ class TransactionFilterType extends AbstractFilterType
                     },
                     'label' => 'Landlord',
                 ]
-            )
-           /* ->add(
-                'tenant',
-                'entity',
-                [
-                    'class' => User::class,
-                    'query_builder' => function (EntityRepository $repository) {
-                        $user = $this->tokenStorage->getToken()->getUser();
-
-                        $qb = $repository->createQueryBuilder('u');
-                        $qb = $qb
-                            ->join('u.properties', 'p')
-                            ->where('p.user = :user')
-                            ->andWhere(
-                                $qb->expr()->isNotNull('p.tenantUser')
-                            )
-                            ->setParameter('user', $user);
-
-                        return $qb;
-                    },
-                    'label' => 'Tenant',
-                ]
-            )*/;
+            );
     }
 
     /**

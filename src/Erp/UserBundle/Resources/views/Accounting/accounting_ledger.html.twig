@@ -16,9 +16,7 @@
         {{ form_widget(form.dateTo, {'attr': {'class': 'form-control col-xs-3 date'}, 'label_attr': {'class': 'control-label'}}) }}
         {{ form_label(form.landlord) }}
         {{ form_widget(form.landlord, {'attr': {'class': 'form-control col-xs-3'}, 'label_attr': {'class': 'control-label'}}) }}
-        {{ form_label(form.tenant) }}
-        {{ form_widget(form.tenant, {'attr': {'class': 'form-control col-xs-3'}, 'label_attr': {'class': 'control-label'}}) }}
-        <button type="submit">Filter</button>
+        <button type="submit" class="btn">Filter</button>
     {{ form_end(form) }}
     <div class="accounting-block">
         <div class="accounting">
