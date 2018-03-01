@@ -50,9 +50,9 @@
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    <div class="text-center">
+                    <p class="text-center">
                         You have no Properties yet.{% if not user.isReadOnlyUser() and not user.isPropertyCounterFree %} Number of available Properties that can be created: {{ user.propertyCounter }}. Fee for every additional Property: ${{ propertyFee }}.{% endif %}
-                    </div>
+                    </p>
                 {% endif %}
                 <div class="col-xs-12 text-center">
                     {{ knp_pagination_render(pagination) }}
