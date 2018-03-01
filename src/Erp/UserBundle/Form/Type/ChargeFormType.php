@@ -27,7 +27,7 @@ class ChargeFormType extends AbstractType
                         ]
                     ),
                     new Regex([
-                            'pattern' => '/^[0-9]\d*$/',
+                            'pattern' => '/^[0-9]{1,3}(,[0-9]{3})*(\.[0-9]+)*$/',
                             'message' => 'Please use only positive numbers',
                             'groups' => ['LandlordCharge']
                         ]
