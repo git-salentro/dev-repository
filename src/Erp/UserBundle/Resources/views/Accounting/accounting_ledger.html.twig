@@ -11,14 +11,14 @@
     </div>
     {{ form_start(form) }}
     <div class="form-group">
+        <div class="col-xs-3">
+            {{ form_widget(form.landlord) }}
+        </div>
         <div class="col-xs-2">
             {{ form_widget(form.dateFrom) }}
         </div>
         <div class="col-xs-2">
             {{ form_widget(form.dateTo) }}
-        </div>
-        <div class="col-xs-3">
-            {{ form_widget(form.landlord) }}
         </div>
         <div class="col-xs-4">
             {{ form_widget(form.button) }}
@@ -40,7 +40,7 @@
         {% if (pagination|length) %}
         {% for item in pagination %}
             <tr>
-                <td class="text-left">{{ item.account.user.fullName }}</td>
+                <td class="text-left">{{ item.customer.user.fullName }}</td>
                 <td class="text-left">{{ item.amount }}</td>
                 <td class="text-left">{{ (95*item.amount/100) }}</td>
                 <td class="text-left">{{ (5*item.amount/100) }}</td>

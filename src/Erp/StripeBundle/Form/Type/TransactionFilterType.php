@@ -27,26 +27,6 @@ class TransactionFilterType extends AbstractFilterType
     {
         $builder
             ->add(
-                'dateFrom',
-                'date',
-                [
-                    'label' => 'Date From',
-                    'widget' => 'single_text',
-                    'format' => 'MM/dd/yyyy',
-                    'attr' => ['placeholder' => 'Date From', 'class' => 'form-control date']
-                ]
-            )
-            ->add(
-                'dateTo',
-                'date',
-                [
-                    'label' => 'Date To',
-                    'widget' => 'single_text',
-                    'format' => 'MM/dd/yyyy',
-                    'attr' => ['placeholder' => 'Date To', 'class' => 'form-control date']
-                ]
-            )
-            ->add(
                 'landlord',
                 'entity',
                 [
@@ -64,6 +44,26 @@ class TransactionFilterType extends AbstractFilterType
                     },
                     'attr' => ['class' => 'form-control']
 
+                ]
+            )
+            ->add(
+                'dateFrom',
+                'date',
+                [
+                    'label' => 'Date From',
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
+                    'attr' => ['placeholder' => 'Date From', 'class' => 'form-control date']
+                ]
+            )
+            ->add(
+                'dateTo',
+                'date',
+                [
+                    'label' => 'Date To',
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
+                    'attr' => ['placeholder' => 'Date To', 'class' => 'form-control date']
                 ]
             )
             ->add('button', 'submit', ['label' => 'Filter', 'attr' => ['class' => 'btn red-btn', 'value' => 'Filter']]);
