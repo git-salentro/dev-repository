@@ -38,14 +38,14 @@
         </thead>
         <tbody>
         {% if (pagination|length) %}
-        {% for item in pagination %}
-            <tr>
-                <td class="text-left">{{ item.customer.user.fullName }}</td>
-                <td class="text-left">{{ item.amount }}</td>
-                <td class="text-left">{{ (95*item.amount/100) }}</td>
-                <td class="text-left">{{ (5*item.amount/100) }}</td>
-            </tr>
-        {% endfor %}
+            {% for item in pagination %}
+                <tr>
+                    <td class="text-left">{{ item.customer ? item.customer.user.fullName : '' }}</td>
+                    <td class="text-left">{{ item.amount }}</td>
+                    <td class="text-left">{{ (95*item.amount/100) }}</td>
+                    <td class="text-left">{{ (5*item.amount/100) }}</td>
+                </tr>
+            {% endfor %}
         {% else %}
             <tr>
                 <td colspan="4" class="text-center">No matches.</td>
