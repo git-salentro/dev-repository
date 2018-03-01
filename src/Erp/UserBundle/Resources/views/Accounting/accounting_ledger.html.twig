@@ -61,6 +61,7 @@
             {#<td class="text-left">3424234</td>#}
             {#<td class="text-left" nowrap>3424234</td>#}
         {#</tr>#}
+        {% if (pagination|length) %}
         {% for item in pagination %}
             <tr>
                 <td class="text-left" nowrap>{{ item.landlord }}</td>
@@ -69,6 +70,11 @@
                 <td class="text-left" nowrap>{{ item.balance }}</td>
             </tr>
         {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4" class="text-center">Empty list</td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
 
