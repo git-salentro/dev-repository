@@ -2,11 +2,11 @@
 
 namespace Erp\UserBundle\Controller;
 
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Repository\TransactionRepository;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\StripeBundle\Form\Type\TransactionFilterType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -41,7 +41,6 @@ class AccountingController extends BaseController
 
         $pagination = [];
         if ($stripeAccount) {
-
             /** @var TransactionRepository $repository */
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
             $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
@@ -53,21 +52,28 @@ class AccountingController extends BaseController
             );
         }
 
-        $twigPath = 'ErpUserBundle:Accounting:accounting_ledger.' . $_format . '.twig';
-        $variables = [
+        $template = sprintf('ErpUserBundle:Accounting:accounting_ledger.%s.twig', $_format);
+        $parameters = [
             'user' => $user,
             'form' => $form->createView(),
             'pagination' => $pagination,
         ];
 
         if ($_format == 'html') {
-            return $this->render($twigPath, $variables);
+            return $this->render($template, $parameters);
         } elseif ($_format == 'pdf') {
-            return new PdfResponse(
-            $this->get('knp_snappy.pdf')->generateOutputFromHtml(
-                $this->renderView($twigPath, $variables),
-                'file.pdf' //TODO: datetime naming
-            ));
+            $fileName = sprintf('accounting_ledger_%s.pdf', (new \DateTime())->format('d_m_Y'));
+            $html = $this->renderView($template, $parameters);
+            $pdf = $this->get('knp_snappy.pdf')->getOutputFromHtml($html);
+
+            return new Response(
+                $pdf,
+                Response::HTTP_OK,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition'  => 'attachment; filename="' . $fileName . '"',
+                ]
+            );
         }
 
     }

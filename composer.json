@@ -38,7 +38,7 @@
         "whiteoctober/breadcrumbs-bundle": "~1.2",
         "goodby/csv": "dev-master#e71217b8d6110f3d1ac3784ef9b8a2383c3398b9",
         "beberlei/DoctrineExtensions": "^1.0",
-        "knplabs/knp-snappy-bundle": "1.5.2",
+        "knplabs/knp-snappy-bundle": "1.4",
         "stripe/stripe-php": "^5.6",
         "php-amqplib/rabbitmq-bundle": "^1.14"
     },
