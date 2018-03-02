@@ -2,6 +2,7 @@
 
 namespace Erp\UserBundle\Controller;
 
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Repository\TransactionRepository;
 use Erp\UserBundle\Entity\User;
@@ -52,11 +53,23 @@ class AccountingController extends BaseController
             );
         }
 
-        return $this->render('ErpUserBundle:Accounting:accounting_ledger.'.$_format.'.twig', [
+        $twigPath = 'ErpUserBundle:Accounting:accounting_ledger.' . $_format . '.twig';
+        $variables = [
             'user' => $user,
             'form' => $form->createView(),
             'pagination' => $pagination,
-        ]);
+        ];
+
+        if ($_format == 'html') {
+            return $this->render($twigPath, $variables);
+        } elseif ($_format == 'pdf') {
+            return new PdfResponse(
+            $this->get('knp_snappy.pdf')->generateOutputFromHtml(
+                $this->renderView($twigPath, $variables),
+                'file.pdf' //TODO: datetime naming
+            ));
+        }
+
     }
 
 }
