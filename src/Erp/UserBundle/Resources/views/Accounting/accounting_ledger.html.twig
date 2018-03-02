@@ -12,16 +12,19 @@
     {{ form_start(form) }}
     <div class="form-group">
         <div class="col-xs-3">
-            {{ form_widget(form.landlord) }}
+            {{ form_widget(form.landlord, {'attr': {'class': 'form-control'}}) }}
         </div>
         <div class="col-xs-2">
-            {{ form_widget(form.dateFrom) }}
+            {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
         </div>
         <div class="col-xs-2">
-            {{ form_widget(form.dateTo) }}
+            {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
         </div>
-        <div class="col-xs-4">
-            {{ form_widget(form.button) }}
+        <div class="col-xs-3">
+            {{ form_widget(form.tenant, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="col-xs-2">
+            <button class="btn red-btn" type="submit">Filter</button>
         </div>
     </div>
 
@@ -75,8 +78,11 @@
     {% if (pagination|length) %}
         <div class="container-fluid">
             <div class="row">
-                <button role="button" class="btn"
-                        onclick="location='{{ path('erp_user_accounting', {_format: 'pdf'}) }}'">Export as PDF
+                <button
+                        role="button"
+                        class="btn"
+                        onclick="location='{{ path('erp_user_accounting_show_accounting_ledger', {_format: 'pdf'}) }}'">
+                    Export as PDF
                 </button>
             </div>
         </div>

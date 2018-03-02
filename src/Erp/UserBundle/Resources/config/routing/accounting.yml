@@ -1,7 +1,13 @@
-erp_user_accounting:
-    path:     /accounting.{_format}
+erp_user_accounting_index:
+    path:     /dashboard/accounting
     defaults:
         _controller: ErpUserBundle:Accounting:index
+    methods: [GET]
+
+erp_user_accounting_show_accounting_ledger:
+    path:     /dashboard/accounting-ledger.{_format}
+    defaults:
+        _controller: ErpUserBundle:Accounting:showAccountingLedger
         _format: 'html'
     requirements:
         _format: 'html|pdf'
