@@ -1,32 +1,7 @@
-{% form_theme form _self %}
-
-{%- block date_widget -%}
-    {% set type = 'text' %}
-    {{ block('form_widget_simple') }}
-{%- endblock date_widget -%}
-
 <div class="col-md-12 col-xs-6 profile-widget-item widget-last">
     <div class="row widget-title-row">
-        <div class="login-block-title bold-text">Accounting Ledger</div>
+        <div class="login-block-title bold-text">Accounting Ledger / Manager: {{user.fullName }}</div>
     </div>
-    {{ form_start(form) }}
-    <div class="form-group">
-        <div class="col-xs-3">
-            {{ form_widget(form.landlord) }}
-        </div>
-        <div class="col-xs-2">
-            {{ form_widget(form.dateFrom) }}
-        </div>
-        <div class="col-xs-2">
-            {{ form_widget(form.dateTo) }}
-        </div>
-        <div class="col-xs-4">
-            {{ form_widget(form.button) }}
-        </div>
-    </div>
-
-    {{ form_end(form) }}
-
     <table class="table table-striped">
         <thead>
         <tr>
@@ -49,9 +24,9 @@
                     </td>
                     <td class="text-left">
                         {% if (item.customer.id == user.stripeCustomer.id) %}
-                            Tenant to Manager
+                        Tenant to Manager
                         {% elseif (item.account.id == user.stripeAccount.id) %}
-                            Manager to Landlord
+                        Manager to Landlord
                         {% endif %}
                     </td>
                     <td class="text-left">{{ item.status }}</td>
@@ -66,20 +41,9 @@
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="6" class="text-center">No matches.</td>
+                <td colspan="4" class="text-center">No matches.</td>
             </tr>
         {% endif %}
         </tbody>
     </table>
-
-    {% if (pagination|length) %}
-        <div class="container-fluid">
-            <div class="row">
-                <button role="button" class="btn"
-                        onclick="location='{{ path('erp_user_accounting', {_format: 'pdf'}) }}'">Export as PDF
-                </button>
-            </div>
-        </div>
-    {% endif %}
-
 </div>

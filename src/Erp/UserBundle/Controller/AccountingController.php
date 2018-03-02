@@ -22,7 +22,7 @@ class AccountingController extends BaseController
         ]);
     }
 
-    public function showAccountingLedgerAction(Request $request)
+    public function showAccountingLedgerAction(Request $request, $_format = 'html')
     {
         /** @var TokenStorage $tokenStorage */
         $tokenStorage = $this->get('security.token_storage');
@@ -52,10 +52,11 @@ class AccountingController extends BaseController
             );
         }
 
-        return $this->render('ErpUserBundle:Accounting:accounting_ledger.html.twig', [
+        return $this->render('ErpUserBundle:Accounting:accounting_ledger.'.$_format.'.twig', [
             'user' => $user,
             'form' => $form->createView(),
             'pagination' => $pagination,
         ]);
     }
+
 }
