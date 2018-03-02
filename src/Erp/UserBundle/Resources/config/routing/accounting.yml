@@ -1,4 +1,8 @@
 erp_user_accounting:
-    path:     /accounting
-    defaults: { _controller: ErpUserBundle:Accounting:index }
+    path:     /accounting.{_format}
+    defaults:
+        _controller: ErpUserBundle:Accounting:index
+        _format: 'html'
+    requirements:
+        _format: 'html|pdf'
     methods: [GET, POST]
