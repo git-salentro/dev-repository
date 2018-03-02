@@ -174,13 +174,18 @@ class LandlordController extends BaseController
         ];
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $manager */
+            $manager = $charge->getManager();
             $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
             $arguments = [
-                'options' => [
+                'params' => [
                     'amount' => $charge->getAmount(),
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                     'source' => $model->getSourceToken(),
                 ],
+                'options' => [
+                    'stripe_account' => $manager->getStripeAccount()->getAccountId(),
+                ]
             ];
             $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
 
