@@ -30,8 +30,10 @@ class AccountingController extends BaseController
         /** @var User $user */
         $user = $tokenStorage->getToken()->getUser();
 
+        $requestStack = $this->get('request_stack');
+
         $form = $this->createForm(new TransactionFilterType($tokenStorage));
-        $form->handleRequest($request);
+        $form->handleRequest($requestStack->getMasterRequest());
 
         $data = $form->getData();
         $stripeCustomer = $data['landlord']; //receiver
@@ -75,7 +77,5 @@ class AccountingController extends BaseController
                 ]
             );
         }
-
     }
-
 }
