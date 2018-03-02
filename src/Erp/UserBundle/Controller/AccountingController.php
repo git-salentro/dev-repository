@@ -33,7 +33,7 @@ class AccountingController extends BaseController
         $form->handleRequest($request);
 
         $data = $form->getData();
-        $stripeCustomer = $data['landlord'];
+        $stripeCustomer = $data['landlord']; //receiver
         $stripeAccount = $user->getStripeAccount();
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
