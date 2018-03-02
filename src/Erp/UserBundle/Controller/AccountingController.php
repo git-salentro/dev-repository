@@ -33,7 +33,7 @@ class AccountingController extends BaseController
         $form->handleRequest($request);
 
         $data = $form->getData();
-        $stripeCustomer = $data['landlord'];
+        $stripeCustomer = $data['landlord']; //receiver
         $stripeAccount = $user->getStripeAccount();
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
@@ -43,7 +43,7 @@ class AccountingController extends BaseController
 
             /** @var TransactionRepository $repository */
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
+            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
@@ -53,6 +53,7 @@ class AccountingController extends BaseController
         }
 
         return $this->render('ErpUserBundle:Accounting:accounting_ledger.html.twig', [
+            'user' => $user,
             'form' => $form->createView(),
             'pagination' => $pagination,
         ]);

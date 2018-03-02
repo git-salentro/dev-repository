@@ -92,6 +92,20 @@ class Transaction
     private $metadata;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="balance", type="string")
+     */
+    protected $balance;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string")
+     */
+    protected $status;
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -299,5 +313,42 @@ class Transaction
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     *
+     * @return Transaction
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @param string $balance
+     * @return Transaction
+     */
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBalance()
+    {
+        return $this->balance;
     }
 }

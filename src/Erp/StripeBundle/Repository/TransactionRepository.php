@@ -74,4 +74,43 @@ class TransactionRepository extends EntityRepository
 
         return $qb->getQuery();
     }
+
+
+    public function getTransactionsBothDirectionsQuery(StripeAccount $stripeAccount = null, StripeCustomer $stripeCustomer = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->orderBy('t.created', 'DESC');
+
+        if ($stripeAccount) {  //outgoing transaction (account -> customer)
+            $qb->where('t.account = :account')
+                ->setParameter('account', $stripeAccount);
+            if ($stripeCustomer) { //incoming transaction (customer -> account)
+                $qb->orWhere('t.account = :customer')
+                    ->setParameter('customer', $stripeCustomer)
+                    ->orWhere('t.customer = :account')
+                    ->setParameter('account', $stripeAccount);
+            }
+        }
+
+        if ($dateFrom) {
+            if ($dateTo) {
+                $qb->andWhere($qb->expr()->between('t.created', ':dateFrom', ':dateTo'))
+                    ->setParameter('dateTo', $dateTo);
+            } else {
+                $qb->andWhere('t.created > :dateFrom');
+            }
+            $qb->setParameter('dateFrom', $dateFrom);
+        }
+
+        if ($type) {
+            $qb->andWhere(
+                $qb->expr()->in(
+                    't.type',
+                    $type
+                )
+            );
+        }
+
+        return $qb->getQuery();
+    }
 }
