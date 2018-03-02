@@ -48,20 +48,19 @@
                         {{ item.type }}
                     </td>
                     <td class="text-left">
-                        {% if (item.customer.id == user.id) %}
+                        {% if (item.customer.id == user.stripeCustomer.id) %}
                         Tenant to Manager
-                        {% elseif (item.account.id == user.id) %}
+                        {% elseif (item.account.id == user.stripeAccount.id) %}
                         Manager to Landlord
                         {% endif %}
                     </td>
                     <td class="text-left">{{ item.status }}</td>
                     <td class="text-left">
-                        {% if (item.customer.id == user.id) %}
+                        {% if (item.customer.id == user.stripeCustomer.id) %}
                             +
-                        {% elseif (item.account.id == user.id) %}
+                        {% elseif (item.account.id == user.stripeAccount.id) %}
                             -
-                        {% endif %}
-                        {{ item.amount }}</td>
+                        {% endif %}{{ item.amount }}</td>
                     <td class="text-left">{{ item.balance }}</td>
                 </tr>
             {% endfor %}
