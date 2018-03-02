@@ -9,6 +9,7 @@ use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Form\Type\ChargeFormType;
 use Erp\UserBundle\Form\Type\LandlordFormType;
 use Erp\StripeBundle\Entity\PaymentTypeInterface;
+use Erp\StripeBundle\Helper\ApiHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 class LandlordController extends BaseController
@@ -155,10 +156,7 @@ class LandlordController extends BaseController
         }
 
         if ($charge->isPaid()) {
-            return $this->render('ErpUserBundle:Landlords:choose_charge_type.html.twig', [
-                'token' => $token,
-                'charge' => $charge,
-            ]);
+            return $this->createNotFoundException();
         }
 
         /** @var PaymentTypeInterface $model */
@@ -179,7 +177,7 @@ class LandlordController extends BaseController
             $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
             $arguments = [
                 'params' => [
-                    'amount' => $charge->getAmount(),
+                    'amount' => ApiHelper::convertAmountToStripeFormat($charge->getAmount()),
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                     'source' => $model->getSourceToken(),
                 ],
