@@ -567,6 +567,13 @@ class User extends BaseUser
     protected $allowRentPayment;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_allow_partial_payment", type="boolean", nullable=true)
+     */
+    private $allowPartialPayment;
+
+    /**
      * @var User Manager
      * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="landlords")
      */
@@ -1964,6 +1971,30 @@ class User extends BaseUser
     public function getAllowRentPayment()
     {
         return $this->allowRentPayment;
+    }
+
+    /**
+     * Set allowPartialPayment
+     *
+     * @param boolean $allowPartialPayment
+     *
+     * @return LateRentPayment
+     */
+    public function setAllowPartialPayment($allowPartialPayment)
+    {
+        $this->allowPartialPayment = $allowPartialPayment;
+
+        return $this;
+    }
+
+    /**
+     * Get allowPartialPayment
+     *
+     * @return boolean
+     */
+    public function getAllowPartialPayment()
+    {
+        return $this->allowPartialPayment;
     }
 
     public function isAllowRentPayment()

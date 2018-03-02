@@ -21,7 +21,15 @@ class UserLateRentPaymentType extends AbstractType
                 [
                     'label' => 'Allow Rent Payment',
                 ]
-            );
+            )
+            ->add(
+                'allowPartialPayment',
+                'checkbox',
+                [
+                    'required' => false,
+                    'label' => 'No Partial Payments Accepted',
+                ]
+            );;
     }
 
     /**

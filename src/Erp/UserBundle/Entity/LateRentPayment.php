@@ -22,6 +22,10 @@ class LateRentPayment implements DatesAwareInterface
     const RENT_PAYMENT_METADATA_KEY = 'rent_payment_id';
     const LATE_RENT_PAYMENT_TYPE = 'late_rent';
     const FEE_PAYMENT_TYPE = 'fee';
+    const LATE_RENT_PAYMENT_TYPE_LABELS = [
+        self::LATE_RENT_PAYMENT_TYPE => 'Late Rent',
+        self::FEE_PAYMENT_TYPE => 'Fee',
+    ];
 
     /**
      * @var integer
@@ -241,5 +245,10 @@ class LateRentPayment implements DatesAwareInterface
         $now->setTime(0, 0);
 
         return $now->diff($createdAt)->format('%a');
+    }
+
+    public function getLabelType()
+    {
+        return self::LATE_RENT_PAYMENT_TYPE_LABELS[$this->type];
     }
 }

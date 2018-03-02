@@ -15,12 +15,11 @@
             </ul>
             <ul class="payment-table">
             {% for id, items in prepared %}
-                {% set checked = false %}
                 {% set action = path('erp_user_user_allow_rent_payment', {'user': id}) %}
                 {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': id}) %}
                 <li>
                     <span class="col-xs-3">
-                        {{ items[0].user.fullName }}
+                        {{ items[0].user.fullName }} <a style="color: #b7b7b7;text-decoration: underline;" href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a>
                     </span>
                     <span class="col-xs-3 amount-col"></span>
                     <span class="col-xs-2 amount-col"></span>
@@ -29,11 +28,16 @@
                     <div class="payment-table_note">
                         <span class="col-xs-3">
                             {{ form_start(form, {'action': action}) }}
-                            {{ form_label(form.allowRentPayment) }}
-                            <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if checked %}checked="checked"{% endif %}>
+                                <div>
+                                     {{ form_label(form.allowRentPayment) }}
+                                    <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if items[0].user.allowRentPayment %}checked="checked"{% endif %}>
+                                </div>
+                                <div>
+                                     {{ form_label(form.allowPartialPayment) }}
+                                    <input type="checkbox" name="{{ form.allowPartialPayment.vars.full_name }}" {% if items[0].user.allowPartialPayment %}checked="checked"{% endif %}>
+                                </div>
                             {{ form_end(form, {'render_rest': false}) }}
                         </span>
-                        <span class="col-xs-3"><a href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a></span>
                     </div>
                 </li>
                 {% for item in items %}
@@ -44,7 +48,7 @@
                             </form>
                         </span>
                         <span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>
-                        <span class="col-xs-2 amount-col">{{ item.type }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.labelType }}</span>
                         <span class="col-xs-2 amount-col">{{ item.amount|money }}</span>
                         <span class="col-xs-2 amount-col">{{ item.dayLate }}</span>
                         {% if loop.last %}

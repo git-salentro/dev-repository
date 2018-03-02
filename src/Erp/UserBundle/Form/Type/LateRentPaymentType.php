@@ -19,6 +19,7 @@ class LateRentPaymentType extends AbstractType
                 'amount',
                 'money',
                 [
+                    'required' => false,
                     'label' => 'Fee',
                     'currency' => false,
                 ]
@@ -27,6 +28,7 @@ class LateRentPaymentType extends AbstractType
                 'type',
                 'choice',
                 [
+                    'required' => false,
                     'label' => 'Category',
                     'choices' => [
                         LateRentPayment::FEE_PAYMENT_TYPE => 'Late Fees',
