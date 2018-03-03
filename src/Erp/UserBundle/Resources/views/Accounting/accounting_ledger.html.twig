@@ -59,11 +59,8 @@
                     </td>
                     <td class="text-left">{{ item.status }}</td>
                     <td class="text-left">
-                        {% if (item.customer.id == user.stripeCustomer.id) %}
-                            +
-                        {% elseif (item.account.id == user.stripeAccount.id) %}
-                            -
-                        {% endif %}{{ item.amount }}</td>
+                        {% if (item.account.id == user.stripeAccount.id) %}-{% endif %}{{ item.amount|stripe_money }}
+                    </td>
                     <td class="text-left">{{ item.balance }}</td>
                 </tr>
             {% endfor %}
@@ -82,7 +79,7 @@
                         role="button"
                         class="btn"
                         onclick="location='{{ path('erp_user_accounting_show_accounting_ledger', {_format: 'pdf'}) }}'">
-                    Export as PDF
+                    Export to PDF
                 </button>
             </div>
         </div>

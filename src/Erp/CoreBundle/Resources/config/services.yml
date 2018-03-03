@@ -4,9 +4,9 @@ parameters:
     erp.core.email_notification.service.class: Erp\CoreBundle\Services\EmailNotification
     erp.property.service.class: Erp\PropertyBundle\Services\PropertyService
     erp.curl.class: Erp\CoreBundle\Services\Curl
-    erp.core.twig.core_extention.class: Erp\CoreBundle\Twig\CoreExtention
+    erp.core.twig.core_extension.class: Erp\CoreBundle\Twig\CoreExtension
     erp.core.email_notification.listener.class: Erp\CoreBundle\Listener\EmailNotificationListener
-    erp.property.twig.property_extention.class: Erp\PropertyBundle\Twig\PropertyExtention
+    erp.property.twig.property_extension.class: Erp\PropertyBundle\Twig\PropertyExtension
     erp.logger.class: Erp\CoreBundle\Services\Logger
 
 services:
@@ -34,8 +34,8 @@ services:
         class: %erp.curl.class%
         arguments: [@service_container]
 
-    erp.core.twig.core_extention:
-        class: %erp.core.twig.core_extention.class%
+    erp.core.twig.core_extension:
+        class: %erp.core.twig.core_extension.class%
         tags:
             -  { name: twig.extension }
         arguments: [@service_container]
@@ -46,8 +46,8 @@ services:
             - { name: kernel.event_listener, event: send.email_notification, method: sendEmailNotification }
         arguments: [@service_container]
 
-    erp.property.twig.property_extention:
-        class: %erp.property.twig.property_extention.class%
+    erp.property.twig.property_extension:
+        class: %erp.property.twig.property_extension.class%
         tags:
             -  { name: twig.extension }
         arguments: [@service_container]
