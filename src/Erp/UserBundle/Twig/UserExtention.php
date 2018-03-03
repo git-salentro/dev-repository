@@ -6,11 +6,11 @@ use Erp\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class UserExtention
+ * Class UserExtension
  *
  * @package Erp\UserBundle\Twig
  */
-class UserExtention extends \Twig_Extension
+class UserExtension extends \Twig_Extension
 {
     /**
      * @var ContainerInterface

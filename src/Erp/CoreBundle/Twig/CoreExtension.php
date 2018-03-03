@@ -5,11 +5,11 @@ namespace Erp\CoreBundle\Twig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class CoreExtention
+ * Class CoreExtension
  *
  * @package Erp\UserBundle\Twig
  */
-class CoreExtention extends \Twig_Extension
+class CoreExtension extends \Twig_Extension
 {
     /**
      * @var ContainerInterface

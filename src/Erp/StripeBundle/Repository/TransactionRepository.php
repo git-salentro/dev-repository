@@ -89,6 +89,7 @@ class TransactionRepository extends EntityRepository
                     ->setParameter('customer', $stripeCustomer)
                     ->orWhere('t.customer = :account')
                     ->setParameter('account', $stripeAccount);
+
             }
         }
 

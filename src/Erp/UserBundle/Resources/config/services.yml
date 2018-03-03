@@ -4,7 +4,7 @@ parameters:
     erp.users.manager_service.class: Erp\UserBundle\Services\Manager
     erp.users.manager.form_registration.class: Erp\UserBundle\Form\Type\ManagerRegistrationFormType
     erp.users.form_reset_password.class: Erp\UserBundle\Form\Type\UserResetPasswordFormType
-    erp.users.twig.user_extention.class: Erp\UserBundle\Twig\UserExtention
+    erp.users.twig.user_extension.class: Erp\UserBundle\Twig\UserExtension
     erp.users.user.class: Erp\UserBundle\Services\UserService
 
 services:
@@ -30,8 +30,8 @@ services:
         tags:
             - { name: form.type, alias: erp_users_form_reset_password }
 
-    erp.users.twig.user_extention:
-        class: %erp.users.twig.user_extention.class%
+    erp.users.twig.user_extension:
+        class: %erp.users.twig.user_extension.class%
         tags:
             -  { name: twig.extension }
         arguments: [@service_container]
