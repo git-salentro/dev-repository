@@ -19,7 +19,6 @@ class LateRentPayment implements DatesAwareInterface
 {
     use DatesAwareTrait;
 
-    const RENT_PAYMENT_METADATA_KEY = 'rent_payment_id';
     const LATE_RENT_PAYMENT_TYPE = 'late_rent';
     const FEE_PAYMENT_TYPE = 'fee';
     const LATE_RENT_PAYMENT_TYPE_LABELS = [
@@ -57,27 +56,6 @@ class LateRentPayment implements DatesAwareInterface
      * @ORM\Column(name="type", type="string")
      */
     private $type = self::LATE_RENT_PAYMENT_TYPE;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="is_paid", type="boolean")
-     */
-    private $paid = false;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Erp\StripeBundle\Entity\Transaction")
-     * @ORM\JoinTable(name="rent_payment_transactions",
-     *      joinColumns={@ORM\JoinColumn(name="rent_payment_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="transaction_id", referencedColumnName="id", unique=true)}
-     *      )
-     */
-    private $transactions;
-
-    public function __construct()
-    {
-        $this->transactions = new ArrayCollection();
-    }
 
     /**
      * @ORM\PrePersist
@@ -155,30 +133,6 @@ class LateRentPayment implements DatesAwareInterface
     }
 
     /**
-     * Set paid
-     *
-     * @param boolean $paid
-     *
-     * @return LateRentPayment
-     */
-    public function setPaid($paid)
-    {
-        $this->paid = $paid;
-
-        return $this;
-    }
-
-    /**
-     * Get paid
-     *
-     * @return boolean
-     */
-    public function getPaid()
-    {
-        return $this->paid;
-    }
-
-    /**
      * Set user
      *
      * @param \Erp\UserBundle\Entity\User $user
@@ -202,52 +156,7 @@ class LateRentPayment implements DatesAwareInterface
         return $this->user;
     }
 
-    /**
-     * Add transaction
-     *
-     * @param \Erp\StripeBundle\Entity\Transaction $transaction
-     *
-     * @return LateRentPayment
-     */
-    public function addTransaction(\Erp\StripeBundle\Entity\Transaction $transaction)
-    {
-        $this->transactions[] = $transaction;
-
-        return $this;
-    }
-
-    /**
-     * Remove transaction
-     *
-     * @param \Erp\StripeBundle\Entity\Transaction $transaction
-     */
-    public function removeTransaction(\Erp\StripeBundle\Entity\Transaction $transaction)
-    {
-        $this->transactions->removeElement($transaction);
-    }
-
-    /**
-     * Get transactions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTransactions()
-    {
-        return $this->transactions;
-    }
-
-    public function getDayLate()
-    {
-        $now = new \DateTime();
-        $createdAt = \DateTimeImmutable::createFromMutable($this->createdAt)->modify('-1 day');
-
-        $createdAt->setTime(0, 0);
-        $now->setTime(0, 0);
-
-        return $now->diff($createdAt)->format('%a');
-    }
-
-    public function getLabelType()
+    public function getTypeLabel()
     {
         return self::LATE_RENT_PAYMENT_TYPE_LABELS[$this->type];
     }

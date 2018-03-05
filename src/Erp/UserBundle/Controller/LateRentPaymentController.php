@@ -72,6 +72,36 @@ class LateRentPaymentController extends BaseController
 
         return $this->redirectToRoute('erp_user_dashboard_dashboard');
     }
+
+    public function removeUserAction(User $user, Request $request)
+    {
+        /** @var User $user */
+        $currentUser = $this->getUser();
+
+        if ($currentUser->hasTenant($user)) {
+            return $this->createNotFoundException();
+        }
+
+        if ($request->getMethod() === 'DELETE') {
+            $user->clearLateRentPayments();
+
+            $em = $this->getDoctrine()->getManagerForClass(User::class);
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
+
+            return $this->redirectToRoute('erp_user_dashboard_dashboard');
+        }
+
+        return $this->render('ErpCoreBundle:crossBlocks:delete-confirmation-popup.html.twig', [
+            'actionUrl' => $this->generateUrl('erp_user_late_rent_payment_remove_user', ['id' => $user->getId()]),
+        ]);
+    }
+
     /**
      * @param LateRentPayment $entity
      * @param Request $request

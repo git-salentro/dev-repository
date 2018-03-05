@@ -2,6 +2,7 @@
 
 namespace Erp\StripeBundle\Form\Type;
 
+use Erp\PropertyBundle\Entity\Property;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Erp\UserBundle\Entity\User;
@@ -77,14 +78,15 @@ class TransactionFilterType extends AbstractFilterType
                 [
                     'required' => false,
                     'empty_data' => null,
-                    'class' => User::class,
-                    'property' => 'FullName',
+                    'choice_label' => 'tenantUser.fullName',
+                    'class' => Property::class,
                     'query_builder' => function (EntityRepository $repository) {
                         $user = $this->tokenStorage->getToken()->getUser();
 
-                        $qb = $repository->createQueryBuilder('u');
+                        $qb = $repository->createQueryBuilder('p');
                         $qb = $qb
-                            ->join('u.properties', 'p')
+                            ->select('p')
+                            ->join('p.tenantUser', 'tu')
                             ->where('p.user = :user')
                             ->andWhere(
                                 $qb->expr()->isNotNull('p.tenantUser')

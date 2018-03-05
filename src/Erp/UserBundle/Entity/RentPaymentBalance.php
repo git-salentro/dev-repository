@@ -43,6 +43,13 @@ class RentPaymentBalance implements DatesAwareInterface
     private $balance = 0;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="debt_start_at", type="date", nullable=true)
+     */
+    private $debtStartAt;
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -56,6 +63,16 @@ class RentPaymentBalance implements DatesAwareInterface
      */
     public function preUpdate()
     {
+        if ($this->balance < 0 && $this->debtStartAt === null) {
+            $this->debtStartAt = new \DateTime();
+
+            return;
+        }
+
+        if ($this->balance >= 0) {
+            $this->debtStartAt = null;
+        }
+
         $this->updatedAt = new \DateTime();
     }
 
@@ -125,5 +142,20 @@ class RentPaymentBalance implements DatesAwareInterface
     public function depositMoneyToBalance($amount)
     {
         $this->balance += $amount;
+    }
+
+    public function getDayLate()
+    {
+        if (!$this->debtStartAt) {
+            return;
+        }
+
+        $now = new \DateTime();
+        $createdAt = \DateTimeImmutable::createFromMutable($this->debtStartAt)->modify('-1 day');
+
+        $createdAt->setTime(0, 0);
+        $now->setTime(0, 0);
+
+        return $now->diff($createdAt)->format('%a');
     }
 }

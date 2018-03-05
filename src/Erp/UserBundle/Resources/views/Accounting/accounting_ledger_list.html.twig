@@ -1,0 +1,99 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block headerBannerTitle %}
+    Accounting Ledger
+{% endblock %}
+
+
+{% block pageContent %}
+    {{ parent() }}
+    <div class="page-content">
+        <section id="managers-listings" class="listings profile">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_start(form) }}
+                        <div class="form-group">
+                            <div class="col-xs-3">
+                                {{ form_widget(form.landlord, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="col-xs-2">
+                                {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
+                            </div>
+                            <div class="col-xs-2">
+                                {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
+                            </div>
+                            <div class="col-xs-3">
+                                {{ form_widget(form.tenant, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="col-xs-2">
+                                <button class="btn red-btn" type="submit">Filter</button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="col-xs-3">Date</th>
+                                <th class="col-xs-3">Transaction</th>
+                                <th class="col-xs-3">Description</th>
+                                <th class="col-xs-3">Status</th>
+                                <th class="col-xs-2" nowrap>Income / Expense</th>
+                                <th class="col-xs-4">Balance</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if (pagination|length) %}
+                                {% for item in pagination %}
+                                    <tr>
+                                        <td class="text-left">{{ item.created|date('M d, Y / h:i') }}</td>
+                                        <td class="text-left">
+                                            {{ item.customer ? item.customer.user.fullName : '' }}<br/>
+                                            {{ item.type }}
+                                        </td>
+                                        <td class="text-left">
+                                            {% if (item.customer.id == user.stripeCustomer.id) %}
+                                                Tenant to Manager
+                                            {% elseif (item.account.id == user.stripeAccount.id) %}
+                                                Manager to Landlord
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-left">{{ item.status }}</td>
+                                        <td class="text-left">
+                                            {% if (item.customer.id == user.stripeCustomer.id) %}
+                                                +
+                                            {% elseif (item.account.id == user.stripeAccount.id) %}
+                                                -
+                                            {% endif %}{{ item.amount }}</td>
+                                        <td class="text-left">{{ item.balance }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No matches.</td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+
+                        {{ knp_pagination_render(pagination) }}
+
+                        {% if (pagination|length) %}
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <button
+                                            role="button"
+                                            class="btn"
+                                            onclick="location='{{ pdf_link }}'">
+                                        Export as PDF
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
