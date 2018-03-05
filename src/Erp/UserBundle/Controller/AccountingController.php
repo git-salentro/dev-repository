@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\StripeBundle\Form\Type\TransactionFilterType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Erp\StripeBundle\Form\Type\AbstractFilterType;
 
 class AccountingController extends BaseController
 {
@@ -31,12 +32,14 @@ class AccountingController extends BaseController
         $user = $tokenStorage->getToken()->getUser();
 
         $requestStack = $this->get('request_stack');
+        $masterRequest = $requestStack->getMasterRequest();
 
         $form = $this->createForm(new TransactionFilterType($tokenStorage));
-        $form->handleRequest($requestStack->getMasterRequest());
+        $form->handleRequest($masterRequest);
 
         $data = $form->getData();
-        $stripeCustomer = $data['landlord']; //receiver
+        /** @var User $landlord */
+        $landlord = $data['landlord']; //receiver
         $stripeAccount = $user->getStripeAccount();
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
@@ -45,7 +48,7 @@ class AccountingController extends BaseController
         if ($stripeAccount) {
             /** @var TransactionRepository $repository */
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
+            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $landlord->getStripeCustomer(), $dateFrom, $dateTo);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
@@ -62,6 +65,12 @@ class AccountingController extends BaseController
         ];
 
         if ($_format == 'html') {
+            $urlParameters = array_merge(
+                ['_format' => 'pdf'],
+                ['filter' => $this->getFilterParameters($masterRequest)]
+            );
+            $parameters['pdf_link'] = $this->generateUrl('erp_user_accounting_show_accounting_ledger', $urlParameters);
+
             return $this->render($template, $parameters);
         } elseif ($_format == 'pdf') {
             $fileName = sprintf('accounting_ledger_%s.pdf', (new \DateTime())->format('d_m_Y'));
@@ -77,5 +86,10 @@ class AccountingController extends BaseController
                 ]
             );
         }
+    }
+
+    private function getFilterParameters(Request $request)
+    {
+        return $request->query->get(AbstractFilterType::NAME, []);
     }
 }
