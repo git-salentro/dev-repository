@@ -74,10 +74,10 @@
 
     {% if (pagination|length) %}
         <div class="container-fluid">
-            <div class="row">
+            <div class="form-group">
                 <button
                         role="button"
-                        class="btn"
+                        class="btn red-btn"
                         onclick="location='{{ path('erp_user_accounting_show_accounting_ledger', {_format: 'pdf'}) }}'">
                     Export to PDF
                 </button>
