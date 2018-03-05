@@ -8,26 +8,26 @@
 <div class="col-md-12 col-xs-6 profile-widget-item widget-last">
     <div class="row widget-title-row">
         <div class="login-block-title bold-text">Accounting Ledger</div>
+
     </div>
     {{ form_start(form) }}
-    <div class="form-group">
-        <div class="col-xs-3">
-            {{ form_widget(form.landlord, {'attr': {'class': 'form-control'}}) }}
+        <div class="form-group">
+            <div class="col-xs-3">
+                {{ form_widget(form.landlord, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
+            </div>
+            <div class="col-xs-3">
+                {{ form_widget(form.tenant, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-xs-2">
+                <button class="btn red-btn" type="submit">Filter</button>
+            </div>
         </div>
-        <div class="col-xs-2">
-            {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
-        </div>
-        <div class="col-xs-2">
-            {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
-        </div>
-        <div class="col-xs-3">
-            {{ form_widget(form.tenant, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="col-xs-2">
-            <button class="btn red-btn" type="submit">Filter</button>
-        </div>
-    </div>
-
     {{ form_end(form) }}
 
     <table class="table table-striped">
@@ -78,12 +78,17 @@
     {% if (pagination|length) %}
         <div class="container-fluid">
             <div class="row">
-                <button
-                        role="button"
-                        class="btn"
-                        onclick="location='{{ pdf_link }}'">
-                    Export as PDF
-                </button>
+                <div class="col-sm-6">
+                    <button
+                            role="button"
+                            class="btn"
+                            onclick="location='{{ pdf_link }}'">
+                        Export as PDF
+                    </button>
+                </div>
+                <div class="col-sm-6">
+                    <a class="btn red-btn" target="_blank" href="{{ path('erp_user_accounting_list_accounting_ledger') }}">View All</a>
+                </div>
             </div>
         </div>
     {% endif %}
