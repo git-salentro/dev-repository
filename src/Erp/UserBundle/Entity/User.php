@@ -548,7 +548,7 @@ class User extends BaseUser
     /**
      * @var \Erp\UserBundle\Entity\LateRentPayment[]|Collection
      *
-     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\LateRentPayment", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\LateRentPayment", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
      */
     protected $lateRentPayments;
 
@@ -2002,24 +2002,6 @@ class User extends BaseUser
         return $this->allowRentPayment;
     }
 
-    public function getTotalLateRentpaymentAmount()
-    {
-        if (!$this->hasRole(User::ROLE_TENANT)) {
-            return;
-        }
-
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('paid', 0));
-        $lateRentPayments = $this->lateRentPayments->matching($criteria);
-
-        $totalAmount = 0;
-        foreach ($lateRentPayments as $lateRentPayment) {
-            $totalAmount += $lateRentPayment->getAmount();
-        }
-
-        return $totalAmount;
-    }
-
     /**
      * Add chargeOutgoing
      *
@@ -2087,5 +2069,17 @@ class User extends BaseUser
     public function getChargeIncomings()
     {
         return $this->chargeIncomings;
+    }
+
+    public function getTotalOwedAmount()
+    {
+        $rentPaymentBalance = $this->rentPaymentBalance->getBalance();
+
+        return $rentPaymentBalance >= 0 ? 0 : abs($rentPaymentBalance);
+    }
+
+    public function clearLateRentPayments()
+    {
+        $this->lateRentPayments->clear();
     }
 }

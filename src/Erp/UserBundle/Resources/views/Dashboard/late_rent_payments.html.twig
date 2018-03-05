@@ -9,8 +9,7 @@
                     <span class="col-xs-3 bold-text">Tenant</span>
                     <span class="col-xs-3 bold-text amount-col">Address</span>
                     <span class="col-xs-2 bold-text amount-col">Type</span>
-                    <span class="col-xs-2 bold-text amount-col">Owed</span>
-                    <span class="col-xs-2 bold-text amount-col">Days Late</span>
+                    <span class="col-xs-2 bold-text amount-col">Date</span>
                 </li>
             </ul>
             <ul class="payment-table">
@@ -19,7 +18,13 @@
                 {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': id}) %}
                 <li>
                     <span class="col-xs-3">
-                        {{ items[0].user.fullName }} <a style="color: #b7b7b7;text-decoration: underline;" href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a>
+                        {{ items[0].user.fullName }}<a style="color: #ca171b;" role="popup" href="{{ path('erp_user_late_rent_payment_remove_user', {'id': items[0].user.id}) }}">X</a>
+                        <br>
+                        <a style="color: #b7b7b7;text-decoration: underline;" href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a>
+                        <br>
+                        Total owed: {{ items[0].user.totalOwedAmount|money }}
+                        <br>
+                        Day Late: {{ items[0].user.rentPaymentBalance.dayLate }}
                     </span>
                     <span class="col-xs-3 amount-col"></span>
                     <span class="col-xs-2 amount-col"></span>
@@ -48,19 +53,9 @@
                             </form>
                         </span>
                         <span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>
-                        <span class="col-xs-2 amount-col">{{ item.labelType }}</span>
+                        <span class="col-xs-2 amount-col">{{ item.typeLabel }}</span>
                         <span class="col-xs-2 amount-col">{{ item.amount|money }}</span>
-                        <span class="col-xs-2 amount-col">{{ item.dayLate }}</span>
-                        {% if loop.last %}
-                            <div class="payment-table_note">
-                                <span class="col-xs-3"></span>
-                                <span class="col-xs-3"></span>
-                                <span class="col-xs-2 amount-col"><b>Total</b></span>
-                                {# TODO Refactoring item.user.totalAmount #}
-                                <span class="col-xs-2 amount-col">{{ item.user.totalLateRentpaymentAmount|money }}</span>
-                                <span class="col-xs-2"></span>
-                            </div>
-                        {% endif %}
+                        <span class="col-xs-2 amount-col">{{ item.createdAt|date('m/d/Y') }}</span>
                     </li>
                 {% endfor %}
             {% endfor %}
