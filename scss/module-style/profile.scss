@@ -186,7 +186,6 @@
                                         content: "";
                                         height: 20px;
                                         width: 20px;
-                                        border: 1px solid #000;
                                         display: inline-block;
                                         position: absolute;
                                         right: 10%;
@@ -255,7 +254,7 @@
         }
         .profile-widget-item {
             margin-right: 47px;
-            height: 100%;
+            min-height: 100px;
             -webkit-border-radius: 5px;
             -moz-border-radius: 5px;
             border-radius: 5px;
