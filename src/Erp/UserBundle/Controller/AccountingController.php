@@ -2,6 +2,7 @@
 
 namespace Erp\UserBundle\Controller;
 
+use Erp\PropertyBundle\Entity\Property;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Repository\TransactionRepository;
 use Erp\UserBundle\Entity\User;
@@ -39,18 +40,24 @@ class AccountingController extends BaseController
         $form->handleRequest($masterRequest);
 
         $data = $form->getData();
+        $stripeAccount = $user->getStripeAccount();
         /** @var User $landlord */
         $landlord = $data['landlord']; //receiver
-        $stripeAccount = $user->getStripeAccount();
-        $stripeCustomer = $landlord ? $landlord->getStripeCustomer() : null;
+        /** @var Property $tenantProperty */
+        $tenantProperty = $data['tenant'];
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
 
         $pagination = [];
         if ($stripeAccount) {
+            $stripeAccounts = [$stripeAccount];
+            $stripeCustomers = [
+                $landlord ? $landlord->getStripeCustomer() : null,
+                $tenantProperty ? $tenantProperty->getUser()->getStripeCustomer() : null,
+            ];
             /** @var TransactionRepository $repository */
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
+            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccounts, $stripeCustomers, $dateFrom, $dateTo);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
@@ -104,18 +111,24 @@ class AccountingController extends BaseController
         $form->handleRequest($masterRequest);
 
         $data = $form->getData();
+        $stripeAccount = $user->getStripeAccount();
         /** @var User $landlord */
         $landlord = $data['landlord']; //receiver
-        $stripeAccount = $user->getStripeAccount();
-        $stripeCustomer = $landlord ? $landlord->getStripeCustomer() : null;
+        /** @var Property $tenantProperty */
+        $tenantProperty = $data['tenant'];
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
 
         $pagination = [];
         if ($stripeAccount) {
+            $stripeAccounts = [$stripeAccount];
+            $stripeCustomers = [
+                $landlord ? $landlord->getStripeCustomer() : null,
+                $tenantProperty ? $tenantProperty->getUser()->getStripeCustomer() : null,
+            ];
             /** @var TransactionRepository $repository */
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
+            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccounts, $stripeCustomers, $dateFrom, $dateTo);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(

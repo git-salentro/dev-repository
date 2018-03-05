@@ -76,19 +76,30 @@ class TransactionRepository extends EntityRepository
     }
 
 
-    public function getTransactionsBothDirectionsQuery(StripeAccount $stripeAccount = null, StripeCustomer $stripeCustomer = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
+    public function getTransactionsBothDirectionsQuery($stripeAccounts = null, $stripeCustomers = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.created', 'DESC');
 
-        if ($stripeAccount) {  //outgoing transaction (account -> customer)
-            $qb->where('t.account = :account')
-                ->setParameter('account', $stripeAccount);
-            if ($stripeCustomer) { //incoming transaction (customer -> account)
-                $qb->orWhere('t.account = :customer')
-                    ->setParameter('customer', $stripeCustomer)
-                    ->orWhere('t.customer = :account')
-                    ->setParameter('account', $stripeAccount);
+        if ($stripeAccounts) {  //outgoing transaction (account -> customer)
+            $qb
+                ->andWhere(
+                    $qb->expr()->in(
+                        't.account',
+                        ':accounts'
+                    )
+                )
+                ->setParameter('accounts', $stripeAccounts);
+
+            if ($stripeCustomers) {
+                $qb
+                    ->orWhere(
+                        $qb->expr()->in(
+                            't.customer',
+                            ':customers'
+                        )
+                    )
+                    ->setParameter('customers', $stripeCustomers);
             }
         }
 
