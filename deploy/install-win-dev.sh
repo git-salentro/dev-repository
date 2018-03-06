@@ -15,13 +15,21 @@ winpty docker-compose -f docker-compose-dev.yml exec php bash -c "chown -R www-d
 
 result=$?
 
-#curl https://api.stripe.com/v1/plans \
-#   -u ${STRIPE_SECRET_KEY}: \
-#   -d amount=1 \
-#   -d interval=year \
-#   -d name="Base yearly plan" \
-#   -d currency=usd \
-#   -d id=base_yearly_plan
+curl https://api.stripe.com/v1/plans \
+   -u ${STRIPE_SECRET_KEY}: \
+   -d amount=1 \
+   -d interval=year \
+   -d name="Base yearly plan" \
+   -d currency=usd \
+   -d id=base_yearly_plan
+
+curl https://api.stripe.com/v1/plans \
+   -u ${STRIPE_SECRET_KEY}: \
+   -d amount=1 \
+   -d interval=month \
+   -d name="Monthly plan" \
+   -d currency=usd \
+   -d id=monthly_plan
 
 if [ $result -eq 0 ]
 then

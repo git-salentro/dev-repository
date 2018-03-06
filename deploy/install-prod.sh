@@ -23,6 +23,14 @@ result=$?
 #   -d currency=usd \
 #   -d id=base_yearly_plan
 
+#curl https://api.stripe.com/v1/plans \
+#   -u ${STRIPE_SECRET_KEY}: \
+#   -d amount=0.01 \
+#   -d interval=month \
+#   -d name="Monthly plan" \
+#   -d currency=usd \
+#   -d id=monthly_plan
+
 if [ $result -eq 0 ]
 then
   echo "Deploy succeed!"
