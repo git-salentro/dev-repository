@@ -10,7 +10,7 @@ use Erp\CoreBundle\Entity\DatesAwareTrait;
  * Charge
  *
  * @ORM\Table(name="charges")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="ChargeRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class Charge implements DatesAwareInterface
@@ -36,6 +36,13 @@ class Charge implements DatesAwareInterface
      * @ORM\Column(name="status", type="string")
      */
     protected $status = self::STATUS_PENDING;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_recurring", type="boolean")
+     */
+    protected $isRecurring = false;
 
     /**
      * @var string
@@ -216,5 +223,21 @@ class Charge implements DatesAwareInterface
     public function isPaid()
     {
         return $this->status === self::STATUS_PAID;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRecurring()
+    {
+        return $this->isRecurring;
+    }
+
+    /**
+     * @param bool $isRecurring
+     */
+    public function setIsRecurring($isRecurring)
+    {
+        $this->isRecurring = $isRecurring;
     }
 }
