@@ -1,12 +1,12 @@
 erp_user_late_rent_payment_update:
-    path:     /late-rent-payment-settings/update/{user}
+    path:     /late-rent-payment/update/{user}
     defaults: { _controller: ErpUserBundle:LateRentPayment:update }
     methods: [GET, POST]
     requirements:
         user: \d+
 
 erp_user_late_rent_payment_create:
-     path:     /late-rent-payment-settings/create/{user}
+     path:     /late-rent-payment/create/{user}
      defaults: { _controller: ErpUserBundle:LateRentPayment:create }
      methods: [GET, POST]
      requirements:
@@ -14,8 +14,15 @@ erp_user_late_rent_payment_create:
 
 
 erp_user_late_rent_payment_remove:
-     path:     /late-rent-payment-settings/remove/{id}
+     path:     /late-rent-payment/remove/{id}
      defaults: { _controller: ErpUserBundle:LateRentPayment:remove }
      methods: [POST]
      requirements:
         user: \d+
+
+erp_user_late_rent_payment_remove_user:
+     path:     /late-rent-payment/user/remove/{id}
+     defaults: { _controller: ErpUserBundle:LateRentPayment:removeUser }
+     methods: [GET, DELETE]
+     requirements:
+        id: \d+

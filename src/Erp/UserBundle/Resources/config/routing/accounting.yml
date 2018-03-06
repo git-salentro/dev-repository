@@ -12,3 +12,12 @@ erp_user_accounting_show_accounting_ledger:
     requirements:
         _format: 'html|pdf'
     methods: [GET, POST]
+
+erp_user_accounting_list_accounting_ledger:
+    path:     /dashboard/list-accounting-ledger
+    defaults:
+        _controller: ErpUserBundle:Accounting:listAccountingLedger
+        _format: 'html'
+    requirements:
+        _format: 'html|pdf'
+    methods: [GET, POST]

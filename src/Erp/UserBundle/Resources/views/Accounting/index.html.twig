@@ -1,6 +1,6 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
-{% block pageContent %}
 
+{% block pageContent %}
     {{ parent() }}
     <section id="managers-accounting" class="listings profile">
         <div class="container">
@@ -18,16 +18,13 @@
                                 type="submit"
                                 href="{{ path('erp_user_landlords_create') }}"
                                 role="popup"
-                        >
-                            Add landlord
-                        </a>
+                        >Add landlord</a>
                         <a
                                 class="btn red-btn"
                                 type="submit"
                                 href="{{ path('erp_user_landlords') }}"
                                 role="popup"
-                        >Charge Clients
-                        </a>
+                        >Charge Clients</a>
                     </div>
                 </div>
 

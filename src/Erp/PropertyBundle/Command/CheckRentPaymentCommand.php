@@ -44,24 +44,10 @@ class CheckRentPaymentCommand extends ContainerAwareCommand
             }
 
             $propertySettings = $property->getSettings();
-
             $paymentAmount = $propertySettings->getPaymentAmount();
-            $rentPaymentBalanceAmount = $rentPaymentBalance->getBalance();
-            $cashBalance = $rentPaymentBalanceAmount - $paymentAmount;
-            $lateRentPayment = null;
-
-            if ($rentPaymentBalanceAmount > 0 && $cashBalance < 0) {
-                $lateRentPayment = new LateRentPayment();
-                $lateRentPayment->setAmount($cashBalance);
-            } elseif ($cashBalance < 0) {
-                $lateRentPayment = new LateRentPayment();
-                $lateRentPayment->setAmount($paymentAmount);
-            }
-
-            $tenant->addLateRentPayment($lateRentPayment);
 
             $rentPaymentBalance->takeMoneyFromBalance($paymentAmount);
-            $em->persist($tenant);
+            $em->persist($rentPaymentBalance);
 
             if ((++$i % 20) == 0) {
                 $em->flush();
