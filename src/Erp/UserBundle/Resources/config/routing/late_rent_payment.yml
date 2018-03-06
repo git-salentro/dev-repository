@@ -16,9 +16,9 @@ erp_user_late_rent_payment_create:
 erp_user_late_rent_payment_remove:
      path:     /late-rent-payment/remove/{id}
      defaults: { _controller: ErpUserBundle:LateRentPayment:remove }
-     methods: [POST]
+     methods: [POST, GET]
      requirements:
-        user: \d+
+        id: \d+
 
 erp_user_late_rent_payment_remove_user:
      path:     /late-rent-payment/user/remove/{id}

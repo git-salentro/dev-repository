@@ -118,6 +118,11 @@
             $('#verify-ba').click(function() {
                 linkHandler.open();
             });
+
+            $('[linked-element]').click(function(){
+                var id = $(this).attr('linked-element');
+                $(id).toggle();
+            });
         })(jQuery);
     </script>
 {% endblock %}

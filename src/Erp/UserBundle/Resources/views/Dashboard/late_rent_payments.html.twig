@@ -4,35 +4,28 @@
     </div>
     <div class="history-block">
         <div class="payment-history">
-            {#<ul class="payment-table-title">#}
-                {#<li>#}
-                    {#<span class="col-xs-3 bold-text">Tenant</span>#}
-                    {#<span class="col-xs-3 bold-text amount-col">Address</span>#}
-                    {#<span class="col-xs-2 bold-text amount-col">Type</span>#}
-                    {#<span class="col-xs-2 bold-text amount-col">Owed</span>#}
-                    {#<span class="col-xs-2 bold-text amount-col">Days Late</span>#}
-                {#</li>#}
-            {#</ul>#}
-            <ul class="payment-table">
+            <ul class="payment-table-title">
                 <li>
                     <span class="col-xs-6 bold-text">Tenant</span>
-                    {#<span class="col-xs-3 bold-text amount-col">Address</span>#}
-                    {#<span class="col-xs-2 bold-text amount-col">Type</span>#}
-                    <span class="col-xs-2 bold-text amount-col">Amount Owed</span>
+                    <span class="col-xs-3 bold-text amount-col">Owed</span>
                     <span class="col-xs-2 bold-text amount-col">Days Late</span>
                 </li>
+            </ul>
+            <ul class="payment-table">
+            {# TODO Refactor preparing data #}
             {% for id, items in prepared %}
                 {% set action = path('erp_user_user_allow_rent_payment', {'user': id}) %}
                 {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': id}) %}
                 <li>
                     <span class="col-xs-6">
-                        {{ items[0].user.fullName }} <a style="color: #b7b7b7;text-decoration: underline;" href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a>
+                      {{ items[0].user.fullName }}
+                        <a style="color: #ca171b;" role="popup" href="{{ path('erp_user_late_rent_payment_remove_user', {'id': items[0].user.id}) }}">X</a>
+                        <br>
+                        <a style="color: #b7b7b7;text-decoration: underline;" href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a>
                     </span>
-                    {#<span class="col-xs-3 amount-col"></span>#}
-                    {#<span class="col-xs-2 amount-col"></span>#}
-                    <span class="col-xs-2 amount-col"></span>
-                    <span class="col-xs-2 amount-col"></span>
-                    <div class="payment-table_note">
+                    <span class="col-xs-3 amount-col">{{ items[0].user.totalOwedAmount|money }}</span>
+                    <span class="col-xs-2 amount-col">{{ items[0].user.rentPaymentBalance.dayLate }}</span>
+                    <div class="payment-table_note" style="position: relative">
                         <span class="col-xs-6">
                             {{ form_start(form, {'action': action}) }}
                                 <div>
@@ -45,35 +38,20 @@
                                 </div>
                             {{ form_end(form, {'render_rest': false}) }}
                         </span>
+                        <a style="right: 5px; position: absolute; bottom: 5px" linked-element="#collapsed-{{ items[0].user.id }}">View</a>
                     </div>
                 </li>
                 {% for item in items %}
-                    <li>
-                         <span class="col-xs-2 amount-col">
-                            <form method="POST" action="{{ path('erp_user_late_rent_payment_remove', {'id': item.id }) }}" style="display: inline">
-                                {#<button class="btn edit-btn payment-table_btn" type="submit">Remove</button>#}
-                                <a class="delete-btn red-btn-color" role="popup" href="/app_dev.php/listings/232/delete/tenant">X</a>
-                            </form>
-                            21/05/16
-                        </span>
-                        <span class="col-xs-3 amount-col align-center">Late rent payment</span>
-                        <span class="col-xs-2 amount-col align-left">$200</span>
-
-                        {#<span class="col-xs-3 amount-col">{{ item.user.tenantProperty.address }}</span>#}
-                        {#<span class="col-xs-2 amount-col">{{ item.labelType }}</span>#}
-                        {#<span class="col-xs-2 amount-col">{{ item.amount|money }}</span>#}
-                        {#<span class="col-xs-2 amount-col">{{ item.dayLate }}</span>#}
-                        {#{% if loop.last %}#}
-                            {#<div class="payment-table_note">#}
-                                {#<span class="col-xs-3"></span>#}
-                                {#<span class="col-xs-3"></span>#}
-                                {#<span class="col-xs-2 amount-col"><b>Total</b></span>#}
-                                {# TODO Refactoring item.user.totalAmount #}
-                                {#<span class="col-xs-2 amount-col">{{ item.user.totalLateRentpaymentAmount|money }}</span>#}
-                                {#<span class="col-xs-2"></span>#}
-                            {#</div>#}
-                        {#{% endif %}#}
-                    </li>
+                    <div id="collapsed-{{ items[0].user.id }}" style="display: none;">
+                        <li>
+                            <span class="col-xs-2 amount-col">{{ item.createdAt|date('m/d/Y') }}</span>
+                            <span class="col-xs-3 amount-col align-center">{{ item.typeLabel }}</span>
+                            <span class="col-xs-2 amount-col align-left">
+                            {{ item.amount|money }}
+                                <a class="delete-btn red-btn-color" role="popup" href="{{ path('erp_user_late_rent_payment_remove', {'id': item.id}) }}">X</a>
+                            </span>
+                        </li>
+                    </div>
                 {% endfor %}
             {% endfor %}
             </ul>

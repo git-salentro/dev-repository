@@ -45,10 +45,11 @@ class LateRentPaymentController extends BaseController
     }
 
     /**
-     * @param LateRentPayment $lateRentPayment
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function removeAction($id)
+    public function removeAction($id, Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -61,21 +62,27 @@ class LateRentPaymentController extends BaseController
             return $this->createNotFoundException();
         }
 
-        $lateRentPayment->setPaid(true);
-        $em->persist($lateRentPayment);
-        $em->flush();
+        if ($request->getMethod() === 'DELETE') {
+            $lateRentPayment->setPaid(true);
+            $em->persist($lateRentPayment);
+            $em->flush();
 
-        $this->addFlash(
-            'alert_ok',
-            'Success'
-        );
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
 
-        return $this->redirectToRoute('erp_user_dashboard_dashboard');
+            return $this->redirectToRoute('erp_user_dashboard_dashboard');
+        }
+
+        return $this->render('ErpCoreBundle:crossBlocks:delete-confirmation-popup.html.twig', [
+            'actionUrl' => $this->generateUrl('erp_user_late_rent_payment_remove', ['id' => $id]),
+        ]);
     }
 
     public function removeUserAction(User $user, Request $request)
     {
-        /** @var User $user */
+        /** @var User $currentUser */
         $currentUser = $this->getUser();
 
         if ($currentUser->hasTenant($user)) {
