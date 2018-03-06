@@ -1,5 +1,11 @@
 /* Modal */
 .modal {
+    .modal-dialog {
+        min-width: 600px;
+        max-width: 1000px;
+        margin: 30px auto;
+        display: table;
+    }
     .modal-header {
         background-color: #ca171b;
         color: #fff;
