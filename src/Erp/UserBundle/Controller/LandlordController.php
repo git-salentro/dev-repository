@@ -54,7 +54,7 @@ class LandlordController extends BaseController
 
             $this->addFlash('alert_ok', 'Landlord has been added successfully!');
 
-            return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
+            return $this->redirect($this->generateUrl('erp_user_accounting_index'));
         }
 
         return $this->render('ErpUserBundle:Landlords:create.html.twig', [
