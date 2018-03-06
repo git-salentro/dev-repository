@@ -25,7 +25,7 @@ result=$?
 
 #curl https://api.stripe.com/v1/plans \
 #   -u ${STRIPE_SECRET_KEY}: \
-#   -d amount=0.01 \
+#   -d amount=1 \
 #   -d interval=month \
 #   -d name="Monthly plan" \
 #   -d currency=usd \
