@@ -30,14 +30,17 @@ class DashboardController extends BaseController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $repository = $this->getDoctrine()->getManagerForClass(LateRentPayment::class)->getRepository(LateRentPayment::class);
-        $items = $repository->getLatePayments($user);
-        $prepared = $this->prepareLateRentPaymentsItems($items);
+        $lateRentPaymentsRepository = $this->getDoctrine()->getManagerForClass(LateRentPayment::class)->getRepository(LateRentPayment::class);
+        $userRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+
+        $propertiesWasNotPaid = $userRepository->getDebtors($user);
+        $lateRentPayments = $lateRentPaymentsRepository->getLatePayments($user);
 
         $form = $this->createForm(new UserLateRentPaymentType());
 
         return $this->render('ErpUserBundle:Dashboard:late_rent_payments.html.twig', [
-            'prepared' => $prepared,
+            'properties_was_not_paid' => $propertiesWasNotPaid,
+            'late_rent_payments' => $lateRentPayments,
             'form' => $form->createView(),
         ]);
     }
@@ -225,16 +228,5 @@ class DashboardController extends BaseController
         }
 
         return $results;
-    }
-
-    private function prepareLateRentPaymentsItems(array $items)
-    {
-        $preparedItems = [];
-        /** @var LateRentPayment $item */
-        foreach ($items as $item) {
-            $preparedItems[$item->getUser()->getId()][] = $item;
-        }
-
-        return $preparedItems;
     }
 }

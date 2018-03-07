@@ -13,45 +13,47 @@
             </ul>
             <ul class="payment-table">
             {# TODO Refactor preparing data #}
-            {% for id, items in prepared %}
-                {% set action = path('erp_user_user_allow_rent_payment', {'user': id}) %}
-                {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': id}) %}
+            {% for property in properties_was_not_paid %}
+                {% set action = path('erp_user_user_allow_rent_payment', {'user': property.tenantUser.id}) %}
+                {% set popupUrl = path('erp_user_late_rent_payment_create', {'user': property.tenantUser.id}) %}
                 <li>
                     <span class="col-xs-6">
-                      {{ items[0].user.fullName }}
-                        <a style="color: #ca171b;" role="popup" href="{{ path('erp_user_late_rent_payment_remove_user', {'id': items[0].user.id}) }}">X</a>
+                      {{ property.tenantUser.fullName }}
+                        <a style="color: #ca171b;" role="popup" href="{{ path('erp_user_late_rent_payment_remove_user', {'id': property.tenantUser.id}) }}">X</a>
                         <br>
-                        <a style="color: #b7b7b7;text-decoration: underline;" href="{{ path('erp_user_late_rent_payment_create', {'user': items[0].user.id}) }}" role="popup">Add Fee</a>
+                        <a style="color: #b7b7b7;text-decoration: underline;" href="{{ path('erp_user_late_rent_payment_create', {'user': property.tenantUser.id}) }}" role="popup">Add Fee</a>
                     </span>
-                    <span class="col-xs-3 amount-col">{{ items[0].user.totalOwedAmount|money }}</span>
-                    <span class="col-xs-2 amount-col">{{ items[0].user.rentPaymentBalance.dayLate }}</span>
+                    <span class="col-xs-3 amount-col">{{ property.tenantUser.totalOwedAmount|money }}</span>
+                    <span class="col-xs-2 amount-col">{{ property.tenantUser.rentPaymentBalance.dayLate }}</span>
                     <div class="payment-table_note" style="position: relative">
                         <span class="col-xs-6">
                             {{ form_start(form, {'action': action}) }}
                                 <div>
                                      {{ form_label(form.allowRentPayment) }}
-                                    <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if items[0].user.allowRentPayment %}checked="checked"{% endif %}>
+                                    <input type="checkbox" name="{{ form.allowRentPayment.vars.full_name }}" {% if property.tenantUser.allowRentPayment %}checked="checked"{% endif %}>
                                 </div>
                                 <div>
                                      {{ form_label(form.allowPartialPayment) }}
-                                    <input type="checkbox" name="{{ form.allowPartialPayment.vars.full_name }}" {% if items[0].user.allowPartialPayment %}checked="checked"{% endif %}>
+                                    <input type="checkbox" name="{{ form.allowPartialPayment.vars.full_name }}" {% if property.tenantUser.allowPartialPayment %}checked="checked"{% endif %}>
                                 </div>
                             {{ form_end(form, {'render_rest': false}) }}
                         </span>
-                        <a style="right: 5px; position: absolute; bottom: 5px" linked-element="#collapsed-{{ items[0].user.id }}">View</a>
+                        <a style="right: 5px; position: absolute; bottom: 5px" linked-element="#collapsed-{{ property.tenantUser.id }}">View</a>
                     </div>
                 </li>
-                {% for item in items %}
-                    <div id="collapsed-{{ items[0].user.id }}" style="display: none;">
-                        <li>
-                            <span class="col-xs-2 amount-col">{{ item.createdAt|date('m/d/Y') }}</span>
-                            <span class="col-xs-3 amount-col align-center">{{ item.typeLabel }}</span>
-                            <span class="col-xs-2 amount-col align-left">
-                            {{ item.amount|money }}
-                                <a class="delete-btn red-btn-color" role="popup" href="{{ path('erp_user_late_rent_payment_remove', {'id': item.id}) }}">X</a>
-                            </span>
-                        </li>
-                    </div>
+                {% for late_rent_payment in late_rent_payments %}
+                    {% if late_rent_payment.user.id ==  property.tenantUser.id %}
+                        <div id="collapsed-{{ property.tenantUser.id }}" style="display: none;">
+                            <li>
+                                <span class="col-xs-2 amount-col">{{ late_rent_payment.createdAt|date('m/d/Y') }}</span>
+                                <span class="col-xs-3 amount-col align-center">{{ late_rent_payment.typeLabel }}</span>
+                                <span class="col-xs-2 amount-col align-left">
+                                {{ late_rent_payment.amount|money }}
+                                    <a class="delete-btn red-btn-color" role="popup" href="{{ path('erp_user_late_rent_payment_remove', {'id': late_rent_payment.id}) }}">X</a>
+                                </span>
+                            </li>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% endfor %}
             </ul>

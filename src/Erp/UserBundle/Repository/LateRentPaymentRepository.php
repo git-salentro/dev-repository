@@ -14,10 +14,7 @@ class LateRentPaymentRepository extends EntityRepository
             ->join('lrp.user', 'tu')
             ->join('tu.tenantProperty', 'p')
             ->join('p.user', 'u')
-            ->join('tu.rentPaymentBalance', 'rpb')
             ->andWhere('p.user = :user')
-            ->andWhere('rpb.debtStartAt <= lrp.createdAt')
-            ->andWhere('rpb.balance < 0')
             ->setParameter('user', $user);
 
         return $qb->getQuery()

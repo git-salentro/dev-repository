@@ -475,4 +475,19 @@ class PropertyRepository extends EntityRepository
 
         return $qb;
     }
+
+    public function getDebtors(User $user)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p, tu')
+            ->join('p.user', 'u')
+            ->join('p.tenantUser', 'tu')
+            ->join('tu.rentPaymentBalance', 'rpb')
+            ->where('p.user = :user')
+            ->andWhere('rpb.balance < 0')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }

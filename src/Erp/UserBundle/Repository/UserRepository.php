@@ -3,6 +3,7 @@
 namespace Erp\UserBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Erp\UserBundle\Entity\User;
 
 /**
  * Class UserRepository
@@ -34,5 +35,4 @@ class UserRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
 }
