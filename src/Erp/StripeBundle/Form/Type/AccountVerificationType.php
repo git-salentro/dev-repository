@@ -20,7 +20,7 @@ class AccountVerificationType extends AbstractType
                 'city',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'City',
                 ]
             )
@@ -28,7 +28,7 @@ class AccountVerificationType extends AbstractType
                 'line1',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Line 1',
                 ]
             )
@@ -36,7 +36,7 @@ class AccountVerificationType extends AbstractType
                 'postalCode',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Postal Code',
                 ]
             )
@@ -44,7 +44,7 @@ class AccountVerificationType extends AbstractType
                 'state',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'State',
                 ]
             )
@@ -52,7 +52,7 @@ class AccountVerificationType extends AbstractType
                 'businessName',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Business Name',
                 ]
             )
@@ -60,7 +60,7 @@ class AccountVerificationType extends AbstractType
                 'businessTaxId',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Business Tax Id',
                 ]
             )
@@ -68,7 +68,7 @@ class AccountVerificationType extends AbstractType
                 'dayOfBirth',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Day Of Birth',
                 ]
             )
@@ -76,7 +76,7 @@ class AccountVerificationType extends AbstractType
                 'monthOfBirth',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Month Of Birth',
                 ]
             )
@@ -84,7 +84,7 @@ class AccountVerificationType extends AbstractType
                 'yearOfBirth',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Year Of Birth',
                 ]
             )
@@ -92,7 +92,7 @@ class AccountVerificationType extends AbstractType
                 'firstName',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'First Name',
                 ]
             )
@@ -100,7 +100,7 @@ class AccountVerificationType extends AbstractType
                 'lastName',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'Last Name',
                 ]
             )
@@ -108,7 +108,7 @@ class AccountVerificationType extends AbstractType
                 'ssnLast4',
                 'text',
                 [
-                    'required' => false,
+                    'required' => true,
                     'label' => 'SSN Last 4 digits',
                 ]
             )
@@ -117,7 +117,7 @@ class AccountVerificationType extends AbstractType
                 'checkbox',
                 [
                     'label' => 'Term of use',
-                    'required' => false,
+                    'required' => true,
                     'mapped' => false,
                     'constraints' => new IsTrue([
                         'message' => 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy'

@@ -64,8 +64,9 @@
                             accountId: metadata.account_id
                         },
                         success: function (response) {
-                            //TODO Prepare backend errors for frontend
-                            processResponse(response);
+                           if (response.redirect) {
+                               document.location = response.redirect;
+                           }
                         }
                     });
                 },

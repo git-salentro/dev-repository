@@ -3,6 +3,7 @@
 namespace Erp\UserBundle\Controller;
 
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
+use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\SiteBundle\Entity\StaticPage;
 use Erp\UserBundle\Entity\InvitedUser;
 use Erp\UserBundle\Entity\User;
@@ -91,15 +92,24 @@ class RegistrationController extends BaseController
                     ->setEnabled(true)
                 ;
 
+                $stripeAccount = $user->getStripeAccount();
+                $stripeAccount
+                    ->setUser($user)
+                    ->setState($user->getState())
+                    ->setPostalCode($user->getPostalCode())
+                    ->setLine1($user->getAddressOne())
+                    ->setCity($user->getCity())
+                    ->setTosAcceptanceDate(new \DateTime())
+                    ->setTosAcceptanceIp($request->getClientIp());
+
                 $userManager->updateUser($user);
-                $isRegisterAccept = true;
 
                 $this->addFlash('show_navigation_sign_after_register', '');
+
                 $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
                 $this->get('security.token_storage')->setToken($token);
 
                 return $this->redirectToRoute('erp_user_dashboard_dashboard');
-//                $this->sendRegistrationEmail($user);
             }
         } else {
             $form->get('email')->setData($request->get('email', null));

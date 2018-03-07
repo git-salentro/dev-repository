@@ -116,8 +116,7 @@ class StripeController extends BaseController
             );
         }
 
-        $customerManager = $this->get('erp.payment.stripe.manager.customer_manager');
-        $accountManager = $this->get('erp.payment.stripe.manager.account_manager');
+        $apiManager = $this->get('erp_stripe.entity.api_manager');
         /** @var $user User */
         $user = $this->getUser();
         $stripeCustomer = $user->getStripeCustomer();
@@ -130,13 +129,14 @@ class StripeController extends BaseController
         }
 
         if (!$stripeCustomer) {
-            $response = $customerManager->create(
-                [
+            $arguments = [
+                'params' => [
                     'email' => $user->getEmail(),
                     'source' => $stripeBankAccountToken,
                 ],
-                $options
-            );
+                'options' => $options,
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Customer', 'create', $arguments);
 
             if (!$response->isSuccess()) {
                 return new JsonResponse(
@@ -157,28 +157,19 @@ class StripeController extends BaseController
             // Force flush for saving Stripe customer
             $this->em->flush();
         } else {
-            /** @var StripeCustomer $stripeCustomer */
-            $response = $customerManager->retrieve($stripeCustomer->getCustomerId(), $options);
+            $arguments = [
+                'id' => $stripeCustomer->getCustomerId(),
+                'params' => ['external_account' => $stripeBankAccountToken],
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Customer', 'update', $arguments);
 
             if (!$response->isSuccess()) {
-                return new JsonResponse(
-                    [
-                        'success' => false,
-                        'error' => $response->getErrorMessage(),
-                    ]
+                $this->addFlash(
+                    'alert_error',
+                    $response->getErrorMessage()
                 );
-            }
-            /** @var Customer $customer */
-            $customer = $response->getContent();
-            $response = $customerManager->update($customer, ['source' => $stripeBankAccountToken], $options);
 
-            if (!$response->isSuccess()) {
-                return new JsonResponse(
-                    [
-                        'success' => false,
-                        'error' => $response->getErrorMessage(),
-                    ]
-                );
+                return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
             }
         }
 
@@ -194,63 +185,56 @@ class StripeController extends BaseController
         }
 
         if ($user->hasRole(User::ROLE_MANAGER)) {
-            if (!$user->hasStripeAccount()) {
-                $response = $accountManager->create([
-                    'country' => StripeAccount::DEFAULT_ACCOUNT_COUNTRY,
-                    'type' => StripeAccount::DEFAULT_ACCOUNT_TYPE,
-                    'external_account' => $stripeBankAccountToken,
-                ]);
+            $stripeAccount = $user->getStripeAccount();
+            if (!$stripeAccount->getAccountId()) {
+                $params = array_merge(
+                    $stripeAccount->toStripe(),
+                    [
+                        'country' => StripeAccount::DEFAULT_ACCOUNT_COUNTRY,
+                        'type' => StripeAccount::DEFAULT_ACCOUNT_TYPE,
+                        'external_account' => $stripeBankAccountToken,
+                    ]
+                );
+                $arguments = [
+                    'params' => $params,
+                    'options' => null,
+
+                ];
+
+                $response = $apiManager->callStripeApi('\Stripe\Account', 'create', $arguments);
 
                 if (!$response->isSuccess()) {
-                    return new JsonResponse(
-                        [
-                            'success' => false,
-                            'error' => $response->getErrorMessage(),
-                        ]
+                    $this->addFlash(
+                        'alert_error',
+                        $response->getErrorMessage()
                     );
+
+                    return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
                 }
                 /** @var Account $account */
                 $account = $response->getContent();
 
-                $stripeAccount = new StripeAccount();
-                $stripeAccount->setUser($user)
-                    ->setAccountId($account['id']);
+                $stripeAccount->setAccountId($account['id']);
 
                 $this->em->persist($stripeAccount);
                 // Force flush for saving Stripe account
                 $this->em->flush();
             } else {
-                $stripeAccount = $user->getStripeAccount();
-                $response = $accountManager->retrieve($stripeAccount->getAccountId());
+                $arguments = [
+                    'id' => $stripeAccount->getAccountId(),
+                    'params' => ['external_account' => $stripeBankAccountToken],
+                ];
+                $response = $apiManager->callStripeApi('\Stripe\Account', 'update', $arguments);
 
                 if (!$response->isSuccess()) {
-                    return new JsonResponse(
-                        [
-                            'success' => false,
-                            'error' => $response->getErrorMessage(),
-                        ]
+                    $this->addFlash(
+                        'alert_error',
+                        $response->getErrorMessage()
                     );
-                }
-                /** @var Account $account */
-                $account = $response->getContent();
-                $response = $accountManager->update($account, ['external_account' => $stripeBankAccountToken]);
 
-                if (!$response->isSuccess()) {
-                    return new JsonResponse(
-                        [
-                            'success' => false,
-                            'error' => $response->getErrorMessage(),
-                        ]
-                    );
+                    return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
                 }
             }
-
-            $form = $this->createForm(new AccountVerificationType());
-
-            return $this->render('ErpStripeBundle:Widget:verification_ba.html.twig', [
-                'form' => $form->createView(),
-                'modalTitle' => 'Continue verification',
-            ]);
         }
 
         return new JsonResponse(
