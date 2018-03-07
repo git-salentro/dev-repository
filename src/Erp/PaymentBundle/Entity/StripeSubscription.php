@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class StripeSubscription
 {
     const BASE_PLAN_ID = 'base_yearly_plan';
+    const MONTHLY_PLAN_ID = 'monthly_plan';
     const DEFAULT_CURRENCY = 'usd';
     const DEFAULT_INTERVAL = 'year';
     const BILLING_AUTOMATICALLY = 'charge_automatically';
