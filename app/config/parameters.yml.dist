@@ -14,7 +14,7 @@ parameters:
     mailer_host:       ~
     mailer_user:       ~
     mailer_password:   ~
-    contact_email:     info@erentpay.com
+    contact_email:     info@zoobdoo.com
 
     siteUrl: 'http://erent.loc'
 

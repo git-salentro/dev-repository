@@ -178,7 +178,7 @@ doctrine_migrations:
     name: Application Migrations
 
 sonata_admin:
-    title:      eRentPay
+    title:      Zoobdoo
     title_logo: bundles/erpadmin/images/admin-logo.jpeg
     security:
         handler: sonata.admin.security.handler.role
