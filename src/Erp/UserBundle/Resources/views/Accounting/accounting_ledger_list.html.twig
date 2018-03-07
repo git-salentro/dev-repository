@@ -15,16 +15,16 @@
                         {{ form_start(form) }}
                         <div class="form-group">
                             <div class="col-xs-3">
+                                {{ form_label(form.landlord) }}
                                 {{ form_widget(form.landlord, {'attr': {'class': 'form-control'}}) }}
                             </div>
                             <div class="col-xs-2">
+                                {{ form_label(form.dateFrom) }}
                                 {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
                             </div>
                             <div class="col-xs-2">
+                                {{ form_label(form.dateTo) }}
                                 {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
-                            </div>
-                            <div class="col-xs-3">
-                                {{ form_widget(form.tenant, {'attr': {'class': 'form-control'}}) }}
                             </div>
                             <div class="col-xs-2">
                                 <button class="btn red-btn" type="submit">Filter</button>
@@ -65,8 +65,8 @@
                                                 +
                                             {% elseif (item.account.id == user.stripeAccount.id) %}
                                                 -
-                                            {% endif %}{{ item.amount }}</td>
-                                        <td class="text-left">{{ item.balance }}</td>
+                                            {% endif %}{{ item.amount|money }}</td>
+                                        <td class="text-left">{{ item.balance|money }}</td>
                                     </tr>
                                 {% endfor %}
                             {% else %}
