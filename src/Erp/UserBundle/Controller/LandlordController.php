@@ -14,26 +14,20 @@ use Erp\StripeBundle\Entity\PaymentTypeInterface;
 use Erp\StripeBundle\Helper\ApiHelper;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class LandlordController extends BaseController
 {
     //list of landlords inside Accounting menu
     public function indexAction(Request $request)
     {
+        //manager charge landlord Step 1 (select) in twig
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        $qb = $this->em->getRepository('ErpUserBundle:User')->findBy(['manager' => $this->getUser()]);
-        $pagination = $this->get('knp_paginator')->paginate(
-            $qb,
-            $this->get('request')->query->get('page', 1) /*page number*/,
-            10/*limit per page*/
-        );
+        $items = $this->getDoctrine()->getManagerForClass(User::class)->getRepository(User::class)->findBy(['manager' => $user]);
 
-        //manager charge landlord Step 1 (select) in twig
         return $this->render('ErpUserBundle:Landlords:index.html.twig', [
             'user' => $user,
-            'pagination' => $pagination,
-            'modalTitle' => 'Landlords management'
+            'items' => $items,
+            'modalTitle' => 'Charge clients'
         ]);
     }
 
@@ -161,7 +155,6 @@ class LandlordController extends BaseController
         if ($charge->isPaid()) {
             return $this->createNotFoundException();
         }
-
 
         /** @var PaymentTypeInterface $model */
         $model = $this->get('erp_stripe.registry.model_registry1')->getModel($type);
