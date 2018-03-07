@@ -1,6 +1,7 @@
 <?php
 namespace Erp\UserBundle\Form\Type;
 
+use Erp\PaymentBundle\Entity\StripeAccount;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -76,6 +77,11 @@ class ManagerRegistrationFormType extends AbstractType
             'save',
             'submit',
             ['label' => 'Submit', 'attr' => ['class' => 'btn submit-popup-btn', 'disabled' => 'disabled']]
+        );
+
+        $this->formBuilder->add(
+            'stripeAccount',
+            'erp_stripe_bank_account_verification'
         );
     }
 

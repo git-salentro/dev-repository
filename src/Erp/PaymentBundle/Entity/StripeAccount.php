@@ -61,7 +61,7 @@ class StripeAccount
     /**
      * @var string
      *
-     * @ORM\Column(name="account_id", type="string")
+     * @ORM\Column(name="account_id", type="string", nullable=true)
      */
     private $accountId;
 
@@ -188,7 +188,7 @@ class StripeAccount
     {
         $this->invoices = new ArrayCollection();
         $this->transactions = new ArrayCollection();
-        $this->recurringPayments = new ArrayCollection();
+        $this->scheduledRentPayments = new ArrayCollection();
     }
 
     /**

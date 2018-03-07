@@ -109,6 +109,46 @@
     </div>
 
     <div class="row">
+        <div class="form-group">
+            {#<div class="col-xs-4">#}
+                {#{{ form_label(form.stripeAccount.businessName) }}#}
+                {#{{ form_widget(form.stripeAccount.businessName, {'attr': {'class': 'form-control'}}) }}#}
+                {#{{ form_custom_errors.widget(form.stripeAccount.businessName) }}#}
+            {#</div>#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_label(form.stripeAccount.businessTaxId) }}#}
+                {#{{ form_widget(form.stripeAccount.businessTaxId, {'attr': {'class': 'form-control'}} ) }}#}
+                {#{{ form_custom_errors.widget(form.stripeAccount.businessTaxId) }}#}
+            {#</div>#}
+            <div class="col-xs-12">
+                {{ form_label(form.stripeAccount.ssnLast4) }}
+                {{ form_widget(form.stripeAccount.ssnLast4, {'attr': {'class': 'form-control'}}) }}
+                {{ form_custom_errors.widget(form.stripeAccount.ssnLast4) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-xs-4">
+                {{ form_label(form.stripeAccount.dayOfBirth) }}
+                {{ form_widget(form.stripeAccount.dayOfBirth, {'attr': {'class': 'form-control'}}) }}
+                {{ form_custom_errors.widget(form.stripeAccount.dayOfBirth) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_label(form.stripeAccount.monthOfBirth) }}
+                {{ form_widget(form.stripeAccount.monthOfBirth, {'attr': {'class': 'form-control'}}) }}
+                {{ form_custom_errors.widget(form.stripeAccount.monthOfBirth) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_label(form.stripeAccount.yearOfBirth) }}
+                {{ form_widget(form.stripeAccount.yearOfBirth, {'attr': {'class': 'form-control'}}) }}
+                {{ form_custom_errors.widget(form.stripeAccount.yearOfBirth) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="form-group terms-group">
             <div class="col-xs-12 terms-text">
                 <h2>Terms of Use</h2>
