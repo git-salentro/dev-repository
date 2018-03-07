@@ -71,32 +71,6 @@ class TransactionFilterType extends AbstractFilterType
                         'placeholder' => 'Date To',
                     ]
                 ]
-            )
-            ->add(
-                'tenant',
-                'entity',
-                [
-                    'required' => false,
-                    'empty_data' => null,
-                    'choice_label' => 'tenantUser.fullName',
-                    'class' => Property::class,
-                    'query_builder' => function (EntityRepository $repository) {
-                        $user = $this->tokenStorage->getToken()->getUser();
-
-                        $qb = $repository->createQueryBuilder('p');
-                        $qb = $qb
-                            ->select('p')
-                            ->join('p.tenantUser', 'tu')
-                            ->where('p.user = :user')
-                            ->andWhere(
-                                $qb->expr()->isNotNull('p.tenantUser')
-                            )
-                            ->setParameter('user', $user);
-
-                        return $qb;
-                    },
-                    'label' => 'Tenant',
-                ]
             );
     }
 

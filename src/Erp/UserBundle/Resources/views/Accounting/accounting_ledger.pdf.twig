@@ -35,8 +35,8 @@
                             +
                         {% elseif (item.account.id == user.stripeAccount.id) %}
                             -
-                        {% endif %}{{ item.amount }}</td>
-                    <td class="text-left">{{ item.balance }}</td>
+                        {% endif %}{{ item.amount|money }}</td>
+                    <td class="text-left">{{ item.balance|money }}</td>
                 </tr>
             {% endfor %}
         {% else %}
