@@ -4,6 +4,8 @@ namespace Erp\UserBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeCustomer;
+use Erp\PaymentBundle\Entity\StripeSubscription;
+use Stripe\Subscription;
 use Erp\UserBundle\Entity\Charge;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Form\Type\ChargeFormType;
@@ -11,6 +13,7 @@ use Erp\UserBundle\Form\Type\LandlordFormType;
 use Erp\StripeBundle\Entity\PaymentTypeInterface;
 use Erp\StripeBundle\Helper\ApiHelper;
 use Symfony\Component\HttpFoundation\Request;
+
 
 class LandlordController extends BaseController
 {
@@ -159,6 +162,7 @@ class LandlordController extends BaseController
             return $this->createNotFoundException();
         }
 
+
         /** @var PaymentTypeInterface $model */
         $model = $this->get('erp_stripe.registry.model_registry1')->getModel($type);
         $form = $this->get('erp_stripe.registry.form_registry1')->getForm($type);
@@ -175,17 +179,77 @@ class LandlordController extends BaseController
             /** @var User $manager */
             $manager = $charge->getManager();
             $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
-            $arguments = [
-                'params' => [
-                    'amount' => ApiHelper::convertAmountToStripeFormat($charge->getAmount()),
-                    'currency' => StripeCustomer::DEFAULT_CURRENCY,
-                    'source' => $model->getSourceToken(),
-                ],
-                'options' => [
-                    'stripe_account' => $manager->getStripeAccount()->getAccountId(),
-                ]
-            ];
-            $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+            $stripeCustomer = $charge->getLandlord()->getStripeCustomer();
+            $amount = $charge->getAmount();
+            $stripeAccount = $manager->getStripeAccount()->getAccountId();
+            $stripeSubscription = $stripeCustomer->getStripeSubscription();
+            //TODO: add possibility for many subscriptions
+
+            if (!$stripeSubscription && !$charge->isRecurring()) {
+                $arguments = [
+                    'params' => [
+                        'customer' => $stripeCustomer->getCustomerId(),
+                        'items' => [
+                            [
+                                'plan' => StripeSubscription::MONTHLY_PLAN_ID,
+                                'quantity' => ApiHelper::convertAmountToStripeFormat($amount),
+                            ],
+                        ],
+                    ],
+                    'options' => [
+                        'stripe_account' => $stripeAccount,
+                    ]
+                ];
+                $response = $stripeApiManager->callStripeApi('\Stripe\Subscription', 'create', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $templateParams['errors'] = $response->getErrorMessage();
+                    return $this->render($template, $templateParams);
+                }
+                /** @var Subscription $subscription */
+                $subscription = $response->getContent();
+
+                $stripeSubscription = new StripeSubscription();
+                $stripeSubscription->setSubscriptionId($subscription['id'])
+                    ->setStripeCustomer($stripeCustomer);
+
+                $stripeCustomer->setStripeSubscription($stripeSubscription);
+
+                $em->persist($stripeCustomer);
+            } else {
+                $arguments = [
+                    'id' => $stripeSubscription->getSubscriptionId(),
+                    'params' => [
+                        'quantity' => ApiHelper::convertAmountToStripeFormat($amount),
+                    ],
+                    'options' => null,
+                ];
+                $response = $stripeApiManager->callStripeApi('\Stripe\Subscription', 'update', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $templateParams['errors'] = $response->getErrorMessage();
+                    return $this->render($template, $templateParams);
+                }
+
+                $arguments = [
+                    'params' => [
+                        'amount' => ApiHelper::convertAmountToStripeFormat($amount),
+                        'customer' => $stripeCustomer->getCustomerId(),
+                        'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                        'source' => $model->getSourceToken(),
+                    ],
+                    'options' => [
+                        'stripe_account' => $stripeAccount,
+                    ]
+                ];
+                $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $templateParams['errors'] = $response->getErrorMessage();
+                    return $this->render($template, $templateParams);
+                }
+            }
+
 
             if (!$response->isSuccess()) {
                 $this->addFlash(
