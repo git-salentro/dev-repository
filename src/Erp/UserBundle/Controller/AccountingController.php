@@ -107,21 +107,14 @@ class AccountingController extends BaseController
         $stripeAccount = $user->getStripeAccount();
         /** @var User $landlord */
         $landlord = $data['landlord']; //receiver
-        /** @var Property $tenantProperty */
-        $tenantProperty = $data['tenant'];
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
 
         $pagination = [];
         if ($stripeAccount) {
-            $stripeAccounts = [$stripeAccount];
-            $stripeCustomers = [
-                $landlord ? $landlord->getStripeCustomer() : null,
-                $tenantProperty ? $tenantProperty->getUser()->getStripeCustomer() : null,
-            ];
-            /** @var TransactionRepository $repository */
+            $stripeCustomer = $landlord ? $landlord->getStripeCustomer() : null;
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccounts, $stripeCustomers, $dateFrom, $dateTo);
+            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(

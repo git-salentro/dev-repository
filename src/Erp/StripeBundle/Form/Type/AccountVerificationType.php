@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Erp\PaymentBundle\Entity\StripeAccount;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class AccountVerificationType extends AbstractType
 {
@@ -20,7 +21,6 @@ class AccountVerificationType extends AbstractType
                 'city',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'City',
                 ]
             )
@@ -28,7 +28,6 @@ class AccountVerificationType extends AbstractType
                 'line1',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Line 1',
                 ]
             )
@@ -36,7 +35,6 @@ class AccountVerificationType extends AbstractType
                 'postalCode',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Postal Code',
                 ]
             )
@@ -44,7 +42,6 @@ class AccountVerificationType extends AbstractType
                 'state',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'State',
                 ]
             )
@@ -52,7 +49,6 @@ class AccountVerificationType extends AbstractType
                 'businessName',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Business Name',
                 ]
             )
@@ -60,7 +56,6 @@ class AccountVerificationType extends AbstractType
                 'businessTaxId',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Business Tax Id',
                 ]
             )
@@ -68,31 +63,60 @@ class AccountVerificationType extends AbstractType
                 'dayOfBirth',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Day Of Birth',
+                    'attr' => [
+                        'placeholder' => '01',
+                    ],
+                    'constraints' => [
+                        new Assert\Regex(
+                            [
+                                'message' => 'Invalid Format',
+                                'pattern' => '(0[1-9]|[12][0-9]|3[01])',
+                            ]
+                        ),
+                    ],
                 ]
             )
             ->add(
                 'monthOfBirth',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Month Of Birth',
+                    'attr' => [
+                        'placeholder' => '01',
+                    ],
+                    'constraints' => [
+                        new Assert\Regex(
+                            [
+                                'message' => 'Invalid Format',
+                                'pattern' => '^(0?[1-9]|1[012])$'
+                            ]
+                        ),
+                    ],
                 ]
             )
             ->add(
                 'yearOfBirth',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Year Of Birth',
+                    'attr' => [
+                        'placeholder' => '1999',
+                    ],
+                    'constraints' => [
+                        new Assert\Regex(
+                            [
+                                'message' => 'Invalid Format',
+                                'pattern' => '^19\d{2}$'
+                            ]
+                        ),
+                    ],
                 ]
             )
             ->add(
                 'firstName',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'First Name',
                 ]
             )
@@ -100,7 +124,6 @@ class AccountVerificationType extends AbstractType
                 'lastName',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'Last Name',
                 ]
             )
@@ -108,7 +131,6 @@ class AccountVerificationType extends AbstractType
                 'ssnLast4',
                 'text',
                 [
-                    'required' => true,
                     'label' => 'SSN Last 4 digits',
                 ]
             )
@@ -117,7 +139,6 @@ class AccountVerificationType extends AbstractType
                 'checkbox',
                 [
                     'label' => 'Term of use',
-                    'required' => true,
                     'mapped' => false,
                     'constraints' => new IsTrue([
                         'message' => 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy'
