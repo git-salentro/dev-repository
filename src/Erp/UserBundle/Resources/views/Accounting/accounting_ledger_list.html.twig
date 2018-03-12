@@ -50,26 +50,34 @@
                                         <td class="text-left">{{ item.created|date('M d, Y / h:i') }}</td>
                                         <td class="text-left">
                                             {{ item.account ? item.account.user.fullName : '' }}<br/>
-                                            {{ item.type }}
                                         </td>
                                         <td class="text-left">
-
                                             {% if (item.amount <= 0) %}
+                                                {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
+                                                {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
+                                                {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                                                 {{ item.account.user.fullName }}
                                                 >
+                                                {% if (item.customer.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
+                                                {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
+                                                {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                                                 {{ item.customer.user.fullName }}
                                             {% else %}
-
+                                                {% if (item.customer.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
+                                                {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
+                                                {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                                                 {{ item.customer.user.fullName }}
                                                 >
+                                                {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
+                                                {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
+                                                {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                                                 {{ item.account.user.fullName }}
                                             {% endif %}
-
                                         </td>
                                         <td class="text-left">{{ item.status }}</td>
                                         <td class="text-left">
-                                            {{ item.amount|money }}</td>
-                                        <td class="text-left">{{ item.balance|money }}</td>
+                                            {{ item.amount|stripe_money }}</td>
+                                        <td class="text-left">{{ item.balance|stripe_money }}</td>
                                     </tr>
                                 {% endfor %}
                             {% else %}
