@@ -47,15 +47,23 @@
                 <tr>
                     <td class="text-left">{{ item.created|date('M d, Y / h:i') }}</td>
                     <td class="text-left">
-                        {{ item.customer ? item.customer.user.fullName : '' }}<br/>
+                        {{ item.account ? item.account.user.fullName : '' }}<br/>
                         {{ item.type }}
                     </td>
                     <td class="text-left">
-                        {% if (item.customer.id == user.stripeCustomer.id) %}
-                            Tenant to Manager
-                        {% elseif (item.account.id == user.stripeAccount.id) %}
-                            Manager to Landlord
+
+                        {% if (item.amount <= 0) %}
+
+                            {{ item.account.user.fullName }}
+                            -
+                            {{ item.customer.user.fullName }}
+                        {% else %}
+
+                            {{ item.customer.user.fullName }}
+                            -
+                            {{ item.account.user.fullName }}
                         {% endif %}
+
                     </td>
                     <td class="text-left">{{ item.status }}</td>
                     <td class="text-left">
