@@ -115,4 +115,5 @@ class UserFixture extends Fixture
 
         $this->addReference('peterparker@test.com', $user);
     }
+
 }
