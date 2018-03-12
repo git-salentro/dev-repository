@@ -108,12 +108,12 @@ class StripeController extends BaseController
         try {
             $stripeBankAccountToken = $this->createBankAccountToken($publicToken, $accountId);
         } catch (ServiceException $e) {
-            return new JsonResponse(
-                [
-                    'success' => false,
-                    'error' => $e->getMessage(),
-                ]
+            $this->addFlash(
+                'alert_error',
+                $e->getMessage()
             );
+
+            return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
         }
 
         $apiManager = $this->get('erp_stripe.entity.api_manager');
@@ -176,12 +176,12 @@ class StripeController extends BaseController
         try {
             $stripeBankAccountToken = $this->createBankAccountToken($publicToken, $accountId);
         } catch (ServiceException $e) {
-            return new JsonResponse(
-                [
-                    'success' => false,
-                    'error' => $e->getMessage(),
-                ]
+            $this->addFlash(
+                'alert_error',
+                $e->getMessage()
             );
+
+            return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
         }
 
         if ($user->hasRole(User::ROLE_MANAGER)) {
@@ -237,11 +237,13 @@ class StripeController extends BaseController
             }
         }
 
-        return new JsonResponse(
-            [
-                'success' => true,
-            ]
-        );
+        if ($user->hasRole(User::ROLE_MANAGER)) {
+            $url = $this->generateUrl('erp_property_unit_buy');
+        } else {
+            $url = $this->generateUrl('erp_user_profile_dashboard');
+        }
+
+        return $this->redirect($url);
     }
 
     public function verifyAccountAction(Request $request)
