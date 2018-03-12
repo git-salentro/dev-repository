@@ -61,11 +61,7 @@
                                         </td>
                                         <td class="text-left">{{ item.status }}</td>
                                         <td class="text-left">
-                                            {% if (item.customer.id == user.stripeCustomer.id) %}
-                                                +
-                                            {% elseif (item.account.id == user.stripeAccount.id) %}
-                                                -
-                                            {% endif %}{{ item.amount|money }}</td>
+                                            {{ item.amount|money }}</td>
                                         <td class="text-left">{{ item.balance|money }}</td>
                                     </tr>
                                 {% endfor %}
