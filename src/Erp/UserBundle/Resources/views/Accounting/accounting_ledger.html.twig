@@ -33,12 +33,12 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th class="col-xs-3">Date</th>
+            <th class="col-xs-2">Date</th>
             <th class="col-xs-3">Transaction</th>
-            <th class="col-xs-3">Description</th>
-            <th class="col-xs-3">Status</th>
-            <th class="col-xs-2" nowrap>Income</th>
-            <th class="col-xs-4">Balance</th>
+            <th class="col-xs-4">Description</th>
+            <th class="col-xs-1">Status</th>
+            <th class="col-xs-1" nowrap>Income</th>
+            <th class="col-xs-1">Balance</th>
         </tr>
         </thead>
         <tbody>
@@ -53,14 +53,12 @@
                     <td class="text-left">
 
                         {% if (item.amount <= 0) %}
-
                             {{ item.account.user.fullName }}
-                            -
+                            >
                             {{ item.customer.user.fullName }}
                         {% else %}
-
                             {{ item.customer.user.fullName }}
-                            -
+                            >
                             {{ item.account.user.fullName }}
                         {% endif %}
 
