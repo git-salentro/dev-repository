@@ -49,6 +49,7 @@
                     <td class="text-left">{{ item.created|date('M d, Y / h:i') }}</td>
                     <td class="text-left">
                         {{ item.account ? item.account.user.fullName : '' }}<br/>
+                        {{ item.paymentMethodDescription }}
                     </td>
                     <td class="text-left">
                         {{ item.internalType|internal_type }}:
