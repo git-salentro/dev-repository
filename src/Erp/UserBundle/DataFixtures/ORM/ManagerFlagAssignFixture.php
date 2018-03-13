@@ -12,18 +12,15 @@ class ManagerFlagAssignFixture extends Fixture implements DependentFixtureInterf
     /**
      * @inheritdoc
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $objectManager)
     {
         $userManager = $this->container->get('fos_user.user_manager');
-
-        /** @var User $user */
-        $manager = $userManager->findUserByEmail('tonystark@test.com'); //manager
-        $manager->setManager($this->getReference('johndoe@test.com'));//landlord
-        $userManager->updateUser($manager);
-
-        /** @var User $user */
         $landlord = $userManager->findUserByEmail('johndoe@test.com'); //landlord
-        $landlord->setManager($this->getReference('peterparker@test.com'));//landlord
+        $landlord->setManager($this->getReference('tonystark@test.com'));//manager
+        $userManager->updateUser($landlord);
+
+        $tenant = $userManager->findUserByEmail('peterparker@test.com'); //tenant
+        $tenant->setManager($this->getReference('johndoe@test.com'));//landlord
         $userManager->updateUser($landlord);
     }
 
