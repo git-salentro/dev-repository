@@ -2,6 +2,7 @@
 
 namespace Erp\UserBundle\DataFixtures\ORM;
 
+use Erp\CoreBundle\DataFixtures\ORM\EmailNotificationFixture;
 use Erp\UserBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -139,6 +140,13 @@ class UserFixture extends Fixture
         $userManager->updateUser($user);
 
         $this->addReference('peterparker@test.com', $user);
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            EmailNotificationFixture::class,
+        );
     }
 
 }
