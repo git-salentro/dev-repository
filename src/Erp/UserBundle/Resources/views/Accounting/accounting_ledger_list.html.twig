@@ -97,12 +97,14 @@
                         {% if (pagination|length) %}
                             <div class="container-fluid">
                                 <div class="row">
+                                    <div class="form-group">
                                     <button
                                             role="button"
                                             class="btn red-btn"
                                             onclick="location='{{ pdf_link }}'">
                                         Export as PDF
                                     </button>
+                                    </div>
                                 </div>
                             </div>
                         {% endif %}
