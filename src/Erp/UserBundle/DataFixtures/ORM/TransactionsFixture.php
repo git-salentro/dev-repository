@@ -23,7 +23,13 @@ class TransactionsFixture extends Fixture
         /** @var User $landlord */
         $landlord = $this->getReference('johndoe@test.com');
 
-        $stripeAccount = new StripeAccount();
+        if ($stripeAccount = $manager->getStripeAccount() instanceof StripeAccount) {
+            //stay exist account
+        } else {
+            $stripeAccount = new StripeAccount();
+        }
+
+
         $stripeAccount->setUser($manager)
             ->setAccountId('0987654321')//mock data
             ->setFirstName($manager->getFirstName())
@@ -31,7 +37,13 @@ class TransactionsFixture extends Fixture
         $objectManager->persist($stripeAccount);
         $objectManager->flush();
 
-        $stripeCustomer = new StripeCustomer();
+
+        if ($stripeCustomer = $landlord->getStripeCustomer() instanceof StripeCustomer) {
+            //stay exist account
+        } else {
+            $stripeCustomer = new StripeCustomer();
+        }
+
         $stripeCustomer->setUser($landlord)
             ->setCustomerId('1234567890')//mock data
         ;
