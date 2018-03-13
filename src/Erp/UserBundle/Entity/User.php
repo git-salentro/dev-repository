@@ -576,6 +576,11 @@ class User extends BaseUser
     /**
      * @var User Manager
      * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="landlords")
+     * @ORM\JoinColumn(
+     *      name="manager_id",
+     *      referencedColumnName="id",
+     *      onDelete="SET NULL"
+     * )
      */
     protected $manager;
 
