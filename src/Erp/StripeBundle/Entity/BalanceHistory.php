@@ -34,7 +34,7 @@ class BalanceHistory
     /**
      * @var string
      *
-     * @ORM\Column(name="amount", type="string", length=255)
+     * @ORM\Column(name="amount", type="string", length=255, nullable=true)
      */
     private $amount;
 
@@ -42,7 +42,7 @@ class BalanceHistory
     /**
      * @var string
      *
-     * @ORM\Column(name="balance", type="string", length=255)
+     * @ORM\Column(name="balance", type="string", length=255, nullable=true)
      */
     private $balance;
 

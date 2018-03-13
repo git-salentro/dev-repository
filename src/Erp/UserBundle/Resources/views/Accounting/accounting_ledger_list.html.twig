@@ -14,20 +14,21 @@
                     <div class="col-md-12">
                         {{ form_start(form) }}
                         <div class="form-group">
-                            <div class="col-xs-3">
+                            <div class="col-xs-12 col-md-3">
                                 {{ form_label(form.landlord) }}
                                 {{ form_widget(form.landlord, {'attr': {'class': 'form-control'}}) }}
                             </div>
-                            <div class="col-xs-3">
+                            <div class="col-xs-12 col-md-3">
                                 {{ form_label(form.dateFrom) }}
                                 {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
                             </div>
-                            <div class="col-xs-3">
+                            <div class="col-xs-12 col-md-3">
                                 {{ form_label(form.dateTo) }}
                                 {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
                             </div>
-                            <div class="col-xs-2">
-                                <button class="btn red-btn" type="submit">Filter</button>
+                            <div class="col-xs-12 col-md-3">
+                                <label for="filter">&nbsp;</label><br/>
+                                <button id="filter" name="filter" class="btn red-btn" type="submit">Filter</button>
                             </div>
                         </div>
                         {{ form_end(form) }}
@@ -95,7 +96,7 @@
                                 <div class="row">
                                     <button
                                             role="button"
-                                            class="btn"
+                                            class="btn red-btn"
                                             onclick="location='{{ pdf_link }}'">
                                         Export as PDF
                                     </button>

@@ -4,6 +4,7 @@ namespace Erp\UserBundle\DataFixtures\ORM;
 
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
+use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Helper\ApiHelper;
 use Erp\UserBundle\Entity\User;
@@ -38,42 +39,83 @@ class TransactionsFixture extends Fixture
         $objectManager->flush();
 
         $transaction = new Transaction();
+        $amount = ApiHelper::convertAmountToStripeFormat('100');
+        $balance = ApiHelper::convertAmountToStripeFormat('100');
+
         $transaction->setAccount($stripeAccount)
             ->setCustomer($stripeCustomer)
             ->setCurrency('usd')
-            ->setAmount(ApiHelper::convertAmountToStripeFormat('100'))
-            ->setBalance(ApiHelper::convertAmountToStripeFormat('100'))
-            ->setPaymentMethod('card')
-            ->setType(Transaction::TYPE_CHARGE)
             ->setStatus('cleared')
-            ->setCreated(new \DateTime());
+            ->setCreated(new \DateTime())
+            ->setAmount($amount)
+            ->setBalance($balance)
+            ->setPaymentMethod(Transaction::CREDIT_CARD_PAYMENT_METHOD)
+            ->setType(Transaction::TYPE_CHARGE)
+            ->setInternalType('late_rent_payment');
         $objectManager->persist($transaction);
         $objectManager->flush();
 
+        $balanceHistory = new BalanceHistory();
+        $balanceHistory->setTransaction($transaction);
+        $objectManager->persist($balanceHistory);
+        $balanceHistory
+            ->setAmount($amount)
+            ->setBalance($balance)
+        ;
+        $objectManager->persist($balanceHistory);
+        $objectManager->flush();
+
+
         $transaction = new Transaction();
+        $amount = ApiHelper::convertAmountToStripeFormat('150');
+        $balance = ApiHelper::convertAmountToStripeFormat('250');
         $transaction->setAccount($stripeAccount)
             ->setCustomer($stripeCustomer)
             ->setCurrency('usd')
-            ->setAmount(ApiHelper::convertAmountToStripeFormat('150'))
-            ->setBalance(ApiHelper::convertAmountToStripeFormat('250'))
-            ->setPaymentMethod('card')
-            ->setType(Transaction::TYPE_CHARGE)
             ->setStatus('cleared')
-            ->setCreated(new \DateTime());
+            ->setCreated(new \DateTime())
+            ->setAmount($amount)
+            ->setBalance($balance)
+            ->setPaymentMethod(Transaction::CREDIT_CARD_PAYMENT_METHOD)
+            ->setType(Transaction::TYPE_CHARGE)
+            ->setInternalType('rent_payment');
         $objectManager->persist($transaction);
         $objectManager->flush();
 
+        $balanceHistory = new BalanceHistory();
+        $balanceHistory->setTransaction($transaction);
+        $objectManager->persist($balanceHistory);
+        $balanceHistory
+            ->setAmount($amount)
+            ->setBalance($balance)
+        ;
+        $objectManager->persist($balanceHistory);
+        $objectManager->flush();
+
         $transaction = new Transaction();
+        $amount = ApiHelper::convertAmountToStripeFormat('-100');
+        $balance = ApiHelper::convertAmountToStripeFormat('150');
         $transaction->setAccount($stripeAccount)
             ->setCustomer($stripeCustomer)
-            ->setCurrency('usd')
-            ->setAmount(ApiHelper::convertAmountToStripeFormat('-100'))
-            ->setBalance(ApiHelper::convertAmountToStripeFormat('150'))
-            ->setPaymentMethod('card')
             ->setType(Transaction::TYPE_CHARGE)
+            ->setCurrency('usd')
             ->setStatus('cleared')
-            ->setCreated(new \DateTime());
+            ->setCreated(new \DateTime())
+            ->setAmount($amount)
+            ->setBalance($balance)
+            ->setPaymentMethod(Transaction::CREDIT_CARD_PAYMENT_METHOD)
+            ->setInternalType('fee');
         $objectManager->persist($transaction);
+        $objectManager->flush();
+
+        $balanceHistory = new BalanceHistory();
+        $balanceHistory->setTransaction($transaction);
+        $objectManager->persist($balanceHistory);
+        $balanceHistory
+            ->setAmount($amount)
+            ->setBalance($balance)
+        ;
+        $objectManager->persist($balanceHistory);
         $objectManager->flush();
 
 

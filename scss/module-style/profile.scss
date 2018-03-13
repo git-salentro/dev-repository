@@ -156,8 +156,6 @@
         }
     }
     .profile-widget-row {
-        //height: 260px;
-        height: 300px;
         margin-bottom: 30px;
         &.settings-row {
             height: auto;
@@ -254,7 +252,8 @@
         }
         .profile-widget-item {
             margin-right: 47px;
-            min-height: 100px;
+            padding: 0 10px 10px 10px;
+            min-height: 300px;
             -webkit-border-radius: 5px;
             -moz-border-radius: 5px;
             border-radius: 5px;
@@ -732,8 +731,6 @@
                 -webkit-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
                 -moz-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
                 box-shadow: 1px 2px 6px rgba(0,0,0,.15);
-                //height: 260px;
-                height: 300px;
                 &.widget-second {
                     margin-top: 30px;
                 }
