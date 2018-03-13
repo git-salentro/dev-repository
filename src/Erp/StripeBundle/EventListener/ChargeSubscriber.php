@@ -34,13 +34,20 @@ class ChargeSubscriber extends AbstractSubscriber
             return;
         }
 
+
+        $em = $this->registry->getManagerForClass(Transaction::class);
+
+        //        $repository = $em->getRepository(Transaction::class);
+        //        $transaction= $repository->findOneBy(['account'=>$stripeEvent->account]);
+
         $transaction = new Transaction();
 
         $transaction->setAmount($stripeCharge->amount)
             ->setCurrency($stripeCharge->currency)
             ->setCreated((new \DateTime())->setTimestamp($stripeCharge->created))
             ->setType(Transaction::TYPE_CHARGE)
-            ->setPaymentMethod($stripeCharge->source->object);
+            ->setPaymentMethod($stripeCharge->source->object)
+            ->setPaymentMethodDescription($stripeCharge->source->brand);
 
         if (isset($stripeEvent->account)) {
             $account = $this->getAccount($stripeEvent->account);
@@ -50,7 +57,6 @@ class ChargeSubscriber extends AbstractSubscriber
         $customer = $this->getCustomer($stripeCharge->customer);
         $transaction->setCustomer($customer);
 
-        $em = $this->registry->getManagerForClass(Transaction::class);
 
         $em->persist($transaction);
         $em->flush();

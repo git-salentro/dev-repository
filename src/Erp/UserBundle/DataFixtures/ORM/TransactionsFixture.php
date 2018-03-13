@@ -52,6 +52,8 @@ class TransactionsFixture extends Fixture
             ->setPaymentMethod(Transaction::CREDIT_CARD_PAYMENT_METHOD)
             ->setType(Transaction::TYPE_CHARGE)
             ->setInternalType('late_rent_payment');
+        $transaction->setPaymentMethodDescription('Visa');
+
         $objectManager->persist($transaction);
         $objectManager->flush();
 
@@ -79,6 +81,7 @@ class TransactionsFixture extends Fixture
             ->setPaymentMethod(Transaction::CREDIT_CARD_PAYMENT_METHOD)
             ->setType(Transaction::TYPE_CHARGE)
             ->setInternalType('rent_payment');
+        $transaction->setPaymentMethodDescription('Visa');
         $objectManager->persist($transaction);
         $objectManager->flush();
 
@@ -105,6 +108,7 @@ class TransactionsFixture extends Fixture
             ->setBalance($balance)
             ->setPaymentMethod(Transaction::CREDIT_CARD_PAYMENT_METHOD)
             ->setInternalType('fee');
+        $transaction->setPaymentMethodDescription('Visa');
         $objectManager->persist($transaction);
         $objectManager->flush();
 

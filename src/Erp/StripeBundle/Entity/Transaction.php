@@ -95,6 +95,14 @@ class Transaction
     /**
      * @var string
      *
+     * @ORM\Column(name="payment_method_description", type="string", nullable=true)
+     */
+    private $paymentMethodDescription;
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="metadata", type="array", nullable=true)
      */
     private $metadata;
@@ -400,5 +408,21 @@ class Transaction
     public function setInternalType($internalType)
     {
         $this->internalType = $internalType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethodDescription()
+    {
+        return $this->paymentMethodDescription;
+    }
+
+    /**
+     * @param string $paymentMethodDescription
+     */
+    public function setPaymentMethodDescription($paymentMethodDescription)
+    {
+        $this->paymentMethodDescription = $paymentMethodDescription;
     }
 }
