@@ -8,8 +8,10 @@
 {% block pageContent %}
     {{ parent() }}
     <div class="page-content">
+
         <section id="managers-listings" class="listings profile">
             <div class="container">
+                <span class="bold-text">Total Balance: {{ balance_history_total }}</span>
                 <div class="row">
                     <div class="col-md-12">
                         {{ form_start(form) }}
@@ -53,12 +55,13 @@
                                             {{ item.account ? item.account.user.fullName : '' }}<br/>
                                         </td>
                                         <td class="text-left">
+                                            {{ item.internalType|internal_type }}:
                                             {% if (item.amount <= 0) %}
                                                 {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
                                                 {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                                                 {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                                                 {{ item.account.user.fullName }}
-                                                >
+                                                to
                                                 {% if (item.customer.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
                                                 {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                                                 {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
@@ -68,7 +71,7 @@
                                                 {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                                                 {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                                                 {{ item.customer.user.fullName }}
-                                                >
+                                                to
                                                 {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
                                                 {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                                                 {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}

@@ -3,6 +3,7 @@
 namespace Erp\UserBundle\Controller;
 
 use Erp\PropertyBundle\Entity\Property;
+use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Repository\TransactionRepository;
 use Erp\UserBundle\Entity\User;
@@ -59,11 +60,14 @@ class AccountingController extends BaseController
             );
         }
 
+        $total = 0; //TODO: list of BalanceHistory for current manager
+
         $template = sprintf('ErpUserBundle:Accounting:accounting_ledger_list.html.twig', $_format);
         $parameters = [
             'user' => $user,
             'form' => $form->createView(),
             'pagination' => $pagination,
+            'balance_history_total' => $total,
         ];
 
         if ($_format == 'html') {
