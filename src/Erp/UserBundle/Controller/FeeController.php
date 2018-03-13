@@ -4,11 +4,11 @@ namespace Erp\UserBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Erp\UserBundle\Entity\User;
-use Erp\UserBundle\Form\Type\LateRentPaymentType;
-use Erp\UserBundle\Entity\LateRentPayment;
+use Erp\UserBundle\Form\Type\FeeType;
+use Erp\UserBundle\Entity\Fee;
 use Erp\CoreBundle\Controller\BaseController;
 
-class LateRentPaymentController extends BaseController
+class FeeController extends BaseController
 {
     /**
      * @param User $user
@@ -17,31 +17,31 @@ class LateRentPaymentController extends BaseController
      */
     public function createAction(User $user, Request $request)
     {
-        if (!$user->hasRole(User::ROLE_TENANT) && !$user->getLateRentPayments()) {
+        if (!$user->hasRole(User::ROLE_TENANT)) {
             throw $this->createAccessDeniedException();
         }
 
-        $entity = new LateRentPayment();
+        $entity = new Fee();
         $entity->setUser($user);
 
         return $this->update($entity, $request);
     }
 
     /**
-     * @param LateRentPayment $lateRentPayment
+     * @param Fee $fee
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function updateAction(LateRentPayment $lateRentPayment, Request $request)
+    public function updateAction(Fee $fee, Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        if ($user->hasTenant($lateRentPayment->getUser())) {
+        if ($user->hasTenant($fee->getUser())) {
             return $this->createNotFoundException();
         }
 
-        return $this->update($lateRentPayment, $request);
+        return $this->update($fee, $request);
     }
 
     /**
@@ -54,17 +54,16 @@ class LateRentPaymentController extends BaseController
         /** @var User $user */
         $user = $this->getUser();
 
-        $em = $this->getDoctrine()->getManagerForClass(LateRentPayment::class);
-        $repository = $em->getRepository(LateRentPayment::class);
-        $lateRentPayment = $repository->find($id);
+        $em = $this->getDoctrine()->getManagerForClass(Fee::class);
+        $repository = $em->getRepository(Fee::class);
+        $fee = $repository->find($id);
 
-        if ($user->hasTenant($lateRentPayment->getUser())) {
+        if ($user->hasTenant($fee->getUser())) {
             return $this->createNotFoundException();
         }
 
         if ($request->getMethod() === 'DELETE') {
-            $lateRentPayment->setPaid(true);
-            $em->persist($lateRentPayment);
+            $em->remove($fee);
             $em->flush();
 
             $this->addFlash(
@@ -76,7 +75,7 @@ class LateRentPaymentController extends BaseController
         }
 
         return $this->render('ErpCoreBundle:crossBlocks:delete-confirmation-popup.html.twig', [
-            'actionUrl' => $this->generateUrl('erp_user_late_rent_payment_remove', ['id' => $id]),
+            'actionUrl' => $this->generateUrl('erp_user_fee_remove', ['id' => $id]),
         ]);
     }
 
@@ -90,7 +89,9 @@ class LateRentPaymentController extends BaseController
         }
 
         if ($request->getMethod() === 'DELETE') {
-            $user->clearLateRentPayments();
+            $user->clearFees();
+            $rentPaymentBalance = $user->getRentPaymentBalance();
+            $rentPaymentBalance->setBalance(0);
 
             $em = $this->getDoctrine()->getManagerForClass(User::class);
             $em->persist($user);
@@ -105,22 +106,22 @@ class LateRentPaymentController extends BaseController
         }
 
         return $this->render('ErpCoreBundle:crossBlocks:delete-confirmation-popup.html.twig', [
-            'actionUrl' => $this->generateUrl('erp_user_late_rent_payment_remove_user', ['id' => $user->getId()]),
+            'actionUrl' => $this->generateUrl('erp_user_fee_remove_user', ['id' => $user->getId()]),
         ]);
     }
 
     /**
-     * @param LateRentPayment $entity
+     * @param Fee $entity
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    private function update(LateRentPayment $entity, Request $request)
+    private function update(Fee $entity, Request $request)
     {
-        $form = $this->createForm(new LateRentPaymentType(), $entity);
+        $form = $this->createForm(new FeeType(), $entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManagerForClass(LateRentPayment::class);
+            $em = $this->getDoctrine()->getManagerForClass(Fee::class);
             $em->persist($entity);
             $em->flush();
 
@@ -132,7 +133,7 @@ class LateRentPaymentController extends BaseController
             return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
         }
 
-        return $this->render('ErpUserBundle:LateRentPayment:form.html.twig', [
+        return $this->render('ErpUserBundle:Fee:form.html.twig', [
             'modalTitle' => 'Set Late Rent Payment Settings',
             'form' => $form->createView(),
         ]);

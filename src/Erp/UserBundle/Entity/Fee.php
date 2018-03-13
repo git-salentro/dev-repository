@@ -9,20 +9,18 @@ use Erp\CoreBundle\Entity\DatesAwareTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class LateLateRentPayment
+ * Class Fee
  *
- * @ORM\Table(name="late_rent_payment")
- * @ORM\Entity(repositoryClass="Erp\UserBundle\Repository\LateRentPaymentRepository")
+ * @ORM\Table(name="erp_user_fee")
+ * @ORM\Entity(repositoryClass="Erp\UserBundle\Repository\FeeRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class LateRentPayment implements DatesAwareInterface
+class Fee implements DatesAwareInterface
 {
     use DatesAwareTrait;
 
-    const LATE_RENT_PAYMENT_TYPE = 'late_rent';
     const FEE_PAYMENT_TYPE = 'fee';
     const LATE_RENT_PAYMENT_TYPE_LABELS = [
-        self::LATE_RENT_PAYMENT_TYPE => 'Late Rent',
         self::FEE_PAYMENT_TYPE => 'Fee',
     ];
 
@@ -38,7 +36,7 @@ class LateRentPayment implements DatesAwareInterface
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="lateRentPayments")
+     * @ORM\ManyToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="fees")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
@@ -55,7 +53,7 @@ class LateRentPayment implements DatesAwareInterface
      *
      * @ORM\Column(name="type", type="string")
      */
-    private $type = self::LATE_RENT_PAYMENT_TYPE;
+    private $type = self::FEE_PAYMENT_TYPE;
 
     /**
      * @ORM\PrePersist
@@ -89,7 +87,7 @@ class LateRentPayment implements DatesAwareInterface
      *
      * @param integer $amount
      *
-     * @return LateRentPayment
+     * @return Fee
      */
     public function setAmount($amount)
     {
@@ -113,7 +111,7 @@ class LateRentPayment implements DatesAwareInterface
      *
      * @param string $type
      *
-     * @return LateRentPayment
+     * @return Fee
      */
     public function setType($type)
     {
@@ -137,7 +135,7 @@ class LateRentPayment implements DatesAwareInterface
      *
      * @param \Erp\UserBundle\Entity\User $user
      *
-     * @return LateRentPayment
+     * @return Fee
      */
     public function setUser(\Erp\UserBundle\Entity\User $user = null)
     {

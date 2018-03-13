@@ -546,11 +546,11 @@ class User extends BaseUser
     protected $isActiveMonthlyFee = false;
 
     /**
-     * @var \Erp\UserBundle\Entity\LateRentPayment[]|Collection
+     * @var \Erp\UserBundle\Entity\Fee[]|Collection
      *
-     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\LateRentPayment", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Fee", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
      */
-    protected $lateRentPayments;
+    protected $fees;
 
     /**
      * @var RentPaymentBalance
@@ -616,7 +616,7 @@ class User extends BaseUser
         $this->chargeOutgoings = new ArrayCollection();
         $this->chargeIncomings = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
-        $this->lateRentPayments = new ArrayCollection();
+        $this->fees = new ArrayCollection();
     }
 
     /**
@@ -1891,38 +1891,38 @@ class User extends BaseUser
     }
 
     /**
-     * Add lateRentPayment
+     * Add fee
      *
-     * @param \Erp\UserBundle\Entity\LateRentPayment $lateRentPayment
+     * @param \Erp\UserBundle\Entity\Fee $fee
      *
      * @return User
      */
-    public function addLateRentPayment(\Erp\UserBundle\Entity\LateRentPayment $lateRentPayment)
+    public function addFee(\Erp\UserBundle\Entity\Fee $fee)
     {
-        $lateRentPayment->setUser($this);
-        $this->lateRentPayments[] = $lateRentPayment;
+        $fee->setUser($this);
+        $this->fees[] = $fee;
 
         return $this;
     }
 
     /**
-     * Remove lateRentPayment
+     * Remove fee
      *
-     * @param \Erp\UserBundle\Entity\LateRentPayment $lateRentPayment
+     * @param \Erp\UserBundle\Entity\Fee $fee
      */
-    public function removeLateRentPayment(\Erp\UserBundle\Entity\LateRentPayment $lateRentPayment)
+    public function removeFee(\Erp\UserBundle\Entity\Fee $fee)
     {
-        $this->lateRentPayments->removeElement($lateRentPayment);
+        $this->fees->removeElement($fee);
     }
 
     /**
-     * Get lateRentPayments
+     * Get fees
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getLateRentPayments()
+    public function getFees()
     {
-        return $this->lateRentPayments;
+        return $this->fees;
     }
 
     /**
@@ -1978,7 +1978,7 @@ class User extends BaseUser
      *
      * @param boolean $allowPartialPayment
      *
-     * @return LateRentPayment
+     * @return User
      */
     public function setAllowPartialPayment($allowPartialPayment)
     {
@@ -2078,8 +2078,8 @@ class User extends BaseUser
         return $rentPaymentBalance >= 0 ? 0 : abs($rentPaymentBalance);
     }
 
-    public function clearLateRentPayments()
+    public function clearFees()
     {
-        $this->lateRentPayments->clear();
+        $this->fees->clear();
     }
 }

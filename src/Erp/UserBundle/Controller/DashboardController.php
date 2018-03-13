@@ -8,7 +8,7 @@ use Erp\PropertyBundle\Entity\Property;
 use Erp\StripeBundle\Entity\Invoice;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
-use Erp\UserBundle\Entity\LateRentPayment;
+use Erp\UserBundle\Entity\Fee;
 use Stripe\BankAccount;
 use Stripe\Card;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,17 +30,17 @@ class DashboardController extends BaseController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $lateRentPaymentsRepository = $this->getDoctrine()->getManagerForClass(LateRentPayment::class)->getRepository(LateRentPayment::class);
+        $feeRepository = $this->getDoctrine()->getManagerForClass(Fee::class)->getRepository(Fee::class);
         $userRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
 
         $propertiesWasNotPaid = $userRepository->getDebtors($user);
-        $lateRentPayments = $lateRentPaymentsRepository->getLatePayments($user);
+        $fees = $feeRepository->getFees($user);
 
         $form = $this->createForm(new UserLateRentPaymentType());
 
         return $this->render('ErpUserBundle:Dashboard:late_rent_payments.html.twig', [
             'properties_was_not_paid' => $propertiesWasNotPaid,
-            'late_rent_payments' => $lateRentPayments,
+            'fees' => $fees,
             'form' => $form->createView(),
         ]);
     }

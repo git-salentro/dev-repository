@@ -3,7 +3,6 @@
 namespace Erp\StripeBundle\EventListener;
 
 use Erp\StripeBundle\Entity\Transaction;
-use Erp\UserBundle\Entity\LateRentPayment;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Entity\RentPaymentBalance;
 use Doctrine\Bundle\DoctrineBundle\Registry;

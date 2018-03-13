@@ -1,5 +1,5 @@
 {% set entity =  form.vars.value %}
-{% set action = entity.id ? path('erp_user_late_rent_payment_update', {'user': entity.user.id}) : path('erp_user_late_rent_payment_create', {'user': entity.user.id}) %}
+{% set action = entity.id ? path('erp_user_fee_update', {'user': entity.user.id}) : path('erp_user_fee_create', {'user': entity.user.id}) %}
 
 {{ form_start(form, {'action': action}) }}
     <div class="form-group text-left">

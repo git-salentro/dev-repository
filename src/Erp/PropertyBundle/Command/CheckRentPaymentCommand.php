@@ -2,7 +2,6 @@
 
 namespace Erp\PropertyBundle\Command;
 
-use Erp\UserBundle\Entity\LateRentPayment;
 use Erp\UserBundle\Entity\RentPaymentBalance;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

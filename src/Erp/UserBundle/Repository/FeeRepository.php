@@ -5,9 +5,9 @@ namespace Erp\UserBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Erp\UserBundle\Entity\User;
 
-class LateRentPaymentRepository extends EntityRepository
+class FeeRepository extends EntityRepository
 {
-    public function getLatePayments(User $user)
+    public function getFees(User $user)
     {
         $qb = $this->createQueryBuilder('lrp')
             ->select('lrp, tu')

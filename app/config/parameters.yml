@@ -12,9 +12,9 @@ parameters:
     contact_email: info@e-rentpay.com
     siteUrl: 'https://e-rentpay.com'
     secret: ThisTokenIsNotSoSecretChangeIt
-    docusign_integrator_key: docusign_integrator_key
-    docusign_email: docusign_email
-    docusign_password: docusign_password
-    docusign_environment: na2
-    docusign_account_id: docusign_account_id
+    docusign_integrator_key: '%docusign.integrator.key%'
+    docusign_email: '%docusign.email%'
+    docusign_password: '%docusign.password%'
+    docusign_environment: '%docusign.environment%'
+    docusign_account_id: '%docusign.account.id%'
     ga_id: ga_id

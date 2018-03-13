@@ -5,9 +5,9 @@ namespace Erp\UserBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Erp\UserBundle\Entity\LateRentPayment;
+use Erp\UserBundle\Entity\Fee;
 
-class LateRentPaymentType extends AbstractType
+class FeeType extends AbstractType
 {
     /**
      * @inheritdoc
@@ -31,7 +31,7 @@ class LateRentPaymentType extends AbstractType
                     'required' => false,
                     'label' => 'Category',
                     'choices' => [
-                        LateRentPayment::FEE_PAYMENT_TYPE => 'Late Fees',
+                        Fee::FEE_PAYMENT_TYPE => 'Late Fees',
                     ]
                 ]
             );
@@ -43,7 +43,7 @@ class LateRentPaymentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => LateRentPayment::class,
+            'data_class' => Fee::class,
             'csrf_protection' => false,
         ]);
     }
@@ -53,6 +53,6 @@ class LateRentPaymentType extends AbstractType
      */
     public function getName()
     {
-        return 'erp_user_late_rent_payment';
+        return 'erp_user_fee';
     }
 }
