@@ -22,9 +22,17 @@ class UserFixture extends Fixture
     {
         $userManager = $this->container->get('fos_user.user_manager');
         $settings = $this->container->get('erp.users.user.service')->getSettings();
+        $email = 'tonystark@test.com';
 
         /** @var User $user */
-        $user = $userManager->createUser();
+        $user = $userManager->findUserByEmail($email);
+        if ($user instanceOf User) {
+            //update current user
+        } else {
+            /** @var User $user */
+            $user = $userManager->createUser();
+        }
+
         $user->addRole(User::ROLE_MANAGER);
         $user
             ->setCompanyName('My manager Company')
@@ -33,7 +41,7 @@ class UserFixture extends Fixture
             ->setPhone('555-555-5555')
             ->setAddressOne('Address One')
             ->setPostalCode('11111')
-            ->setEmail('tonystark@test.com')
+            ->setEmail($email)
             ->setPlainPassword('qweASD123')
             ->setEnabled(true)
             ->setUsername($user->getEmail())
@@ -57,8 +65,17 @@ class UserFixture extends Fixture
         $userManager = $this->container->get('fos_user.user_manager');
         $settings = $this->container->get('erp.users.user.service')->getSettings();
 
+        $email = 'johndoe@test.com';
+
         /** @var User $user */
-        $user = $userManager->createUser();
+        $user = $userManager->findUserByEmail($email);
+        if ($user instanceOf User) {
+            //update current user
+        } else {
+            /** @var User $user */
+            $user = $userManager->createUser();
+        }
+
         $user->addRole(User::ROLE_LANDLORD);
         $user
             ->setCompanyName('My Landlord Company')
@@ -67,7 +84,7 @@ class UserFixture extends Fixture
             ->setPhone('111-111-1111')
             ->setAddressOne('Address One')
             ->setPostalCode('11111')
-            ->setEmail('johndoe@test.com')
+            ->setEmail($email)
             ->setPlainPassword('qweASD123')
             ->setEnabled(true)
             ->setUsername($user->getEmail())
@@ -90,8 +107,16 @@ class UserFixture extends Fixture
     {
         $userManager = $this->container->get('fos_user.user_manager');
 
+        $email = 'peterparker@test.com';
         /** @var User $user */
-        $user = $userManager->createUser();
+        $user = $userManager->findUserByEmail($email);
+        if ($user instanceOf User) {
+            //update current user
+        } else {
+            /** @var User $user */
+            $user = $userManager->createUser();
+        }
+
         $user->addRole(User::ROLE_TENANT);
         $user
             ->setCompanyName('Tenant')
@@ -100,7 +125,7 @@ class UserFixture extends Fixture
             ->setPhone('555-555-5555')
             ->setAddressOne('Address One')
             ->setPostalCode('11111')
-            ->setEmail('peterparker@test.com')
+            ->setEmail($email)
             ->setPlainPassword('qweASD123')
             ->setEnabled(true)
             ->setUsername($user->getEmail())
