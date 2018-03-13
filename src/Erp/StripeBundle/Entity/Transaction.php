@@ -99,6 +99,16 @@ class Transaction
     protected $balance;
 
     /**
+     * @ORM\OneToOne(
+     *      targetEntity="\Erp\StripeBundle\Entity\BalanceHistory",
+     *      cascade={"persist"},
+     *      mappedBy="transaction",
+     *      orphanRemoval=true
+     * )
+     */
+    protected $balanceHistory;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="status", type="string")
