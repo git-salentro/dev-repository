@@ -18,7 +18,7 @@ class Transaction
 {
     use CreatedAtAwareTrait;
 
-    const TYPE_CHARGE = 'charge';
+    const TYPE_CHARGE = 'charge'; //stripe transaction type
     const CASH_IN = 'cash-in';
     const CASH_OUT = 'cash-out';
     const BANK_ACCOUNT_PAYMENT_METHOD = 'bank_account';
@@ -39,6 +39,14 @@ class Transaction
      * @ORM\Column(name="type", type="string")
      */
     private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="internal_type", type="string")
+     */
+    private $internalType; //fee (charge), late rent payment, rent payment
+
 
     /**
      * @var float
@@ -87,6 +95,14 @@ class Transaction
     /**
      * @var string
      *
+     * @ORM\Column(name="payment_method_description", type="string", nullable=true)
+     */
+    private $paymentMethodDescription;
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="metadata", type="array", nullable=true)
      */
     private $metadata;
@@ -97,6 +113,16 @@ class Transaction
      * @ORM\Column(name="balance", type="string")
      */
     protected $balance;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="\Erp\StripeBundle\Entity\BalanceHistory",
+     *      cascade={"persist"},
+     *      mappedBy="transaction",
+     *      orphanRemoval=true
+     * )
+     */
+    protected $balanceHistory;
 
     /**
      * @var string
@@ -350,5 +376,53 @@ class Transaction
     public function getBalance()
     {
         return $this->balance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBalanceHistory()
+    {
+        return $this->balanceHistory;
+    }
+
+    /**
+     * @param mixed $balanceHistory
+     */
+    public function setBalanceHistory($balanceHistory)
+    {
+        $this->balanceHistory = $balanceHistory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInternalType()
+    {
+        return $this->internalType;
+    }
+
+    /**
+     * @param string $internalType
+     */
+    public function setInternalType($internalType)
+    {
+        $this->internalType = $internalType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethodDescription()
+    {
+        return $this->paymentMethodDescription;
+    }
+
+    /**
+     * @param string $paymentMethodDescription
+     */
+    public function setPaymentMethodDescription($paymentMethodDescription)
+    {
+        $this->paymentMethodDescription = $paymentMethodDescription;
     }
 }

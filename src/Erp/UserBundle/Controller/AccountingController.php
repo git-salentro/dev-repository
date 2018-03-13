@@ -3,6 +3,7 @@
 namespace Erp\UserBundle\Controller;
 
 use Erp\PropertyBundle\Entity\Property;
+use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Repository\TransactionRepository;
 use Erp\UserBundle\Entity\User;
@@ -63,7 +64,7 @@ class AccountingController extends BaseController
         $parameters = [
             'user' => $user,
             'form' => $form->createView(),
-            'pagination' => $pagination,
+            'pagination' => $pagination
         ];
 
         if ($_format == 'html') {
