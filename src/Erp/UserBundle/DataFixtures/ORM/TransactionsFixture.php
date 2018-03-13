@@ -27,10 +27,11 @@ class TransactionsFixture extends Fixture
             //stay exist account
         } else {
             $stripeAccount = new StripeAccount();
+            $stripeAccount->setUser($manager);
         }
 
 
-        $stripeAccount->setUser($manager)
+        $stripeAccount
             ->setAccountId('0987654321')//mock data
             ->setFirstName($manager->getFirstName())
             ->setLastName($manager->getLastName());
@@ -42,9 +43,10 @@ class TransactionsFixture extends Fixture
             //stay exist account
         } else {
             $stripeCustomer = new StripeCustomer();
+            $stripeCustomer->setUser($landlord);
         }
 
-        $stripeCustomer->setUser($landlord)
+        $stripeCustomer
             ->setCustomerId('1234567890')//mock data
         ;
         $objectManager->persist($stripeCustomer);
