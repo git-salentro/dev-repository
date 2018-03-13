@@ -3,7 +3,6 @@
 namespace Erp\StripeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Stripe\Balance;
 
 /**
  * BalanceHistory
@@ -40,6 +39,12 @@ class BalanceHistory
     private $amount;
 
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="balance", type="string", length=255)
+     */
+    private $balance;
 
 
     /**
@@ -52,6 +57,16 @@ class BalanceHistory
         return $this->id;
     }
 
+
+    /**
+     * Get amount
+     *
+     * @return string
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
 
     /**
      * Set amount
@@ -68,13 +83,19 @@ class BalanceHistory
     }
 
     /**
-     * Get amount
-     *
      * @return string
      */
-    public function getAmount()
+    public function getBalance()
     {
-        return $this->amount;
+        return $this->balance;
+    }
+
+    /**
+     * @param string $balance
+     */
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
     }
 
     /**
@@ -98,5 +119,7 @@ class BalanceHistory
     {
         $this->transaction = $transaction;
     }
+
+
 }
 

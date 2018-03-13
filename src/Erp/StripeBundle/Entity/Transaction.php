@@ -18,7 +18,7 @@ class Transaction
 {
     use CreatedAtAwareTrait;
 
-    const TYPE_CHARGE = 'charge';
+    const TYPE_CHARGE = 'charge'; //stripe transaction type
     const CASH_IN = 'cash-in';
     const CASH_OUT = 'cash-out';
     const BANK_ACCOUNT_PAYMENT_METHOD = 'bank_account';
@@ -39,6 +39,14 @@ class Transaction
      * @ORM\Column(name="type", type="string")
      */
     private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="internal_type", type="string")
+     */
+    private $internalType; //fee (charge), late rent payment, rent payment
+
 
     /**
      * @var float
@@ -376,5 +384,21 @@ class Transaction
     public function setBalanceHistory($balanceHistory)
     {
         $this->balanceHistory = $balanceHistory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInternalType()
+    {
+        return $this->internalType;
+    }
+
+    /**
+     * @param string $internalType
+     */
+    public function setInternalType($internalType)
+    {
+        $this->internalType = $internalType;
     }
 }
