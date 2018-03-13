@@ -489,7 +489,7 @@ class User extends BaseUser
      * @ORM\OneToOne(
      *      targetEntity="\Erp\PaymentBundle\Entity\StripeAccount",
      *      mappedBy="user",
-     *      cascade={"persist"}
+     *      cascade={"persist","remove"}
      * )
      */
     protected $stripeAccount;
@@ -576,6 +576,11 @@ class User extends BaseUser
     /**
      * @var User Manager
      * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="landlords")
+     * @ORM\JoinColumn(
+     *      name="manager_id",
+     *      referencedColumnName="id",
+     *      onDelete="SET NULL"
+     * )
      */
     protected $manager;
 
