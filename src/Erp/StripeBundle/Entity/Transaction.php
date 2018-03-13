@@ -361,4 +361,20 @@ class Transaction
     {
         return $this->balance;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBalanceHistory()
+    {
+        return $this->balanceHistory;
+    }
+
+    /**
+     * @param mixed $balanceHistory
+     */
+    public function setBalanceHistory($balanceHistory)
+    {
+        $this->balanceHistory = $balanceHistory;
+    }
 }
