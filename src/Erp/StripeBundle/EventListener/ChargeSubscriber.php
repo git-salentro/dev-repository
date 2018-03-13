@@ -33,21 +33,10 @@ class ChargeSubscriber extends AbstractSubscriber
         if (!$stripeCharge->customer) {
             return;
         }
-        //TODO: ERP-138
-        //TODO: request from https://stripe.com/docs/api#balance_transaction_retrieve by "balance_transaction"
-        // $balanceStripeId = $stripeCharge->balance_transaction;
-        //TODO: get from response Balance and Status
-        //Example request: \Stripe\Stripe::setApiKey("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
-        //Example request: \Stripe\BalanceTransaction::retrieve("txn_19XJJ02eZvKYlo2ClwuJ1rbA");
-        //$stripeTransactionBalance = ...
-        //$stripeTransactionStatus =  ...
 
         $transaction = new Transaction();
 
         $transaction->setAmount($stripeCharge->amount)
-            //TODO: ERP-138
-            //            ->setBalance($stripeTransactionBalance)
-            //            ->setStatus($stripeTransactionStatus)
             ->setCurrency($stripeCharge->currency)
             ->setCreated((new \DateTime())->setTimestamp($stripeCharge->created))
             ->setType(Transaction::TYPE_CHARGE)

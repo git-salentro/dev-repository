@@ -60,14 +60,11 @@ class AccountingController extends BaseController
             );
         }
 
-        $total = 0; //TODO: list of BalanceHistory for current manager
-
         $template = sprintf('ErpUserBundle:Accounting:accounting_ledger_list.html.twig', $_format);
         $parameters = [
             'user' => $user,
             'form' => $form->createView(),
-            'pagination' => $pagination,
-            'balance_history_total' => $total,
+            'pagination' => $pagination
         ];
 
         if ($_format == 'html') {
