@@ -40,6 +40,7 @@ class CoreExtension extends \Twig_Extension
         return [
             'json_decode' => new \Twig_Filter_Method($this, 'jsonDecode'),
             'money' => new \Twig_Filter_Method($this, 'formatMoney'),
+            'internal_type' => new \Twig_Filter_Method($this, 'formatInternalType'),
         ];
     }
 
@@ -62,6 +63,13 @@ class CoreExtension extends \Twig_Extension
         }
 
         $formatter = $this->container->get('erp_core.formatter.money_formatter');
+
+        return $formatter->format($value);
+    }
+
+    public function formatInternalType($value)
+    {
+        $formatter = $this->container->get('erp_core.formatter.internal_type_formatter');
 
         return $formatter->format($value);
     }

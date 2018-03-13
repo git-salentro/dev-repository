@@ -58,3 +58,6 @@ services:
 
     erp_core.formatter.money_formatter:
         class: Erp\CoreBundle\Formatter\MoneyFormatter
+
+    erp_core.formatter.internal_type_formatter:
+        class: Erp\CoreBundle\Formatter\InternalTypeFormatter

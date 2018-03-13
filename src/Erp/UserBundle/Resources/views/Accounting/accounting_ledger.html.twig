@@ -49,15 +49,15 @@
                     <td class="text-left">{{ item.created|date('M d, Y / h:i') }}</td>
                     <td class="text-left">
                         {{ item.account ? item.account.user.fullName : '' }}<br/>
-                        {{ item.type }}
                     </td>
                     <td class="text-left">
+                        {{ item.internalType|internal_type }}:
                         {% if (item.amount <= 0) %}
                             {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
                             {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                             {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                             {{ item.account.user.fullName }}
-                            >
+                            to
                             {% if (item.customer.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
                             {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                             {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
@@ -67,7 +67,7 @@
                             {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                             {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
                             {{ item.customer.user.fullName }}
-                            >
+                            to
                             {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
                             {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
                             {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
