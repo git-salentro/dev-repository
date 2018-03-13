@@ -480,7 +480,7 @@ class User extends BaseUser
      * @ORM\OneToOne(
      *      targetEntity="Erp\PaymentBundle\Entity\StripeCustomer",
      *      mappedBy="user",
-     *      cascade={"persist"}
+     *      cascade={"persist", "remove"}
      * )
      */
     protected $stripeCustomer;
@@ -489,7 +489,7 @@ class User extends BaseUser
      * @ORM\OneToOne(
      *      targetEntity="\Erp\PaymentBundle\Entity\StripeAccount",
      *      mappedBy="user",
-     *      cascade={"persist"}
+     *      cascade={"persist", "remove"}
      * )
      */
     protected $stripeAccount;
