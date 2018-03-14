@@ -13,17 +13,30 @@
 
 {% block pageContent %}
     {{ parent() }}
+
     <section id="managers-profile" class="profile">
         <div class="container">
-            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
-            <div class="row">
-                <div class="col-xs-4">
+            {% if charge.isPaid %}
+                <p class="text-center">
+                    Charge already paid.
+                </p>
+            {% else %}
+                <p class="text-center">
+                    {% if charge.isRecurring %}
+                        This charge in recurring charge.
+                    {% else %}
+                        This charge is single charge.
+                    {% endif %}
+                    Amount: {{ charge.amount|money }}.
+                    Description: {{ charge.description }}
+                </p>
+                <div class="confirm-align_btn">
                     <button id='verify-ba' class="btn edit-btn">Verify</button>
                     {{ form_start(form) }}
                         {{ form(form) }}
                     {{ form_end(form) }}
                 </div>
-            </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

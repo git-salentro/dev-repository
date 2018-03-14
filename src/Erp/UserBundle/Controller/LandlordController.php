@@ -143,22 +143,17 @@ class LandlordController extends BaseController
      */
     public function confirmChargeAction(Request $request, $type, $token)
     {
-        $em = $this->getDoctrine()->getManagerForClass(Charge::class);
-        $repository = $em->getRepository(Charge::class);
+        $chargeEm = $this->getDoctrine()->getManagerForClass(Charge::class);
         /** @var Charge $charge */
-        $charge = $repository->find($token);
+        $charge = $chargeEm->getRepository(Charge::class)->find($token);
 
-        if (!$charge) {
-            return $this->createNotFoundException();
-        }
-
-        if ($charge->isPaid()) {
+        if (!$charge || $charge->isPaid()) {
             return $this->createNotFoundException();
         }
 
         /** @var PaymentTypeInterface $model */
-        $model = $this->get('erp_stripe.registry.model_registry1')->getModel($type);
-        $form = $this->get('erp_stripe.registry.form_registry1')->getForm($type);
+        $model = $this->get('erp_stripe.registry.model_registry')->getModel($type);
+        $form = $this->get('erp_stripe.registry.form_registry')->getForm($type);
         $form->setData($model);
         $form->handleRequest($request);
 
@@ -166,22 +161,117 @@ class LandlordController extends BaseController
         $params = [
             'token' => $token,
             'form' => $form->createView(),
+            'charge' => $charge,
         ];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $manager */
-            $manager = $charge->getManager();
-            $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
-            $stripeCustomer = $charge->getLandlord()->getStripeCustomer();
-            $amount = $charge->getAmount();
-            $stripeAccount = $manager->getStripeAccount()->getAccountId();
-            $stripeSubscription = $stripeCustomer->getStripeSubscription();
-            //TODO: add possibility for many subscriptions
+        if (!$form->isSubmitted()) {
+            return $this->render($template, $params);
+        }
 
-            if (!$stripeSubscription && !$charge->isRecurring()) {
+        if (!$form->isValid()) {
+            $this->addFlash(
+                'alert_ok',
+                $form->getErrors()[0]
+            );
+            return $this->render($template, $params);
+        }
+
+        /** @var User $landlord */
+        $landlord = $charge->getLandlord();
+        /** @var User $manager */
+        $manager = $charge->getManager();
+        $landlordStripeCustomer = $landlord->getStripeCustomer();
+        $managerStripeAccount = $manager->getStripeAccount();
+
+        $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
+
+        if (!$managerStripeAccount) {
+            $this->addFlash(
+                'alert_error',
+                'Manager can not accept payments.'
+            );
+            return $this->render($template, $params);
+        }
+
+        $sourceToken = $model->getSourceToken();
+        $stripeAccountId = $managerStripeAccount->getAccountId();
+
+        if (!$landlordStripeCustomer) {
+            $arguments = [
+                'params' => [
+                    'email' => $landlord->getEmail(),
+                    'source' => $sourceToken,
+                ],
+                'options' => [
+                    'stripe_account' => $stripeAccountId,
+                ],
+            ];
+            $response = $stripeApiManager->callStripeApi('\Stripe\Customer', 'create', $arguments);
+
+            if (!$response->isSuccess()) {
+                $this->addFlash(
+                    'alert_error',
+                    $response->getErrorMessage()
+                );
+                return $this->render($template, $params);
+            }
+
+            /** @var \Stripe\Customer $externalStripeCustomer */
+            $externalStripeCustomer = $response->getContent();
+
+            $landlordStripeCustomer = new StripeCustomer();
+            $landlordStripeCustomer->setCustomerId($externalStripeCustomer->id)
+                ->setUser($landlord);
+
+            $landlord->setStripeCustomer($landlordStripeCustomer);
+
+            $userEm = $this->getDoctrine()->getManagerForClass(User::class);
+            $userEm->persist($landlord);
+            $userEm->flush();
+        }
+
+        $amount = $charge->getAmount();
+
+        if ($charge->isRecurring()) {
+            //TODO: add possibility for many subscriptions
+            $landlordStripeSubscription = $landlordStripeCustomer->getStripeSubscription();
+
+            if (!$landlordStripeSubscription) {
+                $arguments = [
+                    'id' => StripeSubscription::MONTHLY_PLAN_ID,
+                    'options' => [
+                        'stripe_account' => $stripeAccountId,
+                    ]
+                ];
+                $response = $stripeApiManager->callStripeApi('\Stripe\Plan', 'retrieve', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $arguments = [
+                        'params' => [
+                            'amount' => 1,
+                            'interval' => 'month',
+                            "currency" => 'usd',
+                            'name' => StripeSubscription::MONTHLY_PLAN_ID,
+                            'id' => StripeSubscription::MONTHLY_PLAN_ID,
+                        ],
+                        'options' => [
+                            'stripe_account' => $stripeAccountId,
+                        ]
+                    ];
+                    $response = $stripeApiManager->callStripeApi('\Stripe\Plan', 'create', $arguments);
+
+                    if (!$response->isSuccess()) {
+                        $this->addFlash(
+                            'alert_error',
+                            $response->getErrorMessage()
+                        );
+                        return $this->render($template, $params);
+                    }
+                }
+
                 $arguments = [
                     'params' => [
-                        'customer' => $stripeCustomer->getCustomerId(),
+                        'customer' => $landlordStripeCustomer->getCustomerId(),
                         'items' => [
                             [
                                 'plan' => StripeSubscription::MONTHLY_PLAN_ID,
@@ -190,81 +280,80 @@ class LandlordController extends BaseController
                         ],
                     ],
                     'options' => [
-                        'stripe_account' => $stripeAccount,
+                        'stripe_account' => $stripeAccountId,
                     ]
                 ];
                 $response = $stripeApiManager->callStripeApi('\Stripe\Subscription', 'create', $arguments);
 
                 if (!$response->isSuccess()) {
-                    $templateParams['errors'] = $response->getErrorMessage();
-                    return $this->render($template, $templateParams);
+                    $this->addFlash(
+                        'alert_error',
+                        $response->getErrorMessage()
+                    );
+                    return $this->render($template, $params);
                 }
                 /** @var Subscription $subscription */
                 $subscription = $response->getContent();
 
                 $stripeSubscription = new StripeSubscription();
                 $stripeSubscription->setSubscriptionId($subscription['id'])
-                    ->setStripeCustomer($stripeCustomer);
+                    ->setStripeCustomer($landlordStripeCustomer);
 
-                $stripeCustomer->setStripeSubscription($stripeSubscription);
+                $landlordStripeCustomer->setStripeSubscription($stripeSubscription);
 
-                $em->persist($stripeCustomer);
+                $stripeCustomerEm = $this->getDoctrine()->getManagerForClass(Charge::class);
+                $stripeCustomerEm->persist($landlordStripeCustomer);
             } else {
+                //TODO ERP-191
                 $arguments = [
-                    'id' => $stripeSubscription->getSubscriptionId(),
+                    'id' => $landlordStripeSubscription->getSubscriptionId(),
                     'params' => [
-                        'quantity' => ApiHelper::convertAmountToStripeFormat($amount),
+                        'quantity' => $amount,
                     ],
                     'options' => null,
                 ];
                 $response = $stripeApiManager->callStripeApi('\Stripe\Subscription', 'update', $arguments);
 
                 if (!$response->isSuccess()) {
-                    $templateParams['errors'] = $response->getErrorMessage();
-                    return $this->render($template, $templateParams);
-                }
-
-                $arguments = [
-                    'params' => [
-                        'amount' => ApiHelper::convertAmountToStripeFormat($amount),
-                        'customer' => $stripeCustomer->getCustomerId(),
-                        'currency' => StripeCustomer::DEFAULT_CURRENCY,
-                        'source' => $model->getSourceToken(),
-                    ],
-                    'options' => [
-                        'stripe_account' => $stripeAccount,
-                    ]
-                ];
-                $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
-
-                if (!$response->isSuccess()) {
-                    $templateParams['errors'] = $response->getErrorMessage();
-                    return $this->render($template, $templateParams);
+                    $this->addFlash(
+                        'alert_error',
+                        $response->getErrorMessage()
+                    );
+                    return $this->render($template, $params);
                 }
             }
-
+        } else {
+            $arguments = [
+                'params' => [
+                    'amount' => ApiHelper::convertAmountToStripeFormat($amount),
+                    'customer' => $landlordStripeCustomer->getCustomerId(),
+                    'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                ],
+                'options' => [
+                    'stripe_account' => $stripeAccountId,
+                ]
+            ];
+            $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
 
             if (!$response->isSuccess()) {
                 $this->addFlash(
                     'alert_error',
                     $response->getErrorMessage()
                 );
-
                 return $this->render($template, $params);
             }
-
-            $charge->setStatus(Charge::STATUS_PAID);
-            $em->persist($charge);
-            $em->flush();
-
-            $this->addFlash(
-                'alert_ok',
-                'Success'
-            );
-
-            return $this->redirect('/');
         }
 
-        return $this->render($template, $params);
+        $charge->setStatus(Charge::STATUS_PAID);
+
+        $chargeEm->persist($charge);
+        $chargeEm->flush();
+
+        $this->addFlash(
+            'alert_ok',
+            'Success'
+        );
+
+        return $this->redirect('/');
     }
 }

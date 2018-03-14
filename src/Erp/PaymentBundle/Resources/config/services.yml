@@ -35,36 +35,6 @@ services:
         class: Erp\PaymentBundle\Stripe\Manager\ChargeManager
         parent: erp.payment.stripe.manager.abstract_manager
 
-    erp.payment.form.type.stripe_credit_card:
-        class: Erp\PaymentBundle\Form\Type\StripeCreditCardType
-        tags:
-            - { name: form.type, alias: erp_stripe_credit_card }
-
-    erp.payment.form.stripe_credit_card:
-        class: Symfony\Component\Form\Form
-        factory: 'form.factory:createNamed'
-        arguments: ['erp_stripe_credit_card', 'erp_stripe_credit_card', null]
-
-    erp.payment.form.type.stripe_bank_account:
-        class: Erp\PaymentBundle\Form\Type\StripeBankAccountType
-        tags:
-            - { name: form.type, alias: erp_stripe_bank_account }
-
-    erp.payment.form.stripe_bank_account:
-        class: Symfony\Component\Form\Form
-        factory: 'form.factory:createNamed'
-        arguments: ['erp_stripe_credit_card', 'erp_stripe_bank_account', null]
-
-    erp.payment.stripe.registry.form_registry:
-        class: Erp\PaymentBundle\Stripe\Registry\FormRegistry
-        arguments:
-            - {cc: '@erp.payment.form.stripe_credit_card', ba: '@erp.payment.form.stripe_bank_account'}
-
-    erp.payment.stripe.registry.model_registry:
-        class: Erp\PaymentBundle\Stripe\Registry\ModelRegistry
-        arguments:
-            - {cc: 'Erp\PaymentBundle\Stripe\Model\CreditCard', ba: 'Erp\PaymentBundle\Stripe\Model\BankAccount'}
-
     erp.payment.consumer.update_subscriptions:
         class: Erp\PaymentBundle\Consumer\UpdateSubscriptionsConsumer
         arguments:

@@ -19,10 +19,24 @@
     {{ parent() }}
     <section id="register-form-tenants" class="register-form cc-form-wrap">
         <div class="container">
-            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    {{ form_start(form, {'action': path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}), 'attr': {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}}) }}
+            {% if charge.isPaid %}
+            <p class="text-center">
+                Charge already paid.
+            </p>
+            {% else %}
+                {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <p class="text-center">
+                            {% if charge.isRecurring %}
+                                This charge in recurring charge.
+                            {% else %}
+                                This charge is single charge.
+                            {% endif %}
+                            Amount: {{ charge.amount|money }}.
+                            Description: {{ charge.description }}
+                        </p>
+                        {{ form_start(form, {'action': path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}), 'attr': {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}}) }}
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-xs-12">
@@ -67,14 +81,13 @@
                                 </div>
                             </div>
                         </div>
-                    {{ form_end(form) }}
+                        {{ form_end(form) }}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}
-
-
 
 {% block javascript_inline %}
     <script>

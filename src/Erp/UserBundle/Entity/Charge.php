@@ -42,7 +42,7 @@ class Charge implements DatesAwareInterface
      *
      * @ORM\Column(name="is_recurring", type="boolean")
      */
-    protected $isRecurring = false;
+    protected $recurring = false;
 
     /**
      * @var string
@@ -230,14 +230,30 @@ class Charge implements DatesAwareInterface
      */
     public function isRecurring()
     {
-        return $this->isRecurring;
+        return $this->recurring;
     }
 
     /**
-     * @param bool $isRecurring
+     * Set recurring
+     *
+     * @param bool $recurring
+     *
+     * @return Charge
      */
-    public function setIsRecurring($isRecurring)
+    public function setRecurring($recurring)
     {
-        $this->isRecurring = $isRecurring;
+        $this->recurring = $recurring;
+
+        return $this;
+    }
+
+    /**
+     * Get recurring
+     *
+     * @return bool
+     */
+    public function getRecurring()
+    {
+        return $this->recurring;
     }
 }

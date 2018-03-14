@@ -86,7 +86,7 @@ class UnitController extends Controller
                     'customer' => $stripeCustomer->getCustomerId(),
                     'items' => [
                         [
-                            'plan' => StripeSubscription::BASE_PLAN_ID,
+                            'plan' => StripeSubscription::YEARLY_PLAN_ID,
                             'quantity' => $newAmount,
                         ],
                     ],
