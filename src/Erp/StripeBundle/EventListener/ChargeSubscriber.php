@@ -41,7 +41,7 @@ class ChargeSubscriber extends AbstractSubscriber
 
         //get current balance based on
         /* @var $previousTransaction Transaction */
-        $previousTransaction = $repository->findOneBy(['account' => $stripeEvent->account],['created'=>'DESC']);
+        $previousTransaction = $repository->findOneBy(['account' => $stripeEvent->account], ['created' => 'DESC']);
         $balance = 0;
         if ($previousTransaction instanceof Transaction && isset($stripeCharge->amount)) {
             $balance = $stripeCharge->amount + $previousTransaction->getBalanceHistory();
@@ -94,13 +94,13 @@ class ChargeSubscriber extends AbstractSubscriber
     {
         $em = $this->registry->getManagerForClass(StripeAccount::class);
 
-        return $em->getRepository(StripeAccount::class)->findOneBy(['accountId' =>$accountId]);
+        return $em->getRepository(StripeAccount::class)->findOneBy(['accountId' => $accountId]);
     }
 
     private function getCustomer($customerId)
     {
         $em = $this->registry->getManagerForClass(StripeCustomer::class);
 
-        return $em->getRepository(StripeCustomer::class)->findOneBy(['customerId' =>$customerId]);
+        return $em->getRepository(StripeCustomer::class)->findOneBy(['customerId' => $customerId]);
     }
 }

@@ -25,7 +25,8 @@ class BalanceHistory
      * @var Transaction $transaction
      * @ORM\OneToOne(
      *      targetEntity="\Erp\StripeBundle\Entity\Transaction",
-     *      inversedBy="balanceHistory"
+     *      inversedBy="balanceHistory",
+     *      cascade={"remove", "persist"}
      * )
      */
     protected $transaction;

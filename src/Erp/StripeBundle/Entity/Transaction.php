@@ -117,9 +117,14 @@ class Transaction
     /**
      * @ORM\OneToOne(
      *      targetEntity="\Erp\StripeBundle\Entity\BalanceHistory",
-     *      cascade={"persist"},
+     *      cascade={"all"},
      *      mappedBy="transaction",
      *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="balance_history_id",
+     *      referencedColumnName="id",
+     *      onDelete="SET NULL"
      * )
      */
     protected $balanceHistory;

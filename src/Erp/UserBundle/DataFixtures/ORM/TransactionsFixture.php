@@ -53,10 +53,11 @@ class TransactionsFixture extends Fixture
         $objectManager->persist($stripeCustomer);
         $objectManager->flush();
 
-        $transaction = new Transaction();
+
         $amount = ApiHelper::convertAmountToStripeFormat('100');
         $balance = ApiHelper::convertAmountToStripeFormat('100');
 
+        $transaction = new Transaction();
         $transaction->setAccount($stripeAccount)
             ->setCustomer($stripeCustomer)
             ->setCurrency('usd')
