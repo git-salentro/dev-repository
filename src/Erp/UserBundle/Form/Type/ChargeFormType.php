@@ -35,7 +35,7 @@ class ChargeFormType extends AbstractType
                 ]
             ])
             ->add('description', 'textarea', ['label' => 'Description', 'required' => false, 'attr' => ['class' => 'form-control']])
-            ->add('isRecurring', 'checkbox', ['label' => 'Recurring payment', 'required' => false, 'attr' => ['class' => 'form-check-input']])
+            ->add('recurring', 'checkbox', ['label' => 'Recurring payment', 'required' => false, 'attr' => ['class' => 'form-check-input']])
             ->add('button', 'submit', ['label' => 'Send charge', 'attr' => ['class' => 'btn red-btn btn-space', 'value' => 'Send charge']]);
     }
 
