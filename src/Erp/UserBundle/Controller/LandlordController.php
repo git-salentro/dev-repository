@@ -169,10 +169,6 @@ class LandlordController extends BaseController
         }
 
         if (!$form->isValid()) {
-            $this->addFlash(
-                'alert_ok',
-                $form->getErrors()[0]
-            );
             return $this->render($template, $params);
         }
 
