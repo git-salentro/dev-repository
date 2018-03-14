@@ -252,7 +252,8 @@
         }
         .profile-widget-item {
             margin-right: 47px;
-            min-height: 300px;
+            min-height: 100px;
+            max-height: 300px;
             -webkit-border-radius: 5px;
             -moz-border-radius: 5px;
             border-radius: 5px;
