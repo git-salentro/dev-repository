@@ -39,7 +39,7 @@ class ChargeSubscriber extends AbstractSubscriber
         $em = $this->registry->getManagerForClass(Transaction::class);
         $repository = $em->getRepository(Transaction::class);
 
-
+        //get current balance based on
         /* @var $previousTransaction Transaction */
         $previousTransaction = $repository->findOneBy(['account' => $stripeEvent->account],['created'=>'DESC']);
         $balance = 0;
@@ -51,8 +51,10 @@ class ChargeSubscriber extends AbstractSubscriber
 
 
         if ($transaction instanceof Transaction) {
+            //exist transaction
             $balanceHistory = $transaction->getBalanceHistory();
         } else {
+            //new transaction
             $transaction = new Transaction();
             $transaction->setBalance($balance)
                 ->setType(Transaction::TYPE_CHARGE)
@@ -66,6 +68,7 @@ class ChargeSubscriber extends AbstractSubscriber
             $balanceHistory->setTransaction($transaction);
         }
 
+        //update for all cases
         $transaction->setStatus($stripeCharge->status);
 
         if (isset($stripeEvent->account)) {
