@@ -15,9 +15,15 @@ class WebhookController extends Controller
             //TODO file_get_contents('php://input') empty with http
             $content = json_decode($request->getContent(), true);
             $apiManger = $this->get('erp_stripe.entity.api_manager');
+            $options = null;
+
+            if (isset($content['account'])) {
+                $options = ['stripe_account' => $content['account']];
+            }
+
             $arguments = [
                 'id' => $content['id'],
-                'options' => null,
+                'options' => $options,
             ];
             $response = $apiManger->callStripeApi('\Stripe\Event', 'retrieve', $arguments);
 
