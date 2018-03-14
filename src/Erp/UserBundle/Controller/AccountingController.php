@@ -2,10 +2,7 @@
 
 namespace Erp\UserBundle\Controller;
 
-use Erp\PropertyBundle\Entity\Property;
-use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
-use Erp\StripeBundle\Repository\TransactionRepository;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

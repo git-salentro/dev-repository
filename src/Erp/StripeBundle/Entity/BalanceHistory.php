@@ -30,7 +30,6 @@ class BalanceHistory
      */
     protected $transaction;
 
-
     /**
      * @var string
      *
@@ -119,7 +118,6 @@ class BalanceHistory
     {
         $this->transaction = $transaction;
     }
-
 
 }
 

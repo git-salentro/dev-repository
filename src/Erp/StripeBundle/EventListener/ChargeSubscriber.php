@@ -2,6 +2,7 @@
 
 namespace Erp\StripeBundle\EventListener;
 
+use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Event\ChargeEvent;
 use Erp\PaymentBundle\Entity\StripeAccount;
@@ -36,18 +37,39 @@ class ChargeSubscriber extends AbstractSubscriber
 
 
         $em = $this->registry->getManagerForClass(Transaction::class);
+        $repository = $em->getRepository(Transaction::class);
 
-        //        $repository = $em->getRepository(Transaction::class);
-        //        $transaction= $repository->findOneBy(['account'=>$stripeEvent->account]);
+        //get current balance based on
+        /* @var $previousTransaction Transaction */
+        $previousTransaction = $repository->findOneBy(['account' => $stripeEvent->account],['created'=>'DESC']);
+        $balance = 0;
+        if ($previousTransaction instanceof Transaction && isset($stripeCharge->amount)) {
+            $balance = $stripeCharge->amount + $previousTransaction->getBalanceHistory();
+        }
 
-        $transaction = new Transaction();
+        $transaction = $repository->findOneBy(['account' => $stripeEvent->account, 'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
 
-        $transaction->setAmount($stripeCharge->amount)
-            ->setCurrency($stripeCharge->currency)
-            ->setCreated((new \DateTime())->setTimestamp($stripeCharge->created))
-            ->setType(Transaction::TYPE_CHARGE)
-            ->setPaymentMethod($stripeCharge->source->object)
-            ->setPaymentMethodDescription($stripeCharge->source->brand);
+
+        if ($transaction instanceof Transaction) {
+            //exist transaction
+            $balanceHistory = $transaction->getBalanceHistory();
+        } else {
+            //new transaction
+            $transaction = new Transaction();
+            $transaction->setBalance($balance)
+                ->setType(Transaction::TYPE_CHARGE)
+                ->setCurrency($stripeCharge->currency)
+                ->setCreated((new \DateTime())->setTimestamp($stripeCharge->created))
+                ->setAmount($stripeCharge->amount)
+                ->setPaymentMethod($stripeCharge->source->object)
+                ->setPaymentMethodDescription($stripeCharge->source->brand);
+
+            $balanceHistory = new BalanceHistory();
+            $balanceHistory->setTransaction($transaction);
+        }
+
+        //update for all cases
+        $transaction->setStatus($stripeCharge->status);
 
         if (isset($stripeEvent->account)) {
             $account = $this->getAccount($stripeEvent->account);
@@ -57,9 +79,15 @@ class ChargeSubscriber extends AbstractSubscriber
         $customer = $this->getCustomer($stripeCharge->customer);
         $transaction->setCustomer($customer);
 
-
         $em->persist($transaction);
         $em->flush();
+
+
+        $balanceHistory->setAmount($stripeCharge->amount);
+        $balanceHistory->setBalance($balance);
+        $em->persist($balanceHistory);
+        $em->flush();
+
     }
 
     private function getAccount($accountId)

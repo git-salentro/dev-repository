@@ -23,16 +23,31 @@ class TransactionsFixture extends Fixture
         /** @var User $landlord */
         $landlord = $this->getReference('johndoe@test.com');
 
-        $stripeAccount = new StripeAccount();
-        $stripeAccount->setUser($manager)
+        $stripeAccount = $manager->getStripeAccount();
+        if ($stripeAccount instanceof StripeAccount) {
+            //stay exist account
+        } else {
+            $stripeAccount = new StripeAccount();
+            $stripeAccount->setUser($manager);
+        }
+
+
+        $stripeAccount
             ->setAccountId('0987654321')//mock data
             ->setFirstName($manager->getFirstName())
             ->setLastName($manager->getLastName());
         $objectManager->persist($stripeAccount);
         $objectManager->flush();
 
-        $stripeCustomer = new StripeCustomer();
-        $stripeCustomer->setUser($landlord)
+        $stripeCustomer = $landlord->getStripeCustomer();
+        if ($stripeCustomer instanceof StripeCustomer) {
+            //stay exist account
+        } else {
+            $stripeCustomer = new StripeCustomer();
+            $stripeCustomer->setUser($landlord);
+        }
+
+        $stripeCustomer
             ->setCustomerId('1234567890')//mock data
         ;
         $objectManager->persist($stripeCustomer);
@@ -45,7 +60,7 @@ class TransactionsFixture extends Fixture
         $transaction->setAccount($stripeAccount)
             ->setCustomer($stripeCustomer)
             ->setCurrency('usd')
-            ->setStatus('cleared')
+            ->setStatus('succeeded')
             ->setCreated(new \DateTime())
             ->setAmount($amount)
             ->setBalance($balance)
@@ -74,7 +89,7 @@ class TransactionsFixture extends Fixture
         $transaction->setAccount($stripeAccount)
             ->setCustomer($stripeCustomer)
             ->setCurrency('usd')
-            ->setStatus('cleared')
+            ->setStatus('succeeded')
             ->setCreated(new \DateTime())
             ->setAmount($amount)
             ->setBalance($balance)
@@ -102,7 +117,7 @@ class TransactionsFixture extends Fixture
             ->setCustomer($stripeCustomer)
             ->setType(Transaction::TYPE_CHARGE)
             ->setCurrency('usd')
-            ->setStatus('cleared')
+            ->setStatus('succeeded')
             ->setCreated(new \DateTime())
             ->setAmount($amount)
             ->setBalance($balance)
