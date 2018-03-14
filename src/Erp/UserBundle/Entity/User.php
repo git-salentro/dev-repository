@@ -585,20 +585,20 @@ class User extends BaseUser
     protected $manager;
 
     /**
-     * @var User Landlords
+     * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\User", mappedBy="manager")
      */
     protected $landlords;
 
     /**
-     * @var Charge
+     * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="manager")
      */
     protected $chargeOutgoings; //sent
 
     /**
-     * @var Charge
+     * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="landlord")
      */
     protected $chargeIncomings; //received
