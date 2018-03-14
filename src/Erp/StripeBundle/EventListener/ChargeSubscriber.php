@@ -41,7 +41,7 @@ class ChargeSubscriber extends AbstractSubscriber
 
 
         /* @var $previousTransaction Transaction */
-        $previousTransaction = $repository->findOneBy(['account' => $stripeEvent->account]);
+        $previousTransaction = $repository->findOneBy(['account' => $stripeEvent->account],['created'=>'DESC']);
         $balance = 0;
         if ($previousTransaction instanceof Transaction && isset($stripeCharge->amount)) {
             $balance = $stripeCharge->amount + $previousTransaction->getBalanceHistory();
