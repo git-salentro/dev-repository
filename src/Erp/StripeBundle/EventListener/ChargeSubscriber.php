@@ -35,25 +35,34 @@ class ChargeSubscriber extends AbstractSubscriber
             return;
         }
 
-
         $em = $this->registry->getManagerForClass(Transaction::class);
         $repository = $em->getRepository(Transaction::class);
 
+
+        $stripeAccount = $this->getAccount($stripeCharge->metadata->account);
+        $stripeAccountId = ($stripeAccount instanceof StripeAccount) ? $stripeAccount->getId() : null;
+        $stripeCustomer = $this->getCustomer($stripeCharge->customer);
+        $internalType = $stripeCharge->metadata->internalType;
+
         //get current balance based on
         /* @var $previousTransaction Transaction */
-        $previousTransaction = $repository->findOneBy(['account' => $stripeEvent->account], ['created' => 'DESC']);
-        $balance = 0;
+
+        $previousTransaction = $repository->findOneBy(['account' => $stripeAccountId], ['created' => 'DESC']);
+
         if ($previousTransaction instanceof Transaction && isset($stripeCharge->amount)) {
-            $balance = $stripeCharge->amount + $previousTransaction->getBalanceHistory();
+            $previousBalance = $previousTransaction->getBalanceHistory()->getBalance();
+            $balance = $stripeCharge->amount + $previousBalance;
+        } else {
+            //first balance
+            $balance = $stripeCharge->amount;
         }
-
-        $transaction = $repository->findOneBy(['account' => $stripeEvent->account, 'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
-
+        $transaction = $repository->findOneBy(['account' => $stripeAccountId, 'amount' => $stripeCharge->amount,'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
 
         if ($transaction instanceof Transaction) {
             //exist transaction
             $balanceHistory = $transaction->getBalanceHistory();
         } else {
+
             //new transaction
             $transaction = new Transaction();
             $transaction->setBalance($balance)
@@ -63,30 +72,23 @@ class ChargeSubscriber extends AbstractSubscriber
                 ->setAmount($stripeCharge->amount)
                 ->setPaymentMethod($stripeCharge->source->object)
                 ->setPaymentMethodDescription($stripeCharge->source->brand);
-
+            $transaction->setInternalType($internalType);
             $balanceHistory = new BalanceHistory();
             $balanceHistory->setTransaction($transaction);
         }
 
         //update for all cases
         $transaction->setStatus($stripeCharge->status);
-
-        if (isset($stripeEvent->account)) {
-            $account = $this->getAccount($stripeEvent->account);
-            $transaction->setAccount($account);
-        }
-
-        $customer = $this->getCustomer($stripeCharge->customer);
-        $transaction->setCustomer($customer);
-
+        $transaction->setAccount($stripeAccount);
+        $transaction->setCustomer($stripeCustomer);
         $em->persist($transaction);
         $em->flush();
-
 
         $balanceHistory->setAmount($stripeCharge->amount);
         $balanceHistory->setBalance($balance);
         $em->persist($balanceHistory);
         $em->flush();
+
 
     }
 

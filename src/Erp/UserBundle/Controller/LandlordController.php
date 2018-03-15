@@ -324,6 +324,10 @@ class LandlordController extends BaseController
                     'amount' => ApiHelper::convertAmountToStripeFormat($amount),
                     'customer' => $landlordStripeCustomer->getCustomerId(),
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                    'metadata' => [
+                        'account' => $stripeAccountId,
+                        'internalType' => 'rent_payment'
+                    ],
                 ],
                 'options' => [
                     'stripe_account' => $stripeAccountId,

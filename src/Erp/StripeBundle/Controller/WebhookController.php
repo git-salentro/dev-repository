@@ -27,6 +27,7 @@ class WebhookController extends Controller
             ];
             $response = $apiManger->callStripeApi('\Stripe\Event', 'retrieve', $arguments);
 
+
             if (!$response->isSuccess()) {
                 return new Response('ok');
             }

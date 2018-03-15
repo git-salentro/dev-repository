@@ -121,11 +121,6 @@ class Transaction
      *      mappedBy="transaction",
      *      orphanRemoval=true
      * )
-     * @ORM\JoinColumn(
-     *      name="balance_history_id",
-     *      referencedColumnName="id",
-     *      onDelete="SET NULL"
-     * )
      */
     protected $balanceHistory;
 
