@@ -73,7 +73,6 @@ class ChargeSubscriber extends AbstractSubscriber
             $transaction->setInternalType($internalType);
             $transaction->setMetadata(json_decode($stripeCharge->metadata));
             $balanceHistory = new BalanceHistory();
-            $balanceHistory->setTransaction($transaction);
         }
 
         //update for all cases
@@ -85,6 +84,7 @@ class ChargeSubscriber extends AbstractSubscriber
 
         $balanceHistory->setAmount($stripeCharge->amount);
         $balanceHistory->setBalance($balance);
+        $balanceHistory->setTransaction($transaction);
         $em->persist($balanceHistory);
         $em->flush();
 
