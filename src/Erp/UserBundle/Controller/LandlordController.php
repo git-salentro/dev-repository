@@ -45,9 +45,13 @@ class LandlordController extends BaseController
                 ->setUsername($landlord->getEmail())
                 ->setPlainPassword('12345')
                 ->setIsPrivatePaySimple(false);
-
+            $landlord->addRole('ROLE_LANDLORD');
             $this->em->persist($landlord);
             $this->em->flush();
+
+            //TODO: create request to StripeAPI
+            //TODO: create StripeCustomer entity
+
 
             $this->addFlash('alert_ok', 'Landlord has been added successfully!');
 
@@ -192,7 +196,7 @@ class LandlordController extends BaseController
         $sourceToken = $model->getSourceToken();
         $stripeAccountId = $managerStripeAccount->getAccountId();
 
-        if (!$landlordStripeCustomer) {
+        if (!$landlordStripeCustomer) { //TODO: refactor it into private method for checking StripeCustomer exists
             $arguments = [
                 'params' => [
                     'email' => $landlord->getEmail(),

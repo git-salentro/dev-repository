@@ -38,7 +38,6 @@ class ChargeSubscriber extends AbstractSubscriber
         $em = $this->registry->getManagerForClass(Transaction::class);
         $repository = $em->getRepository(Transaction::class);
 
-
         $stripeAccount = $this->getAccount($stripeCharge->metadata->account);
         $stripeAccountId = ($stripeAccount instanceof StripeAccount) ? $stripeAccount->getId() : null;
         $stripeCustomer = $this->getCustomer($stripeCharge->customer);
@@ -56,13 +55,12 @@ class ChargeSubscriber extends AbstractSubscriber
             //first balance
             $balance = $stripeCharge->amount;
         }
-        $transaction = $repository->findOneBy(['account' => $stripeAccountId, 'amount' => $stripeCharge->amount,'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
+        $transaction = $repository->findOneBy(['account' => $stripeAccountId, 'amount' => $stripeCharge->amount, 'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
 
         if ($transaction instanceof Transaction) {
             //exist transaction
             $balanceHistory = $transaction->getBalanceHistory();
         } else {
-
             //new transaction
             $transaction = new Transaction();
             $transaction->setBalance($balance)
@@ -73,6 +71,7 @@ class ChargeSubscriber extends AbstractSubscriber
                 ->setPaymentMethod($stripeCharge->source->object)
                 ->setPaymentMethodDescription($stripeCharge->source->brand);
             $transaction->setInternalType($internalType);
+            $transaction->setMetadata(json_decode($stripeCharge->metadata));
             $balanceHistory = new BalanceHistory();
             $balanceHistory->setTransaction($transaction);
         }
