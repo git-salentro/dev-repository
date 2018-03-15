@@ -408,7 +408,8 @@
                     color: #b7b7b7;
                 }
                 .bank-details {
-                    height: 100px;
+                    min-height: 100px;
+                    padding: 10px 0 0 10px;
                     .bank-title {
                         .bank-icon {
                             background: url(../images/profile/icon-bank.png) no-repeat;
