@@ -39,8 +39,8 @@
                             <tr>
                                 <th class="col-xs-2 col-md-2">Date</th>
                                 <th class="col-xs-2 col-md-2">Transaction</th>
+                                <th class="col-xs-3 col-md-3">Type</th>
                                 <th class="col-xs-5 col-md-5">Description</th>
-                                <th class="col-xs-1 col-md-1">Status</th>
                                 <th class="col-xs-1 col-md-1" nowrap>Income</th>
                                 <th class="col-xs-1 col-md-1">Balance</th>
                             </tr>
@@ -49,13 +49,17 @@
                             {% if (pagination|length) %}
                                 {% for item in pagination %}
                                     <tr>
-                                        <td class="text-left">{{ item.created|date('M d, Y / h:i') }}</td>
+                                        <td class="text-center">
+                                            {{ item.created|date('M d, Y') }}<br/>
+                                            {{ item.created|date('h:i:s') }}
+                                        </td>
                                         <td class="text-left">
                                             {{ item.account ? item.account.user.fullName : '' }}<br/>
                                             {{ item.paymentMethodDescription }}
                                         </td>
+                                        <td class="text-left" nowrap title="{{ item.status }}">{{ item.internalType|internal_type }}</td>
                                         <td class="text-left">
-                                            {{ item.internalType|internal_type }}:
+                                            From
                                             {% if (item.amount <= 0) %}
                                                 {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
                                                 {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
@@ -78,7 +82,6 @@
                                                 {{ item.account.user.fullName }}
                                             {% endif %}
                                         </td>
-                                        <td class="text-left">{{ item.status }}</td>
                                         <td class="text-left">
                                             {{ item.amount|stripe_money }}</td>
                                         <td class="text-left">{{ item.balance|stripe_money }}</td>

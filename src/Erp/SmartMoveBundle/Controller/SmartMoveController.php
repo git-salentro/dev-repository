@@ -371,6 +371,9 @@ class SmartMoveController extends BaseController
                         'amount' => ApiHelper::convertAmountToStripeFormat($amount),
                         'currency' => StripeCustomer::DEFAULT_CURRENCY,
                         'customer' => $customer->getCustomerId(),
+                        'metadata' => [
+                            'internalType' => 'tenant_screening'
+                        ],
                     ],
                     'options' => null
                 ];

@@ -90,6 +90,9 @@ class UnitController extends Controller
                             'quantity' => $newAmount,
                         ],
                     ],
+                    'metadata' => [
+                        'internalType' => 'annual_service_fee'
+                    ],
                 ],
                 'options' => null,
             ];

@@ -45,7 +45,7 @@ class LandlordController extends BaseController
                 ->setUsername($landlord->getEmail())
                 ->setPlainPassword('12345')
                 ->setIsPrivatePaySimple(false);
-            $landlord->addRole('ROLE_LANDLORD');
+            $landlord->addRole(User::ROLE_LANDLORD);
             $this->em->persist($landlord);
             $this->em->flush();
 
@@ -330,7 +330,7 @@ class LandlordController extends BaseController
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                     'metadata' => [
                         'account' => $stripeAccountId,
-                        'internalType' => 'rent_payment'
+                        'internalType' => 'charge'
                     ],
                 ],
                 'options' => [
@@ -353,11 +353,7 @@ class LandlordController extends BaseController
         $chargeEm->persist($charge);
         $chargeEm->flush();
 
-        $this->addFlash(
-            'alert_ok',
-            'Success'
-        );
-
+        //TODO: page with success message
         return $this->redirect('/');
     }
 }

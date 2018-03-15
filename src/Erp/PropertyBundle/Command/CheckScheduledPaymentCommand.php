@@ -57,6 +57,10 @@ class CheckScheduledPaymentCommand extends ContainerAwareCommand
                     'amount' => ApiHelper::convertAmountToStripeFormat($payment->getAmount()),
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                     'customer' => $payment->getCustomer()->getCustomerId(),
+                    'metadata' => [
+                        'account' => $payment->getAccount()->getAccountId(),
+                        'internalType' => 'rent_payment'
+                    ],
                 ],
                 'options' => [
                     'stripe_account' => $payment->getAccount()->getAccountId()

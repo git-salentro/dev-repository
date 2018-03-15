@@ -45,7 +45,7 @@ class Transaction
      *
      * @ORM\Column(name="internal_type", type="string")
      */
-    private $internalType; //fee, late_rent_payment, rent_payment
+    private $internalType; //charge, late_rent_payment, rent_payment, tenant_screening, annual_service_fee
 
 
     /**
