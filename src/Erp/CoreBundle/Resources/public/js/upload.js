@@ -8,9 +8,9 @@ UploadController.prototype.customUpload = function() {
         return this.each(function() {
             var $file = $(this).addClass( 'custom-file-upload-hidden' ), 
                 $wrap = $( '<div class="file-upload-wrapper">' ),
-                $button = $( '<button type="button" class="file-upload-button">Select File</button>' ),
+                $button = $( '<button type="button" class="btn red-btn file-upload-button">Select File</button>' ),
                 $input = $( '.upload-input' ),
-                $label = $( '<label class="file-upload-button" for="'+ $file[0].id +'">Select File</label>' ),
+                $label = $( '<label class="btn red-btn file-upload-button" for="'+ $file[0].id +'">Select File</label>' ),
                 docLabel =$( '.doc-property-item label' );
 
                 docLabel.hide();

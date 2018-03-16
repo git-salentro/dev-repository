@@ -11,9 +11,9 @@ UserController.prototype.customUpload = function() {
         return this.each(function() {
             var $file = $( this ).addClass( 'custom-file-upload-hidden' ),
                 $wrap = $( '<div class="file-upload-wrapper">' ),
-                $button = $( '<button type="button" class="file-upload-button">Select File</button>' ),
-                $input = $( '<textarea type="text" class="file-upload-input" disabled="disabled"></textarea>' ),
-                $label = $( '<label class="file-upload-button" for="' + $file[0].id + '">Select File</label>' );
+                $button = $( '<button type="button" class="btn red-btn file-upload-button">Select File</button>' ),
+                $input = $( '<textarea class="file-upload-input" disabled="disabled"></textarea>' ),
+                $label = $( '<label class="btn red-btn file-upload-button" for="' + $file[0].id + '">Select File</label>' );
 
             $file.css({
                 position: 'absolute',

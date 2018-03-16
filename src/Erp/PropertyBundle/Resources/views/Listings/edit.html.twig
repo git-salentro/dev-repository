@@ -46,7 +46,7 @@
                 {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
                 <div class="row">
-                    {{ form_start(form, { attr: {'id' : 'property-edit-form', 'class': 'form-horizontal'}, 'enctype': form_enctype(form)}) }}
+                    {{ form_start(form, { attr: {'id' : 'property-edit-form', 'class': 'form-horizontal', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
                         <div class="col-md-10 col-md-offset-1 listings-block">
                             <div class="listing-block">
                                 {{ form_custom_errors.widget(form) }}
