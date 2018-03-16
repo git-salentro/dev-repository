@@ -72,4 +72,40 @@ class DocuSignService
 
         return $response;
     }
+
+
+    public function editEnvelopeFromDocument(Document $document, $emails)
+    {
+        $client = $this->container->get('erp.signature.docusign.client');
+        if ($client->hasError()) {
+            throw new NotFoundHttpException($client->getErrorMessage());
+        }
+
+        $this->service = new DocuSignRequestSignatureService($client);
+        $baseDir = $document->getUploadBaseDir($this->container);
+        $file = $baseDir.$document->getPath().'/'.$document->getName();
+
+        if (!file_exists($file)) {
+            throw new NotFoundHttpException('File not found');
+        }
+
+        $documents = [new DocuSignDocument($document->getOriginalName(), 1, file_get_contents($file))];
+
+        $signers = [];
+        $i = 0;
+        foreach ($emails as $email) {
+            $z = ++$i;
+            $signers[] = new DocuSignRecipient($z, $z, $email, $email);
+        }
+
+        $response = $this->service->signature->editEnvelopFromDocument(
+            'The document to be signed',
+            'The document to be signed',
+            self::DOCUSIGN_STATUS_SENT,
+            $documents,
+            $signers
+        );
+
+        return $response->url;
+    }
 }
