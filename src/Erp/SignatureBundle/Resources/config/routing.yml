@@ -4,3 +4,10 @@ erp_esign_form:
     requirements:
         documentId: \d+
     methods: [GET, POST]
+
+erp_signature_signature_edit_envelop:
+    path:     /envelop/edit/{userDocumentId}
+    defaults: { _controller: ErpSignatureBundle:Signature:editEnvelop }
+    requirements:
+        documentId: \d+
+    methods: [GET, POST]
