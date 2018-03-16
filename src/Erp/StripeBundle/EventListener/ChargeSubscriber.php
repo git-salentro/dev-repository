@@ -18,6 +18,9 @@ class ChargeSubscriber extends AbstractSubscriber
     {
         return [
             ChargeEvent::SUCCEEDED => 'onChargeSucceeded',
+            ChargeEvent::PENDING => 'onChargePending',
+            ChargeEvent::UPDATED => 'onChargeUpdated',
+            ChargeEvent::REFUNDED => 'onChargeRefunded'
         ];
     }
 
@@ -73,6 +76,8 @@ class ChargeSubscriber extends AbstractSubscriber
             $transaction->setInternalType($internalType);
             $transaction->setMetadata(json_decode($stripeCharge->metadata));
             $balanceHistory = new BalanceHistory();
+            $balanceHistory->setAmount($stripeCharge->amount);
+            $balanceHistory->setBalance($balance);
         }
 
         //update for all cases
@@ -82,14 +87,30 @@ class ChargeSubscriber extends AbstractSubscriber
         $em->persist($transaction);
         $em->flush();
 
-        $balanceHistory->setAmount($stripeCharge->amount);
-        $balanceHistory->setBalance($balance);
         $balanceHistory->setTransaction($transaction);
         $em->persist($balanceHistory);
         $em->flush();
 
 
     }
+
+    public function onChargeUpdated(ChargeEvent $event)
+    {
+        $this->onChargeSucceeded($event);
+    }
+
+    public function onChargePending(ChargeEvent $event)
+    {
+        $this->onChargeSucceeded($event);
+    }
+
+    public function onChargeRefunded(ChargeEvent $event)
+    {
+        $this->onChargeSucceeded($event);
+    }
+
+
+
 
     private function getAccount($accountId)
     {
