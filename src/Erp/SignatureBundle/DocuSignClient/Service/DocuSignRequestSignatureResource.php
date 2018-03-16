@@ -1,10 +1,11 @@
 <?php
+
 namespace Erp\SignatureBundle\DocuSignClient\Service;
+
+use Erp\SignatureBundle\DocuSignClient\Exception\DocuSignException;
 
 /**
  * Class DocuSignRequestSignatureResource
- *
- * @package Erp\SignatureBundle\DocuSignClient\Service
  */
 class DocuSignRequestSignatureResource extends DocuSignResource
 {
@@ -110,6 +111,105 @@ class DocuSignRequestSignatureResource extends DocuSignResource
 
         $this->curl->setHeaders($headers)->setPostParams($data)->execute($url);
         $response = $this->curl->getBodyResponse(true);
+
+        return $response;
+    }
+
+    public function editEnvelopFromDocument(
+        $emailSubject,
+        $emailBlurb,
+        $status = 'created',
+        $documents = [],
+        $recipients = [],
+        $eventNotifications = [],
+        $options = []
+    )
+    {
+        $doc = [];
+        $contentDisposition = '';
+        foreach ($documents as $document) {
+            array_push(
+                $doc,
+                [
+                    'name' => $document->getName(),
+                    'documentId' => $document->getId()
+                ]
+            );
+            $contentDisposition .= "--myboundary\r\n" .
+                "Content-Type:application/pdf\r\n" .
+                "Content-Disposition: file; filename=\"" .
+                $document->getName() .
+                "\"; documentid=" .
+                $document->getId() .
+                "\r\n" .
+                "\r\n" .
+                $document->getContent() .
+                "\r\n";
+        }
+
+        $data = [
+            'emailSubject' => $emailSubject,
+            'emailBlurb' => $emailBlurb,
+            'documents' => $doc,
+            'status' => $status
+        ];
+        $data = array_merge($data, $options);
+
+        if ($recipients) {
+            $recipientsList = [];
+            foreach ($recipients as $recipient) {
+                $recipientsList[$recipient->getType()][] = [
+                    'routingOrder' => $recipient->getRoutingOrder(),
+                    'recipientId' => $recipient->getId(),
+                    'name' => $recipient->getName(),
+                    'email' => $recipient->getEmail(),
+                    'clientUserId' => $recipient->getClientId(),
+                    'tabs' => $recipient->getTabs(),
+                ];
+            }
+            $data['recipients'] = $recipientsList;
+        }
+
+        if ($eventNotifications) {
+            $data['eventNotification'] = $eventNotifications->toArray();
+        }
+
+        $headers = $this->client->getHeaders(
+            'Accept: application/json',
+            'Content-Type: multipart/form-data;boundary=myboundary'
+        );
+        $data = json_encode($data);
+        $data = "\r\n" .
+            "\r\n" .
+            "--myboundary\r\n" .
+            "Content-Type: application/json\r\n" .
+            "Content-Disposition: form-data\r\n" .
+            "\r\n" .
+            $data .
+            "\r\n" .
+            $contentDisposition .
+            "--myboundary--";
+
+        $url = $this->client->getBaseURL().'/accounts/'.$this->client->getAccountID().'/envelopes';
+        $this->curl->setHeaders($headers)->setPostParams($data)->execute($url);
+        $response = $this->curl->getBodyResponse(true);
+
+        if (isset($response->status) && $response->status !== 'sent') {
+            throw new DocuSignException('An occurred error.');
+        }
+
+        $data = [
+            'returnUrl' => 'http://www.docusign.com/devcenter',
+        ];
+        $data = json_encode($data);
+        $headers = $this->client->getHeaders('Content-Length: '.strlen($data), 'Content-Type: application/json');
+        $url = $url.'/'. $response->envelopeId.'/views/correct';
+        $this->curl->setHeaders($headers)->setPostParams($data)->execute($url);
+        $response = $this->curl->getBodyResponse(true);
+
+        if (isset($response->status) && $response->status !== 'sent') {
+            throw new DocuSignException('An occurred error.');
+        }
 
         return $response;
     }

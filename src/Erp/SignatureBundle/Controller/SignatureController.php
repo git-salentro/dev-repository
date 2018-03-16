@@ -3,13 +3,11 @@ namespace Erp\SignatureBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\Entity\Document;
-use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
-use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
-use Erp\UserBundle\Entity\User;
 use Erp\PropertyBundle\Form\Type\ESignFormType;
-
+use Erp\UserBundle\Entity\User;
+use Erp\UserBundle\Entity\UserDocument;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class SignatureController
@@ -126,6 +124,33 @@ class SignatureController extends BaseController
         $renderOptions = array_merge($renderOptions, ['form' => $form->createView()]);
 
         return $this->render('ErpPropertyBundle:Form:esign-form.html.twig', $renderOptions);
+    }
+
+    public function editEnvelopAction($userDocumentId, Request $request)
+    {
+        $em = $this->getDoctrine()->getManagerForClass(UserDocument::class);
+        $repository = $em->getRepository(UserDocument::class);
+        /** @var UserDocument $document */
+        $userDocument = $repository->find($userDocumentId);
+
+        if (!$userDocument || !$userDocument->getDocument()) {
+            throw $this->createNotFoundException('Document not found');
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $emails = [
+            $user->getEmail(),
+            $userDocument->getToUser()->getEmail(),
+        ];
+
+        try {
+            $url = $this->get('erp.signature.docusign.service')->editEnvelopeFromDocument($userDocument->getDocument(), $emails);
+
+            return new RedirectResponse($url);
+        } catch (\Exception $e) {
+            //TODO Handle an error
+        }
     }
 
     /**
