@@ -1,4 +1,5 @@
 <?php
+
 namespace Erp\SignatureBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
@@ -8,6 +9,7 @@ use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Entity\UserDocument;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class SignatureController
@@ -56,40 +58,40 @@ class SignatureController extends BaseController
             if ($form->isValid()) {
                 // Payment
                 $amount = $this->get('erp.core.fee.service')->getESignFee();
-//
-//                $payer = ($user->hasRole(User::ROLE_TENANT))
-//                    ? $user->getTenantProperty()->getUser()
-//                    : $user;
-//
-//                $customer = $payer->getPaySimpleCustomers()->first();
-//                $accountId = $customer->getPrimaryType() === PaySimpleManagerInterface::CREDIT_CARD
-//                    ? $customer->getCcId()
-//                    : $customer->getBaId();
-//                $paymentModel = new RecurringPaymentModel();
-//                $paymentModel->setAmount($amount)
-//                    ->setCustomer($customer)
-//                    ->setStartDate(new \DateTime())
-//                    ->setAccountId($accountId);
-//
-//                $paymentResponse = $this->get('erp.users.user.service')->makeOnePayment($paymentModel);
-//
-//                if (!$paymentResponse['status']) {
-//                    $this->get('erp.payment.paysimple_service')->sendPaymentEmail($customer);
-//                    if ($user->hasRole(User::ROLE_TENANT)) {
-//                        $msg =
-//                            $this->get('erp.users.user.service')->getPaySimpleErrorByCode('charge_esign_tenant_error');
-//                    } else {
-//                        $msg = $this->get('erp.users.user.service')->getPaySimpleErrorByCode('error');
-//                    }
-//
-//                    $renderOptions = array_merge(
-//                        $renderOptions,
-//                        [
-//                            'modalTitle' => 'Error',
-//                            'msg' => $msg,
-//                        ]
-//                    );
-//                } else {
+
+                $payer = ($user->hasRole(User::ROLE_TENANT))
+                    ? $user->getTenantProperty()->getUser()
+                    : $user;
+
+                $customer = $payer->getPaySimpleCustomers()->first();
+                $accountId = $customer->getPrimaryType() === PaySimpleManagerInterface::CREDIT_CARD
+                    ? $customer->getCcId()
+                    : $customer->getBaId();
+                $paymentModel = new RecurringPaymentModel();
+                $paymentModel->setAmount($amount)
+                    ->setCustomer($customer)
+                    ->setStartDate(new \DateTime())
+                    ->setAccountId($accountId);
+
+                $paymentResponse = $this->get('erp.users.user.service')->makeOnePayment($paymentModel);
+
+                if (!$paymentResponse['status']) {
+                    $this->get('erp.payment.paysimple_service')->sendPaymentEmail($customer);
+                    if ($user->hasRole(User::ROLE_TENANT)) {
+                        $msg =
+                            $this->get('erp.users.user.service')->getPaySimpleErrorByCode('charge_esign_tenant_error');
+                    } else {
+                        $msg = $this->get('erp.users.user.service')->getPaySimpleErrorByCode('error');
+                    }
+
+                    $renderOptions = array_merge(
+                        $renderOptions,
+                        [
+                            'modalTitle' => 'Error',
+                            'msg' => $msg,
+                        ]
+                    );
+                } else {
                     $email = $form->get('email')->getData();
                     $response =
                         $this->get('erp.signature.docusign.service')->createEnvelopeFromDocument($document, $email);
@@ -117,7 +119,7 @@ class SignatureController extends BaseController
                             ]
                         );
                     }
-//                }
+                }
             }
         }
 
@@ -149,7 +151,7 @@ class SignatureController extends BaseController
 
             return new RedirectResponse($url);
         } catch (\Exception $e) {
-            //TODO Handle an error
+            return new Response($e->getMessage());
         }
     }
 
