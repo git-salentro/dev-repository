@@ -37,7 +37,8 @@
             <th class="col-xs-2 col-md-2">Date</th>
             <th class="col-xs-2 col-md-2">Transaction</th>
             <th class="col-xs-1 col-md-1">Type</th>
-            <th class="col-xs-5 col-md-5">Description</th>
+            <th class="col-xs-4 col-md-4">Description</th>
+            <th class="col-xs-1 col-md-1">Status</th>
             <th class="col-xs-1 col-md-1" nowrap>Income</th>
             <th class="col-xs-1 col-md-1">Balance</th>
         </tr>
@@ -51,10 +52,10 @@
                         {{ item.created|date('h:i:s') }}
                     </td>
                     <td class="text-left">
-                        {{ item.account ? item.account.user.fullName : '' }}<br/>
+                        {{ item.customer ? item.customer.user.fullName : '' }}<br/>
                         {{ item.paymentMethodDescription }}
                     </td>
-                    <td class="text-left" nowrap title="{{ item.status }}">{{ item.internalType|internal_type }}</td>
+                    <td class="text-left" nowrap>{{ item.internalType|internal_type }}</td>
                     <td class="text-left">
                         From
                         {% if (item.amount <= 0) %}
@@ -79,6 +80,7 @@
                             {{ item.account.user.fullName }}
                         {% endif %}
                     </td>
+                    <td>{{ item.status }}</td>
                     <td class="text-left">
                         {{ item.amount|stripe_money }}
                     </td>
