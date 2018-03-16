@@ -60,27 +60,34 @@
                                         </td>
                                         <td class="text-left" nowrap>{{ item.internalType|internal_type }}</td>
                                         <td class="text-left">
-                                            From
-                                            {% if (item.amount <= 0) %}
-                                                {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
-                                                {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
-                                                {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
-                                                {{ item.account.user.fullName }}
-                                                to
-                                                {% if (item.customer.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
-                                                {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
-                                                {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
-                                                {{ item.customer.user.fullName }}
+                                            {% if item.account %}
+                                                From
+                                                {% if (item.amount <= 0) %}
+                                                    {% if (item.account.user.hasrole('ROLE_MANAGER')) %}Manager{% endif %}
+                                                    {% if (item.account.user.hasrole('ROLE_LANDLORD')) %}Landlord{% endif %}
+                                                    {% if (item.account.user.hasrole('ROLE_TENANT')) %}Tenant{% endif %}
+                                                    {{ item.account.user.fullName }}
+                                                    to
+                                                    {% if (item.customer.user.hasrole('ROLE_MANAGER')) %}Manager{% endif %}
+                                                    {% if (item.customer.user.hasrole('ROLE_LANDLORD')) %}Landlord{% endif %}
+                                                    {% if (item.customer.user.hasrole('ROLE_TENANT')) %}Tenant{% endif %}
+                                                    {{ item.customer.user.fullName }}
+                                                {% else %}
+                                                    {% if (item.customer.user.hasrole('ROLE_MANAGER')) %}Manager{% endif %}
+                                                    {% if (item.customer.user.hasrole('ROLE_LANDLORD')) %}Landlord{% endif %}
+                                                    {% if (item.customer.user.hasrole('ROLE_TENANT')) %}Tenant{% endif %}
+                                                    {{ item.customer.user.fullName }}
+                                                    to
+                                                    {% if (item.account.user.hasrole('ROLE_MANAGER')) %}Manager{% endif %}
+                                                    {% if (item.account.user.hasrole('ROLE_LANDLORD')) %}Landlord{% endif %}
+                                                    {% if (item.account.user.hasrole('ROLE_TENANT')) %}Tenant{% endif %}
+                                                    {{ item.account.user.fullName }}
+                                                {% endif %}
                                             {% else %}
-                                                {% if (item.customer.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
-                                                {% if (item.customer.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
-                                                {% if (item.customer.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
-                                                {{ item.customer.user.fullName }}
-                                                to
-                                                {% if (item.account.user.hasrole('ROLE_MANAGER'))%}Manager{% endif %}
-                                                {% if (item.account.user.hasrole('ROLE_LANDLORD'))%}Landlord{% endif %}
-                                                {% if (item.account.user.hasrole('ROLE_TENANT'))%}Tenant{% endif %}
-                                                {{ item.account.user.fullName }}
+                                                {% if (item.customer.user.hasrole('ROLE_MANAGER')) %}Manager{% endif %}
+                                                {% if (item.customer.user.hasrole('ROLE_LANDLORD')) %}Landlord{% endif %}
+                                                {% if (item.customer.user.hasrole('ROLE_TENANT')) %}Tenant{% endif %}
+                                                {{ item.customer.user.fullName }} to service
                                             {% endif %}
                                         </td>
                                         <td>{{ item.status }}</td>

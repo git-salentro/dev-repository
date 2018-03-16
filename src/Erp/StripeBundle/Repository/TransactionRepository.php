@@ -81,27 +81,44 @@ class TransactionRepository extends EntityRepository
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.created', 'DESC');
 
-        if ($stripeAccounts) {  //outgoing transaction (account -> customer)
+        if ($stripeCustomers) {
             $qb
                 ->andWhere(
+                    $qb->expr()->in(
+                        't.customer',
+                        ':customers'
+                    )
+                );
+        }
+
+        if ($stripeAccounts) {
+            $qb
+                ->orWhere(
                     $qb->expr()->in(
                         't.account',
                         ':accounts'
                     )
-                )
-                ->setParameter('accounts', $stripeAccounts);
-
-            if ($stripeCustomers) {
-                $qb
-                    ->orWhere(
-                        $qb->expr()->in(
-                            't.customer',
-                            ':customers'
-                        )
-                    )
-                    ->setParameter('customers', $stripeCustomers);
-            }
+                );
         }
+
+        if ($stripeAccounts && $stripeCustomers) {
+            $qb
+                ->orWhere(
+                    $qb->expr()->in(
+                        't.account',
+                        ':customers'
+                    )
+                );
+            $qb
+                ->orWhere(
+                    $qb->expr()->in(
+                        't.customer',
+                        ':customers'
+                    )
+                );
+        }
+
+        $qb->setParameters(['accounts'=> $stripeAccounts, 'customers' => $stripeCustomers]);
 
         if ($dateFrom) {
             if ($dateTo) {
