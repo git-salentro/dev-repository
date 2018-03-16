@@ -2,6 +2,7 @@
 
 namespace Erp\StripeBundle\EventListener;
 
+use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Entity\RentPaymentBalance;
@@ -21,9 +22,12 @@ class TransactionEntityListener
 
     public function postPersist(Transaction $entity)
     {
-        $user = $entity->getCustomer()->getUser();
-        if (!$user->hasRole(User::ROLE_TENANT)) {
-            return;
+        $customer = $entity->getCustomer();
+        if ($customer instanceof StripeCustomer) {
+            $user = $customer->getUser();
+            if (!$user->hasRole(User::ROLE_TENANT)) {
+                return;
+            }
         }
 
         $em = $this->registry->getManagerForClass(RentPaymentBalance::class);
