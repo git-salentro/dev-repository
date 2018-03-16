@@ -6,6 +6,7 @@ use Erp\UserBundle\Entity\Charge;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -26,6 +27,10 @@ class ChargeFormType extends AbstractType
                             'groups' => ['LandlordCharge']
                         ]
                     ),
+                    new GreaterThan([
+                            'value' => '0.50',
+                            'groups' => ['LandlordCharge']
+                    ]),
                     new Regex([
                             'pattern' => '/^[0-9]{1,10}(,[0-9]{3})*(\.[0-9]+)*$/',
                             'message' => 'Please use only positive numbers',
