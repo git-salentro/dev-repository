@@ -90,7 +90,7 @@
                                                 {{ item.customer.user.fullName }} to service
                                             {% endif %}
                                         </td>
-                                        <td>{{ item.status }}</td>
+                                        <td>{{ item.status|transaction_status }}</td>
                                         <td class="text-left">
                                             {{ item.amount|stripe_money }}
                                         </td>

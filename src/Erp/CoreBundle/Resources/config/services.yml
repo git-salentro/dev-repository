@@ -61,3 +61,6 @@ services:
 
     erp_core.formatter.internal_type_formatter:
         class: Erp\CoreBundle\Formatter\InternalTypeFormatter
+
+    erp_core.formatter.transaction_status_formatter:
+        class: Erp\CoreBundle\Formatter\TransactionStatusFormatter
