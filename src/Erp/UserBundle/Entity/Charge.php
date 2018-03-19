@@ -5,6 +5,7 @@ namespace Erp\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\CoreBundle\Entity\DatesAwareInterface;
 use Erp\CoreBundle\Entity\DatesAwareTrait;
+use Erp\StripeBundle\Entity\Transaction;
 
 /**
  * Charge
@@ -69,6 +70,14 @@ class Charge implements DatesAwareInterface
      * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="chargeIncomings")
      */
     protected $landlord; //receiver
+
+
+    /**
+     * @var Transaction
+     * @ORM\OneToOne(targetEntity="Erp\StripeBundle\Entity\Transaction", mappedBy="charge")
+     */
+    protected $transaction; //can be empty if not yet paid
+
 
     /**
      * @ORM\PrePersist
@@ -255,5 +264,21 @@ class Charge implements DatesAwareInterface
     public function getRecurring()
     {
         return $this->recurring;
+    }
+
+    /**
+     * @return Transaction
+     */
+    public function getTransaction()
+    {
+        return $this->transaction;
+    }
+
+    /**
+     * @param Transaction $transaction
+     */
+    public function setTransaction($transaction)
+    {
+        $this->transaction = $transaction;
     }
 }

@@ -91,7 +91,7 @@ class LandlordController extends BaseController
 
                 $this->get('erp_user.mailer.processor')->sendChargeEmail($charge);
 
-                return $this->render('ErpUserBundle:Landlords:chargeComplete.html.twig', [
+                return $this->render('ErpUserBundle:Landlords:chargeSent.html.twig', [
                     'charge' => $charge,
                     'modalTitle' => 'Sent',
                     'user' => $user,
@@ -326,7 +326,9 @@ class LandlordController extends BaseController
                     'currency' => StripeCustomer::DEFAULT_CURRENCY,
                     'metadata' => [
                         'account' => $stripeAccountId,
-                        'internalType' => 'charge'
+                        'internalType' => 'charge',
+                        'description' => $charge->getDescription(),
+                        'internalChargeId' => $charge->getId()
                     ],
                 ],
                 'options' => [

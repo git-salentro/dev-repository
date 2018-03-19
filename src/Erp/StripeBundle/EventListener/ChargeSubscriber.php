@@ -7,7 +7,8 @@ use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Event\ChargeEvent;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
-use Stripe\Charge;
+use Stripe\Charge as StripeCharge;
+use Erp\UserBundle\Entity\Charge;
 
 class ChargeSubscriber extends AbstractSubscriber
 {
@@ -30,7 +31,7 @@ class ChargeSubscriber extends AbstractSubscriber
         $stripeCharge = $stripeEvent->data->object;
 
         /** @var Charge $stripeCharge */
-        if (!$stripeCharge instanceof Charge) {
+        if (!$stripeCharge instanceof StripeCharge) {
             throw new \InvalidArgumentException('ChargeSubscriber::onChargeSucceeded() accepts only Stripe\Charge objects as second parameter.');
         }
 
@@ -40,11 +41,13 @@ class ChargeSubscriber extends AbstractSubscriber
 
         $em = $this->registry->getManagerForClass(Transaction::class);
         $repository = $em->getRepository(Transaction::class);
+        $chargeRepository = $em->getRepository(Charge::class);
 
         $stripeAccount = $this->getAccount($stripeCharge->metadata->account);
         $stripeAccountId = ($stripeAccount instanceof StripeAccount) ? $stripeAccount->getId() : null;
         $stripeCustomer = $this->getCustomer($stripeCharge->customer);
         $internalType = $stripeCharge->metadata->internalType;
+        $internalChargeId = $stripeCharge->metadata->internalChargeId ? $stripeCharge->metadata->internalChargeId : null; //if exist
 
         //get current balance based on
         /* @var $previousTransaction Transaction */
@@ -58,6 +61,8 @@ class ChargeSubscriber extends AbstractSubscriber
             //first balance
             $balance = $stripeCharge->amount;
         }
+
+        $charge = $chargeRepository->find($internalChargeId);
         $transaction = $repository->findOneBy(['account' => $stripeAccountId, 'amount' => $stripeCharge->amount, 'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
 
         if ($transaction instanceof Transaction) {
@@ -74,7 +79,7 @@ class ChargeSubscriber extends AbstractSubscriber
                 ->setPaymentMethod($stripeCharge->source->object)
                 ->setPaymentMethodDescription($stripeCharge->source->brand);
             $transaction->setInternalType($internalType);
-            $transaction->setMetadata(json_decode($stripeCharge->metadata));
+            $transaction->setMetadata($stripeCharge->metadata->jsonSerialize());
             $balanceHistory = new BalanceHistory();
             $balanceHistory->setAmount($stripeCharge->amount);
             $balanceHistory->setBalance($balance);
@@ -84,6 +89,7 @@ class ChargeSubscriber extends AbstractSubscriber
         $transaction->setStatus($stripeCharge->status);
         $transaction->setAccount($stripeAccount);
         $transaction->setCustomer($stripeCustomer);
+        $transaction->setCharge($charge); //set if exists
         $em->persist($transaction);
         $em->flush();
 

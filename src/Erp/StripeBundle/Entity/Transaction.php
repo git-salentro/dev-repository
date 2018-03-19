@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use  Erp\CoreBundle\Entity\CreatedAtAwareTrait;
+use Erp\UserBundle\Entity\Charge;
 
 /**
  * Class Transaction
@@ -130,6 +131,13 @@ class Transaction
      * @ORM\Column(name="status", type="string")
      */
     protected $status;
+
+    /**
+     * @var Charge
+     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\Charge", inversedBy="transaction")
+     */
+    protected $charge;
+
 
     /**
      * @ORM\PrePersist
@@ -424,5 +432,21 @@ class Transaction
     public function setPaymentMethodDescription($paymentMethodDescription)
     {
         $this->paymentMethodDescription = $paymentMethodDescription;
+    }
+
+    /**
+     * @return Charge
+     */
+    public function getCharge()
+    {
+        return $this->charge;
+    }
+
+    /**
+     * @param Charge $charge
+     */
+    public function setCharge($charge)
+    {
+        $this->charge = $charge;
     }
 }
