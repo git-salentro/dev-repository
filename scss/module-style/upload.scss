@@ -18,7 +18,6 @@
 
 .file-upload-wrapper {
     position: relative; 
-    margin: 5px 0;
     input[type=file] {
         display: none;
     }
@@ -42,8 +41,6 @@
 .file-upload,
 .doc-property-item {
     .upload-input {
-        width: 60%;
-        margin: 0 50px;
         display: inline-block;
     }
 }
