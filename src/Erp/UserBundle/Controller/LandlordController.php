@@ -49,10 +49,6 @@ class LandlordController extends BaseController
             $this->em->persist($landlord);
             $this->em->flush();
 
-            //TODO: create request to StripeAPI
-            //TODO: create StripeCustomer entity
-
-
             $this->addFlash('alert_ok', 'Landlord has been added successfully!');
 
             return $this->redirect($this->generateUrl('erp_user_accounting_index'));
