@@ -17,6 +17,10 @@ Run command `bash deploy/instal-[dev|prod].sh`.
 # Updating
 Run command `bash deploy/update-[dev|prod].sh`.
 
+Test login with TENANT role: 
+Login: peterparker@test.com
+Pass: qweASD123
+
 Test login with MANAGER role: 
 Login: tonystark@test.com
 Pass: qweASD123
