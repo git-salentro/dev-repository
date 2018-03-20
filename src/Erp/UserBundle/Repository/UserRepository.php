@@ -15,7 +15,7 @@ class UserRepository extends EntityRepository
     /**
      * Get users by role
      *
-     * @param string      $role
+     * @param string $role
      * @param string|null $otherRole
      *
      * @return array
@@ -34,5 +34,23 @@ class UserRepository extends EntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function getLandlords(User $user)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where(
+                $qb->expr()
+                    ->in(
+                        'u.roles',
+                        [User::ROLE_LANDLORD]
+                    )
+            )
+            ->andWhere('u.manager = :manager')
+            ->setParameter('manager', $user);
+
+        return $qb->getQuery()
+            ->getResult();
     }
 }

@@ -17,7 +17,8 @@ class UserDocument
 {
     const STATUS_ACCEPTED = 'accepted';
     const STATUS_SENT     = 'sent';
-    const STATUS_RECIEVED = 'recieved';
+    const STATUS_RECEIVED = 'received';
+    const APPLICANT_USER_ID = 0;
 
     /**
      * @var integer
@@ -62,7 +63,7 @@ class UserDocument
      *      columnDefinition="ENUM('accepted','sent','recieved') DEFAULT 'sent'"
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_ACCEPTED;
 
     /**
      * @var \DateTime

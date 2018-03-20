@@ -13,7 +13,7 @@ parameters:
     siteUrl: 'https://e-rentpay.com'
     secret: ThisTokenIsNotSoSecretChangeIt
     docusign_integrator_key: '%docusign.integrator.key%'
-    docusign_email: '%docusign.email%'
+    docusign_email: '%docusign.username%'
     docusign_password: '%docusign.password%'
     docusign_environment: '%docusign.environment%'
     docusign_account_id: '%docusign.account.id%'

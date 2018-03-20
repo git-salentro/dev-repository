@@ -301,7 +301,7 @@ class ApplicationFormController extends BaseController
                     ->setFromUser(null)
                     ->setToUser($user)
                     ->setDocument($document)
-                    ->setStatus(UserDocument::STATUS_RECIEVED);
+                    ->setStatus(UserDocument::STATUS_RECEIVED);
 
                 $this->em->persist($userDocument);
                 $this->em->flush();
