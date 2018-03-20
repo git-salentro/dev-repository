@@ -10,10 +10,7 @@ UploadController.prototype.customUpload = function() {
                 $wrap = $( '<div class="file-upload-wrapper">' ),
                 $button = $( '<button type="button" class="btn red-btn file-upload-button">Select File</button>' ),
                 $input = $( '.upload-input' ),
-                $label = $( '<label class="btn red-btn file-upload-button" for="'+ $file[0].id +'">Select File</label>' ),
-                docLabel =$( '.doc-property-item label' );
-
-                docLabel.hide();
+                $label = $( '<label class="btn red-btn file-upload-button" for="'+ $file[0].id +'">Select File</label>' );
 
                 $file.css({
                     position: 'absolute',

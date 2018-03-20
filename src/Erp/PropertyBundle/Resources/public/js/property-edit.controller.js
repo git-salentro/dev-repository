@@ -224,7 +224,7 @@ PropertyEditController.prototype.initDocumentUploader = function() {
     self.addDocumentBtn.click(function ( e ) {
         e.preventDefault();
         var newWidget = self.documentsDataPrototype.replace( /__name__/g, self.documentCount );
-        var docDeleteBtn = '<div class="doc-delete-block"><span class="doc-delete">X</span></div>';
+        var docDeleteBtn = '<div class="doc-delete-block"><span class="doc-delete" aria-hidden="true">&times;</span></div>';
         var newLi = $( '<li class="doc-property-item"></li>' ).html( newWidget ).append( docDeleteBtn );
 
         self.documentFieldsList.append(newLi);

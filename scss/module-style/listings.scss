@@ -114,11 +114,11 @@
         .doc-property-item {
           font-size: 16px;
           position: relative;
+          display: inline-block;
           .doc-delete-block {
             position: absolute;
             top: -10px;
-            text-align: right;
-            left: 82.3%;
+            right: -10px;
             margin: 0;
             display: inline-block;
             .doc-delete {
@@ -244,7 +244,7 @@
         &.edit-prop-form {
           padding: 0 10px;
         }
-        .propety-name {
+        .property-name {
           display: inline-block;
         }
         .edit-link {

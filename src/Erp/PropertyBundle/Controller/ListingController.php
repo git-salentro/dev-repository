@@ -878,7 +878,7 @@ class ListingController extends BaseController
             10
         );
 
-        return $this->render('ErpPropertyBundle:Listings:serach_result.html.twig', [
+        return $this->render('ErpPropertyBundle:Listings:search_result.html.twig', [
             'user' => $user,
             'pagination' => $pagination,
         ]);

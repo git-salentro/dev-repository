@@ -39,13 +39,14 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row">
+                {% form_theme form '@ErpUser/Form/form_upload.html.twig' %}
                 {{ form_start(form, { attr: {'id' : 'property-edit-form', 'class': 'form-horizontal'}, 'enctype': form_enctype(form)}) }}
                 <input type="hidden" id="document-data-prototype" class="file-input" value="{{ form_widget(form.documents.vars.prototype)|e }}"/>
                 <div class="col-md-10 col-md-offset-1 listings-block">
                     <div class="listing-block">
                         <div class="desc-block">
                             <div class="listing-form form-horizontal">
-                                <h3 class="propety-name">{{ property.name }}</h3>
+                                <h3 class="property-name">{{ property.name }}</h3>
                                 <div class="documentation-block">
                                     <div class="errors documentation-errors">{{ form_custom_errors.widget(form) }}</div>
                                     {% if not property.getDocuments()|length %}
@@ -75,8 +76,9 @@
                                     </div>
 
                                     <div class="hide">
-                                        <ul id="document-fields-list">
+                                        <ul>
                                             {% for documentField in form.documents %}
+                                                {{ documentField }}
                                                 <li id="new-form-doc-field-{{ loop.index - 1 }}">
                                                     {{ form_widget(documentField) }}
                                                 </li>

@@ -37,6 +37,7 @@ class DocumentType extends AbstractType
             'file',
             'file',
             [
+                'label' => false,
                 'data_class'  => null,
                 'constraints' => [
                     new NotBlank(['message' => 'File is not selected.', 'groups' => ['UserDocument']]),
@@ -70,7 +71,7 @@ class DocumentType extends AbstractType
             'originalName',
             'text',
             [
-                'label' => 'Document Name *',
+                'label' => false,
                 'attr' => ['class' => $fieldClass, 'readonly' => 'readonly'],
                 'required' => true,
                 'constraints' => [

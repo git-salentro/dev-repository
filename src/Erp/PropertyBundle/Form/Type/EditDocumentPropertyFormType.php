@@ -47,7 +47,6 @@ class EditDocumentPropertyFormType extends AbstractType
                     'nested_form' => true,
                     'nested_form_min' => 0,
                 ],
-                'label' => false,
             ]
         );
 
