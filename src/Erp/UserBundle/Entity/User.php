@@ -1831,6 +1831,13 @@ class User extends BaseUser
         return $this->properties->matching($criteria)->isEmpty();
     }
 
+    public function getPropertiesWithTenants()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('tenantUser', null));
+
+        return $this->properties->matching($criteria);
+    }
 
     /**
      * Add landlord
