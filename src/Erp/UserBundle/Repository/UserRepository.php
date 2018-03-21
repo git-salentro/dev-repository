@@ -40,14 +40,7 @@ class UserRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('u');
         $qb->select('u')
-            ->where(
-                $qb->expr()
-                    ->in(
-                        'u.roles',
-                        [User::ROLE_LANDLORD]
-                    )
-            )
-            ->andWhere('u.manager = :manager')
+            ->where('u.manager = :manager')
             ->setParameter('manager', $user);
 
         return $qb->getQuery()
