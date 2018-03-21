@@ -211,6 +211,12 @@ knp_paginator:
         pagination: ErpPropertyBundle:Listings:pagination.html.twig     # sliding pagination controls template
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
+knp_menu:
+    twig:  # use "twig: false" to disable the Twig extension and the TwigRenderer
+        template: knp_menu.html.twig
+    templating: true # if true, enables the helper for PHP templates
+    default_renderer: twig # The renderer to use, list is also available by default
+
 white_october_breadcrumbs:
     viewTemplate: '::breadcrumbs.html.twig'
 

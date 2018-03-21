@@ -96,7 +96,10 @@ class DocumentController extends BaseController
 
             $menu->addChild('Applicants', [
                 'route' => 'erp_user_documentation',
-                'routeParameters' => ['toUserId' => $anonUser->getId()]
+                'routeParameters' => ['toUserId' => $anonUser->getId()],
+                'attributes' => [
+                    'class' => 'companion-name',
+                ],
             ]);
             $menu->addChild('Tenants', [
                 'childrenAttributes' => [
