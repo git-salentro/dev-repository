@@ -112,7 +112,48 @@ class ChargeSubscriber extends AbstractSubscriber
 
     public function onChargeRefunded(ChargeEvent $event)
     {
-        $this->onChargeSucceeded($event);
+        //TODO: current version change status, but we need to change it for create entities Refunds
+
+        $stripeEvent = $event->getStripeEvent();
+        $stripeCharge = $stripeEvent->data->object;
+
+        /** @var Charge $stripeCharge */
+        if (!$stripeCharge instanceof StripeCharge) {
+            throw new \InvalidArgumentException('ChargeSubscriber::onChargeRefunded() accepts only Stripe\Charge objects as second parameter.');
+        }
+
+        if (!$stripeCharge->customer) {
+            return;
+        }
+
+
+        $em = $this->registry->getManagerForClass(Transaction::class);
+        $repository = $em->getRepository(Transaction::class);
+        $stripeAccount = $this->getAccount($stripeCharge->metadata->account);
+        $stripeAccountId = ($stripeAccount instanceof StripeAccount) ? $stripeAccount->getId() : null;
+
+
+        $transaction = $repository->findOneBy(['account' => $stripeAccountId, 'amount' => $stripeCharge->amount, 'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
+
+        /** @var Charge $stripeCharge */
+        if (!$transaction instanceof Transaction) {
+            return;
+        }
+
+        if ($stripeCharge->refunded) {
+            if ($stripeCharge->amount_refunded == $stripeCharge->amount) { //full refund
+                //update for all cases
+                //$transaction->setStatus('refunded');
+                //$transaction->setRefund($refund);
+
+                $em->persist($transaction);
+                $em->flush();
+
+            }
+        };
+
+
+
     }
 
 
