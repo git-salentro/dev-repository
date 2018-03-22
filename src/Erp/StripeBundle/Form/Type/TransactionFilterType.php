@@ -27,6 +27,14 @@ class TransactionFilterType extends AbstractFilterType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('keyword',
+                'text',
+                [
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => 'Search',
+                    ]
+                ])
             ->add(
                 'landlord',
                 'entity',
