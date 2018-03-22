@@ -8,11 +8,11 @@ class Processor extends BaseProcessor
 {
     CONST CHARGE_EMAIL_TEMPLATE = 'ErpUserBundle:Landlords:charge_email_template.html.twig';
 
-    public function sendChargeEmail(Charge $charge)
+    public function sendChargeEmail(Charge $charge, $mailFrom)
     {
         $rendered = $this->templating->render(self::CHARGE_EMAIL_TEMPLATE, ['charge' => $charge]);
         $subject = sprintf('Charge request from %s to %s', $charge->getManager()->getFullName(), $charge->getLandlord()->getFullName());
-        $result = $this->sendEmail($rendered, $subject, 'support@zoobdoo.com', $charge->getLandlord()->getEmail(), 'text/html');
+        $result = $this->sendEmail($rendered, $subject, $mailFrom, $charge->getLandlord()->getEmail(), 'text/html');
 
         return $result;
     }

@@ -12,7 +12,7 @@ parameters:
     mailer_port: '%mailer.port%'
     mailer_encryption: '%mailer.encryption%'
     contact_email: '%contact.email%'
-    siteUrl: 'https://e-rentpay.com'
+    siteUrl: 'https://zoobdoo.com'
     secret: ThisTokenIsNotSoSecretChangeIt
     docusign_integrator_key: '%docusign.integrator.key%'
     docusign_email: '%docusign.username%'

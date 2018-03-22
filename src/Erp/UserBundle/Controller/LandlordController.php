@@ -89,7 +89,8 @@ class LandlordController extends BaseController
                 $this->em->persist($charge);
                 $this->em->flush();
 
-                $this->get('erp_user.mailer.processor')->sendChargeEmail($charge);
+                $from = $this->container->getParameter('contact_email');
+                $this->get('erp_user.mailer.processor')->sendChargeEmail($charge, $from);
 
                 return $this->render('ErpUserBundle:Landlords:chargeSent.html.twig', [
                     'charge' => $charge,
