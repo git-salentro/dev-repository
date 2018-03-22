@@ -11,7 +11,7 @@ parameters:
     mailer_password: '%mailer.password%'
     mailer_port: '%mailer.port%'
     mailer_encryption: '%mailer.encryption%'
-    contact_email: info@e-rentpay.com
+    contact_email: '%contact.email%'
     siteUrl: 'https://e-rentpay.com'
     secret: ThisTokenIsNotSoSecretChangeIt
     docusign_integrator_key: '%docusign.integrator.key%'

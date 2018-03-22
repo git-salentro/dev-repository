@@ -125,7 +125,7 @@ fos_user:
         form:
             type: erp_users_form_reset_password
     from_email:
-        address:  info@zoobdoo.com
+        address:  '%contact.email%'
         sender_name: "Zoobdoo"
     registration:
         form:
