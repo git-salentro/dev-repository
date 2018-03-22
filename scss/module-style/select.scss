@@ -1,20 +1,17 @@
 /* Select */
-.select2-container--default .select2-selection--single{
-    border: 0;
-}
 .select2-container--default {
     .select2-selection--single {
-        height: 44px;
+        min-height: 40px;
         background-color: transparent;
         border: none;
         .select2-container--default .select2-selection--single .select2-selection__arrow {
             display: none;
         }
          .select2-selection__rendered {
-            height: 44px;
-            padding-left: 20px;
-            line-height: 2.5;
+            color: #444;
+            line-height: 2.1em;
         }
+
     }
 }
 
@@ -35,7 +32,7 @@
         // left: -36px;
         .select2-results {
             display: block;
-            width: 104%;
+
             // margin-left: 33px;
             background-color: #fff;
             border: 1px solid #d6d6d6;
