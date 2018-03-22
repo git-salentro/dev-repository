@@ -76,7 +76,7 @@ class TransactionRepository extends EntityRepository
     }
 
 
-    public function getTransactionsBothDirectionsQuery($stripeAccounts = null, $stripeCustomers = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
+    public function getTransactionsBothDirectionsQuery($stripeAccounts = null, $stripeCustomers = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null, $keyword = null)
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.created', 'DESC');
@@ -120,6 +120,10 @@ class TransactionRepository extends EntityRepository
                     $type
                 )
             );
+        }
+
+        if ($keyword) {
+           //TODO: search by several fields (create index)
         }
 
         return $qb->getQuery();
