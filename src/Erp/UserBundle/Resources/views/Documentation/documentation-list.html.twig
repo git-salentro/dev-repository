@@ -42,7 +42,7 @@
             {% if not currentCompanion.hasRole(role_anonymous) %}
                 <a target="_blank" href="{{ path('erp_signature_signature_edit_envelop', {'userDocumentId':userDocument.id}) }}" class="sign-btn signature-btn">Sign</a>
             {% endif %}
-            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED')) or user.hasRole(constRoleManager) %}
+            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED')) or user.hasRole(role_manager) %}
                 <span class="doc-edit" data-is-tenant="{% if user.hasRole(role_tenant) %}1{% else %}0{% endif %}"></span>
                 <span class="ok-btn">Ok</span>
                 <a role="popup" href="{{ path('erp_user_document_delete', {'documentId':userDocument.id}) }}" class="doc-delete">×</a>

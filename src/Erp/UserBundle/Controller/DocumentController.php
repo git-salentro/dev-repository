@@ -152,15 +152,29 @@ class DocumentController extends BaseController
                 ]);
             }
         } else {
-            $menu->addChild('Managers');
+
             /** @var Property $property */
             $property = $currentUser->getTenantProperty();
-            $menu->addChild('Managers');
 
             $managers = [];
             if ($property) {
-                $managers = $property->getUser();
+                $managers = [$property->getUser()];
             }
+            $menu->addChild('Managers', [
+                'childrenAttributes' => [
+                    'id' => 'managers',
+                    'class' => 'collapse list-unstyled',
+                ],
+                'linkAttributes' => [
+                    'data-toggle' => 'collapse',
+                    'aria-expanded' => 'false',
+                ],
+                'attributes' => [
+                    'class' => 'companion-name',
+                ],
+                'uri' => '#managers',
+            ]);
+
 
             /** @var User $manager */
             foreach ($managers as $manager) {
