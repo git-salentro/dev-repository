@@ -17,4 +17,4 @@ parameters:
     docusign_password: '%docusign.password%'
     docusign_environment: '%docusign.environment%'
     docusign_account_id: '%docusign.account.id%'
-    ga_id: '%ga.id%'
+    ga_id: '%ga_id%'
