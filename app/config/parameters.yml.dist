@@ -14,6 +14,8 @@ parameters:
     mailer_host:       ~
     mailer_user:       ~
     mailer_password:   ~
+    mailer_port: ~
+    mailer_encryption: ~
     contact_email:     info@zoobdoo.com
 
     siteUrl: 'http://erent.loc'

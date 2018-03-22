@@ -9,6 +9,8 @@ parameters:
     mailer_host: '%mailer.host%'
     mailer_user: '%mailer.user%'
     mailer_password: '%mailer.password%'
+    mailer_port: '%mailer.port%'
+    mailer_encryption: '%mailer.encryption%'
     contact_email: info@e-rentpay.com
     siteUrl: 'https://e-rentpay.com'
     secret: ThisTokenIsNotSoSecretChangeIt
