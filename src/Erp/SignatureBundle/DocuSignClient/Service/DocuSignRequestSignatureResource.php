@@ -2,8 +2,6 @@
 
 namespace Erp\SignatureBundle\DocuSignClient\Service;
 
-use Erp\SignatureBundle\DocuSignClient\Exception\DocuSignException;
-
 /**
  * Class DocuSignRequestSignatureResource
  */
@@ -115,7 +113,8 @@ class DocuSignRequestSignatureResource extends DocuSignResource
         return $response;
     }
 
-    public function editEnvelopFromDocument(
+
+    public function createEnvelopeFromDocumentNew(
         $emailSubject,
         $emailBlurb,
         $status = 'created',
@@ -123,8 +122,7 @@ class DocuSignRequestSignatureResource extends DocuSignResource
         $recipients = [],
         $eventNotifications = [],
         $options = []
-    )
-    {
+    ) {
         $doc = [];
         $contentDisposition = '';
         foreach ($documents as $document) {
@@ -171,7 +169,7 @@ class DocuSignRequestSignatureResource extends DocuSignResource
         }
 
         if ($eventNotifications) {
-            $data['eventNotification'] = $eventNotifications->toArray();
+            $data['eventNotification'] = $eventNotifications;
         }
 
         $headers = $this->client->getHeaders(
@@ -194,22 +192,19 @@ class DocuSignRequestSignatureResource extends DocuSignResource
         $this->curl->setHeaders($headers)->setPostParams($data)->execute($url);
         $response = $this->curl->getBodyResponse(true);
 
-        if (isset($response->status) && $response->status !== 'sent') {
-            throw new DocuSignException('An occurred error.');
-        }
+        return $response;
+    }
 
+    public function createCorrectLink($envelopeId, $returnUrl = 'http://www.docusign.com/devcenter')
+    {
         $data = [
-            'returnUrl' => 'http://www.docusign.com/devcenter',
+            'returnUrl' => $returnUrl,
         ];
         $data = json_encode($data);
         $headers = $this->client->getHeaders('Content-Length: '.strlen($data), 'Content-Type: application/json');
-        $url = $url.'/'. $response->envelopeId.'/views/correct';
+        $url = $this->client->getBaseURL().'/accounts/'.$this->client->getAccountID().'/envelopes'.'/'. $envelopeId.'/views/correct';
         $this->curl->setHeaders($headers)->setPostParams($data)->execute($url);
         $response = $this->curl->getBodyResponse(true);
-
-        if (isset($response->status) && $response->status !== 'sent') {
-            throw new DocuSignException('An occurred error.');
-        }
 
         return $response;
     }
