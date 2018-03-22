@@ -27,4 +27,4 @@ parameters:
     docusign_environment: demo
     docusign_account_id: a73c6d27-004a-4dea-8fe0-872354443292
 
-    ga_id: ''
+    google_analytics_id: ~
