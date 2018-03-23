@@ -79,9 +79,9 @@ class TransactionRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.created', 'DESC');
-        $qb->leftJoin('ErpPaymentBundle:StripeAccount','sa', 'WITH', 'sa.id = t.account');
-        $qb->leftJoin('ErpPaymentBundle:StripeCustomer','sc', 'WITH', 'sc.id = t.customer');
-        $qb->leftJoin('ErpUserBundle:User','u', 'WITH', 'sc.user = u.id');
+        $qb->leftJoin('ErpPaymentBundle:StripeAccount', 'sa', 'WITH', 'sa.id = t.account');
+        $qb->leftJoin('ErpPaymentBundle:StripeCustomer', 'sc', 'WITH', 'sc.id = t.customer');
+        $qb->leftJoin('ErpUserBundle:User', 'u', 'WITH', 'sc.user = u.id');
         if ($stripeAccountId) {  //outgoing transaction (account -> customer)
             $qb
                 ->andWhere(
@@ -103,13 +103,19 @@ class TransactionRepository extends EntityRepository
 
         if ($dateFrom) {
             if ($dateTo) {
-                $qb->andWhere($qb->expr()->between('t.created', ':dateFrom', ':dateTo'))
+                $qb->andWhere(
+                    $qb->expr()->between('t.created', ':dateFrom', ':dateTo')
+                )
                     ->setParameter('dateTo', $dateTo);
             } else {
                 $qb->andWhere('t.created > :dateFrom');
             }
             $qb->setParameter('dateFrom', $dateFrom);
+        } elseif ($dateTo) {
+            $qb->andWhere('t.created < :dateTo')
+                ->setParameter('dateTo', $dateTo);
         }
+
 
         if ($type) {
             $qb->andWhere(
@@ -125,12 +131,12 @@ class TransactionRepository extends EntityRepository
             foreach ($words as $word) {
                 $qb->andWhere(
                     $qb->expr()->orX(
-                        $qb->expr()->like('u.firstName',':word'),
-                        $qb->expr()->like('u.lastName',':word'),
-                        $qb->expr()->like('t.metadata',':word'),
-                        $qb->expr()->like('t.status',':word'),
-                        $qb->expr()->like('t.internalType',':word'),
-                        $qb->expr()->like('t.amount',':word')
+                        $qb->expr()->like('u.firstName', ':word'),
+                        $qb->expr()->like('u.lastName', ':word'),
+                        $qb->expr()->like('t.metadata', ':word'),
+                        $qb->expr()->like('t.status', ':word'),
+                        $qb->expr()->like('t.internalType', ':word'),
+                        $qb->expr()->like('t.amount', ':word')
                     )
                 )->setParameter('word', '%' . $word . '%');
             }
