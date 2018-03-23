@@ -127,7 +127,10 @@ class TransactionRepository extends EntityRepository
                     $qb->expr()->orX(
                         $qb->expr()->like('u.firstName',':word'),
                         $qb->expr()->like('u.lastName',':word'),
-                        $qb->expr()->like('t.metadata',':word')
+                        $qb->expr()->like('t.metadata',':word'),
+                        $qb->expr()->like('t.status',':word'),
+                        $qb->expr()->like('t.internalType',':word'),
+                        $qb->expr()->like('t.amount',':word')
                     )
                 )->setParameter('word', '%' . $word . '%');
             }
