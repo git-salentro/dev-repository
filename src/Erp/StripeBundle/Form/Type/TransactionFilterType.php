@@ -37,25 +37,6 @@ class TransactionFilterType extends AbstractFilterType
                     ]
                 ])
             ->add(
-                'landlord',
-                'entity',
-                [
-                    'class' => User::class,
-                    'label' => 'Landlord',
-                    'empty_data' => null,
-                    'property' => 'FullName',
-                    'required' => false,
-                    'query_builder' => function (EntityRepository $repository) {
-                        $user = $this->tokenStorage->getToken()->getUser();
-                        $qb = $repository->createQueryBuilder('u')
-                            ->where('u.manager = :manager')
-                            ->setParameter('manager', $user);
-                        return $qb;
-                    },
-
-                ]
-            )
-            ->add(
                 'dateFrom',
                 'date',
                 [

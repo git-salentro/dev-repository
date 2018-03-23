@@ -10,6 +10,7 @@ use Erp\CoreBundle\Controller\BaseController;
 use Erp\StripeBundle\Form\Type\TransactionFilterType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Erp\StripeBundle\Form\Type\AbstractFilterType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class AccountingController extends BaseController
 {
@@ -39,19 +40,16 @@ class AccountingController extends BaseController
 
         $data = $form->getData();
         $stripeAccount = $user->getStripeAccount();
-        /** @var User $landlord */
-        $landlord = $data['landlord']; //receiver
+
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
         $keyword = $data['keyword'];
-        $type = null;
 
         $pagination = [];
         if ($stripeAccount) {
-            $stripeCustomerId = $landlord ? $landlord->getStripeCustomer()->getId() : null;
             $stripeAccountId = $stripeAccount ? $stripeAccount->getId() : null;
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsSearchQuery($stripeAccountId, $stripeCustomerId, $dateFrom, $dateTo, $type, $keyword);
+            $query = $repository->getTransactionsSearchQuery($stripeAccountId, null, $dateFrom, $dateTo, null, $keyword);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
@@ -106,19 +104,16 @@ class AccountingController extends BaseController
 
         $data = $form->getData();
         $stripeAccount = $user->getStripeAccount();
-        /** @var User $landlord */
-        $landlord = $data['landlord']; //receiver
+
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
         $keyword = $data['keyword'];
-        $type = null;
 
         $pagination = [];
         if ($stripeAccount) {
-            $stripeCustomerId = $landlord ? $landlord->getStripeCustomer()->getId() : null;
             $stripeAccountId = $stripeAccount ? $stripeAccount->getId() : null;
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsSearchQuery($stripeAccountId, $stripeCustomerId, $dateFrom, $dateTo, $type, $keyword);
+            $query = $repository->getTransactionsSearchQuery($stripeAccountId, null, $dateFrom, $dateTo, null, $keyword);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(

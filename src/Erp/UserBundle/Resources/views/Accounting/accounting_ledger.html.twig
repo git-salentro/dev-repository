@@ -11,29 +11,25 @@
 
     </div>
     {{ form_start(form) }}
-        <div class="form-group form-accounting">
-            <div class="col-xs-12 col-md-5">
-                {{ form_label(form.keyword) }}
-                {{ form_widget(form.keyword, {'attr': {'class': 'form-control'}}) }}
-            </div>
-
-            <div class="col-xs-12 col-md-2">
-                {{ form_label(form.dateFrom) }}
-                {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
-            </div>
-            <div class="col-xs-12 col-md-2">
-                {{ form_label(form.dateTo) }}
-                {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
-            </div>
-            <div class="col-xs-12 col-md-2">
-                {{ form_label(form.landlord) }}
-                {{ form_widget(form.landlord, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="col-xs-12 col-md-1">
-                <label for="filter">&nbsp;</label><br/>
-                <button id="filter" name="filter" class="btn red-btn" type="submit">Find</button>
-            </div>
+    <div class="form-group form-accounting">
+        <div class="col-xs-12 col-md-7">
+            {{ form_label(form.keyword) }}
+            {{ form_widget(form.keyword, {'attr': {'class': 'form-control'}}) }}
         </div>
+
+        <div class="col-xs-12 col-md-2">
+            {{ form_label(form.dateFrom) }}
+            {{ form_widget(form.dateFrom, {'attr': {'class': 'form-control date'}}) }}
+        </div>
+        <div class="col-xs-12 col-md-2">
+            {{ form_label(form.dateTo) }}
+            {{ form_widget(form.dateTo, {'attr': {'class': 'form-control date'}}) }}
+        </div>
+        <div class="col-xs-12 col-md-1">
+            <label for="filter">&nbsp;</label><br/>
+            <button id="filter" name="filter" class="btn red-btn" type="submit">Find</button>
+        </div>
+    </div>
     {{ form_end(form) }}
 
     <table class="table table-striped">
