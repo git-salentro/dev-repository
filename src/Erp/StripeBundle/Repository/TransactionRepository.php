@@ -79,6 +79,9 @@ class TransactionRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.created', 'DESC');
+        $qb->leftJoin('ErpPaymentBundle:StripeAccount','sa', 'WITH', 'sa.id = t.account');
+        $qb->leftJoin('ErpPaymentBundle:StripeCustomer','sc', 'WITH', 'sc.id = t.customer');
+        $qb->leftJoin('ErpUserBundle:User','u', 'WITH', 'sc.user = u.id');
         if ($stripeAccountId) {  //outgoing transaction (account -> customer)
             $qb
                 ->andWhere(
@@ -120,12 +123,15 @@ class TransactionRepository extends EntityRepository
         if ($keywords) {
             $words = explode(" ", $keywords);
             foreach ($words as $word) {
-                $qb->andWhere('t.status LIKE \'%' . $word . '%\'');
-                $qb->orWhere('t.metadata LIKE \'%' . $word . '%\'');
+                $qb->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->like('u.firstName',':word'),
+                        $qb->expr()->like('u.lastName',':word'),
+                        $qb->expr()->like('t.metadata',':word')
+                    )
+                )->setParameter('word', '%' . $word . '%');
             }
         }
-
-
 
         return $qb->getQuery();
     }
