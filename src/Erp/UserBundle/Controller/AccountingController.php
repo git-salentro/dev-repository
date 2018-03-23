@@ -123,7 +123,6 @@ class AccountingController extends BaseController
             );
         }
 
-        echo $query->getSQL();
         $template = sprintf('ErpUserBundle:Accounting:accounting_ledger.%s.twig', $_format);
         $parameters = [
             'user' => $user,
