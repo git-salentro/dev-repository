@@ -112,9 +112,10 @@ class AccountingController extends BaseController
 
         $pagination = [];
         if ($stripeAccount) {
-            $stripeCustomer = $landlord ? $landlord->getStripeCustomer() : null;
+            $stripeCustomerId = $landlord ? $landlord->getStripeCustomer()->getId() : null;
+            $stripeAccountId = $stripeAccount ? $stripeAccount->getId() : null;
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo, $type, $keyword);
+            $query = $repository->getTransactionsSearchQuery($stripeAccountId, $stripeCustomerId, $dateFrom, $dateTo, $type, $keyword);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(

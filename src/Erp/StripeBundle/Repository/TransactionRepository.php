@@ -11,7 +11,6 @@ class TransactionRepository extends EntityRepository
     public function getGroupedTransactions(StripeAccount $stripeAccount = null, StripeCustomer $stripeCustomer = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $qb = $this->createQueryBuilder('t');
-        $qb->select('SUM(t.amount) as gAmount, MONTH(t.created) as gMonth, YEAR(t.created) as gYear, CONCAT(YEAR(t.created), \'-\', MONTH(t.created)) as interval');
 
         if ($stripeAccount) {
             $qb->where('t.account = :account')
@@ -76,31 +75,26 @@ class TransactionRepository extends EntityRepository
     }
 
 
-    public function getTransactionsBothDirectionsQuery($stripeAccounts = null, $stripeCustomers = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null, $keyword = null)
+    public function getTransactionsSearchQuery($stripeAccountId = null, $stripeCustomerId = null, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null, $keywords = null)
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.created', 'DESC');
-        $qb->leftJoin('ErpPaymentBundle:StripeAccount','sa', 'WITH', 'sa.id = t.account');
-        $qb->leftJoin('ErpPaymentBundle:StripeCustomer','sc', 'WITH', 'sc.id = t.customer');
-
-        if ($stripeAccounts) {  //outgoing transaction (account -> customer)
+        if ($stripeAccountId) {  //outgoing transaction (account -> customer)
             $qb
                 ->andWhere(
                     $qb->expr()->in(
                         't.account',
-                        ':accounts'
+                        $stripeAccountId
                     )
-                )
-                ->setParameter('accounts', $stripeAccounts);
-            if ($stripeCustomers) {
+                );
+            if ($stripeCustomerId) {
                 $qb
-                    ->orWhere(
+                    ->andWhere(
                         $qb->expr()->in(
                             't.customer',
-                            ':customers'
+                            $stripeCustomerId
                         )
-                    )
-                    ->setParameter('customers', $stripeCustomers);
+                    );
             }
         }
 
@@ -123,13 +117,15 @@ class TransactionRepository extends EntityRepository
             );
         }
 
-        if ($keyword) {
-            //TODO: search by several fields (create index)
-            $qb->andWhere(
-                $qb->expr()->like('sa.lastName',':keyword')
-            )
-            ->setParameter('keyword', $keyword);
+        if ($keywords) {
+            $words = explode(" ", $keywords);
+            foreach ($words as $word) {
+                $qb->andWhere('t.status LIKE \'%' . $word . '%\'');
+                $qb->orWhere('t.metadata LIKE \'%' . $word . '%\'');
+            }
         }
+
+
 
         return $qb->getQuery();
     }
