@@ -80,6 +80,8 @@ class TransactionRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.created', 'DESC');
+        $qb->leftJoin('ErpPaymentBundle:StripeAccount','sa', 'WITH', 'sa.id = t.account');
+        $qb->leftJoin('ErpPaymentBundle:StripeCustomer','sc', 'WITH', 'sc.id = t.customer');
 
         if ($stripeAccounts) {  //outgoing transaction (account -> customer)
             $qb
@@ -90,7 +92,6 @@ class TransactionRepository extends EntityRepository
                     )
                 )
                 ->setParameter('accounts', $stripeAccounts);
-
             if ($stripeCustomers) {
                 $qb
                     ->orWhere(
@@ -123,7 +124,11 @@ class TransactionRepository extends EntityRepository
         }
 
         if ($keyword) {
-           //TODO: search by several fields (create index)
+            //TODO: search by several fields (create index)
+            $qb->andWhere(
+                $qb->expr()->like('sa.lastName',':keyword')
+            )
+            ->setParameter('keyword', $keyword);
         }
 
         return $qb->getQuery();

@@ -107,12 +107,14 @@ class AccountingController extends BaseController
         $landlord = $data['landlord']; //receiver
         $dateFrom = $data['dateFrom'];
         $dateTo = $data['dateTo'];
+        $keyword = $data['keyword'];
+        $type = null;
 
         $pagination = [];
         if ($stripeAccount) {
             $stripeCustomer = $landlord ? $landlord->getStripeCustomer() : null;
             $repository = $this->getDoctrine()->getManagerForClass(Transaction::class)->getRepository(Transaction::class);
-            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo);
+            $query = $repository->getTransactionsBothDirectionsQuery($stripeAccount, $stripeCustomer, $dateFrom, $dateTo, $type, $keyword);
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
@@ -121,6 +123,7 @@ class AccountingController extends BaseController
             );
         }
 
+        echo $query->getSQL();
         $template = sprintf('ErpUserBundle:Accounting:accounting_ledger.%s.twig', $_format);
         $parameters = [
             'user' => $user,
