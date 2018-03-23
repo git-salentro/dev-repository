@@ -14,6 +14,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class AccountingController extends BaseController
 {
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function indexAction(Request $request)
     {
         /** @var $user \Erp\UserBundle\Entity\User */
@@ -24,7 +27,10 @@ class AccountingController extends BaseController
         ]);
     }
 
-    // TODO Remove that. Crate one method with showAccountingLedgerAction
+
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function listAccountingLedgerAction(Request $request, $_format = 'html')
     {
         /** @var TokenStorage $tokenStorage */
@@ -83,12 +89,15 @@ class AccountingController extends BaseController
                 Response::HTTP_OK,
                 [
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition'  => 'attachment; filename="' . $fileName . '"',
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
                 ]
             );
         }
     }
 
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function showAccountingLedgerAction(Request $request, $_format = 'html')
     {
         /** @var TokenStorage $tokenStorage */
@@ -147,7 +156,7 @@ class AccountingController extends BaseController
                 Response::HTTP_OK,
                 [
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition'  => 'attachment; filename="' . $fileName . '"',
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
                 ]
             );
         }

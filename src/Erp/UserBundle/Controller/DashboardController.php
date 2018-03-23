@@ -13,10 +13,14 @@ use Stripe\BankAccount;
 use Stripe\Card;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\UserBundle\Form\Type\UserLateRentPaymentType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 //TODO Refactor preparing chart data
 class DashboardController extends BaseController
 {
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function dashboardAction()
     {
         /** @var User $user */
