@@ -31,8 +31,9 @@ class TransactionFilterType extends AbstractFilterType
                 'text',
                 [
                     'required' => false,
+                    'label' => 'Search',
                     'attr' => [
-                        'placeholder' => 'Search',
+                        'placeholder' => 'Customer, Amount, Type, Description... etc.',
                     ]
                 ])
             ->add(
