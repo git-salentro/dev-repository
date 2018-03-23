@@ -11,6 +11,7 @@ class TransactionRepository extends EntityRepository
     public function getGroupedTransactions(StripeAccount $stripeAccount = null, StripeCustomer $stripeCustomer = null, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $qb = $this->createQueryBuilder('t');
+        $qb->select('SUM(t.amount) as gAmount, MONTH(t.created) as gMonth, YEAR(t.created) as gYear, CONCAT(YEAR(t.created), \'-\', MONTH(t.created)) as interval');
 
         if ($stripeAccount) {
             $qb->where('t.account = :account')
