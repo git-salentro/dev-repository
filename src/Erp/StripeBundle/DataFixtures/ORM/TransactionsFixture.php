@@ -1,12 +1,13 @@
 <?php
 
-namespace Erp\UserBundle\DataFixtures\ORM;
+namespace Erp\StripeBundle\DataFixtures\ORM;
 
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Helper\ApiHelper;
+use Erp\UserBundle\DataFixtures\ORM\ManagerFlagAssignFixture;
 use Erp\UserBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
