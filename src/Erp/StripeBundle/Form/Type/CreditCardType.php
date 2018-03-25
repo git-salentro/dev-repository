@@ -27,13 +27,13 @@ class CreditCardType extends AbstractType
                         'data-stripe' => 'number',
                     ],
                     'constraints' => [
-                        new Assert\NotBlank(['message' => 'Please enter a card number']),
+                        new Assert\NotBlank(['message' => 'Please enter credit card number']),
                         new Assert\Length(
                             [
                                 'min' => 12,
                                 'max' => 19,
-                                'minMessage' => 'Invalid card number',
-                                'maxMessage' => 'Invalid card number'
+                                'minMessage' => 'Cannot be less than 12 symbols',
+                                'maxMessage' => 'Cannot be greater than 19 symbols',
                             ]
                         ),
                         new Assert\Luhn(['message' => 'Invalid card number']),
@@ -56,8 +56,8 @@ class CreditCardType extends AbstractType
                             [
                                 'min' => 3,
                                 'max' => 4,
-                                'minMessage' => 'Invalid security code',
-                                'maxMessage' => 'Invalid security code',
+                                'minMessage' => 'Cannot be less than 3 symbols',
+                                'maxMessage' => 'Cannot be greater than 4 symbols',
                             ]
                         ),
                     ]
@@ -81,8 +81,8 @@ class CreditCardType extends AbstractType
                             [
                                 'min' => 1,
                                 'max' => 12,
-                                'minMessage' => 'Invalid expiry month',
-                                'maxMessage' => 'Invalid expiry month'
+                                'minMessage' => 'Cannot be less than 1',
+                                'maxMessage' => 'Cannot be greater than 12'
                             ]
                         ),
                     ],
@@ -123,7 +123,8 @@ class CreditCardType extends AbstractType
                     ]
                 ]
             )
-            ->add('token', 'hidden');
+            ->add('token', 'hidden')
+            ->add('js_error_message', 'hidden', ['mapped' => false]); //transporting from Stripe JS API to Symfony errors
     }
 
     /**

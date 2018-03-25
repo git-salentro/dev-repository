@@ -167,6 +167,16 @@ class LandlordController extends BaseController
             'charge' => $charge,
         ];
 
+        $jsErrorMessage = $request->request->get('erp_stripe_credit_card')['js_error_message']; //message come from Stripe JS API
+
+        if ($jsErrorMessage) {
+            $this->addFlash(
+                'alert_error',
+                $jsErrorMessage
+            );
+            return $this->render($template, $params);
+        }
+
         if ($form->isValid() && $charge->isPaid()) {
             $this->addFlash(
                 'alert_error',

@@ -133,14 +133,15 @@
     <script>
         (function ($) {
             var form = $('[name="{{ form.vars.name }}"]');
+            $('#{{ form.js_error_message.vars.id }}').val('');//reset Stripe API JS error
 
             function stripeResponseHandler(status, response) {
                 if (status < 200 || status >= 300) {
-                    return false;
+                    $('#{{ form.js_error_message.vars.id }}').val(response['error']['message']); //set stripe response error message to form
                 } else {
                     $('#{{ form.token.vars.id }}').val(response['id']);
-                    form.get(0).submit();
                 }
+                form.get(0).submit();
             }
 
             form.on('submit', function (e) {
