@@ -106,8 +106,8 @@ class CreditCardType extends AbstractType
                             [
                                 'min' => date('Y'),
                                 'max' => date('Y', strtotime('+20 years')),
-                                'minMessage' => 'Invalid expiry year',
-                                'maxMessage' => 'Invalid expiry year'
+                                'minMessage' => 'Expiry year cannot be less than current',
+                                'maxMessage' => 'Expiry year cannot be greater than 20 years'
                             ]
                         ),
                     ],

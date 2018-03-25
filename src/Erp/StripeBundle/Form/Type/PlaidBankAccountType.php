@@ -42,7 +42,7 @@ class PlaidBankAccountType extends AbstractType
                 'hidden',
                 [
                     'constraints' => [
-                        new Assert\NotBlank(['message' => 'Please enter an expiry year']),
+                        new Assert\NotBlank(['message' => 'Please press Verify button']),
                     ],
                 ]
             )
@@ -51,7 +51,7 @@ class PlaidBankAccountType extends AbstractType
                 'hidden',
                 [
                     'constraints' => [
-                        new Assert\NotBlank(['message' => 'Please enter an expiry year']),
+                        new Assert\NotBlank(['message' => 'Bank account not verified']),
                     ],
                 ]
             )
