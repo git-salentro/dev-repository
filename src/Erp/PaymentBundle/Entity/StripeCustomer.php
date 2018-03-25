@@ -4,6 +4,7 @@ namespace Erp\PaymentBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Erp\PropertyBundle\Entity\ScheduledRentPayment;
 use Erp\UserBundle\Entity\User;
 
 /**
@@ -81,10 +82,20 @@ class StripeCustomer
      */
     private $transactions;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\Erp\PropertyBundle\Entity\ScheduledRentPayment", mappedBy="customer", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $scheduledRentPayments;
+
+
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->scheduledRentPayments = new ArrayCollection();
     }
 
     /**
@@ -302,6 +313,42 @@ class StripeCustomer
     public function getInvoices()
     {
         return $this->invoices;
+    }
+
+
+
+    /**
+     * Add scheduledRentPayment
+     *
+     * @param \Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment
+     *
+     * @return StripeCustomer
+     */
+    public function addScheduledRentPayment(\Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment)
+    {
+        $this->scheduledRentPayments[] = $scheduledRentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Remove scheduledRentPayment
+     *
+     * @param \Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment
+     */
+    public function removeScheduledRentPayment(\Erp\PropertyBundle\Entity\ScheduledRentPayment $scheduledRentPayment)
+    {
+        $this->scheduledRentPayments->removeElement($scheduledRentPayment);
+    }
+
+    /**
+     * Get scheduledRentPayments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getScheduledRentPayments()
+    {
+        return $this->scheduledRentPayments;
     }
 
 }

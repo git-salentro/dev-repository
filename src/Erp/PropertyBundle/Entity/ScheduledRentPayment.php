@@ -33,7 +33,7 @@ class ScheduledRentPayment
     /**
      * @var \Erp\PaymentBundle\Entity\StripeCustomer
      *
-     * @ORM\ManyToOne(targetEntity="Erp\PaymentBundle\Entity\StripeCustomer", inversedBy="recurringPayments")
+     * @ORM\ManyToOne(targetEntity="Erp\PaymentBundle\Entity\StripeCustomer", inversedBy="scheduledRentPayments")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      */
     private $customer;
@@ -41,7 +41,7 @@ class ScheduledRentPayment
     /**
      * @var \Erp\PaymentBundle\Entity\StripeAccount
      *
-     * @ORM\ManyToOne(targetEntity="Erp\PaymentBundle\Entity\StripeAccount", inversedBy="recurringPayments")
+     * @ORM\ManyToOne(targetEntity="Erp\PaymentBundle\Entity\StripeAccount", inversedBy="scheduledRentPayments")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
      */
     private $account;

@@ -30,10 +30,9 @@ class RentPaymentBalance implements DatesAwareInterface
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="RentPaymentBalance")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="rentPaymentBalance")
      */
-    private $user;
+    protected $user;
 
     /**
      * @var integer

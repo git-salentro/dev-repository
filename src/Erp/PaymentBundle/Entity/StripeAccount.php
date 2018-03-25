@@ -40,13 +40,6 @@ class StripeAccount
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Erp\PropertyBundle\Entity\ScheduledRentPayment", mappedBy="account", cascade={"persist"})
-     */
-    private $scheduledRentPayments;
-
-    /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Invoice", mappedBy="account", cascade={"persist"}, orphanRemoval=true)
      */
     private $invoices;
@@ -183,6 +176,14 @@ class StripeAccount
      * @ORM\Column(name="updated_at", type="datetime")
      */
     private $updatedAt;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Erp\PropertyBundle\Entity\ScheduledRentPayment", mappedBy="account", cascade={"persist"})
+     */
+    private $scheduledRentPayments;
+
 
     public function __construct()
     {
