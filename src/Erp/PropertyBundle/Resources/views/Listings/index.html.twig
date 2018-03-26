@@ -59,12 +59,15 @@
                 <div class="col-xs-12 text-center">
                     {{ knp_pagination_render(pagination) }}
 
-                    {#{% if user.propertyCounter > 0 or user.isPropertyCounterFree %}#}
-                        {#<a href="{{ path('erp_property_listings_add') }}" class="btn red-btn">&plus; Add Properties{% if not user.isReadOnlyUser() and not user.isPropertyCounterFree %} ({{ user.propertyCounter }} available){% endif %}</a>#}
-                    {#{% else %}#}
-                        {#<a href="{{ path('erp_property_listings_add_charge_popup') }}" role="popup" class="btn red-btn">&plus; Add Properties{% if not user.isReadOnlyUser() %} ({{ user.propertyCounter }} available){% endif %}</a>#}
-                    {#{% endif %}#}
-                    <a href="{{ path('erp_property_unit_buy') }}" class="btn red-btn">&plus; Add Properties</a>
+
+                    {% if user.stripeCustomer %}
+                        <a href="{{ path('erp_property_unit_buy') }}" class="btn red-btn">&plus; Add Properties</a>
+                    {% else %}
+                        <div class="form-group">
+                            <button disabled class="btn red-btn">&plus; Add Properties</button><br/> <em>Verify bank account to able add properties. See Bank information on Dashboard.</em>
+                        </div>
+                    {% endif %}
+
                 </div>
                 {% include 'ErpPropertyBundle:Listings:properties-import-form.html.twig' %}
                 </div>
