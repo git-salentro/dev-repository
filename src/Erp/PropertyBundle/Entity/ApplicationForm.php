@@ -69,6 +69,20 @@ class ApplicationForm
     protected $applicationSections;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_no_fee", type="boolean")
+     */
+    protected $noFee = true;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="fee", type="float", nullable=true)
+     */
+    protected $fee;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -246,5 +260,58 @@ class ApplicationForm
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set $noFee
+     *
+     * @param boolean $noFee
+     *
+     * @return ApplicationForm
+     */
+    public function setNoFee($noFee)
+    {
+        $this->noFee = (boolean) $noFee;
+
+        return $this;
+    }
+
+    /**
+     * Get useFee
+     *
+     * @return boolean
+     */
+    public function getNoFee()
+    {
+        return $this->noFee;
+    }
+
+    /**
+     * Set fee
+     *
+     * @param float $fee
+     *
+     * @return ApplicationForm
+     */
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
+
+        return $this;
+    }
+
+    /**
+     * Get fee
+     *
+     * @return float
+     */
+    public function getFee()
+    {
+        return $this->fee;
+    }
+
+    public function isNoFee()
+    {
+        return $this->noFee;
     }
 }

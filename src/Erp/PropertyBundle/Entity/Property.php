@@ -1168,4 +1168,9 @@ class Property
     {
         return $this->history;
     }
+
+    public function isDeleted()
+    {
+        return $this->status === self::STATUS_DELETED;
+    }
 }

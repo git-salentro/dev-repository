@@ -60,7 +60,7 @@ class UserDocument
      * @ORM\Column(
      *      name="status",
      *      type="string",
-     *      columnDefinition="ENUM('accepted','sent','recieved') DEFAULT 'sent'"
+     *      columnDefinition="ENUM('accepted','sent','received') DEFAULT 'sent'"
      * )
      */
     protected $status = self::STATUS_ACCEPTED;
