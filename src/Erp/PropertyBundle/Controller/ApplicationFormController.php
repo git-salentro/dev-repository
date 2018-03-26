@@ -329,7 +329,7 @@ class ApplicationFormController extends BaseController
             'data' => $data,
             'paymentData' => [],
             'property' => $property,
-            'isManager' => $currentUser->hasRole(User::ROLE_MANAGER),
+            'isManager' => $currentUser && $currentUser->hasRole(User::ROLE_MANAGER),
             'applicationCreditCardForm' => $applicationCreditCardForm->createView(),
         ];
 
