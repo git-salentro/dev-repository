@@ -76,8 +76,9 @@
                     <div class="col-md-8 col-md-offset-2">
 
                         {{ form_start(form, {'action': path('erp_user_landlords_confirm_charge', {'type': 'cc', 'token': token}), 'attr': {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}}) }}
-                        {{ form_widget(form.token) }}
                         {{ form_widget(form.js_error_message) }}
+                        {{ form_widget(form._token) }}
+                        {{ form_widget(form.token) }}
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-xs-12">
