@@ -18,7 +18,9 @@
             </div>
 
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
-
+            {% if errors %}
+                <span class="field-validation-error">{{ errors }}</span>
+            {% endif %}
             <div class="row">
                 <div class="col-md-6 prising_wrap">
                     <div class="prising_info">
@@ -31,9 +33,6 @@
                     </div>
                 </div>
                 <div class="col-md-6 form_wrap">
-                    {% if errors %}
-                        <span class="field-validation-error">{{ errors }}</span>
-                    {% endif %}
 
                     {# TODO money format on js #}
                     <p>Current annual cost: $<span id="current-year-price">{{ current_year_price }}</span></p>
