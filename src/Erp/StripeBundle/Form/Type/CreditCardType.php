@@ -16,6 +16,42 @@ class CreditCardType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add(
+                'firstName',
+                'text',
+                [
+                    'required' => false,
+                    'label' => 'First Name',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
+                ]
+            )
+            ->add(
+                'middleName',
+                'text',
+                [
+                    'required' => false,
+                    'label' => 'Middle Name',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
+                ]
+            )
+            ->add(
+                'lastName',
+                'text',
+                [
+                    'required' => false,
+                    'label' => 'Last Name',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
+                ]
+            )
             ->add('number',
                 'text',
                 [
