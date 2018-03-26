@@ -157,7 +157,7 @@ class SignatureController extends BaseController
                 $em->flush();
             }
 
-            $url = $docusignService->createCorrectLink($response->envelopeId, $recipient);
+            $url = $docusignService->createCorrectLink($userDocument->getEnvelopId(), $recipient);
 
             return new RedirectResponse($url);
         } catch (\Exception $e) {
