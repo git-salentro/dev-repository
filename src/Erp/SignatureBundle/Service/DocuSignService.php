@@ -82,6 +82,15 @@ class DocuSignService
         $router = $this->container->get('router');
         $returnUrl = $router->generate('erp_user_documentation', ['toUserId' => $recipient->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        if (!$this->service) {
+            $client = $this->container->get('erp.signature.docusign.client');
+            if ($client->hasError()) {
+                throw new NotFoundHttpException($client->getErrorMessage());
+            }
+
+            $this->service = new DocuSignRequestSignatureService($client);
+        }
+
         $response = $this->service->signature->createCorrectLink($envelopId, $returnUrl);
 
         return $response->url;
