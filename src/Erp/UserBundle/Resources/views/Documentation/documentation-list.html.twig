@@ -17,13 +17,15 @@
                 data-selected-file-status="{{ userDocument.status }}" type="button" id="dropdownMenu2" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="true">
                     {% if userDocument.status %}
-                        {% if userDocument.status == constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_SENT') and userDocument.fromUser.id != user.id %}
-                            {% set status = constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_RECIEVED') %}
-                        {% else %}
+                        {% if userDocument.status == constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_SENT') %}
+                            {% set status = constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_SENT') %}
+                        {% elseif userDocument.status == constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_COMPLETED') %}
                             {% set status = userDocument.status %}
+                        {% else  %}
+                            {% set status = constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_PENDING') %}
                         {% endif %}
-                        <li class="doc-{{ status|lower }} current" data-status="{{ status|lower }}">
-                            <span class="status"><span class="doc-{{ status|lower }}-icon doc-status-icon"></span>{{ status }}</span>
+                        <li class="current">
+                            <span class="status"><span class="doc-status-icon"></span>{{ status }}</span>
                         </li>
                     {% else %}
                         <span class="select-container"></span>
@@ -31,8 +33,8 @@
                 </button>
                 {% if user.hasRole(role_manager) %}
                     <ul class="companions-list dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <li class="doc-accepted" data-status="{{ constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED') }}">
-                            <span class="status"><span class="doc-accepted-icon doc-status-icon"></span>Accepted</span>
+                        <li class="doc-accepted" data-status="{{ constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_PENDING') }}">
+                            <span class="status"><span class="doc-accepted-icon doc-status-icon"></span>Pending</span>
                         </li>
                     </ul>
                 {% endif %}
@@ -42,7 +44,7 @@
             {% if not currentCompanion.hasRole(role_anonymous) %}
                 <a target="_blank" href="{{ path('erp_signature_signature_edit_envelop', {'userDocumentId':userDocument.id}) }}" class="sign-btn signature-btn">Sign</a>
             {% endif %}
-            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_ACCEPTED')) or user.hasRole(role_manager) %}
+            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_PENDING')) or user.hasRole(role_manager) %}
                 <span class="doc-edit" data-is-tenant="{% if user.hasRole(role_tenant) %}1{% else %}0{% endif %}"></span>
                 <span class="ok-btn">Ok</span>
                 <a role="popup" href="{{ path('erp_user_document_delete', {'documentId':userDocument.id}) }}" class="doc-delete">×</a>

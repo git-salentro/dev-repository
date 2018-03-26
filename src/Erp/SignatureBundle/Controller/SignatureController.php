@@ -128,7 +128,7 @@ class SignatureController extends BaseController
         return $this->render('ErpPropertyBundle:Form:esign-form.html.twig', $renderOptions);
     }
 
-    public function editEnvelopAction($userDocumentId, Request $request)
+    public function editEnvelopAction($userDocumentId)
     {
         $em = $this->getDoctrine()->getManagerForClass(UserDocument::class);
         $repository = $em->getRepository(UserDocument::class);
@@ -141,13 +141,23 @@ class SignatureController extends BaseController
 
         /** @var User $user */
         $user = $this->getUser();
-        $emails = [
-            $user->getEmail(),
-            $userDocument->getToUser()->getEmail(),
-        ];
+
+        $sender = $user;
+        $recipient = $userDocument->getToUser();
 
         try {
-            $url = $this->get('erp.signature.docusign.service')->editEnvelopeFromDocument($userDocument->getDocument(), $emails);
+            $docusignService = $this->get('erp.signature.docusign.service');
+
+            if (!$userDocument->getEnvelopId()) {
+                $response = $docusignService->createEnvelopeFromDocumentNew($userDocument->getDocument(), $sender, $recipient);
+
+                $userDocument->setEnvelopId($response->envelopeId);
+
+                $em->persist($userDocument);
+                $em->flush();
+            }
+
+            $url = $docusignService->createCorrectLink($response->envelopeId, $recipient);
 
             return new RedirectResponse($url);
         } catch (\Exception $e) {
