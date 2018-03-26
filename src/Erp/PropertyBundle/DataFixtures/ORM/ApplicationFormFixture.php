@@ -20,6 +20,7 @@ class ApplicationFormFixture extends Fixture
         $applicationForm->setUpdatedDate();
         $applicationForm->setUser(null);
         $applicationForm->setIsDefault(1);
+        $applicationForm->setNoFee(1);
         $manager->persist($applicationForm);
         $manager->flush();
 
