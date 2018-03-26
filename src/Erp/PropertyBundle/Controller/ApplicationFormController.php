@@ -115,6 +115,8 @@ class ApplicationFormController extends BaseController
         $applicationSection = new ApplicationSection();
         $applicationSectionForm = $this->createApplicationSectionForm($applicationSection, $property);
 
+        $applicationFeeForm = $this->createForm(new ApplicationFeeType(), $applicationForm);
+
         if ($request->getMethod() === 'POST') {
             $applicationSectionForm->handleRequest($request);
 
