@@ -78,7 +78,6 @@
                                     <div class="hide">
                                         <ul>
                                             {% for documentField in form.documents %}
-                                                {{ documentField }}
                                                 <li id="new-form-doc-field-{{ loop.index - 1 }}">
                                                     {{ form_widget(documentField) }}
                                                 </li>

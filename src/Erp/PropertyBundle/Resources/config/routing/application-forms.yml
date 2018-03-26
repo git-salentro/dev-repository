@@ -50,3 +50,10 @@ erp_property_application_remove_field:
     requirements:
         propertyId: \d+
         fieldId: \d+
+
+erp_property_application_form_save_application_fee:
+    path:     /{property}/fee/save
+    defaults: { _controller: ErpPropertyBundle:ApplicationForm:saveApplicationFee }
+    methods: [POST]
+    requirements:
+        property: \d+

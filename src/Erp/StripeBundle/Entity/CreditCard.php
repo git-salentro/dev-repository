@@ -7,7 +7,17 @@ class CreditCard implements PaymentTypeInterface
     /**
      * @var string
      */
-    protected $cartHolderFullName;
+    protected $firstName;
+
+    /**
+     * @var string
+     */
+    protected $middleName;
+
+    /**
+     * @var string
+     */
+    protected $lastName;
 
     /**
      * @var string
@@ -35,27 +45,75 @@ class CreditCard implements PaymentTypeInterface
     protected $token;
 
     /**
-     * Set cartHolderFullName
+     * Set firstName
      *
-     * @param $cartHolderFullName
+     * @param $firstName
      *
      * @return CreditCard
      */
-    public function setCartHolderFullName($cartHolderFullName)
+    public function setFirstName($firstName)
     {
-        $this->cartHolderFullName = $cartHolderFullName;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     /**
-     * Get cartHolderFullName
+     * Get firstName
      *
      * @return string
      */
-    public function getCartHolderFullName()
+    public function getFirstName()
     {
-        return $this->cartHolderFullName;
+        return $this->firstName;
+    }
+
+    /**
+     * Set middleName
+     *
+     * @param $middleName
+     *
+     * @return CreditCard
+     */
+    public function setMiddleName($middleName)
+    {
+        $this->middleName = $middleName;
+
+        return $this;
+    }
+
+    /**
+     * Get middleName
+     *
+     * @return string
+     */
+    public function getMiddleName()
+    {
+        return $this->middleName;
+    }
+
+    /**
+     * Set lastName
+     *
+     * @param $lastName
+     *
+     * @return CreditCard
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get lastName
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
     }
 
     /**
