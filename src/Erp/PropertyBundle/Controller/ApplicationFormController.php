@@ -76,7 +76,7 @@ class ApplicationFormController extends BaseController
      *
      * @return RedirectResponse|Response
      */
-    public function cunstructorAction(Request $request, $propertyId)
+    public function constructorAction(Request $request, $propertyId)
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
@@ -87,6 +87,7 @@ class ApplicationFormController extends BaseController
         $property = $this->getProperty($propertyId);
         /** @var ApplicationFormRepository $applicationFormRepository */
         $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
+        /** @var ApplicationForm $applicationForm */
         $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
 
         // Cloning application form, if not exists yet

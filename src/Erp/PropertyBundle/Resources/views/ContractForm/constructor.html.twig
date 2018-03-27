@@ -10,6 +10,12 @@
 {% block pageContent %}
     {{ parent() }}
 
+    <div class="container">
+        <div class="form-group text-right">
+            <a href="{{ path('erp_property_listings_edit_documents', {'propertyId': property.id}) }}" class="btn red-btn">Back</a>
+        </div>
+    </div>
+
     <!-- Contract Form Constructor-->
     <section id="rental-form-constructor" class="register-form rental-form">
         <div class="container">
