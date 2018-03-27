@@ -18,7 +18,7 @@ class ApplicationFormFixture extends Fixture
         $applicationForm = new ApplicationForm();
         $applicationForm->setCreatedDate();
         $applicationForm->setUpdatedDate();
-        $applicationForm->setUser(null);
+        $applicationForm->setProperty(null);
         $applicationForm->setIsDefault(1);
         $applicationForm->setNoFee(1);
         $manager->persist($applicationForm);

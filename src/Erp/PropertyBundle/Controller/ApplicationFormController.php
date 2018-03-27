@@ -88,7 +88,7 @@ class ApplicationFormController extends BaseController
         /** @var ApplicationFormRepository $applicationFormRepository */
         $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
         /** @var ApplicationForm $applicationForm */
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
+        $applicationForm = $applicationFormRepository->findOneBy(['property' => $property]);
 
         // Cloning application form, if not exists yet
         if (!$applicationForm) {
@@ -102,7 +102,7 @@ class ApplicationFormController extends BaseController
                     $this->em->flush();
                 }
 
-                $applicationForm = $this->getCloneApplicationForm($user);
+                $applicationForm = $this->getCloneApplicationForm($property);
 
                 $this->addFlash(
                     'alert_ok',
@@ -155,7 +155,7 @@ class ApplicationFormController extends BaseController
         $em = $this->getDoctrine()->getManagerForClass(ApplicationForm::class);
         $repository = $em->getRepository(ApplicationForm::class);
 
-        $applicationForm = $repository->findOneBy(['user' => $user]);
+        $applicationForm = $repository->findOneBy(['property' => $property]);
 
         if (!$applicationForm) {
             if ($user->getApplicationFormCounter() || $user->getIsApplicationFormCounterFree()) {
@@ -168,7 +168,7 @@ class ApplicationFormController extends BaseController
                     $em->flush();
                 }
 
-                $applicationForm = $this->getCloneApplicationForm($user);
+                $applicationForm = $this->getCloneApplicationForm($property);
             } else {
                 throw $this->createNotFoundException();
             }
@@ -211,7 +211,7 @@ class ApplicationFormController extends BaseController
         $user = $this->getUser();
 
         $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
+        $applicationForm = $applicationFormRepository->findOneBy(['property' => $propertyId]);
 
         if ($applicationForm) {
             return $this->redirectToRoute('erp_property_application_form', ['propertyId' => $propertyId]);
@@ -272,26 +272,27 @@ class ApplicationFormController extends BaseController
     }
 
     /**
-     * @param User $user
+     * @param Property $property
      *
      * @return null|object
      */
-    public function getCloneApplicationForm(User $user)
+    public function getCloneApplicationForm(Property $property)
     {
         /** @var ApplicationFormRepository $applicationFormRepository */
         $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
 
+        /** @var ApplicationForm $applicationForm */
         $applicationForm =
-            $applicationFormRepository->findOneBy(['isDefault' => true, 'user' => null]);
+            $applicationFormRepository->findOneBy(['isDefault' => true, 'property' => null]);
 
         if (!$applicationForm) {
             throw new NotFoundHttpException('Default application form not found');
         }
 
-        $this->cloneApplicationForm($applicationForm, $user);
+        $this->cloneApplicationForm($applicationForm, $property);
         $this->em->clear();
 
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
+        $applicationForm = $applicationFormRepository->findOneBy(['property' => $property]);
 
         return $applicationForm;
     }
@@ -694,15 +695,15 @@ class ApplicationFormController extends BaseController
      * Clone application form
      *
      * @param ApplicationForm $applicationForm
-     * @param User            $user
+     * @param Property            $property
      *
      * @return ApplicationForm
      */
-    protected function cloneApplicationForm(ApplicationForm $applicationForm, User $user)
+    protected function cloneApplicationForm(ApplicationForm $applicationForm, Property $property)
     {
         /** @var ApplicationForm $applicationFormClone */
         $applicationFormClone = clone $applicationForm;
-        $applicationFormClone->setUser($user);
+        $applicationFormClone->setProperty($property);
 
         $this->em->persist($applicationFormClone);
         $this->em->flush();
