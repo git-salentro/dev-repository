@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class StripeSubscription
  *
  * @ORM\Table(name="stripe_subscription")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Erp\StripeBundle\Repository\SubscriptionRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class StripeSubscription
@@ -19,7 +19,6 @@ class StripeSubscription
     const DEFAULT_INTERVAL = 'year';
     const BILLING_AUTOMATICALLY = 'charge_automatically';
     const BILLING_SEND_INVOICE = 'send_invoice';
-    const BILLING_DAYS_UNTIL_DUE = 5;
 
     /**
      * @var integer
@@ -44,6 +43,13 @@ class StripeSubscription
      * @ORM\Column(name="subscription_id", type="string")
      */
     private $subscriptionId;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="trial_period_start_at", type="datetime", nullable=true)
+     */
+    private $trialPeriodStartAt;
 
     /**
      * @var \DateTime
@@ -139,6 +145,30 @@ class StripeSubscription
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set trialPeriodStartAt
+     *
+     * @param \DateTime $trialPeriodStartAt
+     *
+     * @return StripeSubscription
+     */
+    public function setTrialPeriodStartAt($trialPeriodStartAt)
+    {
+        $this->trialPeriodStartAt = $trialPeriodStartAt;
+
+        return $this;
+    }
+
+    /**
+     * Get trialPeriodStartAt
+     *
+     * @return \DateTime
+     */
+    public function getTrialPeriodStartAt()
+    {
+        return $this->trialPeriodStartAt;
     }
 
     /**

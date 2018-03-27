@@ -90,6 +90,7 @@ class UnitController extends Controller
                             'quantity' => $newAmount,
                         ],
                     ],
+                    'trial_period_days' => StripeCustomer::TRIAL_PERIOD_DAYS,
                     'metadata' => [
                         'internalType' => 'annual_service_fee'
                     ],
@@ -107,7 +108,8 @@ class UnitController extends Controller
 
             $stripeSubscription = new StripeSubscription();
             $stripeSubscription->setSubscriptionId($subscription['id'])
-                ->setStripeCustomer($stripeCustomer);
+                ->setStripeCustomer($stripeCustomer)
+                ->setTrialPeriodStartAt(new \DateTime());
 
             $stripeCustomer->setStripeSubscription($stripeSubscription);
 
