@@ -16,7 +16,7 @@ class HomePageSliderFixture extends Fixture
     {
         $image = new Image();
         $image->setName('slide1.jpeg');
-        $image->setPath('uploads/images/slide1.jpeg');
+        $image->setPath('uploads/images');
         $image->setCreatedDate();
         $image->setUpdatedDate();
         $objectManager->persist($image);
@@ -32,7 +32,7 @@ class HomePageSliderFixture extends Fixture
 
         $image = new Image();
         $image->setName('slide2.jpeg');
-        $image->setPath('uploads/images/slide2.jpeg');
+        $image->setPath('uploads/images');
         $image->setCreatedDate();
         $image->setUpdatedDate();
         $objectManager->persist($image);
@@ -48,7 +48,7 @@ class HomePageSliderFixture extends Fixture
 
         $image = new Image();
         $image->setName('slide3.jpeg');
-        $image->setPath('uploads/images/slide3.jpeg');
+        $image->setPath('uploads/images');
         $image->setCreatedDate();
         $image->setUpdatedDate();
         $objectManager->persist($image);
@@ -64,7 +64,7 @@ class HomePageSliderFixture extends Fixture
 
         $image = new Image();
         $image->setName('slide4.jpeg');
-        $image->setPath('uploads/images/slide4.jpeg');
+        $image->setPath('uploads/images');
         $image->setCreatedDate();
         $image->setUpdatedDate();
         $objectManager->persist($image);
