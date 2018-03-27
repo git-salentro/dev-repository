@@ -11,7 +11,13 @@
     <section id="managers-profile" class="profile">
         <div class="container">
             <div class="row">
-                <div class="title-block" title="{{ user.stripeAccount.accountId }}">
+                <div class="title-block">
+                    <!--  {% if user.stripeAccount is defined %}
+                       {% if user.stripeAccount.accountId %}
+                        Account ID: {{ user.stripeAccount.accountId }}
+                       {% endif %}
+                    {% endif %} -->
+
                     <h1 class="bold-text">Your Profile</h1>
                 </div>
             </div>
