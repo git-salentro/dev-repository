@@ -5,7 +5,7 @@ namespace Erp\PropertyBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PropertyBundle\Entity\ApplicationSection;
-use Erp\UserBundle\Entity\User;
+
 
 /**
  * ApplicationForm
@@ -48,15 +48,15 @@ class ApplicationForm
 
     /**
      * @ORM\OneToOne(
-     *      targetEntity="\Erp\UserBundle\Entity\User",
+     *      targetEntity="\Erp\PropertyBundle\Entity\Property",
      *      inversedBy="applicationForm"
      * )
      * @ORM\JoinColumn(
-     *      name="user_id",
+     *      name="property_id",
      *      referencedColumnName="id"
      * )
      */
-    protected $user;
+    protected $property;
 
     /**
      * @ORM\OneToMany(
@@ -118,7 +118,7 @@ class ApplicationForm
      *
      * @param string $id
      *
-     * @return ApplicationSection
+     * @return ApplicationForm
      */
     private function setId($id = null)
     {
@@ -187,7 +187,7 @@ class ApplicationForm
      * @ORM\PrePersist
      * @ORM\PreUpdate
      *
-     * @return ApplicationSection
+     * @return ApplicationForm
      */
     public function setUpdatedDate()
     {
@@ -236,30 +236,6 @@ class ApplicationForm
     public function getApplicationSections()
     {
         return $this->applicationSections;
-    }
-
-    /**
-     * Set user
-     *
-     * @param User $user
-     *
-     * @return ApplicationForm
-     */
-    public function setUser(User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 
     /**
@@ -313,5 +289,29 @@ class ApplicationForm
     public function isNoFee()
     {
         return $this->noFee;
+    }
+
+    /**
+     * Set property
+     *
+     * @param Property $property
+     *
+     * @return ApplicationForm
+     */
+    public function setProperty(Property $property = null)
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
+    /**
+     * Get property
+     *
+     * @return Property
+     */
+    public function getProperty()
+    {
+        return $this->property;
     }
 }

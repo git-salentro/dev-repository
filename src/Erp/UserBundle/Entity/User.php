@@ -377,16 +377,6 @@ class User extends BaseUser
     protected $isApplicationFormCounterFree = false;
 
     /**
-     * @ORM\OneToOne(
-     *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationForm",
-     *      mappedBy="user",
-     *      cascade={"persist"},
-     *      orphanRemoval=true
-     * )
-     */
-    protected $applicationForm;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="contract_form_counter", type="integer", nullable=true, options={"default" = 0})
@@ -1645,30 +1635,6 @@ class User extends BaseUser
     public function getPaySimpleApiSecretKey()
     {
         return $this->paySimpleApiSecretKey;
-    }
-
-    /**
-     * Set applicationForm
-     *
-     * @param ApplicationForm $applicationForm
-     *
-     * @return User
-     */
-    public function setApplicationForm(ApplicationForm $applicationForm = null)
-    {
-        $this->applicationForm = $applicationForm;
-
-        return $this;
-    }
-
-    /**
-     * Get applicationForm
-     *
-     * @return ApplicationForm
-     */
-    public function getApplicationForm()
-    {
-        return $this->applicationForm;
     }
 
     /**

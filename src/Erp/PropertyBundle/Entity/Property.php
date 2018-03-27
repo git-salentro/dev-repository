@@ -355,6 +355,17 @@ class Property
      */
     protected $contractForm;
 
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationForm",
+     *      mappedBy="property",
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     */
+    protected $applicationForm;
+
     /**
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\PropertyRepostRequest",
@@ -1093,7 +1104,7 @@ class Property
      *
      * @return Property
      */
-    public function setContractForm(\Erp\PropertyBundle\Entity\ContractForm $contractForm = null)
+    public function setContractForm(ContractForm $contractForm = null)
     {
         $this->contractForm = $contractForm;
 
@@ -1110,6 +1121,31 @@ class Property
         return $this->contractForm;
     }
 
+
+    /**
+     * Set applicationForm
+     *
+     * @param ApplicationForm $applicationForm
+     *
+     * @return Property
+     */
+    public function setApplicationForm(ApplicationForm $applicationForm = null)
+    {
+        $this->applicationForm = $applicationForm;
+
+        return $this;
+    }
+
+    /**
+     * Get applicationForm
+     *
+     * @return ApplicationForm
+     */
+    public function getApplicationForm()
+    {
+        return $this->applicationForm;
+    }
+
     /**
      * Set settings
      *
@@ -1117,7 +1153,7 @@ class Property
      *
      * @return Property
      */
-    public function setSettings(\Erp\PropertyBundle\Entity\PropertySettings $settings = null)
+    public function setSettings(PropertySettings $settings = null)
     {
         $this->settings = $settings;
 
@@ -1141,7 +1177,7 @@ class Property
      *
      * @return Property
      */
-    public function addHistory(\Erp\PropertyBundle\Entity\PropertyRentHistory $history)
+    public function addHistory(PropertyRentHistory $history)
     {
         $history->setProperty($this);
         $this->history[] = $history;
@@ -1154,7 +1190,7 @@ class Property
      *
      * @param \Erp\PropertyBundle\Entity\PropertyRentHistory $history
      */
-    public function removeHistory(\Erp\PropertyBundle\Entity\PropertyRentHistory $history)
+    public function removeHistory(PropertyRentHistory $history)
     {
         $this->history->removeElement($history);
     }
@@ -1173,4 +1209,5 @@ class Property
     {
         return $this->status === self::STATUS_DELETED;
     }
+
 }
