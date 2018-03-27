@@ -112,7 +112,7 @@ class ContractForm
      *
      * @param string $id
      *
-     * @return ApplicationSection
+     * @return ContractForm
      */
     private function setId($id = null)
     {
@@ -181,7 +181,7 @@ class ContractForm
      * @ORM\PrePersist
      * @ORM\PreUpdate
      *
-     * @return ApplicationSection
+     * @return ContractForm
      */
     public function setUpdatedDate()
     {

@@ -21,7 +21,7 @@
                 {% endfor %}
             {% endif %}
             <div class="edit-row">
-                {% if user.applicationForm and property.status != propertyStatusRented %}
+                {% if property.applicationForm and property.status != propertyStatusRented %}
                     {% set applicationFormUrl = path('erp_property_application_complete_form', {'propertyId':property.id}) %}
                     <br/><a href="{{ applicationFormUrl }}" class="red-link" target="_blank">Link to Application <span>Form</span> >></a>
                 {% endif %}
