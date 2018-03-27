@@ -233,21 +233,21 @@ class Managers extends BaseAdmin
                 ]
             );
 
-            if ($user->getStatus() == User::STATUS_ACTIVE and !$this->getIsDisableAllowed($user)) {
-                $text = 'To disable Manager\'s account you have to remove all Tenants from this Manager\'s properties
-            and press the appeared "Disable Manager" button.';
-
-                $this->formMapper->add(
-                    'id',
-                    'text',
-                    [
-                        'label'    => $text,
-                        'required' => false,
-                        'disabled' => true,
-                        'attr'     => ['class' => 'hidden']
-                    ]
-                );
-            }
+//            if ($user->getStatus() == User::STATUS_ACTIVE and !$this->getIsDisableAllowed($user)) {
+//                $text = 'To disable Manager\'s account you have to remove all Tenants from this Manager\'s properties
+//            and press the appeared "Disable Manager" button.';
+//
+//                $this->formMapper->add(
+//                    'id',
+//                    'text',
+//                    [
+//                        'label'    => $text,
+//                        'required' => false,
+//                        'disabled' => true,
+//                        'attr'     => ['class' => 'hidden']
+//                    ]
+//                );
+//            }
         }
 
         $issetTenants = (bool)$user->getTenants();
@@ -356,22 +356,22 @@ class Managers extends BaseAdmin
                 break;
 
             case User::STATUS_ACTIVE:
+                $textConfirm  = 'Are you sure you want to disable this Manager\'s account? ';
+                $textConfirm .= 'All postponed and recurring payments of this Manager ';
+                $textConfirm .= 'will be canceled, pending tenants ';
+                $textConfirm .= 'will be deleted and account will be disabled.';
+
                 if ($this->getIsDisableAllowed($user)) {
-                    $textConfirm  = 'Are you sure you want to disable this Manager\'s account? ';
-                    $textConfirm .= 'All postponed and recurring payments of this Manager ';
-                    $textConfirm .= 'will be canceled, pending tenants ';
-                    $textConfirm .= 'will be deleted and account will be disabled.';
-
-                    $menu->addChild(
-                        'Disable Manager',
-                        ['uri' => $this->generateObjectUrl('disableManager', $user), 'class' => 'btn red-btn']
-                    )->setAttribute('onclick', 'if (!confirm("' . $textConfirm . '")) return false;');
-
                     $menu->addChild(
                         'Delete Manager',
                         ['uri' => '#', 'class' => 'btn red-btn']
                     )->setAttribute('onclick', 'alert("' . $textAlert . '"); return false;');
                 }
+
+                $menu->addChild(
+                    'Disable Manager',
+                    ['uri' => $this->generateObjectUrl('disableManager', $user), 'class' => 'btn red-btn']
+                )->setAttribute('onclick', 'if (!confirm("' . $textConfirm . '")) return false;');
 
                 break;
 

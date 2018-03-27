@@ -106,14 +106,12 @@ class UserService
     /**
      * Deactivate user
      *
-     * @param \Erp\UserBundle\Entity\User $user
-     *
+     * @param User $user
+     * @param bool $flush
      * @return $this
      */
-    public function deactivateUser(User $user)
+    public function deactivateUser(User $user, $flush = true)
     {
-        $this->deactivateUserPayments($user);
-
         $emailParams = [
             'sendTo' => $user->getEmail(),
             'url' => $this->container->get('router')->generate('erp_site_contact_page', [], true),
@@ -122,8 +120,15 @@ class UserService
         $emailType = EmailNotificationFactory::TYPE_USER_DEACTIVATE;
         $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
-        $this->em->persist($user->setEnabled(false)->setStatus(User::STATUS_DISABLED));
-        $this->em->flush();
+        $user
+            ->setEnabled(false)
+            ->setStatus(User::STATUS_DISABLED);
+
+        $this->em->persist($user);
+
+        if ($flush) {
+            $this->em->flush();
+        }
 
         return $this;
     }

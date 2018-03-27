@@ -2094,4 +2094,9 @@ class User extends BaseUser
     {
         $this->fees->clear();
     }
+
+    public function clearProperties()
+    {
+        $this->properties->clear();
+    }
 }

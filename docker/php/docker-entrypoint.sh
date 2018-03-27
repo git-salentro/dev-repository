@@ -21,6 +21,7 @@ php app/console rabbitmq:consumer -m 50
 
 info "Add Cron Job"
 (crontab -l ; echo "0 0 * * * /var/www/site/app/console erp:property:scheduled-payment-check") | crontab -
+(crontab -l ; echo "0 0 * * * /var/www/site/app/console erp:stripe:subscription:check-end-of-trial-period") | crontab -
 (crontab -l ; echo "0 1 * * * /var/www/site/app/console erp:property:rent-payment-check") | crontab -
 
 exec "$@"

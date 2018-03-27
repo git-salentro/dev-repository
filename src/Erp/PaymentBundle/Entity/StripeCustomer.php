@@ -22,6 +22,7 @@ class StripeCustomer
     const BILLING_SEND_INVOICE = 'send_invoice';
     const BILLING_DAYS_UNTIL_DUE = 5;
     const DEFAULT_CURRENCY = 'usd';
+    const TRIAL_PERIOD_DAYS = 30;
 
     /**
      * @var integer
