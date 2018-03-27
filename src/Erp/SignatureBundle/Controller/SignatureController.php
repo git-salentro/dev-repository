@@ -139,6 +139,10 @@ class SignatureController extends BaseController
             throw $this->createNotFoundException('Document not found');
         }
 
+        if ($userDocument->isSigned() || $userDocument->isSent()) {
+            throw $this->createNotFoundException('Document already signed or signed');
+        }
+
         /** @var User $user */
         $user = $this->getUser();
 

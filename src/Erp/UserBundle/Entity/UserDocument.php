@@ -270,4 +270,19 @@ class UserDocument
     {
         return $this->envelopId;
     }
+
+    public function isSigned()
+    {
+        return $this->status === self::STATUS_COMPLETED;
+    }
+
+    public function isSent()
+    {
+        return $this->status === self::STATUS_SENT;
+    }
+
+    public function isPending()
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
 }
