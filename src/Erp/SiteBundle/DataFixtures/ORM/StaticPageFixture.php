@@ -33,7 +33,7 @@ class StaticPageFixture extends Fixture
 
 <ul><li>• <a href="https://zoobdoo.com/landlord-features" style="color:#555;" title="Landlords">Manager Features</a></li>
 	<li>• <a href="https://zoobdoo.com/tenant-features" style="color:#555;" title="Tenants">Tenant Features</a></li>
-	<li>• <a href="https://zoobdoo.com/contact" style="color:#555;" title="Contact Zoobdoo">Contact us</a> today for more information</li>
+	<li>• <a href="https://zoobdoo.com/contact" style="color:#555;" title="Contact Zoobdoo">Contact us</a></li>
 </ul>');
         $staticPage->setInSubmenu(1);
         $staticPage->setWithSubmenu(1);
