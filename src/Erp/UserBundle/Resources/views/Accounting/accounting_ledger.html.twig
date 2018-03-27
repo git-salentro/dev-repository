@@ -59,8 +59,8 @@
                     <td class="text-left" nowrap>{{ item.internalType|internal_type }}</td>
                     <td class="text-left">
 
-                        {% if (item.metadata) %}
-                            {% if (item.metadata.description) %}
+                        {% if item.metadata is defined  %}
+                            {% if item.metadata.description is defined %}
                                 <em>{{ item.metadata.description }}</em><br/>
                             {% endif %}
                         {% endif %}
