@@ -155,9 +155,9 @@ class StaticPageFixture extends Fixture
 
 
         $staticPage = new StaticPage();
-        $staticPage->setCode('landlord-features');
+        $staticPage->setCode('manager-features');
         $staticPage->setTemplate('features');
-        $staticPage->setSlug('landlord-features');
+        $staticPage->setSlug('manager-features');
         $staticPage->setMetaTitle('Manager Features | Zoobdoo');
         $staticPage->setMetaDescription('Discover an easy solution for managing all your properties. Sign up for Zoobdoo to post vacancies and receive payments and maintenance requests online.');
         $staticPage->setHeaderTitle('Manager Features');
