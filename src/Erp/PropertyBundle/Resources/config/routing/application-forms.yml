@@ -57,3 +57,13 @@ erp_property_application_form_save_application_fee:
     methods: [POST]
     requirements:
         property: \d+
+
+erp_property_application_form_copy_list:
+    path:     /{propertyId}/copy-list
+    defaults: { _controller: ErpPropertyBundle:ApplicationForm:copyList }
+    methods: [GET]
+
+erp_property_application_form_copy_complete:
+    path:     /{propertyId}/copy-complete
+    defaults: { _controller: ErpPropertyBundle:ApplicationForm:copyToOtherProperties }
+    methods: [GET, POST]

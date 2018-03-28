@@ -19,6 +19,7 @@ use Erp\PropertyBundle\Repository\ApplicationSectionRepository;
 use Erp\PropertyBundle\Repository\ApplicationFormRepository;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Entity\UserDocument;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -811,5 +812,40 @@ class ApplicationFormController extends BaseController
         $sentStatus = $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
         return $sentStatus;
+    }
+
+
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
+    public function copyListAction(Request $request, $propertyId)
+    {
+        $user = $this->getUser();
+        $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $property = $propertyRepository->find($propertyId);
+        $items = $propertyRepository->findBy(['user' => $user]);
+
+        return $this->render('ErpPropertyBundle:ApplicationForm:copy-list.html.twig', [
+            'currentProperty' => $property,
+            'user' => $user,
+            'items' => $items,
+            'modalTitle' => 'Copy Application Forms to these properties'
+        ]);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
+    public function copyToOtherPropertiesAction(Request $request, $propertyId)
+    {
+        $user = $this->getUser();
+        $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $property = $propertyRepository->find($propertyId);
+        //$properties = $request->get('properties');
+
+        return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [
+            'user' => $user,
+            'modalTitle' => 'Copied'
+        ]);
     }
 }
