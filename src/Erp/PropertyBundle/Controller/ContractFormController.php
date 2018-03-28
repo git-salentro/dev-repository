@@ -71,7 +71,7 @@ class ContractFormController extends BaseController
 
         // Cloning contract form, yet if not exists
         if (!$contractForm) {
-            $contractForm = $this->getCloneApplicationForm($property);
+            $contractForm = $this->getCloneContractForm($property);
         }
 
         $contractSection = new ContractSection();
@@ -359,7 +359,7 @@ class ContractFormController extends BaseController
      *
      * @return null|object
      */
-    public function getCloneApplicationForm(Property $property)
+    public function getCloneContractForm(Property $property)
     {
         /** @var ContractFormRepository $contractFormRepository */
         $contractFormRepository = $this->em->getRepository('ErpPropertyBundle:ContractForm');
