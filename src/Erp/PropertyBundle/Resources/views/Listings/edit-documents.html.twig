@@ -90,13 +90,25 @@
                         <div class="row">
                             <div class="col-xs-12 link-col">
                                 <ul>
-                                    <li><a class="red-link" href="{{ path('erp_property_application_form', {'propertyId':property.id}) }}">Create Online Application Form</a>
+                                    <li><a class="red-link" href="{{ path('erp_property_application_form', {'propertyId':property.id}) }}">
+                                            {% if property.applicationForm.id is defined %}
+                                                Edit
+                                            {% else %}
+                                                Create
+                                            {% endif %}
+                                            Online Application Form</a>
                                     {% if property.applicationForm.id is defined %}
                                         &nbsp;|&nbsp;<a href="{{ path('erp_property_application_form_copy_list',{'propertyId':property.id}) }}" type="submit" role="popup" class="red-link">Copy to other properties</a>
                                     {% endif %}
                                     </li>
 
-                                    <li><a class="red-link" href="{{ path('erp_property_contract_form', {'propertyId':property.id}) }}">Create Online Contract Form</a></li>
+                                    <li><a class="red-link" href="{{ path('erp_property_contract_form', {'propertyId':property.id}) }}">
+                                            {% if property.contractForm.id is defined %}
+                                                Edit
+                                            {% else %}
+                                                Create
+                                            {% endif %}
+                                            Online Contract Form</a></li>
                                 </ul>
                             </div>
                         </div>

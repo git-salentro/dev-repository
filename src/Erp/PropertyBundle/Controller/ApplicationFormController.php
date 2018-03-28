@@ -829,7 +829,7 @@ class ApplicationFormController extends BaseController
             'currentProperty' => $property,
             'user' => $user,
             'items' => $items,
-            'modalTitle' => 'Copy Application Forms to these properties'
+            'modalTitle' => 'Copy Application Forms to other properties'
         ]);
     }
 
