@@ -840,10 +840,17 @@ class ApplicationFormController extends BaseController
     {
         $user = $this->getUser();
         $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
-        $property = $propertyRepository->find($propertyId);
-        //$properties = $request->get('properties');
+        $currentProperty = $propertyRepository->find($propertyId);
+        $propertiesIds = $request->get('property');
+        $properties = $propertyRepository->findBy(['id' => $propertiesIds]);
+
+        //TODO: get list of properties
+        //TODO: Remove application forms for these properties
+        //TODO: copy currentProperty application form to selected properties
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [
+            'properties' => $properties,
+            'currentProperty' => $currentProperty,
             'user' => $user,
             'modalTitle' => 'Copied'
         ]);
