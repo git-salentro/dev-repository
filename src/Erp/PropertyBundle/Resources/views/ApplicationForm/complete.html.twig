@@ -35,8 +35,8 @@
 
                     <form action="{{ path('erp_property_application_complete_form', {'propertyId':property.id}) }}"
                     class="form-horizontal" method="post" enctype="multipart/form-data" name="application-form">
-                        {% if property.user.applicationForm %}
-                            {% set applicationSections = property.user.applicationForm.applicationSections %}
+                        {% if property.applicationForm is defined %}
+                            {% set applicationSections = property.applicationForm.applicationSections %}
                             {% if applicationSections %}
 
                                 <!-- Nav tabs -->
@@ -46,7 +46,7 @@
                                             <a href="#section_{{ key }}" aria-controls="section_{{ key }}" role="tab" data-toggle="tab">{{ key + 1 }}</a>
                                         </li>
                                     {% endfor %}
-                                    {% if property.user.applicationForm.isNoFee == false %}
+                                    {% if property.applicationForm.isNoFee == false %}
                                         <li role="presentation" {% if paymentData.error.section is defined %}class="active"{% endif %}><a href="#section_last" aria-controls="section_last" role="tab" data-toggle="tab">{{ applicationSections|length + 1 }}</a></li>
                                     {% endif %}
                                 </ul>
@@ -80,7 +80,7 @@
                                             </div>
                                         </div>
                                     {% endfor %}
-                                    {% if property.user.applicationForm.isNoFee == false %}
+                                    {% if property.applicationForm.isNoFee == false %}
                                         <div role="tabpanel" class="tab-pane{% if paymentData.error.section is defined %} active{% endif %}" id="section_last">
                                             <div class="form-group section-block">
                                                 <div class="block-title">Payment info</div>
