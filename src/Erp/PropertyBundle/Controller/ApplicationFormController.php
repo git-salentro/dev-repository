@@ -2,6 +2,7 @@
 
 namespace Erp\PropertyBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 use Erp\CoreBundle\Entity\Document;
@@ -822,11 +823,11 @@ class ApplicationFormController extends BaseController
     {
         $user = $this->getUser();
         $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
-        $property = $propertyRepository->find($propertyId);
-        $items = $propertyRepository->findBy(['user' => $user]);
+        $currentProperty = $propertyRepository->find($propertyId);
+        $items = $propertyRepository->getPropertiesListExceptCurrent($currentProperty, $user);
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-list.html.twig', [
-            'currentProperty' => $property,
+            'currentProperty' => $currentProperty,
             'user' => $user,
             'items' => $items,
             'modalTitle' => 'Copy Application Forms to other properties'
@@ -843,9 +844,19 @@ class ApplicationFormController extends BaseController
         $currentProperty = $propertyRepository->find($propertyId);
         $propertiesIds = $request->get('property');
         $properties = $propertyRepository->findBy(['id' => $propertiesIds]);
+        $applicationFormRepository = $this->getDoctrine()->getManagerForClass(ApplicationForm::class)->getRepository(ApplicationForm::class);
+        $applicationForms = $applicationFormRepository->findBy(['property' => $propertiesIds, 'isDefault' => false]);
 
-        //TODO: get list of properties
-        //TODO: Remove application forms for these properties
+        foreach ($applicationForms as $applicationForm) {
+            //TODO: Remove application forms for these properties
+
+        }
+        /** @var ApplicationForm $ethalonApplicationForm */
+        $ethalonApplicationForm = $currentProperty->getApplicationForm();
+        //$ethalonApplicationForm->getApplicationSections();
+
+        //TODO: get application form as template
+
         //TODO: copy currentProperty application form to selected properties
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [

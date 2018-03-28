@@ -932,9 +932,10 @@ class Property
     public function getFullAddress()
     {
         $city = $this->getCity() ? $this->getCity()->getName() . ', ' : ' ';
-        $address = $this->getAddress() . ', ' . $city . $this->getStateCode() . ' ' . $this->getZip();
+        $address = $this->getAddress() ? $this->getAddress() . ', ' : ' ';
+        $fullAddress = $address .  $city . $this->getStateCode() . ' ' . $this->getZip();
 
-        return $address;
+        return $fullAddress;
     }
 
     /**
