@@ -99,7 +99,7 @@
 
                                     {% include 'ErpPropertyBundle:Property:details-documents.html.twig' %}
 
-                                    {% if property.user.applicationForm and property.user.applicationForm.applicationSections|length %}
+                                    {% if property.applicationForm and property.applicationForm.applicationSections|length %}
                                     <div class="app-online col-md-12 doc-col">
                                         <a href="{{ path('erp_property_application_complete_form', {'propertyId':property.id}) }}">
                                         Complete a Rental Application Online &#187; </a>

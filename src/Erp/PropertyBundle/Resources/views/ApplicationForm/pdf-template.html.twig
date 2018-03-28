@@ -41,8 +41,8 @@
     </div>
 </div>
 
-{% if property.user.applicationForm %}
-    {% set applicationSections = property.user.getApplicationForm().getApplicationSections() %}
+{% if property.applicationForm %}
+    {% set applicationSections = property.applicationForm.applicationSections %}
     {% if applicationSections %}
         {% for applicationSection in applicationSections %}
             <div class="block-title">{{ applicationSection.name }}</div>
