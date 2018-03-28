@@ -41,7 +41,7 @@
     </div>
 </div>
 
-{% if property.applicationForm %}
+{% if property.applicationForm is defined %}
     {% set applicationSections = property.getApplicationForm().getApplicationSections() %}
     {% if applicationSections %}
         {% for applicationSection in applicationSections %}

@@ -315,7 +315,7 @@ class ApplicationFormController extends BaseController
         }
 
         $propertyUser = $property->getUser();
-        $applicationForm = $propertyUser->getApplicationForm();
+        $applicationForm = $property->getApplicationForm();
         if (!$applicationForm) {
             throw new NotFoundHttpException('Application form not found');
         }
@@ -632,18 +632,11 @@ class ApplicationFormController extends BaseController
      */
     protected function getApplicationSection($sectionId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        /** @var ApplicationFormRepository $applicationFormRepository */
-        $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
-
         /** @var ApplicationSectionRepository $applicationSectionRepository */
         $applicationSectionRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationSection');
         /** @var ApplicationSection $applicationSection */
         $applicationSection =
-            $applicationSectionRepository->findOneBy(['id' => $sectionId, 'applicationForm' => $applicationForm]);
+            $applicationSectionRepository->findOneBy(['id' => $sectionId]);
 
         if (!$applicationSection) {
             throw new NotFoundHttpException('Section not found');
