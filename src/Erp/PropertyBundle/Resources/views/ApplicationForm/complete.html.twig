@@ -35,7 +35,7 @@
 
                     <form action="{{ path('erp_property_application_complete_form', {'propertyId':property.id}) }}"
                     class="form-horizontal" method="post" enctype="multipart/form-data" name="application-form">
-                        {% if property.applicationForm %}
+                        {% if property.applicationForm is defined %}
                             {% set applicationSections = property.applicationForm.applicationSections %}
                             {% if applicationSections %}
 
@@ -84,7 +84,6 @@
                                         <div role="tabpanel" class="tab-pane{% if paymentData.error.section is defined %} active{% endif %}" id="section_last">
                                             <div class="form-group section-block">
                                                 <div class="block-title">Payment info</div>
-                                                <p>Application fee is {{ property.applicationForm.fee | money }}</p>
                                                 <div class="col-xs-12 block-fields">
                                                     {{ form_start(applicationCreditCardForm) }}
                                                         <div class="form-group">
