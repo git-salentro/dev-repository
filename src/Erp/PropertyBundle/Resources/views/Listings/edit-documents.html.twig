@@ -91,7 +91,7 @@
                             <div class="col-xs-12 link-col">
                                 <ul>
                                     <li><a class="red-link" href="{{ path('erp_property_application_form', {'propertyId':property.id}) }}">Create Online Application Form</a>
-                                    {% if property.applicationForm is defined %}
+                                    {% if property.applicationForm.id is defined %}
                                         &nbsp;|&nbsp;<a href="{{ path('erp_property_application_form_copy_list',{'propertyId':property.id}) }}" type="submit" role="popup" class="red-link">Copy to other properties</a>
                                     {% endif %}
                                     </li>
