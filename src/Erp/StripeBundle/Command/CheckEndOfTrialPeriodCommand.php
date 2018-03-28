@@ -16,7 +16,7 @@ class CheckEndOfTrialPeriodCommand extends ContainerAwareCommand
     {
         $this
             ->setName('erp:stripe:subscription:check-end-of-trial-period')
-            ->setDescription('Check subscription\'s end of trial peridod');
+            ->setDescription('Check subscription\'s end of trial period');
     }
 
     /**
@@ -31,12 +31,13 @@ class CheckEndOfTrialPeriodCommand extends ContainerAwareCommand
         $subscriptions = $repository->getSubscriptionsByEndOfTrialPeriod($afterThreeDays);
 
         $processor = $this->getContainer()->get('erp_user.mailer.processor');
+        $from = $this->getContainer()->getParameter('contact_email');
 
         /** @var StripeSubscription $subscription */
         foreach ($subscriptions as $subscription) {
             $user =  $subscription->getStripeCustomer()->getUser();
 
-            $processor->sendEndOfTrialPeriodEmail($user);
+            $processor->sendEndOfTrialPeriodEmail($user, $from);
         }
     }
 }
