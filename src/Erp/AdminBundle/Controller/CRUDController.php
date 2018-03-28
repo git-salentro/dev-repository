@@ -6,15 +6,11 @@ use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\PropertyBundle\Entity\Property;
-use Erp\UserBundle\Entity\InvitedUser;
 use Erp\UserBundle\Entity\ProReport;
 use Erp\UserBundle\Entity\ProRequest;
 use Erp\UserBundle\Entity\User;
 use Sonata\AdminBundle\Controller\CRUDController as BaseController;
-use Sonata\AdminBundle\Exception\ModelManagerException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CRUDController extends BaseController
 {
@@ -142,28 +138,62 @@ class CRUDController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->admin->getSubject();
-        if (!$user || $user->getStatus() !== User::STATUS_ACTIVE) {
+        if (!$user || !$user->isActive()) {
             throw $this->createNotFoundException();
         }
 
-        $isTenants = $this->get('erp.users.manager_service')->checkIsManagerHasTenants($user);
-        if ($isTenants) {
-            throw $this->createNotFoundException();
+        $apiManager = $this->get('erp_stripe.entity.api_manager');
+        $userService = $this->get('erp.users.user.service');
+
+        $user->clearProperties();
+        $userService->deactivateUser($user);
+
+        $stripeCustomer = $user->getStripeCustomer();
+
+        $em = $this->getDoctrine()->getManager();
+
+        if ($stripeCustomer) {
+            $stripeSubscription = $stripeCustomer->getStripeSubscription();
+
+            if (!$stripeSubscription) {
+                $this->addFlash(
+                    'sonata_flash_error',
+                    'The user does not have subscription'
+                );
+                return $this->redirect($this->get('request')->headers->get('referer'));
+            }
+
+            $arguments = [
+                'id' => $stripeSubscription->getSubscriptionId(),
+                'options' => null,
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Subscription', 'retrieve', $arguments);
+
+            if (!$response->isSuccess()) {
+                $this->addFlash(
+                    'sonata_flash_error',
+                    'An occurred error while retrieving subscription'
+                );
+                return $this->redirect($this->get('request')->headers->get('referer'));
+            }
+
+            /** @var \Stripe\Subscription $subscription */
+            $subscription = $response->getContent();
+            $response = $apiManager->callStripeObject($subscription, 'cancel');
+
+            if (!$response->isSuccess()) {
+                $this->addFlash(
+                    'sonata_flash_error',
+                    'An occurred error while cancel subscription'
+                );
+                return $this->redirect($this->get('request')->headers->get('referer'));
+            }
+
+            $em->remove($stripeSubscription);
         }
-
-        $this->get('erp.users.user.service')->deactivateUser($user);
-
-        $user->setStatus(User::STATUS_DISABLED)
-            ->setEnabled(false);
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($user);
-
-        // kill payments and properties
-        $this->get('erp.users.user.service')->deactivateUserPayments($user);
 
         /** @var Property $property */
         foreach ($user->getProperties() as $property) {
-            $property->setStatus($property::STATUS_DRAFT);
             $invitedUsers = $property->getInvitedUsers();
             foreach ($invitedUsers as $invitedUser) {
                 $em->remove($invitedUser);
@@ -173,6 +203,11 @@ class CRUDController extends BaseController
         }
 
         $em->flush();
+
+        $this->addFlash(
+            'sonata_flash_success',
+            'Success'
+        );
 
         return $this->redirect($this->get('request')->headers->get('referer'));
     }
