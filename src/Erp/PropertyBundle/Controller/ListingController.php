@@ -317,13 +317,6 @@ class ListingController extends BaseController
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
-                $this->em->persist($property);
-                $this->em->flush();
-            } else {
-                $errors = true;
-            }
-
             if ($errors) {
                 $text = str_replace(
                     ['{maxSize}', '{sizeIn}'],
@@ -332,6 +325,9 @@ class ListingController extends BaseController
                 );
 
                 $this->addFlash('alert_error', $text);
+            } else {
+                $this->em->persist($property);
+                $this->em->flush();
             }
 
             return $this->redirectToRoute(
