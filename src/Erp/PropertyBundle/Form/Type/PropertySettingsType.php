@@ -44,7 +44,7 @@ class PropertySettingsType extends AbstractType
                 'allowPartialPayments',
                 'checkbox',
                 [
-                    'label' => 'Allow Partial Payments',
+                    'label' => 'Restrict Partial Payments',
                     'required' => false,
                 ]
             )
