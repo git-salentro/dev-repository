@@ -66,6 +66,13 @@ class StripeSubscription
     private $updatedAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_at", type="date", nullable=true)
+     */
+    private $endAt;
+
+    /**
      * Get id
      *
      * @return integer
@@ -193,6 +200,30 @@ class StripeSubscription
     public function getStripeCustomer()
     {
         return $this->stripeCustomer;
+    }
+
+    /**
+     * Set endAt
+     *
+     * @param \DateTime $endAt
+     *
+     * @return StripeSubscription
+     */
+    public function setEndAt($endAt)
+    {
+        $this->endAt = $endAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getEndAt()
+    {
+        return $this->endAt;
     }
 
     /**

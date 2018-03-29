@@ -594,6 +594,13 @@ class User extends BaseUser
     protected $chargeIncomings; //received
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_agree_auto_withdrawal", type="boolean", nullable=true)
+     */
+    protected $agreeAutoWithdrawal;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -2064,5 +2071,41 @@ class User extends BaseUser
     public function clearProperties()
     {
         $this->properties->clear();
+    }
+
+    /**
+     * Set agreeAutoWithdrawal
+     *
+     * @param boolean $agreeAutoWithdrawal
+     *
+     * @return User
+     */
+    public function setAgreeAutoWithdrawal($agreeAutoWithdrawal)
+    {
+        $this->agreeAutoWithdrawal = $agreeAutoWithdrawal;
+
+        return $this;
+    }
+
+    /**
+     * Get agreeAutoWithdrawal
+     *
+     * @return boolean
+     */
+    public function getAgreeAutoWithdrawal()
+    {
+        return $this->agreeAutoWithdrawal;
+    }
+
+    public function isAgreeAutoWithdrawal()
+    {
+        return $this->agreeAutoWithdrawal;
+    }
+
+    public function isDebtor()
+    {
+        $balance = $this->rentPaymentBalance->getBalance();
+
+        return $balance < 0;
     }
 }

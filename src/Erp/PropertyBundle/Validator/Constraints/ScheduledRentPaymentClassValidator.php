@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Erp\PropertyBundle\Entity\ScheduledRentPayment;
 
 class ScheduledRentPaymentClassValidator extends ConstraintValidator
 {
@@ -94,9 +95,8 @@ class ScheduledRentPaymentClassValidator extends ConstraintValidator
         }
 
         $rentPaymentBalance = $user->getRentPaymentBalance();
-        //TODO Refactoring fee, rent tenant payment
         if ($rentPaymentBalance && $rentPaymentBalance->getBalance() < 0) {
-            if ($value->getCategory() == 'rent' && !$user->isAllowRentPayment()) {
+            if ($value->getCategory() == ScheduledRentPayment::CATEGORY_RENT_PAYMENT && !$user->isAllowRentPayment()) {
                 if ($this->context instanceof ExecutionContextInterface) {
                     $this->context->buildViolation($constraint->allowRentPaymentMessage)
                         ->addViolation();
