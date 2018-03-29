@@ -10,48 +10,48 @@
 <div class="collapse navbar-collapse white-navbar" id="secondary-profile-navbar">
     <ul class="nav navbar-nav">
         <li class="menu-item{{ currentRoute == 'erp_user_dashboard_dashboard' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_dashboard_dashboard') }}">Dashboard</a>
             <span class="secondary-menu-icon dashboard-icon"></span>
+            <a href="{{ path('erp_user_dashboard_dashboard') }}">Dashboard</a>
         </li>
-        <li class="menu-item{{ currentRoute == 'erp_user_accounting_index' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_accounting_index') }}">Accounting</a>
-            <span class="secondary-menu-icon accounting-icon"></span>
-        </li>
-        <li class="menu-item{{ currentRoute == 'fos_user_profile_show' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_profile_dashboard') }}">Profile</a>
-            <span class="secondary-menu-icon profile-icon"></span>
-        </li>
-
         {% set availRoutes = ['erp_property_listings_all', 'erp_property_listings_add', 'erp_property_listings_edit'] %}
 
         <li class="menu-item{{ (currentRoute in availRoutes) ? ' current' : ''}}">
-            <a href="{{ path('erp_property_listings_all') }}">Listings</a>
             <span class="secondary-menu-icon listings-icon"></span>
+            <a href="{{ path('erp_property_listings_all') }}">Listings</a>
         </li>
+        <li class="menu-item{{ currentRoute == 'erp_user_accounting_index' ? ' current' : ''}}">
+            <span class="secondary-menu-icon accounting-icon"></span>
+            <a href="{{ path('erp_user_accounting_index') }}">Accounting</a>
+        </li>
+
         <li class="menu-item{{ currentRoute == 'erp_user_documentation' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_documentation') }}">Documentation</a>
             <span class="secondary-menu-icon documentation-icon"></span>
-        </li>
-        <li class="menu-item{{ currentRoute == 'erp_user_settings' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_settings') }}">Settings</a>
-            <span class="secondary-menu-icon settings-icon"></span>
+            <a href="{{ path('erp_user_documentation') }}">Documentation</a>
         </li>
         <li class="menu-item{{ currentRoute == 'erp_user_service_request' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_service_request') }}">Service Requests</a>
             <span class="secondary-menu-icon service-icon"></span>
+            <a href="{{ path('erp_user_service_request') }}">Service Requests</a>
         </li>
         <li class="menu-item{{ currentRoute == 'erp_user_profile_forum_index' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_profile_forum_index') }}">Manager Forum</a>
             <span class="secondary-menu-icon forum-icon"></span>
+            <a href="{{ path('erp_user_profile_forum_index') }}">Manager Forum</a>
+        </li>
+        <li class="menu-item{{ currentRoute == 'erp_user_settings' ? ' current' : ''}}">
+            <span class="secondary-menu-icon settings-icon"></span>
+            <a href="{{ path('erp_user_settings') }}">Settings</a>
+        </li>
+        <li class="menu-item{{ currentRoute == 'fos_user_profile_show' ? ' current' : ''}}">
+            <span class="secondary-menu-icon profile-icon"></span>
+            <a href="{{ path('erp_user_profile_dashboard') }}">Profile</a>
         </li>
         <li class="menu-item{{ currentRoute == 'erp_user_messages' ? ' current' : ''}}">
-            <a href="{{ path('erp_user_messages') }}">Messages</a>
             <span class="secondary-menu-icon messages-icon"></span>
             {% if count_unread_messages(user) %}
                 <div class="messages-count-icon">
                     <span class="messages-count">{{ count_unread_messages(user) }}</span>
                 </div>
             {% endif %}
+            <a href="{{ path('erp_user_messages') }}">Messages</a>
         </li>
     </ul>
 </div>
