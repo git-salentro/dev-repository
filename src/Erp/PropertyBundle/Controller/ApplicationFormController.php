@@ -840,24 +840,24 @@ class ApplicationFormController extends BaseController
     public function copyToOtherPropertiesAction(Request $request, $propertyId)
     {
         $user = $this->getUser();
-        $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $propertyRepository = $this->em->getRepository(Property::class);
         $currentProperty = $propertyRepository->find($propertyId);
         $propertiesIds = $request->get('property');
         $properties = $propertyRepository->findBy(['id' => $propertiesIds]);
-        $applicationFormRepository = $this->getDoctrine()->getManagerForClass(ApplicationForm::class)->getRepository(ApplicationForm::class);
+
+        $applicationFormRepository = $this->em->getRepository(ApplicationForm::class);
         $applicationForms = $applicationFormRepository->findBy(['property' => $propertiesIds, 'isDefault' => false]);
 
         foreach ($applicationForms as $applicationForm) {
-            //TODO: Remove application forms for these properties
-
+            $this->em->remove($applicationForm); //TODO: doesn't work
+            $this->em->flush();
         }
-        /** @var ApplicationForm $ethalonApplicationForm */
-        $ethalonApplicationForm = $currentProperty->getApplicationForm();
-        //$ethalonApplicationForm->getApplicationSections();
+        /** @var ApplicationForm $currentApplicationForm */
+        $currentApplicationForm = $currentProperty->getApplicationForm();
 
-        //TODO: get application form as template
-
-        //TODO: copy currentProperty application form to selected properties
+        foreach ($properties as $property) {
+            $this->cloneApplicationForm($currentApplicationForm, $property);
+        }
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [
             'properties' => $properties,
