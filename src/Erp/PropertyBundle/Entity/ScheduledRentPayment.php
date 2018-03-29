@@ -20,6 +20,9 @@ class ScheduledRentPayment
     const STATUS_PENDING = 'pending';
     const STATUS_FAILURE = 'failure';
     const STATUS_SUCCESS = 'success';
+    const CATEGORY_RENT_PAYMENT = 'rent_payment';
+    const CATEGORY_LATE_RENT_PAYMENT = 'late_rent_payment';
+    const CATEGORY_FEE = 'fee';
 
     /**
      * @var integer
@@ -94,6 +97,13 @@ class ScheduledRentPayment
      * @ORM\Column(name="updated_at", type="datetime")
      */
     private $updatedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_at", type="date" ,nullable=true)
+     */
+    private $endAt;
 
     /**
      * @var string
@@ -295,6 +305,30 @@ class ScheduledRentPayment
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set endAt
+     *
+     * @param \DateTime $endAt
+     *
+     * @return ScheduledRentPayment
+     */
+    public function setEndAt($endAt)
+    {
+        $this->endAt = $endAt;
+
+        return $this;
+    }
+
+    /**
+     * Get endAt
+     *
+     * @return \DateTime
+     */
+    public function getEndAt()
+    {
+        return $this->endAt;
     }
 
     /**

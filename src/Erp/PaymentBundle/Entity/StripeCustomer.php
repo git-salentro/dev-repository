@@ -352,4 +352,8 @@ class StripeCustomer
         return $this->scheduledRentPayments;
     }
 
+    public function clearScheduledRentPayments()
+    {
+        $this->scheduledRentPayments->clear();
+    }
 }

@@ -3,19 +3,47 @@
 namespace Erp\PropertyBundle\Form\Type;
 
 use Erp\PropertyBundle\Entity\ScheduledRentPayment;
+use Erp\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Erp\CoreBundle\Formatter\MoneyFormatter;
 
 class ScheduledRentPaymentType extends AbstractType
 {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var MoneyFormatter
+     */
+    private $formatter;
+
+    public function __construct(TokenStorageInterface $tokenStorage, MoneyFormatter $formatter)
+    {
+        $this->tokenStorage = $tokenStorage;
+        $this->formatter = $formatter;
+    }
+
     /**
      * @inheritdoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var User $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (!$user->hasRole(User::ROLE_TENANT)) {
+            return new \RuntimeException('%s can use only %s', self::class, User::ROLE_TENANT);
+        }
+
+        $choices = $this->getCategoryChoices($user);
+
         $builder
             ->add(
                 'amount',
@@ -72,11 +100,7 @@ class ScheduledRentPaymentType extends AbstractType
                 'choice',
                 [
                     'label' => 'Category',
-                    'choices' => [
-                        //TODO Refactoring fee, rent tenant payment
-                        'rent' => 'Rent Payment',
-                        'fee' => 'Late Fees',
-                    ],
+                    'choices' => $choices,
                 ]
             )
             ->add(
@@ -123,6 +147,37 @@ class ScheduledRentPaymentType extends AbstractType
      */
     public function getName()
     {
-        return 'erp_property_scheduled_rent_payment_recurring';
+        return 'erp_property_scheduled_rent_payment';
+    }
+
+    private function getCategoryChoices(User $user)
+    {
+        if ($user->isDebtor()) {
+            //TODO Refactor amount
+            $amount = $this->formatter->format($user->getTotalOwedAmount() / 100);
+
+            return [ScheduledRentPayment::CATEGORY_LATE_RENT_PAYMENT => sprintf('Late Rent Payment (%s)', $amount)];
+        }
+
+        $property = $user->getTenantProperty();
+
+        if (!$property) {
+            return [];
+        }
+
+        $propertySettings = $property->getSettings();
+        $dayUntilDue = $propertySettings->getDayUntilDue();
+
+        $now = new \DateTime();
+        $currentDayOfMonth = $now->format('j');
+
+        $amount = 0;
+        if ($currentDayOfMonth > $dayUntilDue) {
+            $amount = $propertySettings->getPaymentAmount();
+        }
+
+        $amount = $this->formatter->format($amount);
+
+        return [ScheduledRentPayment::CATEGORY_RENT_PAYMENT => sprintf('Rent Payment (%s)', $amount)];
     }
 }

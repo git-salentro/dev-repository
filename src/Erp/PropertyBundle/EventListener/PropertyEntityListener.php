@@ -37,7 +37,7 @@ class PropertyEntityListener
 
         $property->addHistory($propertyRentHistory);
 
-        $em->persist($propertyRentHistory);
-        $em->flush();
+//        $em->persist($propertyRentHistory);
+//        $em->flush();
     }
 }

@@ -11,11 +11,13 @@ use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\PropertyBundle\Entity\PropertyRepostRequest;
 use Erp\PropertyBundle\Entity\PropertySettings;
+use Erp\PropertyBundle\Entity\ScheduledRentPayment;
 use Erp\PropertyBundle\Form\Type\EditDocumentPropertyFormType;
 use Erp\PropertyBundle\Form\Type\EditImagePropertyFormType;
 use Erp\PropertyBundle\Form\Type\EditPropertyFormType;
 use Erp\PropertyBundle\Form\Type\PropertyImportFormType;
 use Erp\PropertyBundle\Form\Type\PropertySettingsType;
+use Erp\PropertyBundle\Form\Type\StopAutoWithdrawalFormType;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -816,14 +818,14 @@ class ListingController extends BaseController
     {
         /** @var $user User */
         $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManagerForClass(Property::class);
         /** @var Property $property */
-        $property = $this->em->getRepository('ErpPropertyBundle:Property')->getPropertyByUser($user, $propertyId);
+        $property = $em->getRepository(Property::class)->getPropertyByUser($user, $propertyId);
 
         if (!$property) {
             throw $this->createNotFoundException();
         }
-
-        $page = $request->get('page', 1);
 
         $propertySettings = $property->getSettings() ?: new PropertySettings();
         $property->setSettings($propertySettings);
@@ -831,9 +833,12 @@ class ListingController extends BaseController
         $form = $this->createForm(new PropertySettingsType(), $propertySettings);
         $form->handleRequest($request);
 
+        $scheduledRentPayment = new ScheduledRentPayment();
+        $stopAutoWithdrawalForm = $this->createForm(new StopAutoWithdrawalFormType(), $scheduledRentPayment);
+
         if ($form->isValid()) {
-            $this->em->persist($property);
-            $this->em->flush();
+            $em->persist($property);
+            $em->flush();
 
             $this->addFlash(
                 'alert_ok',
@@ -846,8 +851,8 @@ class ListingController extends BaseController
         return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'autoWithdrawalForm' => $stopAutoWithdrawalForm->createView(),
             'property' => $property,
-            'page' => $page
         ]);
     }
 

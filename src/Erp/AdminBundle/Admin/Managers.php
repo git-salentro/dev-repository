@@ -188,7 +188,7 @@ class Managers extends BaseAdmin
             [
                 'label' => 'Free Application Form Creation (this option can be switched
                     only when Manager has not created application form yet)',
-                'disabled' => ($user->getApplicationForm() || $isDisabled) ? true : false
+                'disabled' => false
             ]
         );
 
