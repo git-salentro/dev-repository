@@ -25,7 +25,7 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row profile-widget-row">
-                <div class="col-md-3 col-xs-5 profile-widget-item login-widget widget-first">
+                <div class="col-md-3 col-xs-12 profile-widget-item">
                     <div class="row widget-title-row">
                         <div class="login-block-title bold-text">Account Login Details</div>
                     </div>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 col-xs-5 profile-widget-item widget-first address-widget profile-widget-item-adr">
+                <div class="col-md-offset-1 col-md-3 col-xs-12 profile-widget-item">
                     <div class="row widget-title-row">
                         <div class="login-block-title bold-text">Address Details</div>
                     </div>
@@ -77,10 +77,8 @@
                         <a role="popup" href="{{ path('erp_user_profile_hint_content', {'hintCode':'address_details'}) }}">&#063;</a>
                     </div>
                 </div>
-            </div>
 
-            <div class="row profile-widget-row">
-                <div class="col-md-3 col-xs-6 profile-widget-item widget-last">
+                <div class="col-md-offset-1 col-md-3 col-xs-12 profile-widget-item">
                     <div class="row widget-title-row">
                         <div class="login-block-title bold-text">Email Options</div>
                     </div>
@@ -106,6 +104,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 {% endblock %}

@@ -1140,9 +1140,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 &.widget-last {
                     margin-right: 0;
                 }
-                &.widget-first {
-                    width: 47%;
-                }
                 .address-details-block {
                     .address-details {
                         display: block;
@@ -2242,7 +2239,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
         .profile-widget-row {
             min-height: 300px;
-            //height: 260px;
             margin: 0 5px 30px;
             position: relative;
             .profile-widget-item {
