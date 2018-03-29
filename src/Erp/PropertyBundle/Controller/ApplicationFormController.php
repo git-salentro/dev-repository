@@ -848,13 +848,19 @@ class ApplicationFormController extends BaseController
         $applicationFormRepository = $this->em->getRepository(ApplicationForm::class);
         $applicationForms = $applicationFormRepository->findBy(['property' => $propertiesIds, 'isDefault' => false]);
 
-        foreach ($applicationForms as $applicationForm) {
-            $this->em->remove($applicationForm); //TODO: doesn't work
+
+        foreach ($properties as $property) {
+            $property->setApplicationForm(null);
+            $this->em->persist($property);
             $this->em->flush();
         }
+        foreach ($applicationForms as $applicationForm) {
+            $this->em->remove($applicationForm);
+            $this->em->flush();
+        }
+
         /** @var ApplicationForm $currentApplicationForm */
         $currentApplicationForm = $currentProperty->getApplicationForm();
-
         foreach ($properties as $property) {
             $this->cloneApplicationForm($currentApplicationForm, $property);
         }
