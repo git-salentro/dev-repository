@@ -24,7 +24,7 @@ class PropertyEntityListener
         $this->createHistoryRecord($property);
     }
 
-    public function postUpdate(Property $property, LifecycleEventArgs $args)
+    public function preUpdate(Property $property, LifecycleEventArgs $args)
     {
         $this->createHistoryRecord($property);
     }
@@ -37,7 +37,7 @@ class PropertyEntityListener
 
         $property->addHistory($propertyRentHistory);
 
-        $em->persist($propertyRentHistory);
-        $em->flush();
+//        $em->persist($propertyRentHistory);
+//        $em->flush();
     }
 }
