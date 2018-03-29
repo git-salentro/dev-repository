@@ -2,6 +2,7 @@
 
 namespace Erp\PropertyBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 use Erp\CoreBundle\Entity\Document;
@@ -822,11 +823,11 @@ class ApplicationFormController extends BaseController
     {
         $user = $this->getUser();
         $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
-        $property = $propertyRepository->find($propertyId);
-        $items = $propertyRepository->findBy(['user' => $user]);
+        $currentProperty = $propertyRepository->find($propertyId);
+        $items = $propertyRepository->getPropertiesListExceptCurrent($currentProperty, $user);
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-list.html.twig', [
-            'currentProperty' => $property,
+            'currentProperty' => $currentProperty,
             'user' => $user,
             'items' => $items,
             'modalTitle' => 'Copy Application Forms to other properties'
@@ -839,14 +840,30 @@ class ApplicationFormController extends BaseController
     public function copyToOtherPropertiesAction(Request $request, $propertyId)
     {
         $user = $this->getUser();
-        $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $propertyRepository = $this->em->getRepository(Property::class);
         $currentProperty = $propertyRepository->find($propertyId);
         $propertiesIds = $request->get('property');
         $properties = $propertyRepository->findBy(['id' => $propertiesIds]);
 
-        //TODO: get list of properties
-        //TODO: Remove application forms for these properties
-        //TODO: copy currentProperty application form to selected properties
+        $applicationFormRepository = $this->em->getRepository(ApplicationForm::class);
+        $applicationForms = $applicationFormRepository->findBy(['property' => $propertiesIds, 'isDefault' => false]);
+
+
+        foreach ($properties as $property) {
+            $property->setApplicationForm(null);
+            $this->em->persist($property);
+            $this->em->flush();
+        }
+        foreach ($applicationForms as $applicationForm) {
+            $this->em->remove($applicationForm);
+            $this->em->flush();
+        }
+
+        /** @var ApplicationForm $currentApplicationForm */
+        $currentApplicationForm = $currentProperty->getApplicationForm();
+        foreach ($properties as $property) {
+            $this->cloneApplicationForm($currentApplicationForm, $property);
+        }
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [
             'properties' => $properties,

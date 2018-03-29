@@ -12,10 +12,12 @@ Install Sass:
 
 Run command `gulp`
 
-Run command `bash deploy/instal-[dev|prod].sh`.
+Run commands `bash deploy/install-dev.sh`.
+and `bash deploy/install-prod.sh`.
 
 # Updating
-Run command `bash deploy/update-[dev|prod].sh`.
+Run commands `bash deploy/update-dev.sh`
+and `bash deploy/update-prod.sh`.
 
 Test login with TENANT role: 
 Login: peterparker@test.com

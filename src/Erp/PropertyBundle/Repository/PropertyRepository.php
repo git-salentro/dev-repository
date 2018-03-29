@@ -490,4 +490,17 @@ class PropertyRepository extends EntityRepository
         return $qb->getQuery()
             ->getResult();
     }
+
+    public function getPropertiesListExceptCurrent(Property $property, User $user)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.user = :user')
+            ->andWhere('p.status != :status')
+            ->setParameter('status','deleted')
+            ->andWhere($qb->expr()->neq('p.id', $property->getId()))
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getResult();
+    }
 }

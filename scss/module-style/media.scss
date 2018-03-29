@@ -129,11 +129,13 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     .secondary-profile-menu {
         .navbar-default {
             li {
+                line-height: 42px;
                 a {
                     display: inline-block;
-                    padding: 0 2px 0 4px;
-                    //padding: 0 10px 0 16px;
-                    font-size: 14px;
+                    vertical-align: text-bottom;
+                    padding: 0 14px 0 4px;
+                    font-size: 16px;
+                    line-height: 18px;
                 }
             }
         }
@@ -530,9 +532,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             li {
                 a {
                     display: inline-block;
-                    padding: 0 2px 0 4px;
-                    //padding: 0 10px 0 16px;
-                    font-size: 14px;
+                    vertical-align: middle;
+                    padding: 0 12px 0 3px;
+                    font-size: 16px;
+                    line-height: 23px;
                 }
             }
 
@@ -1139,9 +1142,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 }
                 &.widget-last {
                     margin-right: 0;
-                }
-                &.widget-first {
-                    width: 47%;
                 }
                 .address-details-block {
                     .address-details {
@@ -2242,7 +2242,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
         .profile-widget-row {
             min-height: 300px;
-            //height: 260px;
             margin: 0 5px 30px;
             position: relative;
             .profile-widget-item {
@@ -3724,13 +3723,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 }
             }
             li {
-                padding: 0 0 20px 0;
-                &:first-child {
-                    padding-top: 20px;
-                }
-                a {
-                    width: 100%;
-                }
+                line-height: 60px;
                 .secondary-menu-icon,
                 .messages-count-icon {
                     display: none;
@@ -5022,7 +5015,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     .secondary-profile-menu {
         .navbar-default {
             li {
-                padding: 0 0 20px 0;
+                line-height: 60px;
             }
         }
     }
@@ -5186,3 +5179,26 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
 }
 
+
+
+
+.secondary-profile-menu {
+    .navbar-default {
+        li {
+            padding: 0;
+            line-height: 60px;
+            a {
+                display: inline-block;
+                vertical-align: text-top;
+                padding: 0 13px 0 3px;
+                font-size: 16px;
+                line-height: 21px;
+            }
+        }
+
+    }
+}
+
+.navbar-nav {
+    margin: 0 0 0 10px;
+}
