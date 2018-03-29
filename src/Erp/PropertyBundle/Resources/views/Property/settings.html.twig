@@ -1,6 +1,7 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
 {% form_theme form _self %}
+{% form_theme autoWithdrawalForm _self %}
 
 {%- block date_widget -%}
     {% set type = 'text' %}
@@ -41,37 +42,35 @@
 
                 {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
-                {%- set agreeAutoWithdrawalText -%}
-                    {%- if property.settings.allowAutoDraft -%}
-                        {% if (property.tenantUser) %}
-                            {%- if property.tenantUser.isAgreeAutoWithdrawal -%}
-                                {{ form_start(autoWithdrawalForm, {'action': path('erp_property_scheduled_stop_auto_withdrawal', {'user': property.tenantUser}) }) }}
-                                <div class="row">
-                                    <div class="col-md-10 col-md-offset-1 listings-block">
-                                        <div class="listing-block">
-                                            <p>To stop auto-withdrawals please choose date and submit</p>
-                                            <div class="desc-block">
-                                                <div class="listing-form form-horizontal edit-prop-form">
-                                                    <div class="prop-description form-group">
-                                                        <div class="prop-info">
-                                                            {{ form_label(autoWithdrawalForm.endAt) }}
-                                                            {{ form_widget(autoWithdrawalForm.endAt, {'attr': {'class': 'form-control date'}}) }}
-                                                            {{ form_custom_errors.widget(autoWithdrawalForm.endAt) }}
-                                                        </div>
+                {%- if property.settings.allowAutoDraft -%}
+                    {% if (property.tenantUser) %}
+                        {%- if property.tenantUser.isAgreeAutoWithdrawal -%}
+                            {{ form_start(autoWithdrawalForm, {'action': path('erp_property_scheduled_stop_auto_withdrawal', {'user': property.tenantUser.id}) }) }}
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1 listings-block">
+                                    <div class="listing-block">
+                                        <p>To stop auto-withdrawals please choose date and submit</p>
+                                        <div class="desc-block">
+                                            <div class="listing-form form-horizontal edit-prop-form">
+                                                <div class="prop-description form-group">
+                                                    <div class="prop-info">
+                                                        {{ form_label(autoWithdrawalForm.endAt) }}
+                                                        {{ form_widget(autoWithdrawalForm.endAt, {'attr': {'class': 'form-control date'}}) }}
+                                                        {{ form_custom_errors.widget(autoWithdrawalForm.endAt) }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 submit-row">
-                                    {{ form_widget(autoWithdrawalForm.submit, {'attr': {'class': 'btn red-btn'}}) }}
-                                </div>
-                                {{ form_end(autoWithdrawalForm) }}
-                            {%- endif -%}
+                            </div>
+                            <div class="col-xs-12 submit-row">
+                                {{ form_widget(autoWithdrawalForm.submit, {'attr': {'class': 'btn red-btn'}}) }}
+                            </div>
+                            {{ form_end(autoWithdrawalForm) }}
                         {%- endif -%}
                     {%- endif -%}
-                {%- endset -%}
+                {%- endif -%}
 
                 <div class="row">
                     {{ form_start(form, { attr: {'id' : 'property-edit-form', 'class': 'form-horizontal'}, 'enctype': form_enctype(form)}) }}

@@ -24,7 +24,7 @@ class PropertyEntityListener
         $this->createHistoryRecord($property);
     }
 
-    public function preUpdate(Property $property, LifecycleEventArgs $args)
+    public function postUpdate(Property $property, LifecycleEventArgs $args)
     {
         $this->createHistoryRecord($property);
     }

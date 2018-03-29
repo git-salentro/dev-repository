@@ -17,10 +17,12 @@ class StopAutoWithdrawalFormType extends AbstractType
         $builder
             ->add(
                 'endAt',
-                'text',
+                'date',
                 [
                     'required' => false,
                     'label' => 'Date',
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
                 ]
             )
             ->add(
@@ -39,6 +41,7 @@ class StopAutoWithdrawalFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ScheduledRentPayment::class,
+            'validation_groups' => 'StopAuthWithdrawal',
         ]);
     }
 

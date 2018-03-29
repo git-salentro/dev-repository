@@ -4,7 +4,7 @@ namespace Erp\PropertyBundle\Controller;
 
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PropertyBundle\Entity\ScheduledRentPayment;
-use Erp\PropertyBundle\Form\Type\ScheduledRentPaymentType;
+use Erp\PropertyBundle\Form\Type\StopAutoWithdrawalFormType;
 use Erp\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,11 +82,16 @@ class ScheduledRentPaymentController extends Controller
         }
 
         $entity = new ScheduledRentPayment();
-        $form = $this->createForm(new ScheduledRentPaymentType(), $entity);
+        $form = $this->createForm(new StopAutoWithdrawalFormType(), $entity, ['validation_groups' => 'StopAuthWithdrawal']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $stripeCustomer->clearScheduledRentPayments();
+            $endAt = $entity->getEndAt();
+            $scheduledRentPayments = $stripeCustomer->getScheduledRentPayments();
+            /** @var ScheduledRentPayment $scheduledRentPayment */
+            foreach ($scheduledRentPayments as $scheduledRentPayment) {
+                $scheduledRentPayment->setEndAt($endAt);
+            }
 
             $em = $this->getDoctrine()->getManagerForClass(StripeCustomer::class);
             $em->persist($stripeCustomer);
@@ -98,6 +103,6 @@ class ScheduledRentPaymentController extends Controller
             );
         }
 
-        return $this->redirectToRoute('erp_property_property_settings_edit');
+        return $this->redirect($request->headers->get('referer'));
     }
 }

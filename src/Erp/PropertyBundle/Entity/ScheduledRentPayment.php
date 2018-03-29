@@ -101,7 +101,7 @@ class ScheduledRentPayment
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="end_at", type="date")
+     * @ORM\Column(name="end_at", type="date" ,nullable=true)
      */
     private $endAt;
 
