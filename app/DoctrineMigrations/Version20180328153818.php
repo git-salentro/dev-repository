@@ -18,7 +18,6 @@ class Version20180328153818 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE erp_user_fee RENAME INDEX idx_e54e5729a76ed395 TO IDX_2EB5E72DA76ED395');
         $this->addSql('ALTER TABLE users ADD is_agree_auto_withdrawal TINYINT(1) DEFAULT NULL');
     }
 
