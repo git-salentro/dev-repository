@@ -115,6 +115,7 @@ class RegistrationController extends BaseController
             $form->get('email')->setData($request->get('email', null));
         }
 
+        /** @var StaticPage $termsOfUse */
         $termsOfUse =$this->em->getRepository('ErpSiteBundle:StaticPage')
             ->findOneBy(['code' => StaticPage::PAGE_CODE_TERMS_OF_USE]);
 
