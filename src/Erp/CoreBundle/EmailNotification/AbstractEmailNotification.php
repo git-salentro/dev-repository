@@ -24,7 +24,7 @@ abstract class AbstractEmailNotification implements EmailNotificationInterface
 
     protected function getLogoPath($params)
     {
-        $path = \Swift_Image::fromPath($params['basePath'] . '/bundles/erpcore/images/email_logo.gif');
+        $path = \Swift_Image::fromPath($params['basePath'] . '/bundles/erpcore/images/email_logo.png');
 
         return $path;
     }

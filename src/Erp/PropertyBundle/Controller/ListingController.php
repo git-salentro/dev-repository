@@ -656,6 +656,7 @@ class ListingController extends BaseController
             $repostRequest = new PropertyRepostRequest();
             $repostRequest->setProperty($property);
             $repostRequest->setStatus($repostRequest::STATUS_NEW);
+            $repostRequest->setNote('');
 
             $this->em->persist($repostRequest);
             $this->em->flush();
