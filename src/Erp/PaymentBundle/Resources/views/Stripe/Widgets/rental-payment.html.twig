@@ -31,6 +31,16 @@
                     {{ form_label(form.type) }}
                 </label>
             </div>
+
+            {% if form.agreeAutoWithdrawal is defined %}
+                <div class="checkbox">
+                    <label>
+                        {{ form_widget(form.agreeAutoWithdrawal) }}
+                        {{ form_label(form.agreeAutoWithdrawal) }}
+                    </label>
+                </div>
+            {% endif %}
+
             <div class="row edit-row">
                 {% set attr = [] %}
 

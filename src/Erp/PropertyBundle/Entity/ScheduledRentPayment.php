@@ -4,6 +4,7 @@ namespace Erp\PropertyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PropertyBundle\Validator\Constraints as Assert;
+use Erp\UserBundle\Entity\User;
 
 /**
  * Class ScheduledRentPayment
@@ -111,6 +112,11 @@ class ScheduledRentPayment
      * @ORM\Column(name="category", type="string")
      */
     private $category;
+
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * @ORM\PrePersist
@@ -406,5 +412,47 @@ class ScheduledRentPayment
     public function isRecurring()
     {
         return $this->type === self::TYPE_RECURRING;
+    }
+
+    /**
+     * Set user
+     *
+     * @param $user
+     *
+     * @return ScheduledRentPayment
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function setAgreeAutoWithdrawal($agreeAutoWithdrawal)
+    {
+        if (!$this->user) {
+            throw new \RuntimeException('Please specify user');
+        }
+
+        $this->user->setAgreeAutoWithdrawal($agreeAutoWithdrawal);
+    }
+
+    public function getAgreeAutoWithdrawal()
+    {
+        if (!$this->user) {
+            return;
+        }
+
+        $this->user->getAgreeAutoWithdrawal();
     }
 }

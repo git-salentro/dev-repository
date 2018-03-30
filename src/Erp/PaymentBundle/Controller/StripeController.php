@@ -173,18 +173,18 @@ class StripeController extends BaseController
             }
         }
 
-        try {
-            $stripeBankAccountToken = $this->createBankAccountToken($publicToken, $accountId);
-        } catch (ServiceException $e) {
-            $this->addFlash(
-                'alert_error',
-                $e->getMessage()
-            );
-
-            return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
-        }
-
         if ($user->hasRole(User::ROLE_MANAGER)) {
+            try {
+                $stripeBankAccountToken = $this->createBankAccountToken($publicToken, $accountId);
+            } catch (ServiceException $e) {
+                $this->addFlash(
+                    'alert_error',
+                    $e->getMessage()
+                );
+
+                return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
+            }
+
             $stripeAccount = $user->getStripeAccount();
             if (!$stripeAccount->getAccountId()) {
                 $params = array_merge(

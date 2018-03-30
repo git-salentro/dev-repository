@@ -121,6 +121,23 @@ class ScheduledRentPaymentType extends AbstractType
                 ]
             );
 
+
+        $property = $user->getTenantProperty();
+        if ($property) {
+            $propertySettings = $property->getSettings();
+            if ($propertySettings->isAllowAutoDraft()) {
+                $builder->add(
+                    'agreeAutoWithdrawal',
+                    'checkbox',
+                    [
+                        'required' => false,
+                        'label' => 'Allow auto withdrawal',
+                        'label_attr' => ['class' => 'control-label'],
+                    ]
+                );
+            }
+        }
+
         $builder->get('type')
             ->addViewTransformer(new CallbackTransformer(
                 function ($type) {

@@ -171,7 +171,7 @@ class PropertySettings
      */
     public function setAllowAutoDraft($allowAutoDraft)
     {
-        $this->allowAutoDraft = $allowAutoDraft;
+        $this->allowAutoDraft = (bool) $allowAutoDraft;
 
         return $this;
     }
@@ -182,6 +182,11 @@ class PropertySettings
      * @return boolean
      */
     public function getAllowAutoDraft()
+    {
+        return $this->allowAutoDraft;
+    }
+
+    public function isAllowAutoDraft()
     {
         return $this->allowAutoDraft;
     }

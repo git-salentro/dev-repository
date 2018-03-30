@@ -20,6 +20,8 @@ class ScheduledRentPaymentController extends Controller
         $tenantStripeCustomer = $user->getStripeCustomer();
 
         $entity = new ScheduledRentPayment();
+        $entity->setUser($user);
+
         $form = $this->createForm('erp_property_scheduled_rent_payment', $entity);
         $form->handleRequest($request);
 
