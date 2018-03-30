@@ -32,7 +32,15 @@
                 </label>
             </div>
             <div class="row edit-row">
-                {{ form_widget(form.submit) }}
+                {% set attr = [] %}
+
+                {% if manager.stripeAccount == false or user.stripeCustomer == false %}
+                    {% set attr = attr|merge({
+                        'disabled': 'disabled'
+                    }) %}
+                {% endif %}
+
+                {{ form_widget(form.submit, {'attr': attr}) }}
             </div>
         </div>
     {{ form_end(form) }}

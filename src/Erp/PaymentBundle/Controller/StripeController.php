@@ -152,13 +152,14 @@ class StripeController extends BaseController
             $stripeCustomer->setCustomerId($customer['id'])
                 ->setUser($user);
 
-            $this->em->persist($stripeCustomer);
-            // Force flush for saving Stripe customer
-            $this->em->flush();
+            $em = $this->getDoctrine()->getManagerForClass(StripeCustomer::class);
+            $em->persist($stripeCustomer);
+            $em->flush();
         } else {
             $arguments = [
                 'id' => $stripeCustomer->getCustomerId(),
-                'params' => ['external_account' => $stripeBankAccountToken],
+                'params' => ['source' => $stripeBankAccountToken],
+                'options' => $options,
             ];
             $response = $apiManager->callStripeApi('\Stripe\Customer', 'update', $arguments);
 
@@ -215,9 +216,10 @@ class StripeController extends BaseController
 
                 $stripeAccount->setAccountId($account['id']);
 
-                $this->em->persist($stripeAccount);
+                $em = $this->getDoctrine()->getManagerForClass(StripeAccount::class);
+                $em->persist($stripeAccount);
                 // Force flush for saving Stripe account
-                $this->em->flush();
+                $em->flush();
             } else {
                 $arguments = [
                     'id' => $stripeAccount->getAccountId(),
@@ -241,6 +243,11 @@ class StripeController extends BaseController
         } else {
             $url = $this->generateUrl('erp_user_profile_dashboard');
         }
+
+        $this->addFlash(
+            'alert_ok',
+            'Success'
+        );
 
         return $this->redirect($url);
     }
