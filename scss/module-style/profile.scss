@@ -1,10 +1,19 @@
 /* Profile Main */
 .tenant-nav {
+    display: inline-block;
     float: none;
     margin: 0 auto;
     text-align: center;
-    width: 64%;
+    ul {
+        li {
+            display: inline;
+        }
+    }
 }
+#secondary-profile-navbar {
+    text-align: center;
+}
+
 .secondary-profile-menu {
     .page-title {
         display: none;

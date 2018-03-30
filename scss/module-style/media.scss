@@ -1097,9 +1097,9 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             .tenant-nav {
                 float: none;
                 text-align: center;
-                margin-left: 7%;
                 width: auto;
                 li {
+                    display: inline;
                     a {
                         padding: 0 15px 0 25px;
                     }
