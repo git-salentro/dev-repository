@@ -22,7 +22,7 @@ CityController.prototype.ajax = function() {
             stateCode = $el.val(),
             route = $this.getUrlByRoute( 'erp_core_get_cities_by_state_code' ),
             citiesEl = $( 'select[data-class="cities"]' ),
-            selectProperties = $( '#select2-erp_users_landlord_form_registration_city-container, #select2-properties_cityId-container, #select2-erp_property_edit_form_city-container' ),
+            selectProperties = $( '#select2-erp_users_manager_form_registration_city-container, #select2-properties_cityId-container, #select2-erp_property_edit_form_city-container' ),
             selectPropertiesContainer = $( '#select2-erp_users_tenant_contact_info_city-container, #select2-erp_users_form_address_details_city-container' );
 
         citiesEl.empty();
@@ -48,7 +48,7 @@ CityController.prototype.ajax = function() {
     });
 
     $( document ).on( 'change', 'select[data-class="cities"]', function() {
-        var selectContainers =  $( '#select2-erp_users_landlord_form_registration_city-container, #select2-properties_cityId-container' ),
+        var selectContainers =  $( '#select2-erp_users_manager_form_registration_city-container, #select2-properties_cityId-container' ),
             citySelectContainers = $( '#select2-erp_users_tenant_contact_info_city-container, #select2-erp_users_form_address_details_city-container' ),
             editSelectContainer = $( '#select2-erp_property_edit_form_city-container' );
 

@@ -20,7 +20,7 @@ class SmartMovePushNotification extends AbstractEmailNotification
     public function sendEmailNotification($params)
     {
         $message = $params['mailer']->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType('text/html');
 

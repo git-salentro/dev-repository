@@ -14,7 +14,9 @@ parameters:
     mailer_host:       ~
     mailer_user:       ~
     mailer_password:   ~
-    contact_email:     info@erentpay.com
+    mailer_port: ~
+    mailer_encryption: ~
+    contact_email:     info@zoobdoo.com
 
     siteUrl: 'http://erent.loc'
 
@@ -27,4 +29,4 @@ parameters:
     docusign_environment: demo
     docusign_account_id: a73c6d27-004a-4dea-8fe0-872354443292
 
-    ga_id: 'UA-72964645-1'
+    google_analytics_id: ~

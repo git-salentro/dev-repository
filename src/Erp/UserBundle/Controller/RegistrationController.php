@@ -3,10 +3,11 @@
 namespace Erp\UserBundle\Controller;
 
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
+use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\SiteBundle\Entity\StaticPage;
 use Erp\UserBundle\Entity\InvitedUser;
 use Erp\UserBundle\Entity\User;
-use Erp\UserBundle\Form\Type\LandlordRegistrationFormType;
+use Erp\UserBundle\Form\Type\ManagerRegistrationFormType;
 
 use Erp\UserBundle\Form\Type\UserTermOfUseFormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Class RegistrationController
@@ -46,7 +48,7 @@ class RegistrationController extends BaseController
     }
 
     /**
-     * Register landlord
+     * Register manager
      *
      * @param Request $request
      *
@@ -61,7 +63,7 @@ class RegistrationController extends BaseController
         $userManager = $this->get('fos_user.user_manager');
         /** @var User $user */
         $user = $userManager->createUser();
-        $user->setRoles([User::ROLE_LANDLORD]);
+        $user->setRoles([User::ROLE_MANAGER]);
 
         $form = $this->createRegisterForm($request, $user);
         $isRegisterAccept = false;
@@ -79,7 +81,7 @@ class RegistrationController extends BaseController
                 $settings = $this->get('erp.users.user.service')->getSettings();
 
                 $user->setUsername($user->getEmail())
-                    ->setStatus(User::STATUS_PENDING)
+                    ->setStatus(User::STATUS_ACTIVE)
                     ->setSettings(array_keys($settings))
                     ->setPropertyCounter(User::DEFAULT_PROPERTY_COUNTER)
                     ->setApplicationFormCounter(User::DEFAULT_APPLICATION_FORM_COUNTER)
@@ -87,17 +89,33 @@ class RegistrationController extends BaseController
                     ->setIsPrivatePaySimple(0)
                     ->setIsApplicationFormCounterFree(1)
                     ->setIsPropertyCounterFree(1)
+                    ->setEnabled(true)
                 ;
 
-                $userManager->updateUser($user);
-                $isRegisterAccept = true;
+                $stripeAccount = $user->getStripeAccount();
+                $stripeAccount
+                    ->setUser($user)
+                    ->setState($user->getState())
+                    ->setPostalCode($user->getPostalCode())
+                    ->setLine1($user->getAddressOne())
+                    ->setCity($user->getCity())
+                    ->setTosAcceptanceDate(new \DateTime())
+                    ->setTosAcceptanceIp($request->getClientIp());
 
-                $this->sendRegistrationEmail($user);
+                $userManager->updateUser($user);
+
+                $this->addFlash('show_navigation_sign_after_register', '');
+
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+
+                return $this->redirectToRoute('erp_user_dashboard_dashboard');
             }
         } else {
             $form->get('email')->setData($request->get('email', null));
         }
 
+        /** @var StaticPage $termsOfUse */
         $termsOfUse =$this->em->getRepository('ErpSiteBundle:StaticPage')
             ->findOneBy(['code' => StaticPage::PAGE_CODE_TERMS_OF_USE]);
 
@@ -108,7 +126,7 @@ class RegistrationController extends BaseController
                 'isRegisterAccept' => $isRegisterAccept,
                 'user'             => $user,
                 'termsOfUse'       => $termsOfUse->getContent(),
-                'roleLandlord'     => User::ROLE_LANDLORD,
+                'roleManager'     => User::ROLE_MANAGER,
             ]
         );
     }
@@ -144,7 +162,7 @@ class RegistrationController extends BaseController
     }
 
     /**
-     * Confirm landlord registration
+     * Confirm manager registration
      *
      * @param Request $request
      * @param string  $token
@@ -196,9 +214,9 @@ class RegistrationController extends BaseController
         $invitedUser = $this->em->getRepository('ErpUserBundle:InvitedUser')->findOneBy(
             ['inviteCode' => $token, 'isUse' => false]
         );
-        $landlordUser = $invitedUser ? $invitedUser->getProperty()->getUser() : null;
+        $managerUser = $invitedUser ? $invitedUser->getProperty()->getUser() : null;
 
-        if (!$invitedUser || !$landlordUser || !$landlordUser->hasRole(User::ROLE_LANDLORD)) {
+        if (!$invitedUser || !$managerUser || !$managerUser->hasRole(User::ROLE_MANAGER)) {
             return $this->redirectToRoute('fos_user_security_login');
         }
 
@@ -259,13 +277,13 @@ class RegistrationController extends BaseController
                 'form' => $form->createView(),
                 'user' => $user,
                 'termsOfUse' => $termsOfUse->getContent(),
-                'roleLandlord' => User::ROLE_LANDLORD,
+                'roleManager' => User::ROLE_MANAGER,
             ]
         );
     }
 
     /**
-     * Create Register new Landlord form
+     * Create Register new Manager form
      *
      * @param Request     $request
      * @param User        $user
@@ -289,7 +307,7 @@ class RegistrationController extends BaseController
         $states = $this->get('erp.core.location')->getStates();
 
         $form = $this->createForm(
-            new LandlordRegistrationFormType($request, $states, (bool)$invitedUser),
+            new ManagerRegistrationFormType($request, $states, (bool)$invitedUser),
             $user,
             $formOptions
         );
@@ -323,7 +341,7 @@ class RegistrationController extends BaseController
     }
 
     /**
-     * Sent email after landlord registration
+     * Sent email after manager registration
      *
      * @param User $user
      *
@@ -339,7 +357,7 @@ class RegistrationController extends BaseController
                 UrlGeneratorInterface::ABSOLUTE_URL
             ),
         ];
-        $emailType = EmailNotificationFactory::TYPE_LANDLORD_USER_REGISTER;
+        $emailType = EmailNotificationFactory::TYPE_MANAGER_USER_REGISTER;
         $sentStatus = $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
         return $sentStatus;

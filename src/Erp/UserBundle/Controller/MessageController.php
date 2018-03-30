@@ -42,7 +42,7 @@ class MessageController extends BaseController
         if (!$toUserId) {
             $renderParams = ['user' => $user];
         } elseif (!$toUser
-            || ($user->hasRole(User::ROLE_LANDLORD) && !$user->isTenant($toUser))
+            || ($user->hasRole(User::ROLE_MANAGER) && !$user->isTenant($toUser))
             || ($user->hasRole(User::ROLE_TENANT) && $user->getTenantProperty()->getUser() != $toUser)
         ) {
             throw $this->createNotFoundException();
@@ -62,7 +62,7 @@ class MessageController extends BaseController
                     $this->em->flush();
                     $this->checkDispatch($toUser, $user);
 
-                    $msg = 'Message Landlord: Message has been successfully sent';
+                    $msg = 'Message Manager: Message has been successfully sent';
                     $this->get('session')->getFlashBag()->add('alert_ok', $msg);
 
                     return $this->redirect($request->headers->get('referer'));
@@ -103,7 +103,7 @@ class MessageController extends BaseController
         $companions = [];
 
         // Get companions
-        if ($user->hasRole(User::ROLE_LANDLORD)) {
+        if ($user->hasRole(User::ROLE_MANAGER)) {
             $properties = $user->getProperties();
             /** @var Property $property */
             foreach ($properties as $property) {
@@ -186,7 +186,7 @@ class MessageController extends BaseController
      */
     protected function checkDispatch(User $toUser, User $user)
     {
-        if ($toUser->hasRole(User::ROLE_LANDLORD)) {
+        if ($toUser->hasRole(User::ROLE_MANAGER)) {
             $event = new EmailNotificationEvent(
                 $toUser,
                 EmailNotification::SETTING_PROFILE_MESSAGES,

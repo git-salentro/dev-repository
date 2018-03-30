@@ -19,6 +19,7 @@ use Goodby\CSV\Export\Standard\ExporterConfig;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PaymentWidgetsController extends BaseController
@@ -105,7 +106,7 @@ class PaymentWidgetsController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        if (!$user->hasRole(User::ROLE_TENANT) && !$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user->hasRole(User::ROLE_TENANT) && !$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
@@ -145,7 +146,7 @@ class PaymentWidgetsController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        if (!$user->hasRole(User::ROLE_TENANT) && !$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user->hasRole(User::ROLE_TENANT) && !$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
@@ -171,14 +172,14 @@ class PaymentWidgetsController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        if (!$user or !$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user or !$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
         $formAttr = ['action' => $this->generateUrl('erp_payment_ps_history'), 'method' => 'POST'];
         $form = $this->createForm(new PaySimpleHistoryExportFormType(), null, $formAttr);
 
-        $psHistory = $this->em->getRepository('ErpPaymentBundle:PaySimpleHistory')->getLandlordHistory($user);
+        $psHistory = $this->em->getRepository('ErpPaymentBundle:PaySimpleHistory')->getManagerHistory($user);
         $response = $this->render(
             'ErpPaymentBundle:PaySimple/Widgets:payments-history.html.twig',
             [
@@ -220,7 +221,7 @@ class PaymentWidgetsController extends BaseController
      */
     private function getPDFResponse(User $user, $startDate, $endDate)
     {
-        $psHistory = $this->em->getRepository('ErpPaymentBundle:PaySimpleHistory')->getLandlordHistory(
+        $psHistory = $this->em->getRepository('ErpPaymentBundle:PaySimpleHistory')->getManagerHistory(
             $user,
             $startDate,
             $endDate
@@ -249,7 +250,7 @@ class PaymentWidgetsController extends BaseController
      */
     private function getCSVResponse(User $user, $startDate, $endDate)
     {
-        $psHistory = $this->em->getRepository('ErpPaymentBundle:PaySimpleHistory')->getLandlordHistory(
+        $psHistory = $this->em->getRepository('ErpPaymentBundle:PaySimpleHistory')->getManagerHistory(
             $user,
             $startDate,
             $endDate

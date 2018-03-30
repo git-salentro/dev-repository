@@ -15,9 +15,10 @@ use Erp\UserBundle\Entity\User;
  */
 class UserDocument
 {
-    const STATUS_ACCEPTED = 'accepted';
-    const STATUS_SENT     = 'sent';
-    const STATUS_RECIEVED = 'recieved';
+    const STATUS_SENT = 'Sent';
+    const STATUS_COMPLETED = 'Completed';
+    const STATUS_PENDING = 'Pending';
+    const APPLICANT_USER_ID = 0;
 
     /**
      * @var integer
@@ -59,10 +60,10 @@ class UserDocument
      * @ORM\Column(
      *      name="status",
      *      type="string",
-     *      columnDefinition="ENUM('accepted','sent','recieved') DEFAULT 'sent'"
+     *      columnDefinition="ENUM('Sent','Completed','Pending') DEFAULT 'Pending'"
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_PENDING;
 
     /**
      * @var \DateTime
@@ -92,6 +93,12 @@ class UserDocument
      */
     protected $document;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="envelop_id", type="string", nullable=true)
+     */
+    protected $envelopId;
 
     /**
      * Get id
@@ -238,5 +245,44 @@ class UserDocument
     public function getDocument()
     {
         return $this->document;
+    }
+
+    /**
+     * Set envelopId
+     *
+     * @param string $envelopId
+     *
+     * @return UserDocument
+     */
+    public function setEnvelopId($envelopId)
+    {
+        $this->envelopId = $envelopId;
+
+        return $this;
+    }
+
+    /**
+     * Get envelopId
+     *
+     * @return string
+     */
+    public function getEnvelopId()
+    {
+        return $this->envelopId;
+    }
+
+    public function isSigned()
+    {
+        return $this->status === self::STATUS_COMPLETED;
+    }
+
+    public function isSent()
+    {
+        return $this->status === self::STATUS_SENT;
+    }
+
+    public function isPending()
+    {
+        return $this->status === self::STATUS_PENDING;
     }
 }

@@ -3,6 +3,7 @@
 namespace Erp\PropertyBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Erp\PropertyBundle\Entity\Property;
@@ -17,6 +18,8 @@ use Erp\UserBundle\Entity\User;
  */
 class PropertyRepository extends EntityRepository
 {
+    const ID_SEPARATOR = '~';
+
     /**
      * @param \Erp\UserBundle\Entity\User $user
      *
@@ -39,7 +42,7 @@ class PropertyRepository extends EntityRepository
     /**
      * Get QueryBuilder for available properties by updated date
      *
-     * @param int   $cntNeedle
+     * @param int $cntNeedle
      * @param array $notInclude
      *
      * @return array
@@ -63,6 +66,14 @@ class PropertyRepository extends EntityRepository
         $result = $qb->getQuery()->getResult();
 
         return $result;
+    }
+
+    public function getQueryBuilderByUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('p');
+        return $qb
+            ->where('p.user = :user')
+            ->setParameter('user', $user);
     }
 
     /**
@@ -116,8 +127,8 @@ class PropertyRepository extends EntityRepository
     /**
      * Get Available properties by user city
      *
-     * @param User  $user
-     * @param int   $cntNeedleBuyCity
+     * @param User $user
+     * @param int $cntNeedleBuyCity
      * @param array $notInclude
      *
      * @return array
@@ -133,9 +144,9 @@ class PropertyRepository extends EntityRepository
     /**
      * Get Available properties by user state
      *
-     * @param User  $user
+     * @param User $user
      * @param array $result
-     * @param int   $cntNeedleBuyCity
+     * @param int $cntNeedleBuyCity
      *
      * @return array
      */
@@ -173,6 +184,32 @@ class PropertyRepository extends EntityRepository
         return $result;
     }
 
+    public function addIdentifiersToQueryBuilder(QueryBuilder $qb, array $idx)
+    {
+        if (!$idx) {
+            return;
+        }
+
+        $fieldNames = $this->getClassMetadata()->getIdentifierFieldNames();
+
+        $prefix = uniqid();
+        $sqls = array();
+        foreach ($idx as $pos => $id) {
+            $ids = explode(self::ID_SEPARATOR, $id);
+
+            $ands = array();
+            foreach ($fieldNames as $posName => $name) {
+                $parameterName = sprintf('field_%s_%s_%d', $prefix, $name, $pos);
+                $ands[] = sprintf('%s.%s = :%s', $qb->getRootAlias(), $name, $parameterName);
+                $qb->setParameter($parameterName, $ids[$posName]);
+            }
+
+            $sqls[] = implode(' AND ', $ands);
+        }
+
+        $qb->andWhere(sprintf('( %s )', implode(' OR ', $sqls)));
+    }
+
     /**
      * Return property by user
      *
@@ -192,12 +229,74 @@ class PropertyRepository extends EntityRepository
             ->andWhere('pr.user = :user')
             ->setParameter('propertyId', $propertyId)
             ->setParameter('status', Property::STATUS_DELETED)
-            ->setParameter('user', $user)
-        ;
+            ->setParameter('user', $user);
 
         $result = $qb->getQuery()->getOneOrNullResult();
 
         return $result;
+    }
+
+    public function getPropertiesQuery(User $user, \DateTime $dateFrom = null, \DateTime $dateTo = null, $type = null)
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        $qb->select('p')
+            ->join(\Erp\PropertyBundle\Entity\PropertyRentHistory::class, 'prh', Expr\Join::WITH, 'p.id=prh.property')
+            ->where('p.user = :user')
+            ->setParameter('user', $user);
+
+        if ($dateFrom) {
+            if ($dateTo) {
+                $qb->andWhere($qb->expr()->between('prh.createdAt', ':dateFrom', ':dateTo'));
+                $qb->setParameter('dateTo', $dateTo);
+            } else {
+                $qb->andWhere('prh.createdAt > :dateFrom');
+            }
+            $qb->setParameter('dateFrom', $dateFrom);
+        }
+
+        if ($type) {
+            $qb->andWhere(
+                $qb->expr()->in(
+                    'p.status',
+                    $type
+                )
+            );
+        }
+
+        return $qb->getQuery();
+    }
+
+    public function getScheduledPropertiesForPayment()
+    {
+        //TODO Optimize. Get rid of hydration
+        $yesterday = (new \DateTime())->modify('-1 day');
+        $yesterdayDay = $yesterday->format('j');
+
+        $qb = $this->createQueryBuilder('p')
+            ->select('p', 'ps', 'tu')
+            ->join('p.settings', 'ps')
+            ->join('p.tenantUser', 'tu')
+            ->where('ps.dayUntilDue = :yesterdayDay')
+            ->setParameter('yesterdayDay', $yesterdayDay);
+
+        return $qb
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getPropertiesByRentDueDate($rentDueDate)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('tu')
+            ->join('p.settings', 'ps')
+            ->join('p.tenantUser', 'tu')
+            ->join('p.user', 'u')
+            ->where('ps.dayUntilDue = :dayUntilDue')
+            ->setParameter('dayUntilDue', $rentDueDate);
+
+        return $qb->getQuery()
+            ->getResult();
     }
 
     /**
@@ -375,5 +474,33 @@ class PropertyRepository extends EntityRepository
         }
 
         return $qb;
+    }
+
+    public function getDebtors(User $user)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p, tu')
+            ->join('p.user', 'u')
+            ->join('p.tenantUser', 'tu')
+            ->join('tu.rentPaymentBalance', 'rpb')
+            ->where('p.user = :user')
+            ->andWhere('rpb.balance < 0')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    public function getPropertiesListExceptCurrent(Property $property, User $user)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.user = :user')
+            ->andWhere('p.status != :status')
+            ->setParameter('status','deleted')
+            ->andWhere($qb->expr()->neq('p.id', $property->getId()))
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getResult();
     }
 }

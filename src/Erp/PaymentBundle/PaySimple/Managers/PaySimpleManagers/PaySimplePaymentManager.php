@@ -33,18 +33,18 @@ class PaySimplePaymentManager extends PaySimpleAbstarctManager
             case self::METHOD_PAYMENT_CREATE_CC:
                 // the same logic
             case self::METHOD_PAYMENT_CREATE_BA:
-                $responce = $this->createPaymentAccount($method);
+                $response = $this->createPaymentAccount($method);
                 break;
             case self::METHOD_PAYMENT_GET_DEFAULT_CC:
                 // the same logic
             case self::METHOD_PAYMENT_GET_DEFAULT_BA:
-                $responce = $this->getDefaultPaymentAccount($method);
+                $response = $this->getDefaultPaymentAccount($method);
                 break;
             case self::METHOD_PAYMENT_MAKE:
-                $responce = $this->make();
+                $response = $this->make();
                 break;
             case self::METHOD_PAYMENT_SET_DEFAULT_PAYMENT_ACCOUNT:
-                $responce = $this->setDefaultPaymentAccount();
+                $response = $this->setDefaultPaymentAccount();
                 break;
             default:
                 $available = [
@@ -63,7 +63,7 @@ class PaySimplePaymentManager extends PaySimpleAbstarctManager
                 break;
         }
 
-        return $responce;
+        return $response;
     }
 
     /**

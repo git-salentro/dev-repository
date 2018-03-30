@@ -78,7 +78,7 @@ class FeeOptionService
      */
     public function getSystemEmail()
     {
-        $email = 'info@erentpay.com ';
+        $email = 'info@zoobdoo.com ';
         $fees = $this->getFees();
         if ($fees) {
             $email = $fees->getDefaultEmail();

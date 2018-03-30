@@ -4,6 +4,7 @@ namespace Erp\SmartMoveBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
@@ -11,6 +12,7 @@ use Erp\SmartMoveBundle\Form\Type\SmartMoveEmailFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMoveExamFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMoveGetReportFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMovePersonalFormType;
+use Erp\StripeBundle\Helper\ApiHelper;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -38,7 +40,7 @@ class SmartMoveController extends BaseController
             return $this->redirectToRoute('fos_user_security_login');
         }
 
-        if (!$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
@@ -70,7 +72,7 @@ class SmartMoveController extends BaseController
                 $this->get('session')->getFlashBag()->add('alert_error', $teml . $errors);
             }
 
-            return $this->redirectToRoute('erp_user_profile_dashboard');
+            return $this->redirectToRoute('erp_user_dashboard_dashboard');
         }
 
 
@@ -100,7 +102,7 @@ class SmartMoveController extends BaseController
 
         $isRoleAccess = false;
         if ($user) {
-            $isRoleAccess = $user->hasRole(User::ROLE_LANDLORD) || $user->hasRole(User::ROLE_SUPER_ADMIN)
+            $isRoleAccess = $user->hasRole(User::ROLE_MANAGER) || $user->hasRole(User::ROLE_SUPER_ADMIN)
                 || $user->hasRole(User::ROLE_ADMIN);
         }
         if (!$smartMoveRenter || $isRoleAccess) {
@@ -145,8 +147,8 @@ class SmartMoveController extends BaseController
             ['examToken' => $token, 'isPersonalComleted' => true]
         );
 
-        $isLandlord = $user && $user->hasRole(User::ROLE_LANDLORD);
-        if (!$smartMoveRenter || $isLandlord || $smartMoveRenter->getIsExamComleted()) {
+        $isManager = $user && $user->hasRole(User::ROLE_MANAGER);
+        if (!$smartMoveRenter || $isManager || $smartMoveRenter->getIsExamComleted()) {
             throw $this->createNotFoundException();
         }
 
@@ -212,12 +214,12 @@ class SmartMoveController extends BaseController
             return $this->redirectToRoute('fos_user_security_login');
         }
 
-        if (!$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
         $smRenters = $this->em->getRepository('ErpSmartMoveBundle:SmartMoveRenter')->findBy(
-            ['landlord' => $user, 'isExamComleted' => true]
+            ['manager' => $user, 'isExamComleted' => true]
         );
         $form = $this->createGetReportForm($smRenters);
 
@@ -270,7 +272,7 @@ class SmartMoveController extends BaseController
     }
 
     /**
-     * Landlord paif for the report
+     * Manager paif for the report
      *
      * @param Request $request
      * @param int     $smRenterId
@@ -281,7 +283,7 @@ class SmartMoveController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        if (!$smRenterId || !$user || !$user->hasRole(User::ROLE_LANDLORD)) {
+        if (!$smRenterId || !$user || !$user->hasRole(User::ROLE_MANAGER)) {
             throw $this->createNotFoundException();
         }
 
@@ -339,6 +341,71 @@ class SmartMoveController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @param $smRenterId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Erp\SmartMoveBundle\Exceptions\SmartMoveManagerException
+     */
+    public function payReportAction(Request $request, $smRenterId)
+    {
+        /** @var $user User */
+        $user = $this->getUser();
+        //TODO Add security role
+        $customer = $user->getStripeCustomer();
+        //TODO use ParamConverter?
+        $smRenter = $this->em->getRepository('ErpSmartMoveBundle:SmartMoveRenter')->find($smRenterId);
+
+        if (!$smRenter || !$customer) {
+            throw $this->createNotFoundException();
+        }
+
+        $amount = $this->get('erp.core.fee.service')->getTenantScreeningFee();
+
+        if ($request->getMethod() === 'POST') {
+            if (!$smRenter->getIsPayed()) {
+                $apiManager = $this->get('erp_stripe.entity.api_manager');
+                $arguments = [
+                    'params' => [
+                        //TODO Add stripe money format
+                        'amount' => ApiHelper::convertAmountToStripeFormat($amount),
+                        'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                        'customer' => $customer->getCustomerId(),
+                        'metadata' => [
+                            'internalType' => 'tenant_screening'
+                        ],
+                    ],
+                    'options' => null
+                ];
+                $response = $apiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $this->addFlash('alert_error', $this->get('erp.users.user.service')->getPaySimpleErrorByCode('error'));
+                } else {
+                    $this->em->persist($smRenter->setIsPayed(true));
+                    $this->em->flush();
+
+                    $this->get('erp.smartmove.smartmove_service')->generateRenterReports($smRenter);
+
+                    $msg = 'Please wait for about 30 minutes for your reports to be generated, then select Tenant\'s
+                    email and press GET REPORT button again.';
+                    $this->get('session')->getFlashBag()->add('alert_ok', $msg);
+                }
+            }
+
+            return $this->redirectToRoute('erp_user_profile_dashboard');
+        }
+
+        return $this->render(
+            'ErpCoreBundle:crossBlocks:general-confirmation-popup.html.twig', [
+                'askMsg'    => 'You will be charged $' . $amount . ' for this feature. Do you want to proceed?',
+                'actionBtn' => 'Yes',
+                'actionUrl' => $this->generateUrl('erp_smart_move_smart_move_pay_report', ['smRenterId' => $smRenter->getId()])
+            ]
+        );
+    }
+
+    /**
      * Create Background/Credit check form
      *
      * @param User $user
@@ -348,7 +415,7 @@ class SmartMoveController extends BaseController
     private function createCheckForm(User $user)
     {
         $smRenter = new SmartMoveRenter();
-        $smRenter->setLandlord($user);
+        $smRenter->setManager($user);
 
         $formOptions = ['action' => $this->generateUrl('erp_smart_move_check'), 'method' => 'POST'];
         $form = $this->createForm(new SmartMoveEmailFormType(), $smRenter, $formOptions);
@@ -593,15 +660,15 @@ class SmartMoveController extends BaseController
     {
         $emailType = EmailNotificationFactory::TYPE_SM_CHECK_USER;
         $token = $smartMoveRenter->getPersonalToken();
-        $title = 'eRentPay - Tenant Screening';
-        $text = 'Your Landlord is going to perform tenant screening on your identity.';
+        $title = 'Zoobdoo - Tenant Screening';
+        $text = 'Your Manager is going to perform tenant screening on your identity.';
         $url = 'erp_smart_move_personal_form';
 
         if ($isToExam) {
             $token = $smartMoveRenter->getExamToken();
             $url = 'erp_smart_move_exam_form';
             $text = 'Please pass identity verification exam for tenant screening service.';
-            $title = 'eRentPay - Tenant Screening Exam';
+            $title = 'Zoobdoo - Tenant Screening Exam';
         }
 
         $emailParams = [

@@ -155,7 +155,7 @@ class PaySimpleService
             $needCheckRecurring->setStatus($response['data']['ScheduleStatus'])
                 ->setNextDate(new \DateTime($response['data']['NextScheduleDate']));
 
-            if ($user->hasRole(User::ROLE_LANDLORD) && $user->getStatus() === User::STATUS_PENDING) {
+            if ($user->hasRole(User::ROLE_MANAGER) && $user->getStatus() === User::STATUS_PENDING) {
                 $user->setStatus(User::STATUS_NOT_CONFIRMED);
                 $this->em->persist($user);
             } elseif ($user->hasRole(User::ROLE_TENANT)) {

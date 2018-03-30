@@ -26,6 +26,7 @@ class Version20150928113007 extends AbstractMigration
             ADD created_date DATETIME NOT NULL,
             ADD updated_date DATETIME NOT NULL'
         );
+        $this->addSql('INSERT INTO fees_options (id, created_date, updated_date) VALUES (1, NOW(), NOW())');
     }
 
     /**
@@ -38,7 +39,7 @@ class Version20150928113007 extends AbstractMigration
             $this->connection->getDatabasePlatform()->getName() != 'mysql',
             'Migration can only be executed safely on \'mysql\'.'
         );
-
+        $this->addSql('INSERT INTO fees_options (id, created_date, updated_date) VALUES (1, NOW(), NOW())');
         $this->addSql('ALTER TABLE fees_options DROP created_date, DROP updated_date');
     }
 }

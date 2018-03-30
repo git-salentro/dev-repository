@@ -1,15 +1,15 @@
 <?php
+
 namespace Erp\SignatureBundle\Controller;
 
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\Entity\Document;
-use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
-use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
-use Erp\UserBundle\Entity\User;
 use Erp\PropertyBundle\Form\Type\ESignFormType;
-
+use Erp\UserBundle\Entity\User;
+use Erp\UserBundle\Entity\UserDocument;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class SignatureController
@@ -126,6 +126,47 @@ class SignatureController extends BaseController
         $renderOptions = array_merge($renderOptions, ['form' => $form->createView()]);
 
         return $this->render('ErpPropertyBundle:Form:esign-form.html.twig', $renderOptions);
+    }
+
+    public function editEnvelopAction($userDocumentId)
+    {
+        $em = $this->getDoctrine()->getManagerForClass(UserDocument::class);
+        $repository = $em->getRepository(UserDocument::class);
+        /** @var UserDocument $document */
+        $userDocument = $repository->find($userDocumentId);
+
+        if (!$userDocument || !$userDocument->getDocument()) {
+            throw $this->createNotFoundException('Document not found');
+        }
+
+        if ($userDocument->isSigned() || $userDocument->isSent()) {
+            throw $this->createNotFoundException('Document already signed or signed');
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $sender = $user;
+        $recipient = $userDocument->getToUser();
+
+        try {
+            $docusignService = $this->get('erp.signature.docusign.service');
+
+            if (!$userDocument->getEnvelopId()) {
+                $response = $docusignService->createEnvelopeFromDocumentNew($userDocument->getDocument(), $sender, $recipient);
+
+                $userDocument->setEnvelopId($response->envelopeId);
+
+                $em->persist($userDocument);
+                $em->flush();
+            }
+
+            $url = $docusignService->createCorrectLink($userDocument->getEnvelopId(), $recipient);
+
+            return new RedirectResponse($url);
+        } catch (\Exception $e) {
+            return new Response($e->getMessage());
+        }
     }
 
     /**

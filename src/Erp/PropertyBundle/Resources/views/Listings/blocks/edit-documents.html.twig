@@ -12,7 +12,6 @@
                 {% if document.id %}
                     <li class="doc-property-item">
                         <span class="fa fa-file-o"></span>
-
                         <div class="property-doc-info">
                             <a target="_blank" href="{{ asset(document.getPath() ~ '/' ~ document.getName()) }}">{{ document.getOriginalName() }}</a>
                             <span class="property-doc-details">{{ document.getExtension() }}, {{ document.getFileSize(true) }}</span>

@@ -66,7 +66,7 @@
 	<div class="row">
 		<div class="form-group">
 			<div class="col-xs-12 cc-form-footer">
-				{% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) and (not psCustomer or psCustomer.psRecurringPayments|length == 0) and user.isActiveMonthlyFee %}
+				{% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) and (not psCustomer or psCustomer.psRecurringPayments|length == 0) and user.isActiveMonthlyFee %}
 					<h3>Amount: ${{ amount }} /month</h3>
 				{% else %}
 					<br/>
@@ -78,11 +78,11 @@
 		</div>
 	</div>
 
-	{% if not psCustomer and user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) and user.isActiveMonthlyFee %}
+	{% if not psCustomer and user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) and user.isActiveMonthlyFee %}
 		<div class="row">
 			<div class="form-group">
 				<div class="col-xs-16"><br/>
-					<label for="">You will be charged eRentPay monthly fee starting from today.</label>
+					<label for="">You will be charged Zoobdoo monthly fee starting from today.</label>
 				</div>
 			</div>
 		</div>

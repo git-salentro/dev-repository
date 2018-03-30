@@ -43,7 +43,7 @@ abstract class BaseController extends SymfonyController
     /**
      * Rewrite render method
      *
-     * @param type     $view
+     * @param string     $view
      * @param array    $parameters
      * @param Response $response
      *

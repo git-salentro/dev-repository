@@ -44,3 +44,7 @@ gregwar_captcha_routing:
 erp_smart_move:
     resource: "@ErpSmartMoveBundle/Resources/config/routing.yml"
     prefix:   /smart-move
+
+erp_stripe:
+    resource: "@ErpStripeBundle/Resources/config/routing.yml"
+    prefix:   /

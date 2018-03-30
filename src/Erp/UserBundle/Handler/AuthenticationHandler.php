@@ -49,10 +49,12 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface
 
         if ($user->hasRole(User::ROLE_ADMIN) || $user->hasRole(User::ROLE_SUPER_ADMIN)) {
             $url = 'sonata_admin_dashboard';
-        } elseif ($user->hasRole(User::ROLE_TENANT) || $user->hasRole(User::ROLE_LANDLORD)) {
-            if ($user->getIsTermOfUse()) {
-                $url = 'erp_user_profile_dashboard';
-            } else {
+        } elseif ($user->hasRole(User::ROLE_TENANT) || $user->hasRole(User::ROLE_MANAGER)) {
+            if ($user->hasRole(User::ROLE_MANAGER)) {
+                $url = 'erp_user_dashboard_dashboard';
+            }
+
+            if (!$user->getIsTermOfUse()) {
                 $url = 'erp_user_term_of_use';
             }
         }

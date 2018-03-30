@@ -13,9 +13,6 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="form-group">
-                {% if isTenant is defined and not isTenant %}
-                    You will be charged ${{ eSignFee }} for this feature.<br/>
-                {% endif %}
                 Please enter email and press Submit button. Do not close this popup and wait for about 5 seconds until you see success message.
                 {{ form_label(form.email) }}
                 {% if user is defined %}

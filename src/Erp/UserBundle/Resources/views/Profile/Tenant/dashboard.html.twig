@@ -1,5 +1,10 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+{% endblock %}
+
 {% block pageContent %}
 
     {{ parent() }}
@@ -20,15 +25,15 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row profile-widget-row">
-                {{ render(controller('ErpPaymentBundle:PaymentWidgets:payRent')) }}
+                {{ render(controller('ErpPropertyBundle:ScheduledRentPayment:payRent')) }}
 
-                {{ render(controller('ErpPaymentBundle:PaymentWidgets:bankCards')) }}
+                {{ render(controller('ErpUserBundle:Dashboard:showPaymentDetails')) }}
 
                 {{ render(controller('ErpPaymentBundle:PaymentWidgets:paymentsPreferences')) }}
             </div>
 
-            <div class="row profile-widget-row profile-widget-rows">
-                <div class="col-md-3 col-xs-6 profile-widget-item widget-last">
+            <div class="row profile-widget-row profile-widget-rows tenants-block">
+                <div class="col-md-3 col-xs-6 profile-widget-item widget-last tenants-block-item">
 
                     {{ render(controller('ErpUserBundle:Profile:renderWidgetMessages')) }}
 
@@ -62,9 +67,9 @@
 
                 {{ render(controller('ErpUserBundle:Profile:renderWidgetServiceRequest')) }}
 
-                <div class="col-md-3 col-xs-6 profile-widget-item login-widget widget-last">
+                <div class="col-md-3 col-xs-12 profile-widget-item login-widget widget-last">
 
-                    <div class="profile-widget-content">
+                    <div class="profile-widget-content profile-content-last">
                         <div class="row widget-title-row">
                             <div class="login-block-title bold-text">Account Login Details</div>
                         </div>
@@ -94,7 +99,7 @@
                         </div>
                     </div>
 
-                    <div class="profile-widget-content widget-second prop-widget">
+                    <div class="profile-widget-content profile-content-last widget-second prop-widget">
                         <div class="row widget-title-row">
                             <div class="login-block-title bold-text">My Property</div>
                         </div>
@@ -115,4 +120,44 @@
                 </div>
             </div>
     </section>
+{% endblock %}
+
+{% block javascript_inline %}
+    {# TODO Refactoring #}
+    <script>
+        (function ($) {
+            var linkHandler = Plaid.create({
+                env: '{{ plaid_env }}',
+                clientName: 'Zoobdoo',
+                key: '{{ plaid_public_key }}',
+                product: ['auth'],
+                selectAccount: true,
+                onSuccess: function(public_token, metadata) {
+                    $.ajax({
+                        url: '{{ path("erp_payment_stripe_verify_bank_account") }}',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            publicToken: public_token,
+                            accountId: metadata.account_id
+                        },
+                        success: function (response) {
+                            if (response.redirect) {
+                                document.location = response.redirect;
+                            }
+                        }
+                    });
+                },
+                onExit: function(err, metadata) {
+                    if (err != null) {
+
+                    }
+                }
+            });
+
+            $('#verify-ba').click(function() {
+                linkHandler.open();
+            });
+        })(jQuery);
+    </script>
 {% endblock %}

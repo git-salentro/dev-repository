@@ -28,14 +28,14 @@
                 <div class="col-md-10 col-md-offset-1 complete-contract">
                     <div class="col-xs-12">
                         <b><u>How-To sign Rental Contract online:</u></b><br/>
-                        1) Landlord creates and edits Online Rental Contract using Contract Builder<br/>
-                        2) Landlord previews final contract as Tenant's web-form or as PDF file<br/>
-                        3) Landlord enables contract by "Enable Online Contract for this Property" checkbox<br/>
+                        1) Manager creates and edits Online Rental Contract using Contract Builder<br/>
+                        2) Manager previews final contract as Tenant's web-form or as PDF file<br/>
+                        3) Manager enables contract by "Enable Online Contract for this Property" checkbox<br/>
                         4) Link to complete Online Rental Contract appears in Tenant's Documentation area<br/>
                         5) Tenant completes contract form, signs it online and downloads as PDF file<br/>
-                        6) Tenant uploads signed PDF contract to Landlord's Documentation area<br/>
-                        7) Landlord reviews the contract and signs it by clicking SIGN button<br/>
-                        8) Landlord uploads signed PDF contract to Tenant's Documentation area<br/><br/><br/>
+                        6) Tenant uploads signed PDF contract to Manager's Documentation area<br/>
+                        7) Manager reviews the contract and signs it by clicking SIGN button<br/>
+                        8) Manager uploads signed PDF contract to Tenant's Documentation area<br/><br/><br/>
                     </div>
                     <form action="{{ path('erp_property_contract_form_fill', {'propertyId':property.id}) }}"
                         class="form-horizontal editor contract-ready" method="post"
@@ -48,7 +48,7 @@
                         <div class="form-group">
                             <div class="col-md-12">
                                 <div class="form-footer">
-                                    {% if isLandlord %}
+                                    {% if isManager %}
                                         <a href="{{ path('erp_property_contract_form', {'propertyId':property.id}) }}" class="cancel back-dashboard">Back</a>
                                     {% else %}
                                         <a href="{{ path('erp_user_documentation') }}" class="cancel back-dashboard">Back to Documentation</a>

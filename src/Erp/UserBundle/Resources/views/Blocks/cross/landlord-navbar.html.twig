@@ -5,14 +5,19 @@
         <span class="icon-bar"></span>
     </button>
     <span class="page-title navbar-toggle collapsed" data-toggle="collapse" data-target="#secondary-profile-navbar" 
-    aria-expanded="false">Account Managment</span>
+    aria-expanded="false">Account Management</span>
 </div>
 <div class="collapse navbar-collapse white-navbar" id="secondary-profile-navbar">
     <ul class="nav navbar-nav">
+        <li class="menu-item{{ currentRoute == 'erp_user_dashboard_dashboard' ? ' current' : ''}}">
+            <a href="{{ path('erp_user_dashboard_dashboard') }}">Dashboard</a>
+            <span class="secondary-menu-icon dashboard-icon"></span>
+        </li>
         <li class="menu-item{{ currentRoute == 'fos_user_profile_show' ? ' current' : ''}}">
             <a href="{{ path('erp_user_profile_dashboard') }}">Profile</a>
             <span class="secondary-menu-icon profile-icon"></span>
         </li>
+
         {% set availRoutes = ['erp_property_listings_all', 'erp_property_listings_add', 'erp_property_listings_edit'] %}
 
         <li class="menu-item{{ (currentRoute in availRoutes) ? ' current' : ''}}">

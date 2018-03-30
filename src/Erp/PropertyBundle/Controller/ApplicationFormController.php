@@ -2,6 +2,7 @@
 
 namespace Erp\PropertyBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 use Erp\CoreBundle\Entity\Document;
@@ -19,6 +20,7 @@ use Erp\PropertyBundle\Repository\ApplicationSectionRepository;
 use Erp\PropertyBundle\Repository\ApplicationFormRepository;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Entity\UserDocument;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +29,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Erp\PropertyBundle\Form\Type\ApplicationFeeType;
+use Erp\PropertyBundle\Form\Type\ApplicationCreditCardType;
+use Erp\PropertyBundle\Entity\ApplicationCreditCard;
+use Erp\StripeBundle\Helper\ApiHelper;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 
 class ApplicationFormController extends BaseController
 {
@@ -71,7 +78,7 @@ class ApplicationFormController extends BaseController
      *
      * @return RedirectResponse|Response
      */
-    public function cunstructorAction(Request $request, $propertyId)
+    public function constructorAction(Request $request, $propertyId)
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
@@ -82,7 +89,8 @@ class ApplicationFormController extends BaseController
         $property = $this->getProperty($propertyId);
         /** @var ApplicationFormRepository $applicationFormRepository */
         $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
+        /** @var ApplicationForm $applicationForm */
+        $applicationForm = $applicationFormRepository->findOneBy(['property' => $property]);
 
         // Cloning application form, if not exists yet
         if (!$applicationForm) {
@@ -96,7 +104,7 @@ class ApplicationFormController extends BaseController
                     $this->em->flush();
                 }
 
-                $applicationForm = $this->getCloneApplicationForm($user);
+                $applicationForm = $this->getCloneApplicationForm($property);
 
                 $this->addFlash(
                     'alert_ok',
@@ -109,6 +117,8 @@ class ApplicationFormController extends BaseController
 
         $applicationSection = new ApplicationSection();
         $applicationSectionForm = $this->createApplicationSectionForm($applicationSection, $property);
+
+        $applicationFeeForm = $this->createForm(new ApplicationFeeType(), $applicationForm);
 
         if ($request->getMethod() === 'POST') {
             $applicationSectionForm->handleRequest($request);
@@ -134,9 +144,59 @@ class ApplicationFormController extends BaseController
                 'user' => $property->getUser(),
                 'propertyId' => $property->getId(),
                 'applicationForm' => $applicationForm,
+                'feeForm' => $applicationFeeForm->createView(),
                 'applicationSectionForm' => $applicationSectionForm->createView(),
             ]
         );
+    }
+
+    public function saveApplicationFeeAction(Property $property, Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManagerForClass(ApplicationForm::class);
+        $repository = $em->getRepository(ApplicationForm::class);
+
+        $applicationForm = $repository->findOneBy(['property' => $property]);
+
+        if (!$applicationForm) {
+            if ($user->getApplicationFormCounter() || $user->getIsApplicationFormCounterFree()) {
+                if (!$user->getIsApplicationFormCounterFree()) {
+                    $em->persist(
+                        $property->getUser()->setApplicationFormCounter(
+                            $property->getUser()->getApplicationFormCounter() - 1
+                        )
+                    );
+                    $em->flush();
+                }
+
+                $applicationForm = $this->getCloneApplicationForm($property);
+            } else {
+                throw $this->createNotFoundException();
+            }
+        }
+
+        $form = $this->createForm(new ApplicationFeeType(), $applicationForm);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $em->persist($applicationForm);
+                $em->flush();
+
+                $this->addFlash(
+                    'alert_ok',
+                    'Success'
+                );
+            } else {
+                $this->addFlash(
+                    'alert_error',
+                    $form->getErrors()[0]->getMessage()
+                );
+            }
+        }
+
+        return $this->redirectToRoute('erp_property_application_form', ['propertyId' => $property->getId()]);
     }
 
     /**
@@ -153,7 +213,7 @@ class ApplicationFormController extends BaseController
         $user = $this->getUser();
 
         $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
+        $applicationForm = $applicationFormRepository->findOneBy(['property' => $propertyId]);
 
         if ($applicationForm) {
             return $this->redirectToRoute('erp_property_application_form', ['propertyId' => $propertyId]);
@@ -214,146 +274,170 @@ class ApplicationFormController extends BaseController
     }
 
     /**
-     * @param User $user
+     * @param Property $property
      *
      * @return null|object
      */
-    public function getCloneApplicationForm(User $user)
+    public function getCloneApplicationForm(Property $property)
     {
         /** @var ApplicationFormRepository $applicationFormRepository */
         $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
 
+        /** @var ApplicationForm $applicationForm */
         $applicationForm =
-            $applicationFormRepository->findOneBy(['isDefault' => true, 'user' => null]);
+            $applicationFormRepository->findOneBy(['isDefault' => true, 'property' => null]);
 
         if (!$applicationForm) {
             throw new NotFoundHttpException('Default application form not found');
         }
 
-        $this->cloneApplicationForm($applicationForm, $user);
+        $this->cloneApplicationForm($applicationForm, $property);
         $this->em->clear();
 
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
+        $applicationForm = $applicationFormRepository->findOneBy(['property' => $property]);
 
         return $applicationForm;
     }
 
     /**
-     * Return view complete
-     *
      * @param Request $request
-     * @param int     $propertyId
-     *
+     * @param $propertyId
      * @return RedirectResponse|Response
      */
     public function completeAction(Request $request, $propertyId)
     {
         /** @var Property $property */
         $property = $this->getProperty($propertyId);
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
 
-        if ($property->getStatus() == Property::STATUS_DELETED) {
+        if ($property->isDeleted()) {
             throw new NotFoundHttpException('Application form not found');
         }
 
-        $psCcAnonymousForm = $this->createPaySimpleCreditCardAnonymousForm();
-
-        $data = [];
-        $psData = [];
-        if ($request->getMethod() === 'POST') {
-            $data = $request->request->all();
-            $psData = $data['ps_cc_anonymous_form'];
-
-            $user = $property->getUser();
-            $user->addRole(User::ROLE_ANONYMOUS);
-
-            // Make one payment
-            $result = $this->get('erp.users.user.service')->makeOnePaymentAnonymous($user, $psData);
-            $user->removeRole(User::ROLE_ANONYMOUS);
-
-            $files = $request->files->all();
-            if ($result['status']) {
-                $files = $this->getUploadFilesInBase64($files);
-
-                $formData = array_merge($data, $files);
-
-                $html = $this->renderView(
-                    'ErpPropertyBundle:ApplicationForm:pdf-template.html.twig',
-                    [
-                        'property' => $property,
-                        'formData' => $formData
-                    ]
-                );
-
-                $pdfFileName = $psData['firstName'] . '_' . $psData['lastName'] . '_' . date('dmYHis') . '.pdf';
-                $pdfOriginalName = $psData['firstName'] . ' ' . $psData['lastName'] . '.pdf';
-                $this->generatePdfFromHtml($pdfFileName, $html);
-
-                $emailTenant = $psData['email'];
-
-                // Create new document
-                $document = (new Document())
-                    ->setName($pdfFileName)
-                    ->setOriginalName($pdfOriginalName)
-                    ->setPath($this->basePdfDir);
-
-                // Create new user document
-                $userDocument = (new UserDocument())
-                    ->setFromUser(null)
-                    ->setToUser($user)
-                    ->setDocument($document)
-                    ->setStatus(UserDocument::STATUS_RECIEVED);
-
-                $this->em->persist($userDocument);
-                $this->em->flush();
-
-                $this->get('erp.signature.docusign.service')->createEnvelopeFromDocument($document, $emailTenant);
-
-                // sending email for landlord
-                $this->sendApplicationFormToEmail([
-                    'sendTo' => $property->getUser()->getEmail(),
-                    'replyTo' => $emailTenant,
-                    'filename' => $pdfFileName,
-                    'property' => $property,
-                ]);
-
-                $this->addFlash(
-                    'alert_ok',
-                    'Payment was successful. Your Rental Application is sent to Landlord and a copy to you.
-                     Instruction how to sign your application and link to e-signature service were sent to your email.
-                     Please read instruction first then proceed to online e-signature.'
-                );
-
-                $this->sendApplicationFormInstruction([
-                    'sendTo' => $emailTenant,
-                    'llEmail' => $property->getUser()->getEmail(),
-                    'llName' => $property->getUser()->getFirstName() . ' ' . $property->getUser()->getLastName(),
-                ]);
-
-                return $this->redirectToRoute(
-                    'erp_property_application_complete_form',
-                    ['propertyId' => $property->getId()]
-                );
-            } else {
-                if ($files) {
-                    $this->addFlash(
-                        'alert_error',
-                        'Validation error(s) occurred. Please re-upload previously attached file(s).'
-                    );
-                }
-
-                /* Payment Errors */
-                foreach ($result['errors'] as $error) {
-                    $this->addFlash('alert_error', $error['Message']);
-                }
-
-                $psData['error']['section'] = 'payment';
-            }
+        $propertyUser = $property->getUser();
+        $applicationForm = $property->getApplicationForm();
+        if (!$applicationForm) {
+            throw new NotFoundHttpException('Application form not found');
         }
 
-        /* Breadcrumbs */
+        $applicationCreditCard = new ApplicationCreditCard();
+        $applicationCreditCardForm = $this->createForm(new ApplicationCreditCardType(), $applicationCreditCard);
+
+        $files = $this->getUploadFilesInBase64($request->files->all());
+        $data = $request->request->all();
+        $formData = array_merge($data, $files);
+
+        $template = 'ErpPropertyBundle:ApplicationForm:complete.html.twig';
+        $parameters = [
+            'data' => $data,
+            'paymentData' => [],
+            'property' => $property,
+            'isManager' => $currentUser && $currentUser->hasRole(User::ROLE_MANAGER),
+            'applicationCreditCardForm' => $applicationCreditCardForm->createView(),
+        ];
+
+        $stripeAccount = $propertyUser->getStripeAccount();
+        if (!$stripeAccount) {
+            return $this->render($template, $parameters);
+        }
+
+        if ('POST' === $request->getMethod()) {
+            $applicationCreditCardForm->handleRequest($request);
+
+            if (!$applicationCreditCardForm->isValid()) {
+                return $this->render($template, $parameters);
+            }
+
+            $creditCard = $applicationCreditCard->getCreditCard();
+
+            if (!$applicationForm->isNoFee()) {
+                $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
+                $arguments = [
+                    'params' => [
+                        'amount' => ApiHelper::convertAmountToStripeFormat($applicationForm->getFee()),
+                        'source' => $creditCard->getSourceToken(),
+                        'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                    ],
+                    'options' => [
+                        'stripe_account' => $stripeAccount->getAccountId(),
+                    ]
+                ];
+
+                $response = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $parameters['paymentData'] = [
+                        'error' => [
+                            'section' => 'payment',
+                        ],
+                    ];
+
+                    $this->addFlash('alert_error', $response->getErrorMessage());
+
+                    return $this->render($template, $parameters);
+                }
+            }
+
+            $html = $this->renderView(
+                'ErpPropertyBundle:ApplicationForm:pdf-template.html.twig',
+                [
+                    'property' => $property,
+                    'formData' => $formData
+                ]
+            );
+            $pdfFileName = sprintf('%s_%s_%s.pdf', $creditCard->getFirstName(), $creditCard->getLastName(), date('dmYHis'));
+            $pdfOriginalName = sprintf('%s %s.pdf', $creditCard->getFirstName(), $creditCard->getLastName());
+
+            $this->generatePdfFromHtml($pdfFileName, $html);
+
+            $tenantEmail = $applicationCreditCard->getEmail();
+
+            $document = (new Document())
+                ->setName($pdfFileName)
+                ->setOriginalName($pdfOriginalName)
+                ->setPath($this->basePdfDir);
+
+            $userDocument = (new UserDocument())
+                ->setFromUser(null)
+                ->setToUser($propertyUser)
+                ->setDocument($document);
+
+            $em = $this->getDoctrine()->getManagerForClass(UserDocument::class);
+            $em->persist($userDocument);
+            $em->flush();
+
+            $this->get('erp.signature.docusign.service')->createEnvelopeFromDocument($document, $tenantEmail);
+
+            $this->sendApplicationFormToEmail([
+                'sendTo' => $property->getUser()->getEmail(),
+                'replyTo' => $tenantEmail,
+                'filename' => $pdfFileName,
+                'property' => $property,
+            ]);
+
+            $this->addFlash(
+                'alert_ok',
+                'Payment was successful. Your Rental Application is sent to Manager and a copy to you.
+                     Instruction how to sign your application and link to e-signature service were sent to your email.
+                     Please read instruction first then proceed to online e-signature.'
+            );
+
+            $this->sendApplicationFormInstruction([
+                'sendTo' => $tenantEmail,
+                'llEmail' => $property->getUser()->getEmail(),
+                'llName' => $property->getUser()->getFirstName() . ' ' . $property->getUser()->getLastName(),
+            ]);
+
+            return $this->redirectToRoute(
+                'erp_property_application_complete_form',
+                ['propertyId' => $property->getId()]
+            );
+        }
+
         $breadcrumbs = $this->get('white_october_breadcrumbs');
-        $breadcrumbs->addItem('Home', $this->get('router')->generate('erp_site_homepage'));
-        $breadcrumbs->addItem(
+        $breadcrumbs->addItem('Home', $this->get('router')->generate('erp_site_homepage'))
+            ->addItem(
             $property->getName(),
             $this->get('router')->generate(
                 'erp_property_page',
@@ -366,22 +450,7 @@ class ApplicationFormController extends BaseController
         );
         $breadcrumbs->addItem('Online Rental Application');
 
-        if ($this->getUser() && $this->getUser()->hasRole(User::ROLE_LANDLORD)) {
-            $isLandlord = true;
-        } else {
-            $isLandlord = false;
-        }
-
-        return $this->render(
-            'ErpPropertyBundle:ApplicationForm:complete.html.twig',
-            [
-                'data'              => $data,
-                'psData'            => $psData,
-                'property'          => $property,
-                'isLandlord'        => $isLandlord,
-                'psCcAnonymousForm' => $psCcAnonymousForm->createView()
-            ]
-        );
+        return $this->render($template, $parameters);
     }
 
     /**
@@ -544,7 +613,7 @@ class ApplicationFormController extends BaseController
         $propertyRepository = $this->em->getRepository('ErpPropertyBundle:Property');
 
         /** @var Property $property */
-        $property = ($user instanceof User and $user->hasRole(User::ROLE_LANDLORD))
+        $property = ($user instanceof User and $user->hasRole(User::ROLE_MANAGER))
             ? $propertyRepository->findOneBy(['id' => $propertyId, 'user' => $user])
             : $propertyRepository->find($propertyId);
 
@@ -564,18 +633,11 @@ class ApplicationFormController extends BaseController
      */
     protected function getApplicationSection($sectionId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        /** @var ApplicationFormRepository $applicationFormRepository */
-        $applicationFormRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationForm');
-        $applicationForm = $applicationFormRepository->findOneBy(['user' => $user]);
-
         /** @var ApplicationSectionRepository $applicationSectionRepository */
         $applicationSectionRepository = $this->em->getRepository('ErpPropertyBundle:ApplicationSection');
         /** @var ApplicationSection $applicationSection */
         $applicationSection =
-            $applicationSectionRepository->findOneBy(['id' => $sectionId, 'applicationForm' => $applicationForm]);
+            $applicationSectionRepository->findOneBy(['id' => $sectionId]);
 
         if (!$applicationSection) {
             throw new NotFoundHttpException('Section not found');
@@ -628,15 +690,15 @@ class ApplicationFormController extends BaseController
      * Clone application form
      *
      * @param ApplicationForm $applicationForm
-     * @param User            $user
+     * @param Property            $property
      *
      * @return ApplicationForm
      */
-    protected function cloneApplicationForm(ApplicationForm $applicationForm, User $user)
+    protected function cloneApplicationForm(ApplicationForm $applicationForm, Property $property)
     {
         /** @var ApplicationForm $applicationFormClone */
         $applicationFormClone = clone $applicationForm;
-        $applicationFormClone->setUser($user);
+        $applicationFormClone->setProperty($property);
 
         $this->em->persist($applicationFormClone);
         $this->em->flush();
@@ -728,7 +790,7 @@ class ApplicationFormController extends BaseController
             'url' => $url,
         ];
 
-        $emailType = EmailNotificationFactory::TYPE_APPLICATION_FORM_TO_LANDLORD;
+        $emailType = EmailNotificationFactory::TYPE_APPLICATION_FORM_TO_MANAGER;
         $sentStatus = $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
         return $sentStatus;
@@ -751,5 +813,63 @@ class ApplicationFormController extends BaseController
         $sentStatus = $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
         return $sentStatus;
+    }
+
+
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
+    public function copyListAction(Request $request, $propertyId)
+    {
+        $user = $this->getUser();
+        $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $currentProperty = $propertyRepository->find($propertyId);
+        $items = $propertyRepository->getPropertiesListExceptCurrent($currentProperty, $user);
+
+        return $this->render('ErpPropertyBundle:ApplicationForm:copy-list.html.twig', [
+            'currentProperty' => $currentProperty,
+            'user' => $user,
+            'items' => $items,
+            'modalTitle' => 'Copy Application Forms to other properties'
+        ]);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
+    public function copyToOtherPropertiesAction(Request $request, $propertyId)
+    {
+        $user = $this->getUser();
+        $propertyRepository = $this->em->getRepository(Property::class);
+        $currentProperty = $propertyRepository->find($propertyId);
+        $propertiesIds = $request->get('property');
+        $properties = $propertyRepository->findBy(['id' => $propertiesIds]);
+
+        $applicationFormRepository = $this->em->getRepository(ApplicationForm::class);
+        $applicationForms = $applicationFormRepository->findBy(['property' => $propertiesIds, 'isDefault' => false]);
+
+
+        foreach ($properties as $property) {
+            $property->setApplicationForm(null);
+            $this->em->persist($property);
+            $this->em->flush();
+        }
+        foreach ($applicationForms as $applicationForm) {
+            $this->em->remove($applicationForm);
+            $this->em->flush();
+        }
+
+        /** @var ApplicationForm $currentApplicationForm */
+        $currentApplicationForm = $currentProperty->getApplicationForm();
+        foreach ($properties as $property) {
+            $this->cloneApplicationForm($currentApplicationForm, $property);
+        }
+
+        return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [
+            'properties' => $properties,
+            'currentProperty' => $currentProperty,
+            'user' => $user,
+            'modalTitle' => 'Copied'
+        ]);
     }
 }

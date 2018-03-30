@@ -5,16 +5,18 @@ parameters:
     database_name: '%database.name%'
     database_user: '%database.user%'
     database_password: '%database.password%'
-    mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: null
-    mailer_password: null
-    contact_email: info@e-rentpay.com
-    siteUrl: 'https://e-rentpay.com'
+    mailer_transport: '%mailer.transport%'
+    mailer_host: '%mailer.host%'
+    mailer_user: '%mailer.user%'
+    mailer_password: '%mailer.password%'
+    mailer_port: '%mailer.port%'
+    mailer_encryption: '%mailer.encryption%'
+    contact_email: '%contact.email%'
+    siteUrl: 'https://zoobdoo.com'
     secret: ThisTokenIsNotSoSecretChangeIt
-    docusign_integrator_key: docusign_integrator_key
-    docusign_email: docusign_email
-    docusign_password: docusign_password
-    docusign_environment: na2
-    docusign_account_id: docusign_account_id
-    ga_id: ga_id
+    docusign_integrator_key: '%docusign.integrator.key%'
+    docusign_email: '%docusign.username%'
+    docusign_password: '%docusign.password%'
+    docusign_environment: '%docusign.environment%'
+    docusign_account_id: '%docusign.account.id%'
+    google_analytics_id: '%google.analytics.id%'

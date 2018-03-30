@@ -70,7 +70,7 @@ class PropertyRepostRequests extends Admin
             [
                 'attr' => ['maxlength' => '255'],
                 'required' => false,
-                'label' => 'Note (It will be shown on listings page for Landlord)'
+                'label' => 'Note (It will be shown on listings page for Manager)'
             ]
         );
     }

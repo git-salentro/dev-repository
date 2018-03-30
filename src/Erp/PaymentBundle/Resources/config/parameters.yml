@@ -6,3 +6,11 @@ parameters:
     paysimple.api.endpoint.live: "https://api.paysimple.com"
 
     paysimple.api.test_mode: false
+
+    stripe.public_key: '%stripe.public.key%'
+    stripe.secret_key: '%stripe.secret.key%'
+
+    plaid.client_id: '%plaid.client.id%'
+    plaid.public_key: '%plaid.public.key%'
+    plaid.secret_key: '%plaid.secret.key%'
+    plaid_env: '%plaid.env%'

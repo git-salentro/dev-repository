@@ -34,7 +34,7 @@
             <div class="box">
                 <div class="box-body">
                     <label class="contol-label">From Tenant</label><br/>
-                    <a href="{{ path('admin_erpuserbundle_landlors_edit', {'id' : object.getProperty().getTenantUser().getId()}) }}">
+                    <a href="{{ path('admin_erpuserbundle_managers_edit', {'id' : object.getProperty().getTenantUser().getId()}) }}">
                         {{ object.getProperty().getTenantUser().getFullNameWithEmail() }}
                     </a>
                 </div>
@@ -45,8 +45,8 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-body">
-                    <label class="contol-label">To Landlord</label><br/>
-                    <a href="{{ path('admin_erpuserbundle_landlors_edit', {'id' : object.property.user.id}) }}">
+                    <label class="contol-label">To Manager</label><br/>
+                    <a href="{{ path('admin_erpuserbundle_managers_edit', {'id' : object.property.user.id}) }}">
                         {{ object.property.user.getFullNameWithEmail() }}
                     </a>
                 </div>

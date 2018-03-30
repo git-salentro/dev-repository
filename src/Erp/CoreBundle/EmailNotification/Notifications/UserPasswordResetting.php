@@ -21,11 +21,11 @@ class UserPasswordResetting extends AbstractEmailNotification
     {
         $message = $params['mailer']
             ->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'eRentPay - You have requested password reset';
+        $subject = 'Zoobdoo - You have requested password reset';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['url'] = $params['url'];

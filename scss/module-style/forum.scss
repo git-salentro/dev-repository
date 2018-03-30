@@ -1,4 +1,4 @@
-#landlord-forum {
+#manager-forum {
     .messages-row {
         .messages-col {
             height: 100%;
@@ -15,7 +15,7 @@
     }
 }
 
-#landlord-forum,
+#manager-forum,
 .forum-page {
     margin-bottom: 300px;
     .profile-widget-row {
@@ -86,7 +86,7 @@
     }
 }
 
-#landlord-forum-topic {
+#manager-forum-topic {
     .message-date {
         display: block;
     }
@@ -150,7 +150,7 @@
                 }
             }
         }
-        .landlord-message-block {
+        .manager-message-block {
             display: inline-block;
             width: 100%;
             border-bottom: 1px solid #e3e1e1;

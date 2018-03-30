@@ -11,8 +11,6 @@
         font-size: 18px;
     }
     .title-block {
-        border-bottom: 1px solid  #e3e1e1;
-        margin: 0 0 30px;
         padding: 50px 0 20px;
         text-align: center;
         h1 {
@@ -88,14 +86,12 @@
             }
         }
         .submit-popup-btn {
-            width: 300px;
+            padding: 0 50px;
             font-size: 20px;
-            line-height: 1.4;
+            line-height: 37px;
             border: none;
             color: #fff;
             background-color: #ca171b;
-            -webkit-border-radius: 25px;
-            -moz-border-radius: 25px;
             border-radius: 25px;
             &:hover,
             &:active {
@@ -128,4 +124,16 @@
             }
         }
     }
+}
+.register-form .form_wrap  p {
+    padding: 0 0 30px;
+    margin: 0;
+}
+.form_wrap{
+    padding-top: 35px;
+}
+.form_wrap .field-validation-error{
+    position: absolute;
+    top: 0;
+    left: 11px;
 }

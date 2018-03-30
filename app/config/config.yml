@@ -38,7 +38,10 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         fees: "@erp.core.fee.service"
-        ga_id: %ga_id%
+        google_analytics_id: '%google.analytics.id%'
+        stripe_public_key: '%stripe.public.key%'
+        plaid_public_key: '%plaid.public.key%'
+        plaid_env: '%plaid.env%'
     form:
         resources:
             - 'SonataCoreBundle:Form:datepicker.html.twig'
@@ -66,6 +69,7 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
+        server_version: 5.7
         mapping_types:
             enum: string
 
@@ -83,6 +87,7 @@ doctrine:
         dql:
             datetime_functions:
                 date_format: DoctrineExtensions\Query\Mysql\DateFormat
+                year: DoctrineExtensions\Query\Mysql\Year
             string_functions:
                 month: DoctrineExtensions\Query\Mysql\Month
 
@@ -96,6 +101,9 @@ swiftmailer:
     host:      "%mailer_host%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
+    port:  "%mailer_port%"
+    encryption:  "%mailer_encryption%"
+    auth_mode:            ~
     spool:     { type: memory }
 #    spool:
 #        type: file
@@ -117,11 +125,11 @@ fos_user:
         form:
             type: erp_users_form_reset_password
     from_email:
-        address:  info@erentpay.com
-        sender_name: "eRentPay"
+        address:  '%contact.email%'
+        sender_name: "Zoobdoo"
     registration:
         form:
-            type: erp_users_landlord_form_registration
+            type: erp_users_manager_form_registration
 
 liip_imagine:
     driver: imagick
@@ -174,7 +182,7 @@ doctrine_migrations:
     name: Application Migrations
 
 sonata_admin:
-    title:      eRentPay
+    title:      Zoobdoo
     title_logo: bundles/erpadmin/images/admin-logo.jpeg
     security:
         handler: sonata.admin.security.handler.role
@@ -206,6 +214,12 @@ knp_paginator:
         pagination: ErpPropertyBundle:Listings:pagination.html.twig     # sliding pagination controls template
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
+knp_menu:
+    twig:  # use "twig: false" to disable the Twig extension and the TwigRenderer
+        template: knp_menu.html.twig
+    templating: true # if true, enables the helper for PHP templates
+    default_renderer: twig # The renderer to use, list is also available by default
+
 white_october_breadcrumbs:
     viewTemplate: '::breadcrumbs.html.twig'
 
@@ -214,3 +228,39 @@ trsteel_ckeditor:
 
 knp_snappy:
     temporary_folder: %kernel.cache_dir%/snappy
+    pdf:
+        enabled:    true
+        binary:     'xvfb-run -- wkhtmltopdf'
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     '%rabbitmq.host%'
+            port:     '%rabbitmq.port%'
+            user:     '%rabbitmq.user%'
+            password: '%rabbitmq.password%'
+            vhost:    '%rabbitmq.vhost%'
+            lazy:     false
+            connection_timeout: 3
+            read_write_timeout: 3
+
+            # requires php-amqplib v2.4.1+ and PHP5.4+
+            keepalive: false
+
+            # requires php-amqplib v2.4.1+
+            heartbeat: 0
+
+            #requires php_sockets.dll
+            use_socket: false # default false
+    producers:
+        update_subscriptions:
+            connection:       default
+            exchange_options: {name: 'update-subscriptions', type: direct}
+            service_alias:    update_subscriptions_producer
+    consumers:
+        update_subscriptions:
+            connection:       default
+            exchange_options: {name: 'update-subscriptions', type: direct}
+            queue_options:    {name: 'update-subscriptions'}
+            callback:         erp.payment.consumer.update_subscriptions
+            enable_logger: true

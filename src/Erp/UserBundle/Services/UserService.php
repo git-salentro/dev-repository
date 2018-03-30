@@ -106,14 +106,12 @@ class UserService
     /**
      * Deactivate user
      *
-     * @param \Erp\UserBundle\Entity\User $user
-     *
+     * @param User $user
+     * @param bool $flush
      * @return $this
      */
-    public function deactivateUser(User $user)
+    public function deactivateUser(User $user, $flush = true)
     {
-        $this->deactivateUserPayments($user);
-
         $emailParams = [
             'sendTo' => $user->getEmail(),
             'url' => $this->container->get('router')->generate('erp_site_contact_page', [], true),
@@ -122,8 +120,15 @@ class UserService
         $emailType = EmailNotificationFactory::TYPE_USER_DEACTIVATE;
         $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
-        $this->em->persist($user->setEnabled(false)->setStatus(User::STATUS_DISABLED));
-        $this->em->flush();
+        $user
+            ->setEnabled(false)
+            ->setStatus(User::STATUS_DISABLED);
+
+        $this->em->persist($user);
+
+        if ($flush) {
+            $this->em->flush();
+        }
 
         return $this;
     }
@@ -224,22 +229,22 @@ class UserService
             $paySimpleCredentials['paySimpleApiSecretKey']
         );
 
-        $responce = $paySimpleManager->setModel($this->getPaySimpleCustomerModel($user))->proccess(
+        $response = $paySimpleManager->setModel($this->getPaySimpleCustomerModel($user))->proccess(
             PaySimpleManagerInterface::METHOD_CUSTOMER_CREATE
         );
 
         $result['status'] = true;
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
             $psCustomer = new PaySimpleCustomer();
             $psCustomer->setUser($user)
-                ->setCustomerId($responce['data']['Id']);
+                ->setCustomerId($response['data']['Id']);
             $this->em->persist($psCustomer);
             $this->em->flush();
 
             $result['data'] = $psCustomer;
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -302,10 +307,10 @@ class UserService
             ? PaySimpleManagerInterface::METHOD_PAYMENT_CREATE_CC
             : PaySimpleManagerInterface::METHOD_PAYMENT_CREATE_BA;
 
-        $responce = $paySimpleManager->setModel($model)->proccess($method);
+        $response = $paySimpleManager->setModel($model)->proccess($method);
         $result['status'] = true;
 
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
             $psCustomer = $model->getCustomer();
             $user = $psCustomer->getUser();
             $modelMethodSet = 'set' . strtoupper($type) . 'Id';
@@ -313,17 +318,17 @@ class UserService
 
             $isFirst = !$psCustomer->{$modelMethodGet}() && !$psCustomer->getPrimaryType();
             $isType = $psCustomer->{$modelMethodGet}() && $psCustomer->getPrimaryType() === $type;
-            $isHasRecurring = !$psCustomer->getPsRecurringPayments()->first() && $user->hasRole(User::ROLE_LANDLORD);
+            $isHasRecurring = !$psCustomer->getPsRecurringPayments()->first() && $user->hasRole(User::ROLE_MANAGER);
 
             if ($isType || $isHasRecurring || $isFirst) {
                 $psCustomer->setPrimaryType($type);
             }
-            $psCustomer->{$modelMethodSet}($responce['data']['Id']);
+            $psCustomer->{$modelMethodSet}($response['data']['Id']);
 
             $this->em->persist($psCustomer);
             $this->em->flush();
 
-            if (!$responce['data']['IsDefault']) {
+            if (!$response['data']['IsDefault']) {
                 $paySimpleManager = PaySimpleManagerFactory::getManagerInstance(
                     PaySimpleManagerInterface::TYPE_PAYMENT,
                     $this->container
@@ -336,7 +341,7 @@ class UserService
             $result['data'] = $psCustomer;
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -496,13 +501,13 @@ class UserService
             $paySimpleCredentials['paySimpleApiSecretKey']
         );
 
-        $responce = $paySimpleManager->setModel($model)->proccess(
+        $response = $paySimpleManager->setModel($model)->proccess(
             PaySimpleManagerInterface::METHOD_RECURRING_SUSPEND
         );
 
         $result['status'] = true;
-        $this->logger->add('paysimple', 'PaySimple Suspend Recurring => ' . json_encode($responce), 'INFO');
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
+        $this->logger->add('paysimple', 'PaySimple Suspend Recurring => ' . json_encode($response), 'INFO');
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
             $recurringResponse = $this->retrieveRecurringPayment($model);
 
             if ($recurringResponse['status']) {
@@ -520,7 +525,7 @@ class UserService
             }
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -567,17 +572,17 @@ class UserService
             $paySimpleCredentials['paySimpleApiSecretKey']
         );
 
-        $responce = $paySimpleManager->setModel($model)->proccess(
+        $response = $paySimpleManager->setModel($model)->proccess(
             PaySimpleManagerInterface::METHOD_RECURRING_GET
         );
 
         $result['status'] = true;
-        $this->logger->add('paysimple', 'PaySimple Retrive Recurring => ' . json_encode($responce), 'INFO');
-        if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
-            $result['data'] = $responce['data'];
+        $this->logger->add('paysimple', 'PaySimple Retrive Recurring => ' . json_encode($response), 'INFO');
+        if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
+            $result['data'] = $response['data'];
         } else {
             $result['status'] = false;
-            $result['errors'] = $responce['errors'];
+            $result['errors'] = $response['errors'];
         }
 
         return $result;
@@ -742,8 +747,8 @@ class UserService
      */
     public function addHistoryPayment(RecurringPaymentModel $recurringPaymentModel, $status, $isWithAllowance = false)
     {
-        /* if user's landlord has private paysimple account,
-            we need to charge this landlord */
+        /* if user's manager has private paysimple account,
+            we need to charge this manager */
         $paySimpleCredentials = $this->getCurrentPaySimpleCredentials($recurringPaymentModel->getCustomer()->getUser());
         $isTenant = $recurringPaymentModel->getCustomer()->getUser()->hasRole(User::ROLE_TENANT);
         if (
@@ -753,8 +758,8 @@ class UserService
             && $status == PaySimpleHistory::STATUS_SUCCESS
             && $recurringPaymentModel->getAllowance() > 0
         ) {
-            $landlord = $recurringPaymentModel->getCustomer()->getUser()->getTenantProperty()->getUser();
-            $customer = $landlord->getPaySimpleCustomers()->first();
+            $manager = $recurringPaymentModel->getCustomer()->getUser()->getTenantProperty()->getUser();
+            $customer = $manager->getPaySimpleCustomers()->first();
             $accountId = $customer->getPrimaryType() === PaySimpleManagerInterface::CREDIT_CARD
                 ? $customer->getCcId()
                 : $customer->getBaId();
@@ -861,14 +866,14 @@ class UserService
                     $paySimpleCredentials['paySimpleApiSecretKey']
                 );
 
-                $responce = $paySimpleManager->setModel($model)->proccess($type);
+                $response = $paySimpleManager->setModel($model)->proccess($type);
 
-                if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
-                    $cache->set($hashKey, $responce['data']);
-                    $result['data'] = $responce['data'];
+                if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
+                    $cache->set($hashKey, $response['data']);
+                    $result['data'] = $response['data'];
                 } else {
                     $result['status'] = false;
-                    $result['errors'] = $responce['errors'];
+                    $result['errors'] = $response['errors'];
                     $cache->delete($hashKey);
                 }
             }
@@ -902,16 +907,16 @@ class UserService
                     PaySimpleManagerInterface::TYPE_CUSTOMER,
                     $this->container
                 );
-                $responce = $paySimpleManager->setModel($model)->proccess(
+                $response = $paySimpleManager->setModel($model)->proccess(
                     PaySimpleManagerInterface::METHOD_CUSTOMER_GET_INFO
                 );
 
-                if ($responce['status'] === PaySimpleManagerInterface::STATUS_OK) {
-                    $cache->set($hashKey, $responce['data']);
-                    $result['data'] = $responce['data'];
+                if ($response['status'] === PaySimpleManagerInterface::STATUS_OK) {
+                    $cache->set($hashKey, $response['data']);
+                    $result['data'] = $response['data'];
                 } else {
                     $result['status'] = false;
-                    $result['errors'] = $responce['errors'];
+                    $result['errors'] = $response['errors'];
                     $cache->delete($hashKey);
                 }
             }
@@ -944,24 +949,24 @@ class UserService
     public function getHintContent(User $user, $hintCode)
     {
         $nextRecDate = 'Not set';
-        if ($hintCode == 'pay_rent' || $hintCode == 'landlord_bank_and_card_information') {
+        if ($hintCode == 'pay_rent' || $hintCode == 'manager_bank_and_card_information') {
             $nextRecDate = $this->getNextRecurringDate($user);
         }
 
         $feeService = $this->container->get('erp.core.fee.service');
 
         $hintContent = [
-            'email_options'                      => 'Here you can add and edit Email for notifications from eRentPay.',
+            'email_options'                      => 'Here you can add and edit Email for notifications from Zoobdoo.',
             'account_login_details'              => 'Here you can edit your profile picture, name and password.',
             'my_property'                        => 'Address of Property you have rented.',
-            'message_landlord'                   => 'Here you can quickly send a Message to your Landlord.
+            'message_manager'                    => 'Here you can quickly send a Message to your Manager.
                 You can see all messages at Messages tab.',
-            'service_requests'                   => 'Use this form to request a service from your Landlord and describe
+            'service_requests'                   => 'Use this form to request a service from your Manager and describe
                 your problem.',
             'ask_a_pro_for_tip'                  => 'Should you have any questions to property management professional,
                 please use this form to submit your ticket.
-                eRentPay  will contact you shortly and provide with information on consultation cost.',
-            'pay_rent'                           => 'Here you can make one-time and recurring payments to your Landlord.
+                Zoobdoo  will contact you shortly and provide with information on consultation cost.',
+            'pay_rent'                           => 'Here you can make one-time and recurring payments to your Manager.
                 Payment will be executed on specified date. All payments made with today\'s date are
                 executed immediately.
                 Please note that once you create new recurring payment, the old one will be cancelled.
@@ -969,12 +974,12 @@ class UserService
                 payment, you will be charged a card verification fee of $' . $feeService->getCheckPaymentFee() . '.',
             'tenant_bank_and_card_information'   => 'Here you can add credit card or bank account information.
                 In order to be able to pay rent at least one payment method should be entered.',
-            'landlord_bank_and_card_information' => 'Here you can add credit card or bank account information.
+            'manager_bank_and_card_information' => 'Here you can add credit card or bank account information.
                 In order to use all features of the website at least one payment method should be entered.
                 Once you add valid credit card or bank account, you will be charged recurring fee on a monthly basis.
                 Next recurring payment date: ' . $nextRecDate,
             'payment_preferences'                => 'Please select Primary Account which will be used for
-                all payments at eRentPay. ',
+                all payments at Zoobdoo. ',
             'address_details'                    => 'Please enter your valid address details and phone number.
                 This information will also be used for billing.',
             'background_check_credit_check'      => 'Here you can conduct Tenant screening and get Background Check
@@ -984,7 +989,7 @@ class UserService
                 click "GET REPORT" button',
             'payment_history'                    => 'Here you can see latest rental payments made by your
                 Tenants and export full report to CSV or PDF for analysis.',
-            'landlord_settings'                  => 'Use these settings to subscribe or unsubscribe from certain types
+            'manager_settings'                  => 'Use these settings to subscribe or unsubscribe from certain types
                 of notifications. You can enter different Email address here if you want to send these notifications
                 to other (secondary) Email address than your primary Email.'
         ];
@@ -1024,7 +1029,7 @@ class UserService
      */
     private function getPaySimpleCustomerModel(User $user)
     {
-        $userRole = $user->hasRole(User::ROLE_LANDLORD) ? User::ROLE_LANDLORD : User::ROLE_TENANT;
+        $userRole = $user->hasRole(User::ROLE_MANAGER) ? User::ROLE_MANAGER : User::ROLE_TENANT;
 
         $newCustomer = new CustomerModel();
         $newCustomer->setCustomerAccount($user->getId())
@@ -1096,7 +1101,7 @@ class UserService
                 Processing your payment may take some time.',
             'pay_rent_recurring_ok'       => 'Recurring payment schedule was created successfully.',
             'charge_esign_tenant_error'   => 'An error occurred while trying to sign a document.
-                Please contact your Landlord.',
+                Please contact your Manager.',
             'error'                       => 'An error occurred while charging. Possible reasons: too many transactions
                 in short time, wrong payment settings, not valid card/bank account details, not enough funds.
                 Please try again several minutes later.',

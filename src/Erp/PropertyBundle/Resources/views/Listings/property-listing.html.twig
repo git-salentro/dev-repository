@@ -47,7 +47,7 @@
                     </div>
                     <div class="prop-info">
                         <span class="prop-label">Price</span>
-                        <span class="prop-details prop-price">${{ property.getPrice() }}</span>
+                        <span class="prop-details prop-price">{{ property.settings ? property.settings.paymentAmount|money : '' }}</span>
                     </div>
                     <div class="prop-info">
                         <span class="prop-label"># of Beds</span>
@@ -76,6 +76,33 @@
                     <div class="prop-info">
                         <span class="prop-label">Additional Details</span>
                         <span class="prop-details">{{ property.getAdditionalDetails() }}</span>
+                    </div>
+                </div>
+
+                <div class="prop-description">
+                    <div class="tenant-title bold-text">
+                        Property Settings
+                    </div>
+                    <div class="prop-info">
+                        <span class="prop-label">Rent Due Date</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.dayUntilDue : '' }}</span>
+                    </div>
+                    <div class="prop-info">
+                        <span class="prop-label">Rent Amount</span>
+                        {# TODO Refacoring money #}
+                        <span class="prop-details">{{ property.settings ? property.settings.paymentAmount|money : '' }}</span>
+                    </div>
+                    <div class="prop-info">
+                        <span class="prop-label">Restrict Partial Payments</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.allowPartialPayments ? 'Yes' : 'No' : '' }}</span>
+                    </div>
+                    <div class="prop-info">
+                        <span class="prop-label">Allow Credit Card Payments</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.allowCreditCardPayments ? 'Yes' : 'No' : '' }}</span>
+                    </div>
+                    <div class="prop-info">
+                        <span class="prop-label">Set auto-draft from tenant?</span>
+                        <span class="prop-details">{{ property.settings ? property.settings.allowAutoDraft ? 'Yes' : 'No' : '' }}</span>
                     </div>
                 </div>
 
@@ -161,10 +188,9 @@
                             <a class="btn edit-btn" type="submit" href="{{ path('erp_user_profile_read_only_popup') }}" role="popup">Submit</a>
                         {% else %}
                             {% if (lastPropertyRepostRequest and lastPropertyRepostRequest.status != constant('Erp\\PropertyBundle\\Entity\\PropertyRepostRequest::STATUS_NEW')) or not lastPropertyRepostRequest %}
-                                <a href="{{ path('erp_property_repost_request', {'propertyId':property.id}) }}" role="popup"
-                                   class="btn edit-btn">
-                                    Send Request
-                                </a>
+                                <form method="POST" action="{{ path('erp_property_repost_request', {'propertyId':property.id}) }}">
+                                    <button type="submit" class="btn edit-btn">Send Request</button>
+                                </form>
                             {% endif %}
                         {% endif %}
                     </div>

@@ -228,15 +228,24 @@ class EditPropertyFormType extends AbstractType
     private function addPrice()
     {
         $this->formBuilder->add(
-            'price',
-            'money',
-            [
-                'currency'   => false,
-                'label'      => 'Price',
-                'attr'       => ['class' => 'prop-details prop-price form-control', 'placeholder' => '199'],
-                'label_attr' => ['class' => 'control-label required-label'],
-                'required'   => true,
-            ]
+            $this->formBuilder->create(
+                'settings',
+                'form',
+                [
+                    'data_class' => \Erp\PropertyBundle\Entity\PropertySettings::class,
+                ]
+            )
+                ->add(
+                    'paymentAmount',
+                    'money',
+                    [
+                        'currency'   => false,
+                        'label'      => 'Price',
+                        'attr'       => ['class' => 'prop-details prop-price form-control', 'placeholder' => '199'],
+                        'label_attr' => ['class' => 'control-label required-label'],
+                        'required'   => true,
+                    ]
+                )
         );
 
         return $this;

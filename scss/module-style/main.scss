@@ -58,6 +58,9 @@ html {
                 outline: none;
             }
         }
+        .btn-space {
+            margin: 20px 20px 0 0;
+        }
         textarea {
             resize: none;
         }
@@ -283,18 +286,17 @@ html {
         }
     }
 }
-
 .red-btn {
     font-size: 18px;
     text-align: center;
     line-height: 1.5;
     border: none;
-    width: 170px;
+    max-width: 210px;
     color: #fff;
     background-color: #ca171b;
     border-radius: 25px;
     &:hover,
-    &:active, 
+    &:active,
     &:focus {
         color: #fff;
         background-color: #B00F13;
@@ -366,7 +368,7 @@ html {
         .red-btn {
             width: 100px;
             text-align: center;
-            padding: 6px 12px;
+            padding: 6px 15px;
             float: none;
             opacity: 1;
             line-height: inherit;
@@ -535,4 +537,44 @@ footer {
         display: block;
         text-align: left;
     }
+}
+.payment-table_note {
+    float: left;
+    width: 100%;
+    //border-bottom: 1px solid #e3e1e1;
+    margin: 10px 0 ;
+
+    input[type=checkbox]{
+        vertical-align: top;
+    }
+    a{
+        color: #b7b7b7;
+        text-decoration: underline;
+
+        &:hover{
+            color: #b7b7b7;
+            text-decoration: none;
+        }
+    }
+}
+
+.payment-table_btn{
+    margin-left: 20px;
+}
+.confirm-align_btn{
+    text-align: center;
+    //padding: 20px 0;
+
+    .btn{
+        margin: 20px 10px;
+    }
+}
+.red-btn-color{
+    color: red;
+}
+.align-left{
+    text-align: left!important;
+}
+.align-center{
+    text-align: center!important;
 }

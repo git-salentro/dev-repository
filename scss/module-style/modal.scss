@@ -1,5 +1,11 @@
 /* Modal */
 .modal {
+    .modal-dialog {
+        min-width: 600px;
+        max-width: 1000px;
+        margin: 30px auto;
+        display: table;
+    }
     .modal-header {
         background-color: #ca171b;
         color: #fff;
@@ -37,6 +43,16 @@
         }
     }
     .modal-body {
+        padding: 0;
+        p {
+            margin: 15px 0 0 0;
+        }
+        label {
+            font-weight: normal;
+            padding:0;
+            line-height: 42px;
+            cursor: pointer;
+        }
         .form-control {
             -webkit-border-radius: 20px;
             -moz-border-radius: 20px;

@@ -16,6 +16,7 @@ use Erp\UserBundle\Entity\InvitedUser;
 use Erp\PaymentBundle\Entity\PaySimpleHistory;
 use Erp\PropertyBundle\Entity\ApplicationForm;
 use Erp\PropertyBundle\Entity\PropertyRepostRequest;
+use Erp\PropertyBundle\Entity\PropertySettings;
 
 /**
  * Property
@@ -39,7 +40,7 @@ class Property
 
     const LIMIT_AVAILABLE_PER_PAGE = 8;
     const LIMIT_SEARCH_PER_PAGE    = 9;
-    const LIMIT_USER_LISTINGS      = 3;
+    const LIMIT_USER_LISTINGS      = 9;
 
     /**
      * @var integer
@@ -82,7 +83,8 @@ class Property
      * @ORM\JoinColumn(
      *      name="city_id",
      *      referencedColumnName="id",
-     *      onDelete="CASCADE"
+     *      onDelete="CASCADE",
+     *      nullable=true,
      * )
      *
      * @Assert\NotBlank(
@@ -129,7 +131,7 @@ class Property
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      *
      * @Assert\NotBlank(
      *     message="Please enter property Name",
@@ -155,7 +157,7 @@ class Property
     /**
      * @var string
      *
-     * @ORM\Column(name="address", type="string", length=255)
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
      *
      * @Assert\NotBlank(
      *     message="Please enter Address",
@@ -182,14 +184,14 @@ class Property
     /**
      * @var integer
      *
-     * @ORM\Column(name="city_id", type="integer")
+     * @ORM\Column(name="city_id", type="integer", nullable=true)
      */
     protected $cityId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="state_code", type="string", length=4)
+     * @ORM\Column(name="state_code", type="string", length=4, nullable=true)
      *
      * @Assert\NotBlank(
      *     message="Please select State",
@@ -201,7 +203,7 @@ class Property
     /**
      * @var string
      *
-     * @ORM\Column(name="zip", type="string", length=6)
+     * @ORM\Column(name="zip", type="string", length=6, nullable=true)
      *
      * @Assert\NotBlank(
      *     message="Please enter Zip Code",
@@ -227,26 +229,7 @@ class Property
     /**
      * @var float
      *
-     * @ORM\Column(name="price", type="float")
-     *
-     * @Assert\NotBlank(
-     *      message="Please enter Price",
-     *      groups={"EditProperty"}
-     * )
-     *
-     * @Assert\Type(
-     *      type="float",
-     *      message="Something isn’t right here, check your field",
-     *      groups={"EditProperty"}
-     * )
-     *
-     * @Assert\Range(
-     *      min = 0.01,
-     *      max = 1000000,
-     *      minMessage = "Min price $0.01, Max - $1 000 000",
-     *      maxMessage = "Min price $0.01, Max - $1 000 000",
-     *      groups={"EditProperty"}
-     * )
+     * @ORM\Column(name="price", type="float", nullable=true)
      */
     protected $price;
 
@@ -267,7 +250,7 @@ class Property
     /**
      * @var float
      *
-     * @ORM\Column(name="square_footage", type="float")
+     * @ORM\Column(name="square_footage", type="float", nullable=true)
      *
      * @Assert\NotBlank(
      *      message="Please enter Square Footage",
@@ -303,7 +286,8 @@ class Property
      * @ORM\Column(
      *      name="status",
      *      type="string",
-     *      columnDefinition="ENUM('available','rented', 'draft', 'deleted') NOT NULL DEFAULT 'draft'"
+     *      columnDefinition="ENUM('available','rented', 'draft', 'deleted') DEFAULT 'draft'",
+     *      nullable=true
      * )
      */
     protected $status;
@@ -371,6 +355,17 @@ class Property
      */
     protected $contractForm;
 
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationForm",
+     *      mappedBy="property",
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     */
+    protected $applicationForm;
+
     /**
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\PropertyRepostRequest",
@@ -380,6 +375,24 @@ class Property
      * )
      */
     protected $propertyRepostRequests;
+
+    /**
+     * @var PropertySettings
+     * 
+     * @ORM\OneToOne(targetEntity="\Erp\PropertyBundle\Entity\PropertySettings", cascade={"persist"})
+     * @ORM\JoinColumn(name="settings_id", referencedColumnName="id")
+     */
+    protected $settings;
+
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="\Erp\PropertyBundle\Entity\PropertyRentHistory",
+     *      mappedBy="property",
+     *      cascade={"persist"},
+     *      orphanRemoval=true
+     * )
+     */
+    protected $history;
 
     /**
      * Constructor
@@ -392,6 +405,12 @@ class Property
         $this->invitedUsers = new ArrayCollection();
         $this->paySimpleHistories = new ArrayCollection();
         $this->propertyRepostRequests = new ArrayCollection();
+        $this->history = new ArrayCollection();
+    }
+
+    public function __clone()
+    {
+        $this->status = self::STATUS_DRAFT;
     }
 
     /**
@@ -913,9 +932,10 @@ class Property
     public function getFullAddress()
     {
         $city = $this->getCity() ? $this->getCity()->getName() . ', ' : ' ';
-        $address = $this->getAddress() . ', ' . $city . $this->getStateCode() . ' ' . $this->getZip();
+        $address = $this->getAddress() ? $this->getAddress() . ', ' : ' ';
+        $fullAddress = $address .  $city . $this->getStateCode() . ' ' . $this->getZip();
 
-        return $address;
+        return $fullAddress;
     }
 
     /**
@@ -1085,7 +1105,7 @@ class Property
      *
      * @return Property
      */
-    public function setContractForm(\Erp\PropertyBundle\Entity\ContractForm $contractForm = null)
+    public function setContractForm(ContractForm $contractForm = null)
     {
         $this->contractForm = $contractForm;
 
@@ -1101,4 +1121,94 @@ class Property
     {
         return $this->contractForm;
     }
+
+
+    /**
+     * Set applicationForm
+     *
+     * @param ApplicationForm $applicationForm
+     *
+     * @return Property
+     */
+    public function setApplicationForm(ApplicationForm $applicationForm = null)
+    {
+        $this->applicationForm = $applicationForm;
+
+        return $this;
+    }
+
+    /**
+     * Get applicationForm
+     *
+     * @return ApplicationForm
+     */
+    public function getApplicationForm()
+    {
+        return $this->applicationForm;
+    }
+
+    /**
+     * Set settings
+     *
+     * @param \Erp\PropertyBundle\Entity\PropertySettings $settings
+     *
+     * @return Property
+     */
+    public function setSettings(PropertySettings $settings = null)
+    {
+        $this->settings = $settings;
+
+        return $this;
+    }
+
+    /**
+     * Get settings
+     *
+     * @return \Erp\PropertyBundle\Entity\PropertySettings
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * Add history
+     *
+     * @param \Erp\PropertyBundle\Entity\PropertyRentHistory $history
+     *
+     * @return Property
+     */
+    public function addHistory(PropertyRentHistory $history)
+    {
+        $history->setProperty($this);
+        $this->history[] = $history;
+
+        return $this;
+    }
+
+    /**
+     * Remove history
+     *
+     * @param \Erp\PropertyBundle\Entity\PropertyRentHistory $history
+     */
+    public function removeHistory(PropertyRentHistory $history)
+    {
+        $this->history->removeElement($history);
+    }
+
+    /**
+     * Get history
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    public function isDeleted()
+    {
+        return $this->status === self::STATUS_DELETED;
+    }
+
 }

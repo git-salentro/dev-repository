@@ -23,82 +23,183 @@ class DocumentController extends BaseController
 {
     /**
      * @param Request $request
-     * @param int     $toUserId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \HttpException
+     * @param $toUserId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function indexAction(Request $request, $toUserId)
     {
-        $user = $this->getUser();
-        $companions = $this->getCompanions($user);
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
 
-        if ($toUserId === null && count($companions)) {
-            return $this->redirectToRoute('erp_user_documentation', ['toUserId' => array_shift($companions)->getId()]);
+        if ($toUserId === null) {
+            return $this->redirectToRoute('erp_user_documentation', ['toUserId' => UserDocument::APPLICANT_USER_ID]);
         }
 
-        /** @var User $toUser */
-        $toUser = $companions[(int)$toUserId];
-
-        if (!$toUser
-            || ($user->hasRole(User::ROLE_LANDLORD)
-                && !$user->isTenant($toUser)
-                && !$toUser->hasRole(User::ROLE_ANONYMOUS)
-            )
-            || ($user->hasRole(User::ROLE_TENANT) && $user->getTenantProperty()->getUser() != $toUser)
-        ) {
+        //TODO Handle if manager has selected tenant/landlord
+        if (false) {
             throw $this->createNotFoundException();
-        } else {
-            $userDocument = new UserDocument();
-            $form = $this->createUserDocumentForm($userDocument, $toUser);
-
-            if ($request->getMethod() === 'POST') {
-                $form->handleRequest($request);
-
-                if ($form->isValid()) {
-                    $documentStatus = ($toUser->hasRole(User::ROLE_ANONYMOUS))
-                        ? UserDocument::STATUS_RECIEVED
-                        : UserDocument::STATUS_SENT;
-
-                    $userDocument->setStatus($documentStatus);
-                    $userDocument->setFromUser(($toUser->hasRole(User::ROLE_ANONYMOUS)) ? null: $user);
-                    $userDocument->setToUser(($toUser->hasRole(User::ROLE_ANONYMOUS)) ? $user: $toUser);
-
-                    $this->em->persist($userDocument);
-                    $this->em->flush();
-
-                    $this->get('session')->getFlashBag()->add('alert_ok', 'Document updoaded successfully.');
-
-                    return $this->redirectToRoute('erp_user_documentation', ['toUserId' => $toUserId]);
-                } else {
-                    $this->get('session')->getFlashBag()->add('alert_error', 'Uploading of document is failed.');
-                }
-            }
-
-            foreach ($companions as $key => $companion) {
-                $companions[$key] = [
-                    $companion,
-                    'totalUserDocuments' => $this->getTotalUserDocumentsByToUser($user, $companion)
-                ];
-            }
-
-            $userDocuments = $this->getUserDocuments($user, $toUser);
-            $esignFee = $this->get('erp.core.fee.service')->getESignFee();
-
-            $renderParams = [
-                'form'  => $form->createView(),
-                'user' => $user,
-                'companions' => $companions,
-                'currentCompanion' => $toUser,
-                'userDocuments' => $userDocuments,
-                'constRoleTenant' => User::ROLE_TENANT,
-                'constRoleLandlord' => User::ROLE_LANDLORD,
-                'constRoleAnonymous' => User::ROLE_ANONYMOUS,
-                'esignFee' => $esignFee,
-            ];
         }
 
-        return $this->render('ErpUserBundle:Documentation:documentation.html.twig', $renderParams);
+        $userRepository = $this->getDoctrine()->getRepository('ErpUserBundle:User');
+        /** @var User $user */
+        $user = $userRepository->find($toUserId);
+
+        $anonUser = (new User())
+            ->setId(0)
+            ->setFirstName('Applicants')
+            ->addRole(User::ROLE_ANONYMOUS);
+
+        if (!$user) {
+            $user = $anonUser;
+        }
+
+        $userDocument = new UserDocument();
+        $form = $this->createUserDocumentForm($userDocument, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $fromUser = $user->hasRole(User::ROLE_ANONYMOUS) ? null: $currentUser;
+                $toUser = $user->hasRole(User::ROLE_ANONYMOUS) ? $currentUser: $user;
+
+                $userDocument->setFromUser($fromUser)
+                    ->setToUser($toUser);
+
+                $em = $this->getDoctrine()->getManagerForClass(UserDocument::class);
+
+                $em->persist($userDocument);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('alert_ok', 'Document updoaded successfully.');
+
+                return $this->redirectToRoute('erp_user_documentation', ['toUserId' => $toUserId]);
+            } else {
+                $this->get('session')->getFlashBag()->add('alert_error', 'Uploading of document is failed.');
+            }
+        }
+
+        //TODO put into a separate class
+        $factory = $this->get('knp_menu.factory');
+        $menu = $factory->createItem('root', [
+            'childrenAttributes' => [
+                'class' => 'companions-list',
+            ],
+        ]);
+
+        if ($currentUser->hasRole(User::ROLE_MANAGER)) {
+            $landlords = $userRepository->getLandlords($currentUser);
+            $properties = $currentUser->getPropertiesWithTenants();
+            $tenants = [];
+            foreach ($properties as $property) {
+                $tenants[] = $property->getTenantUser();
+            }
+
+            $menu->addChild('Applicants', [
+                'route' => 'erp_user_documentation',
+                'routeParameters' => ['toUserId' => $anonUser->getId()],
+                'attributes' => [
+                    'class' => 'companion-name',
+                ],
+            ]);
+            $menu->addChild('Tenants', [
+                'childrenAttributes' => [
+                    'id' => 'tenants',
+                    'class' => 'collapse list-unstyled',
+                ],
+                'linkAttributes' => [
+                    'data-toggle' => 'collapse',
+                    'aria-expanded' => 'false',
+                ],
+                'attributes' => [
+                    'class' => 'companion-name',
+                ],
+                'uri' => '#tenants',
+            ]);
+            $menu->addChild('Landlords', [
+                'childrenAttributes' => [
+                    'id' => 'landlords',
+                    'class' => 'collapse list-unstyled',
+                ],
+                'linkAttributes' => [
+                    'data-toggle' => 'collapse',
+                    'aria-expanded' => 'false',
+                ],
+                'attributes' => [
+                    'class' => 'companion-name',
+                ],
+                'uri' => '#landlords',
+            ]);
+
+            /** @var User $landlord */
+            foreach ($landlords as $landlord) {
+                $menu['Landlords']->addChild($landlord->getFullName(), [
+                    'route' => 'erp_user_documentation',
+                    'routeParameters' => ['toUserId' => $landlord->getId()],
+                    'extras' => [
+                        'total_documents' => $this->getTotalUserDocumentsByToUser($currentUser, $landlord),
+                    ],
+                ]);
+            }
+
+            /** @var User $tenant */
+            foreach ($tenants as $tenant) {
+                $menu['Tenants']->addChild($tenant->getFullName(), [
+                    'route' => 'erp_user_documentation',
+                    'routeParameters' => ['toUserId' => $tenant->getId()],
+                    'extras' => [
+                        'total_documents' => $this->getTotalUserDocumentsByToUser($currentUser, $tenant),
+                    ],
+                ]);
+            }
+        } else {
+
+            /** @var Property $property */
+            $property = $currentUser->getTenantProperty();
+
+            $managers = [];
+            if ($property) {
+                $managers = [$property->getUser()];
+            }
+            $menu->addChild('Managers', [
+                'childrenAttributes' => [
+                    'id' => 'managers',
+                    'class' => 'collapse list-unstyled',
+                ],
+                'linkAttributes' => [
+                    'data-toggle' => 'collapse',
+                    'aria-expanded' => 'false',
+                ],
+                'attributes' => [
+                    'class' => 'companion-name',
+                ],
+                'uri' => '#managers',
+            ]);
+
+
+            /** @var User $manager */
+            foreach ($managers as $manager) {
+                $menu['Managers']->addChild($manager->getFullName(), [
+                    'route' => 'erp_user_documentation',
+                    'routeParameters' => ['toUserId' => $manager->getId()],
+                    'extras' => [
+                        'total_documents' => $this->getTotalUserDocumentsByToUser($manager, $currentUser),
+                    ],
+                ]);
+            }
+        }
+
+        $userDocuments = $this->getUserDocuments($currentUser, $user);
+
+        return $this->render('ErpUserBundle:Documentation:documentation.html.twig', [
+            'form'  => $form->createView(),
+            'user' => $currentUser,
+            'user_documents' => $userDocuments,
+            'currentCompanion' => $user,
+            'menu' => $menu,
+            'role_tenant' => User::ROLE_TENANT,
+            'role_manager' => User::ROLE_MANAGER,
+            'role_anonymous' => User::ROLE_ANONYMOUS,
+        ]);
     }
 
     /**
@@ -171,7 +272,7 @@ class DocumentController extends BaseController
                 'hideActionBtn' => true,
                 'cancelBtn' => 'Ok'
             ];
-        } elseif (!$user->hasRole(User::ROLE_LANDLORD) && $userDocument->getFromUser()->getId() != $user->getId()) {
+        } elseif (!$user->hasRole(User::ROLE_MANAGER) && $userDocument->getFromUser()->getId() != $user->getId()) {
             $renderOptions = [
                 'askMsg' => 'Not permissions',
                 'hideActionBtn' => true,
@@ -203,13 +304,13 @@ class DocumentController extends BaseController
      * Create user document form
      *
      * @param UserDocument $userDocument
-     * @param User $toUser
+     * @param User $user
      *
      * @return \Symfony\Component\Form\Form
      */
-    protected function createUserDocumentForm(UserDocument $userDocument, User $toUser)
+    protected function createUserDocumentForm(UserDocument $userDocument, User $user)
     {
-        $action = $this->generateUrl('erp_user_documentation', ['toUserId' => $toUser->getId()]);
+        $action = $this->generateUrl('erp_user_documentation', ['toUserId' => $user->getId()]);
 
         $formOptions = ['action' => $action, 'method' => 'POST'];
         $form = $this->createForm(new UserDocumentFormType(), $userDocument, $formOptions);
@@ -220,14 +321,14 @@ class DocumentController extends BaseController
     /**
      * Return list user documents
      *
-     * @param User $user
+     * @param User $fromUser
      * @param User $toUser
      *
      * @return mixed
      */
-    public function getUserDocuments(User $user, User $toUser)
+    public function getUserDocuments(User $fromUser, User $toUser)
     {
-        $userDocuments = $this->em->getRepository('ErpUserBundle:UserDocument')->getUserDocuments($user, $toUser);
+        $userDocuments = $this->em->getRepository('ErpUserBundle:UserDocument')->getUserDocuments($fromUser, $toUser);
 
         $document = new Document();
         $uploadBaseDir = $document->getUploadBaseDir($this->container);
@@ -272,7 +373,7 @@ class DocumentController extends BaseController
     {
         $companions = [];
 
-        if ($user->hasRole(User::ROLE_LANDLORD)) {
+        if ($user->hasRole(User::ROLE_MANAGER)) {
             // For anonymous area
             $companions[0] = (new User())
                 ->setId(0)

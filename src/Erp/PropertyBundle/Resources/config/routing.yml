@@ -13,3 +13,11 @@ erp_property_application_forms:
 erp_property_contract_forms:
     resource: "@ErpPropertyBundle/Resources/config/routing/contract-forms.yml"
     prefix:   /contract-form
+
+erp_property_unit:
+    resource: "@ErpPropertyBundle/Resources/config/routing/unit.yml"
+    prefix:   /unit
+
+erp_property_scheduled_rent_payment:
+    resource: "@ErpPropertyBundle/Resources/config/routing/scheduled_rent_payment.yml"
+    prefix:   /

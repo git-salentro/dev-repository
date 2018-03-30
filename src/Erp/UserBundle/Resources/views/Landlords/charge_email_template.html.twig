@@ -1,0 +1,15 @@
+{% extends 'ErpUserBundle:Mail:layout.html.twig' %}
+
+{% block content %}
+    <p>
+        Hello, <b>{{ charge.landlord.firstname }} {{ charge.landlord.lastname }}.</b>
+    </p>
+    <p>
+        Please follow this link to pay: {{ url('erp_user_landlords_choose_charge_type', {'token': charge.id}) }}<br/>
+        <b>Amount:</b> {{ charge.amount }} USD<br/>
+        {% if (charge.description) %}
+            Note: {{ charge.description }}
+        {% endif %}
+    </p>
+    <p>Sincerely yours, {{ charge.manager.firstname }} {{ charge.manager.lastname }}.</p>
+{% endblock %}

@@ -1,0 +1,73 @@
+version: '2'
+
+services:
+    db:
+        build: ./docker/mysql
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./log/mysql:/var/log/mysql
+        environment:
+            - MYSQL_ROOT_HOST
+            - MYSQL_ALLOW_EMPTY_PASSWORD
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+
+    nginx:
+        build: ./docker/nginx
+        ports:
+          - '80:80'
+          - '443:443'
+        volumes:
+          - ./log/nginx:/var/log/nginx
+          - ./:/var/www/
+
+    php:
+        build:
+            context: ./docker/php
+            args:
+                - APP_ENV=prod
+        volumes:
+            - ./:/var/www/
+        environment:
+            - SYMFONY__DATABASE__HOST=${MYSQL_ROOT_HOST}
+            - SYMFONY__DATABASE__PORT=${MYSQL_PORT}
+            - SYMFONY__DATABASE__NAME=${MYSQL_DATABASE}
+            - SYMFONY__DATABASE__USER=${MYSQL_USER}
+            - SYMFONY__DATABASE__PASSWORD=${MYSQL_PASSWORD}
+            - SYMFONY__RABBITMQ__HOST=${RABBITMQ_HOST}
+            - SYMFONY__RABBITMQ__PORT=${RABBITMQ_PORT}
+            - SYMFONY__RABBITMQ__USER=${RABBITMQ_USER}
+            - SYMFONY__RABBITMQ__PASSWORD=${RABBITMQ_PASSWORD}
+            - SYMFONY__RABBITMQ__VHOST=${RABBITMQ_VHOST}
+            - SYMFONY__STRIPE__PUBLIC__KEY=${STRIPE_PUBLIC_KEY}
+            - SYMFONY__STRIPE__SECRET__KEY=${STRIPE_SECRET_KEY}
+            - SYMFONY__PLAID__CLIENT__ID=${PLAID_CLIENT_ID}
+            - SYMFONY__PLAID__PUBLIC__KEY=${PLAID_PUBLIC_KEY}
+            - SYMFONY__PLAID__SECRET__KEY=${PLAID_SECRET_KEY}
+            - SYMFONY__PLAID__ENV=${PLAID_ENV}
+            - SYMFONY__MAILER__HOST=${MAILER_HOST}
+            - SYMFONY__MAILER__USER=${MAILER_USER}
+            - SYMFONY__MAILER__PASSWORD=${MAILER_PASSWORD}
+            - SYMFONY__MAILER__TRANSPORT=${MAILER_TRANSPORT}
+            - SYMFONY__MAILER__PORT=${MAILER_PORT}
+            - SYMFONY__MAILER__ENCRYPTION=${MAILER_ENCRYPTION}
+            - SYMFONY__CONTACT__EMAIL=${CONTACT_EMAIL}
+            - SYMFONY__DOCUSIGN__INTEGRATOR__KEY=${DOCUSIGN_INTEGRATOR_KEY}
+            - SYMFONY__DOCUSIGN__USERNAME=${DOCUSIGN_USERNAME}
+            - SYMFONY__DOCUSIGN__PASSWORD=${DOCUSIGN_PASSWORD}
+            - SYMFONY__DOCUSIGN__ENVIRONMENT=${DOCUSIGN_ENVIRONMENT}
+            - SYMFONY__DOCUSIGN__ACCOUNT__ID=${DOCUSIGN_ACCOUNT_ID}
+            - SYMFONY__GOOGLE__ANALYTICS__ID=${GOOGLE_ANALYTICS_ID}
+
+    rabbitmq:
+        image: rabbitmq
+        environment:
+            - HOSTNAME=${RABBITMQ_HOST}
+            - RABBITMQ_NODENAME=rabbitmq
+            - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+            - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_VHOST}
+        ports:
+            - 15672:15672
+            - 5672:5672

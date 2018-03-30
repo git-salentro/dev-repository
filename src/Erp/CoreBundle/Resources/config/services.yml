@@ -4,9 +4,9 @@ parameters:
     erp.core.email_notification.service.class: Erp\CoreBundle\Services\EmailNotification
     erp.property.service.class: Erp\PropertyBundle\Services\PropertyService
     erp.curl.class: Erp\CoreBundle\Services\Curl
-    erp.core.twig.core_extention.class: Erp\CoreBundle\Twig\CoreExtention
+    erp.core.twig.core_extension.class: Erp\CoreBundle\Twig\CoreExtension
     erp.core.email_notification.listener.class: Erp\CoreBundle\Listener\EmailNotificationListener
-    erp.property.twig.property_extention.class: Erp\PropertyBundle\Twig\PropertyExtention
+    erp.property.twig.property_extension.class: Erp\PropertyBundle\Twig\PropertyExtension
     erp.logger.class: Erp\CoreBundle\Services\Logger
 
 services:
@@ -17,6 +17,10 @@ services:
     erp.core.location:
         class: %erp.core.location.class%
         arguments: [@service_container]
+
+    app.core.email_notification.manager:
+        class:        Erp\CoreBundle\Managers\EmailNotificationManager
+        arguments:    [@doctrine.orm.entity_manager]
 
     erp.core.fee.service:
         class: %erp.core.fee_option.service.class%
@@ -30,8 +34,8 @@ services:
         class: %erp.curl.class%
         arguments: [@service_container]
 
-    erp.core.twig.core_extention:
-        class: %erp.core.twig.core_extention.class%
+    erp.core.twig.core_extension:
+        class: %erp.core.twig.core_extension.class%
         tags:
             -  { name: twig.extension }
         arguments: [@service_container]
@@ -42,8 +46,8 @@ services:
             - { name: kernel.event_listener, event: send.email_notification, method: sendEmailNotification }
         arguments: [@service_container]
 
-    erp.property.twig.property_extention:
-        class: %erp.property.twig.property_extention.class%
+    erp.property.twig.property_extension:
+        class: %erp.property.twig.property_extension.class%
         tags:
             -  { name: twig.extension }
         arguments: [@service_container]
@@ -51,3 +55,12 @@ services:
     erp.logger:
         class: %erp.logger.class%
         arguments: [@service_container]
+
+    erp_core.formatter.money_formatter:
+        class: Erp\CoreBundle\Formatter\MoneyFormatter
+
+    erp_core.formatter.internal_type_formatter:
+        class: Erp\CoreBundle\Formatter\InternalTypeFormatter
+
+    erp_core.formatter.transaction_status_formatter:
+        class: Erp\CoreBundle\Formatter\TransactionStatusFormatter

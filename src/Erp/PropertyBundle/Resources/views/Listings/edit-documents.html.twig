@@ -19,7 +19,7 @@
 {% block pageContent %}
     {{ parent() }}
 <div class="page-content">
-    <section id="landlords-listings-edit" class="listings profile">
+    <section id="managers-listings-edit" class="listings profile">
         <div class="container">
             <div class="row">
                 <div class="title-block">
@@ -27,9 +27,10 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row text-center">
                 <div class="col-xs-12 features property-tab">
                     <a class="btn red-btn tab-btn" href="{{ path('erp_property_listings_edit', {'propertyId': property.id}) }}">Property Details</a>
+                    <a class="btn red-btn tab-btn" href="{{ path('erp_property_property_settings_edit', {'propertyId': property.id}) }}">Edit Payment Settings</a>
                     <a class="btn red-btn tab-btn" href="{{ path('erp_property_listings_edit_images', {'propertyId': property.id}) }}">Property Images</a>
                     <a class="btn red-btn tab-btn active" href="{{ path('erp_property_listings_edit_documents', {'propertyId': property.id}) }}">Property Documents</a>
                 </div>
@@ -38,13 +39,14 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row">
+                {% form_theme form '@ErpUser/Form/form_upload.html.twig' %}
                 {{ form_start(form, { attr: {'id' : 'property-edit-form', 'class': 'form-horizontal'}, 'enctype': form_enctype(form)}) }}
                 <input type="hidden" id="document-data-prototype" class="file-input" value="{{ form_widget(form.documents.vars.prototype)|e }}"/>
                 <div class="col-md-10 col-md-offset-1 listings-block">
                     <div class="listing-block">
                         <div class="desc-block">
                             <div class="listing-form form-horizontal">
-                                <h3 class="propety-name">{{ property.name }}</h3>
+                                <h3 class="property-name">{{ property.name }}</h3>
                                 <div class="documentation-block">
                                     <div class="errors documentation-errors">{{ form_custom_errors.widget(form) }}</div>
                                     {% if not property.getDocuments()|length %}
@@ -74,7 +76,7 @@
                                     </div>
 
                                     <div class="hide">
-                                        <ul id="document-fields-list">
+                                        <ul>
                                             {% for documentField in form.documents %}
                                                 <li id="new-form-doc-field-{{ loop.index - 1 }}">
                                                     {{ form_widget(documentField) }}
@@ -87,36 +89,27 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 link-col">
-
-                                {% if not user.isReadOnlyUser() or user.isApplicationFormCounterFree %}
-                                    {% if user.applicationFormCounter == 0 and not user.applicationForm and not user.isApplicationFormCounterFree %}
-                                        {% set applicationFormUrl = path('erp_property_application_form_charge', {'propertyId':property.id}) %}
-                                        {% set applicationFormRole = 'role="popup"' %}
-                                    {% else %}
-                                        {% set applicationFormUrl = path('erp_property_application_form', {'propertyId':property.id}) %}
-                                        {% set applicationFormRole = '' %}
+                                <ul>
+                                    <li><a class="red-link" href="{{ path('erp_property_application_form', {'propertyId':property.id}) }}">
+                                            {% if property.applicationForm.id is defined %}
+                                                Edit
+                                            {% else %}
+                                                Create
+                                            {% endif %}
+                                            Online Application Form</a>
+                                    {% if property.applicationForm.id is defined %}
+                                        &nbsp;|&nbsp;<a href="{{ path('erp_property_application_form_copy_list',{'propertyId':property.id}) }}" type="submit" role="popup" class="red-link">Copy this Application Form to other properties</a>
                                     {% endif %}
-                                    <a href="{{ applicationFormUrl }}" {{ applicationFormRole|raw }} class="red-link">
-                                        {% if user.applicationForm %} Edit {% else %} Create {% endif %} Online Application Form >>
-                                    </a>
-                                {% else %}
-                                    <a class="red-link" href="{{ path('erp_user_profile_read_only_popup') }}" role="popup">Create Online Application Form >></a>
-                                {% endif %}
+                                    </li>
 
-                                {% if not user.isReadOnlyUser() %}
-                                    {% if user.contractFormCounter == 0 and not property.contractForm %}
-                                        {% set contractFormUrl = path('erp_property_contract_form_charge', {'propertyId':property.id}) %}
-                                        {% set contractFormRole = 'role="popup"' %}
-                                    {% else %}
-                                        {% set contractFormUrl = path('erp_property_contract_form', {'propertyId':property.id}) %}
-                                        {% set contractFormRole = '' %}
-                                    {% endif %}
-                                    <a href="{{ contractFormUrl }}" {{ contractFormRole|raw }} class="red-link">
-                                        {% if property.contractForm %} Edit {% else %} Create {% endif %} Online Contract Form >>
-                                    </a>
-                                {% else %}
-                                    <a class="red-link" href="{{ path('erp_user_profile_read_only_popup') }}" role="popup">Create Online Contract Form >></a>
-                                {% endif %}
+                                    <li><a class="red-link" href="{{ path('erp_property_contract_form', {'propertyId':property.id}) }}">
+                                            {% if property.contractForm.id is defined %}
+                                                Edit
+                                            {% else %}
+                                                Create
+                                            {% endif %}
+                                            Online Contract Form</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>

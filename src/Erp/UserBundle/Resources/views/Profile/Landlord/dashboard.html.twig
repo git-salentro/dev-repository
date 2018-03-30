@@ -8,7 +8,7 @@
     {% set ba = constant('Erp\\PaymentBundle\\PaySimple\\Managers\\PaySimpleManagerInterface::BANK_ACCOUNT') %}
     {% set psCustomer = user.getPaySimpleCustomers()|length ? user.getPaySimpleCustomers().first : null %}
 
-    <section id="landlords-profile" class="profile">
+    <section id="managers-profile" class="profile">
         <div class="container">
             <div class="row">
                 <div class="title-block">
@@ -53,9 +53,7 @@
                     </div>
                 </div>
 
-                {{ render(controller('ErpPaymentBundle:PaymentWidgets:bankCards')) }}
-
-                <div class="col-md-3 col-xs-5 profile-widget-item widget-first address-widget">
+                <div class="col-md-3 col-xs-5 profile-widget-item widget-first address-widget profile-widget-item-adr">
                     <div class="row widget-title-row">
                         <div class="login-block-title bold-text">Address Details</div>
                     </div>
@@ -101,17 +99,6 @@
                         <a role="popup" href="{{ path('erp_user_profile_hint_content', {'hintCode':'email_options'}) }}">&#063;</a>
                     </div>
                 </div>
-
-				{{ render(controller('ErpSmartMoveBundle:SmartMove:backgroundCreditCheckWidget')) }}
-
-                {{ render(controller('ErpPaymentBundle:PaymentWidgets:paymentsPreferences')) }}
-            </div>
-
-            <div class="row profile-widget-row tip-item-row">
-
-                {{ render(controller('ErpPaymentBundle:PaymentWidgets:paymentHistory', {'export' : null})) }}
-
-                {{ render(controller('ErpUserBundle:Profile:askPro')) }}
             </div>
         </div>
     </section>

@@ -3,8 +3,11 @@
 namespace Erp\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\PaySimpleCustomer;
+use Erp\PaymentBundle\Entity\StripeCustomer;
 use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -15,6 +18,7 @@ use Erp\CoreBundle\Entity\Image;
 use Erp\CoreBundle\Entity\City;
 use Erp\UserBundle\Entity\UserDocument;
 use Erp\UserBundle\Entity\ForumTopic;
+use Erp\UserBundle\Entity\Charge;
 use Erp\PaymentBundle\Entity\PaySimpleHistory;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
 use Erp\PropertyBundle\Entity\ApplicationForm;
@@ -29,7 +33,7 @@ use Erp\PropertyBundle\Entity\ApplicationForm;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="Email is already in use",
- *     groups={"AdminCreated", "LandlordCreated", "LandlordRegister", "ChangeEmail"}
+ *     groups={"AdminCreated", "ManagerCreated", "ManagerRegister", "ChangeEmail", "LandlordDetails"}
  * )
  * @ORM\HasLifecycleCallbacks()
  */
@@ -38,6 +42,7 @@ class User extends BaseUser
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     const ROLE_ADMIN       = 'ROLE_ADMIN';
     const ROLE_LANDLORD    = 'ROLE_LANDLORD';
+    const ROLE_MANAGER    = 'ROLE_MANAGER';
     const ROLE_TENANT      = 'ROLE_TENANT';
     const ROLE_ANONYMOUS   = 'ROLE_ANONYMOUS';
 
@@ -88,7 +93,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your First Name",
-     *     groups={"LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      *
      * @Assert\Length(
@@ -96,7 +101,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="First Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="First name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      */
     protected $firstName;
@@ -108,7 +113,7 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Last Name",
-     *     groups={"LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      *
      * @Assert\Length(
@@ -116,20 +121,20 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Last Name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="Last Name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "LandlordRegister", "LandlordDetails", "TenantDetails"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails"}
      * )
      */
     protected $lastName;
 
     /**
-     * @var srting
+     * @var string
      *
      * @Assert\Length(
      *     min=5,
      *     max=255,
      *     minMessage="Password should have minimum 5 characters and maximum 255 characters",
      *     maxMessage="Password should have minimum 5 characters and maximum 255 characters",
-     *     groups={"AdminCreated", "LandlordRegister", "LandlordDetails", "TenantDetails", "ResetPassword"}
+     *     groups={"AdminCreated", "ManagerRegister", "ManagerDetails", "TenantDetails", "ResetPassword"}
      * )
      */
     protected $plainPassword;
@@ -144,7 +149,7 @@ class User extends BaseUser
      *     max=255,
      *     minMessage="Company name should have minimum 2 characters and maximum 255 characters",
      *     maxMessage="Company name should have minimum 2 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister"}
+     *     groups={"ManagerCreated", "ManagerRegister"}
      * )
      */
     protected $companyName;
@@ -155,15 +160,15 @@ class User extends BaseUser
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      *
      * @Assert\NotBlank(
-     *     message="Please enter your Phone",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     message="Please enter Phone number",
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo", "LandlordDetails"}
      * )
      *
      * @Assert\Regex(
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo", "LandlordDetails"}
      * )
      */
     protected $phone;
@@ -177,7 +182,7 @@ class User extends BaseUser
      *     pattern="/^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$/i",
      *     htmlPattern="^([01][- .])?(\(\d{3}\)|\d{3})[- .]?\d{3}[- .]\d{4}$",
      *     message=" Enter phone in one of the following formats: (555)555-5555 OR 555-555-5555",
-     *     groups={"LandlordCreated", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "TenantContactInfo", "LandlordDetails"}
      * )
      */
     protected $workPhone;
@@ -189,14 +194,14 @@ class User extends BaseUser
      *
      * @Assert\Url(
      *     message="Please use link format. Example: http(s)://mysite.com",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=4,
      *     max="255",
      *     minMessage="Website should have minimum 4 characters and maximum 255 characters",
      *     maxMessage="Website should have minimum 4 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $websiteUrl;
@@ -208,14 +213,14 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your Address",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=3,
      *     max="255",
      *     minMessage="Address should have minimum 3 characters and maximum 255 characters",
      *     maxMessage="Address should have minimum 3 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $addressOne;
@@ -230,7 +235,7 @@ class User extends BaseUser
      *     max="255",
      *     minMessage="Address should have minimum 3 characters and maximum 255 characters",
      *     maxMessage="Address should have minimum 3 characters and maximum 255 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $addressTwo;
@@ -252,7 +257,7 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="paysimple_api_secret_key", type="text")
+     * @ORM\Column(name="paysimple_api_secret_key", type="string", length=255, nullable=true)
      */
     protected $paySimpleApiSecretKey;
 
@@ -268,7 +273,7 @@ class User extends BaseUser
      * )
      * @Assert\NotBlank(
      *     message="Please enter your City",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $city;
@@ -280,14 +285,14 @@ class User extends BaseUser
      *
      * @Assert\NotBlank(
      *     message="Please enter your State",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=2,
      *     max="35",
      *     minMessage="State should have minimum 2 characters and maximum 35 characters",
      *     maxMessage="State should have minimum 2 characters and maximum 35 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $state;
@@ -298,21 +303,21 @@ class User extends BaseUser
      * @ORM\Column(name="postal_code", type="string", length=35, nullable=true)
      * @Assert\NotBlank(
      *     message="Please enter your Zip Code",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      *
      * @Assert\Regex(
      *     pattern="/^[0-9]+$/",
      *     match=true,
      *     message="Zip code must contain numbers",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      * @Assert\Length(
      *     min=5,
      *     max=5,
      *     minMessage="Zip code should have minimum 5 characters and maximum 5 characters",
      *     maxMessage="Zip code should have minimum 5 characters and maximum 5 characters",
-     *     groups={"LandlordCreated", "LandlordRegister", "AddressDetails", "TenantContactInfo"}
+     *     groups={"ManagerCreated", "ManagerRegister", "AddressDetails", "TenantContactInfo"}
      * )
      */
     protected $postalCode;
@@ -370,16 +375,6 @@ class User extends BaseUser
      * @ORM\Column(name="is_application_form_counter_free", type="boolean")
      */
     protected $isApplicationFormCounterFree = false;
-
-    /**
-     * @ORM\OneToOne(
-     *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationForm",
-     *      mappedBy="user",
-     *      cascade={"persist"},
-     *      orphanRemoval=true
-     * )
-     */
-    protected $applicationForm;
 
     /**
      * @var integer
@@ -443,7 +438,7 @@ class User extends BaseUser
     protected $userDocuments;
 
     /**
-     * @var text
+     * @var string
      *
      * @ORM\Column(name="settings", type="text", nullable=true)
      */
@@ -468,6 +463,26 @@ class User extends BaseUser
      * @ORM\OrderBy({"updatedDate"="DESC"})
      */
     protected $paySimpleCustomers;
+
+    /**
+     * @var StripeCustomer
+     *
+     * @ORM\OneToOne(
+     *      targetEntity="Erp\PaymentBundle\Entity\StripeCustomer",
+     *      mappedBy="user",
+     *      cascade={"persist", "remove"}
+     * )
+     */
+    protected $stripeCustomer;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="\Erp\PaymentBundle\Entity\StripeAccount",
+     *      mappedBy="user",
+     *      cascade={"persist", "remove"}
+     * )
+     */
+    protected $stripeAccount;
 
     /**
      * @var ArrayCollection
@@ -508,7 +523,7 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Erp\SmartMoveBundle\Entity\SmartMoveRenter", mappedBy="landlord", cascade={"ALL"})
+     * @ORM\OneToMany(targetEntity="Erp\SmartMoveBundle\Entity\SmartMoveRenter", mappedBy="manager", cascade={"ALL"})
      * @ORM\OrderBy({"updatedDate"="DESC"})
      */
     protected $smartMoveRenters;
@@ -519,6 +534,71 @@ class User extends BaseUser
      * @ORM\Column(name="is_active_monthly_fee", type="boolean")
      */
     protected $isActiveMonthlyFee = false;
+
+    /**
+     * @var \Erp\UserBundle\Entity\Fee[]|Collection
+     *
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Fee", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $fees;
+
+    /**
+     * @var RentPaymentBalance
+     *
+     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\RentPaymentBalance", mappedBy="user", cascade={"persist"})
+     */
+    protected $rentPaymentBalance;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_allow_rent_payment", type="boolean", nullable=true)
+     */
+    protected $allowRentPayment;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_allow_partial_payment", type="boolean", nullable=true)
+     */
+    private $allowPartialPayment;
+
+    /**
+     * @var User Manager
+     * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="landlords")
+     * @ORM\JoinColumn(
+     *      name="manager_id",
+     *      referencedColumnName="id",
+     *      onDelete="SET NULL"
+     * )
+     */
+    protected $manager;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\User", mappedBy="manager")
+     */
+    protected $landlords;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="manager")
+     */
+    protected $chargeOutgoings; //sent
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="landlord")
+     */
+    protected $chargeIncomings; //received
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_agree_auto_withdrawal", type="boolean", nullable=true)
+     */
+    protected $agreeAutoWithdrawal;
 
     /**
      * Constructor
@@ -534,7 +614,11 @@ class User extends BaseUser
         $this->paySimpleHistory = new ArrayCollection();
         $this->proRequests = new ArrayCollection();
         $this->tenants = new ArrayCollection();
+        $this->landlords = new ArrayCollection();
+        $this->chargeOutgoings = new ArrayCollection();
+        $this->chargeIncomings = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
+        $this->fees = new ArrayCollection();
     }
 
     /**
@@ -1111,7 +1195,7 @@ class User extends BaseUser
      */
     public function isReadOnlyUser()
     {
-        return $this->getStatus() !== self::STATUS_ACTIVE && $this->hasRole(self::ROLE_LANDLORD);
+        return $this->getStatus() !== self::STATUS_ACTIVE && $this->hasRole(self::ROLE_MANAGER);
     }
 
     /**
@@ -1561,30 +1645,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set applicationForm
-     *
-     * @param ApplicationForm $applicationForm
-     *
-     * @return User
-     */
-    public function setApplicationForm(ApplicationForm $applicationForm = null)
-    {
-        $this->applicationForm = $applicationForm;
-
-        return $this;
-    }
-
-    /**
-     * Get applicationForm
-     *
-     * @return ApplicationForm
-     */
-    public function getApplicationForm()
-    {
-        return $this->applicationForm;
-    }
-
-    /**
      * Set isPropertyCounterFree
      *
      * @param boolean $isPropertyCounterFree
@@ -1654,5 +1714,403 @@ class User extends BaseUser
     public function getIsActiveMonthlyFee()
     {
         return $this->isActiveMonthlyFee;
+    }
+
+    /**
+     * Set stripeCustomer
+     *
+     * @param \Erp\PaymentBundle\Entity\StripeCustomer $stripeCustomer
+     *
+     * @return User
+     */
+    public function setStripeCustomer($stripeCustomer)
+    {
+        $this->stripeCustomer = $stripeCustomer;
+
+        return $this;
+    }
+
+    /**
+     * Get stripeCustomer
+     *
+     * @return StripeCustomer
+     */
+    public function getStripeCustomer()
+    {
+        return $this->stripeCustomer;
+    }
+
+    /**
+     * Set stripeAccount
+     *
+     * @param \Erp\PaymentBundle\Entity\StripeAccount $stripeAccount
+     *
+     * @return User
+     */
+    public function setStripeAccount(\Erp\PaymentBundle\Entity\StripeAccount $stripeAccount = null)
+    {
+        $this->stripeAccount = $stripeAccount;
+
+        return $this;
+    }
+
+    /**
+     * Get stripeAccount
+     *
+     * @return \Erp\PaymentBundle\Entity\StripeAccount
+     */
+    public function getStripeAccount()
+    {
+        return $this->stripeAccount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return self::STATUS_ACTIVE === $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAccessToPaymentPage()
+    {
+        return $this->hasRole(self::ROLE_MANAGER) && !$this->hasRole(self::ROLE_TENANT);
+    }
+
+    public function hasStripeAccount()
+    {
+        return null !== $this->stripeAccount;
+    }
+
+    /**
+     * @return ArrayCollection|Collection
+     */
+    public function getActiveProperties()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('status', self::STATUS_DELETED));
+
+        return $this->properties->matching($criteria);
+    }
+
+    public function hasTenant(User $user)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('tenantUser', $user));
+
+        return $this->properties->matching($criteria)->isEmpty();
+    }
+
+    public function getPropertiesWithTenants()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq('tenantUser', null));
+
+        return $this->properties->matching($criteria);
+    }
+
+    /**
+     * Add landlord
+     *
+     * @param User $landlord
+     *
+     * @return User
+     */
+    public function addLandlord(User $landlord)
+    {
+        $this->landlords[] = $landlord;
+
+        return $this;
+    }
+
+    /**
+     * Remove landlord
+     *
+     * @param User $landlord
+     */
+    public function removeLandlord(User $landlord)
+    {
+        $this->landlords->removeElement($landlord);
+    }
+
+    /**
+     * Get landlords
+     *
+     * @return Collection
+     */
+    public function getLandlords()
+    {
+        return $this->landlords;
+    }
+
+    /**
+     * Get manager
+     *
+     * @return User
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * Set manager
+     *
+     * @param User $manager
+     *
+     * @return User
+     */
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    public function getFullName()
+    {
+        return sprintf('%s %s', $this->firstName, $this->lastName);
+    }
+
+    /**
+     * Add fee
+     *
+     * @param \Erp\UserBundle\Entity\Fee $fee
+     *
+     * @return User
+     */
+    public function addFee(\Erp\UserBundle\Entity\Fee $fee)
+    {
+        $fee->setUser($this);
+        $this->fees[] = $fee;
+
+        return $this;
+    }
+
+    /**
+     * Remove fee
+     *
+     * @param \Erp\UserBundle\Entity\Fee $fee
+     */
+    public function removeFee(\Erp\UserBundle\Entity\Fee $fee)
+    {
+        $this->fees->removeElement($fee);
+    }
+
+    /**
+     * Get fees
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Set rentPaymentBalance
+     *
+     * @param \Erp\UserBundle\Entity\RentPaymentBalance $rentPaymentBalance
+     *
+     * @return User
+     */
+    public function setRentPaymentBalance(\Erp\UserBundle\Entity\RentPaymentBalance $rentPaymentBalance = null)
+    {
+        $this->rentPaymentBalance = $rentPaymentBalance;
+
+        return $this;
+    }
+
+    /**
+     * Get rentPaymentBalance
+     *
+     * @return \Erp\UserBundle\Entity\RentPaymentBalance
+     */
+    public function getRentPaymentBalance()
+    {
+        return $this->rentPaymentBalance;
+    }
+
+    /**
+     * Set allowRentPayment
+     *
+     * @param boolean $allowRentPayment
+     *
+     * @return User
+     */
+    public function setAllowRentPayment($allowRentPayment)
+    {
+        $this->allowRentPayment = (bool) $allowRentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Get allowRentPayment
+     *
+     * @return boolean
+     */
+    public function getAllowRentPayment()
+    {
+        return $this->allowRentPayment;
+    }
+
+    /**
+     * Set allowPartialPayment
+     *
+     * @param boolean $allowPartialPayment
+     *
+     * @return User
+     */
+    public function setAllowPartialPayment($allowPartialPayment)
+    {
+        $this->allowPartialPayment = $allowPartialPayment;
+
+        return $this;
+    }
+
+    /**
+     * Get allowPartialPayment
+     *
+     * @return boolean
+     */
+    public function getAllowPartialPayment()
+    {
+        return $this->allowPartialPayment;
+    }
+
+    public function isAllowRentPayment()
+    {
+        return $this->allowRentPayment;
+    }
+
+    /**
+     * Add chargeOutgoing
+     *
+     * @param Charge $chargeOutgoing
+     *
+     * @return Charge
+     */
+    public function addChargeOutgoing(Charge $chargeOutgoing)
+    {
+        $this->chargeOutgoings[] = $chargeOutgoing;
+
+        return $chargeOutgoing;
+    }
+
+    /**
+     * Remove chargeOutgoing
+     *
+     * @param Charge $chargeOutgoing
+     */
+    public function removeChargeOutgoing(Charge $chargeOutgoing)
+    {
+        $this->chargeOutgoings->removeElement($chargeOutgoing);
+    }
+
+    /**
+     * Get chargeOutgoings
+     *
+     * @return Collection
+     */
+    public function getChargeOutgoings()
+    {
+        return $this->chargeOutgoings;
+    }
+
+
+    /**
+     * Add chargeIncoming
+     *
+     * @param Charge $chargeIncoming
+     *
+     * @return Charge
+     */
+    public function addChargeIncoming(Charge $chargeIncoming)
+    {
+        $this->chargeIncomings[] = $chargeIncoming;
+
+        return $chargeIncoming;
+    }
+
+    /**
+     * Remove chargeIncoming
+     *
+     * @param Charge $chargeIncoming
+     */
+    public function removeChargeIncoming(Charge $chargeIncoming)
+    {
+        $this->chargeIncomings->removeElement($chargeIncoming);
+    }
+
+    /**
+     * Get chargeIncomings
+     *
+     * @return Collection
+     */
+    public function getChargeIncomings()
+    {
+        return $this->chargeIncomings;
+    }
+
+    public function getTotalOwedAmount()
+    {
+        $rentPaymentBalance = $this->rentPaymentBalance->getBalance();
+
+        return $rentPaymentBalance >= 0 ? 0 : abs($rentPaymentBalance);
+    }
+
+    public function clearFees()
+    {
+        $this->fees->clear();
+    }
+
+    public function clearProperties()
+    {
+        $this->properties->clear();
+    }
+
+    /**
+     * Set agreeAutoWithdrawal
+     *
+     * @param boolean $agreeAutoWithdrawal
+     *
+     * @return User
+     */
+    public function setAgreeAutoWithdrawal($agreeAutoWithdrawal)
+    {
+        $this->agreeAutoWithdrawal = $agreeAutoWithdrawal;
+
+        return $this;
+    }
+
+    /**
+     * Get agreeAutoWithdrawal
+     *
+     * @return boolean
+     */
+    public function getAgreeAutoWithdrawal()
+    {
+        return $this->agreeAutoWithdrawal;
+    }
+
+    public function isAgreeAutoWithdrawal()
+    {
+        return $this->agreeAutoWithdrawal;
+    }
+
+    public function isDebtor()
+    {
+        // TODO Create Payment balance when tenant register
+        if (!$this->rentPaymentBalance) {
+            return false;
+        }
+
+        $balance = $this->rentPaymentBalance->getBalance();
+
+        return $balance < 0;
     }
 }

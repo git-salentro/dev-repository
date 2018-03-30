@@ -2,19 +2,22 @@
 
 namespace Erp\PropertyBundle\Controller;
 
+use Doctrine\ORM\QueryBuilder;
 use Erp\CoreBundle\Controller\BaseController;
-use Erp\CoreBundle\Entity\City;
 use Erp\CoreBundle\Entity\Document;
-use Erp\CoreBundle\Entity\FeeOption;
 use Erp\CoreBundle\Entity\Image;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\PropertyBundle\Entity\PropertyRepostRequest;
+use Erp\PropertyBundle\Entity\PropertySettings;
+use Erp\PropertyBundle\Entity\ScheduledRentPayment;
 use Erp\PropertyBundle\Form\Type\EditDocumentPropertyFormType;
 use Erp\PropertyBundle\Form\Type\EditImagePropertyFormType;
 use Erp\PropertyBundle\Form\Type\EditPropertyFormType;
 use Erp\PropertyBundle\Form\Type\PropertyImportFormType;
+use Erp\PropertyBundle\Form\Type\PropertySettingsType;
+use Erp\PropertyBundle\Form\Type\StopAutoWithdrawalFormType;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -316,13 +319,6 @@ class ListingController extends BaseController
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
-                $this->em->persist($property);
-                $this->em->flush();
-            } else {
-                $errors = true;
-            }
-
             if ($errors) {
                 $text = str_replace(
                     ['{maxSize}', '{sizeIn}'],
@@ -331,6 +327,9 @@ class ListingController extends BaseController
                 );
 
                 $this->addFlash('alert_error', $text);
+            } else {
+                $this->em->persist($property);
+                $this->em->flush();
             }
 
             return $this->redirectToRoute(
@@ -381,12 +380,12 @@ class ListingController extends BaseController
             $errors = $preValidate['errors'];
 
             $form->handleRequest($request);
-            if ($form->isValid()) {
-                $this->em->persist($property);
-                $this->em->flush();
-            } else {
-                $errors = true;
-            }
+//            if ($form->isValid()) {
+//                $this->em->persist($property);
+//                $this->em->flush();
+//            } else {
+//                $errors = true;
+//            }
 
             if ($errors) {
                 $text = str_replace(
@@ -397,6 +396,9 @@ class ListingController extends BaseController
 
                 $this->addFlash('alert_error', $text);
             }
+
+            $this->em->persist($property);
+            $this->em->flush();
 
             return $this->redirectToRoute(
                 'erp_property_listings_edit_images',
@@ -639,67 +641,249 @@ class ListingController extends BaseController
      */
     public function repostRequestAction(Request $request, $propertyId)
     {
-        /** @var $user \Erp\UserBundle\Entity\User */
+        /** @var $user User */
         $user = $this->getUser();
         if ($user->isReadOnlyUser()) {
             throw $this->createNotFoundException();
         }
 
-        /** @var $property \Erp\PropertyBundle\Entity\Property */
+        /** @var $property Property */
         $property = $this->em->getRepository('ErpPropertyBundle:Property')->find($propertyId);
 
         if (!$property) {
             throw new NotFoundHttpException();
         }
 
-        $amount = $this->get('erp.core.fee.service')->getPostVacancyOnlineFee();
-
         if ($request->getMethod() === 'POST') {
-            // Make one payment
-            $customer = $user->getPaySimpleCustomers()->first();
-            $accountId = $customer->getPrimaryType() === PaySimpleManagerInterface::CREDIT_CARD
-                ? $customer->getCcId()
-                : $customer->getBaId();
-            $paymentModel = new RecurringPaymentModel();
-            $paymentModel->setAmount($amount)
-                ->setCustomer($customer)
-                ->setStartDate(new \DateTime())
-                ->setAccountId($accountId);
+            $repostRequest = new PropertyRepostRequest();
+            $repostRequest->setProperty($property);
+            $repostRequest->setStatus($repostRequest::STATUS_NEW);
+            $repostRequest->setNote('');
 
-            $paymentResponse = $this->get('erp.users.user.service')->makeOnePayment($paymentModel);
+            $this->em->persist($repostRequest);
+            $this->em->flush();
 
-            if (!$paymentResponse['status']) {
-                $this->get('erp.payment.paysimple_service')->sendPaymentEmail($customer);
-                $this->addFlash(
-                    'alert_error',
-                    $this->get('erp.users.user.service')->getPaySimpleErrorByCode('error')
-                );
-            } else {
-                $repostRequest = new PropertyRepostRequest();
-                $repostRequest->setProperty($property);
-                $repostRequest->setStatus($repostRequest::STATUS_NEW);
-
-                $this->em->persist($repostRequest);
-                $this->em->flush();
-
-                $this->addFlash(
-                    'alert_ok',
-                    $this->get('erp.users.user.service')->getPaySimpleErrorByCode('charge_repost_request_ok')
-                );
-            }
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
 
             return $this->redirect($request->headers->get('referer'));
         }
 
-        return $this->render(
-            'ErpCoreBundle:crossBlocks:general-confirmation-popup.html.twig',
-            [
-                'askMsg'    => 'You will be charged $' . $amount . ' for this feature. Do you want to proceed?',
-                'actionBtn' => 'Yes',
-                'cancelBtn' => 'No',
-                'actionUrl' => $this->generateUrl('erp_property_repost_request', ['propertyId' => $propertyId])
-            ]
+        throw new NotFoundHttpException();
+    }
+
+    public function chooseSettingsAction()
+    {
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $properties = $user->getActiveProperties();
+
+        return $this->render('ErpPropertyBundle:Listings:settings.html.twig', [
+            'form' => $form->createView(),
+            'modalTitle' => 'Payment Settings',
+            'properties' => $properties,
+        ]);
+    }
+
+    public function choosePropertiesAction()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $properties = $user->getActiveProperties();
+
+        return $this->render('ErpPropertyBundle:Listings:properties-table.html.twig', [
+            'properties' => $properties,
+            'modalTitle' => 'Choose properties',
+        ]);
+    }
+
+    public function confirmSettingsAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
+
+        $idx = $request->get('idx', []);
+        $allElements = $request->get('all_elements', false);
+
+        $propertyRepository = $this->getDoctrine()->getRepository(Property::class);
+        /** @var QueryBuilder $qb */
+        $qb = $propertyRepository->getQueryBuilderByUser($user);
+
+        $propertyRepository->addIdentifiersToQueryBuilder($qb, $idx);
+
+        return $this->render('ErpPropertyBundle:Listings:settings-confirm.html.twig', [
+            'form' => $form->createView(),
+            'modalTitle' => 'Confirmation',
+            'properties' => $qb->getQuery()->getResult(),
+            'data' => [
+                'idx' => $idx,
+                'all_elements' => $allElements,
+            ],
+        ]);
+    }
+
+    public function saveSettingsAction(Request $request)
+    {
+        $propertySettings = new PropertySettings();
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$form->isValid()) {
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'errors' => $form->getErrors(),
+                ]
+            );
+        }
+
+        if ($data = json_decode($request->get('data'), true)) {
+            $idx = $data['idx'];
+            $allElements = $data['all_elements'];
+        } else {
+            $idx = $request->get('idx', []);
+            $allElements = $request->get('all_elements', false);
+        }
+
+        if (!$idx && !$allElements) {
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'errors' => ['Please, chose properties.'],
+                ]
+            );
+        }
+
+        $propertyRepository = $this->getDoctrine()->getRepository(Property::class);
+        /** @var QueryBuilder $qb */
+        $qb = $propertyRepository->getQueryBuilderByUser($user);
+
+        if (count($idx) > 0) {
+            $propertyRepository->addIdentifiersToQueryBuilder($qb, $idx);
+        } elseif (!$allElements) {
+            $query = null;
+        }
+
+        $em = $this->getDoctrine()->getManagerForClass(Property::class);
+
+        try {
+            $i = 0;
+            foreach ($qb->getQuery()->iterate() as $object) {
+                /** @var Property $property */
+                $property = $object[0];
+                /** @var PropertySettings $settings */
+                $settings = $property->getSettings();
+
+                if (!$settings) {
+                    $propertySettings = clone $propertySettings;
+                    $property->setSettings($propertySettings);
+                } else {
+                    $settings->replace($propertySettings);
+                }
+
+                $em->persist($property);
+
+                if ((++$i % 20) == 0) {
+                    $em->flush();
+                    $em->clear();
+                }
+            }
+
+            $em->flush();
+            $em->clear();
+
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
+
+            return $this->redirect($this->generateUrl('erp_property_listings_all'));
+        } catch (\PDOException $e) {
+            throw $e;
+        }
+    }
+
+    public function editPaymentSettingsAction($propertyId, Request $request)
+    {
+        /** @var $user User */
+        $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManagerForClass(Property::class);
+        /** @var Property $property */
+        $property = $em->getRepository(Property::class)->getPropertyByUser($user, $propertyId);
+
+        if (!$property) {
+            throw $this->createNotFoundException();
+        }
+
+        $propertySettings = $property->getSettings() ?: new PropertySettings();
+        $property->setSettings($propertySettings);
+
+        $form = $this->createForm(new PropertySettingsType(), $propertySettings);
+        $form->handleRequest($request);
+
+        $scheduledRentPayment = new ScheduledRentPayment();
+        $stopAutoWithdrawalForm = $this->createForm(new StopAutoWithdrawalFormType(), $scheduledRentPayment);
+
+        if ($form->isValid()) {
+            $em->persist($property);
+            $em->flush();
+
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
+
+            return $this->redirectToRoute('erp_property_property_settings_edit', ['propertyId' => $property->getId()]);
+        }
+
+        return $this->render('ErpPropertyBundle:Property:settings.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+            'autoWithdrawalForm' => $stopAutoWithdrawalForm->createView(),
+            'property' => $property,
+        ]);
+    }
+
+    public function searchAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        //TODO Do more flexible. Create filter model, form
+        $type = $request->query->get('filter[type]', null, true);
+        $interval = $request->query->get('filter[interval]', null, true);
+
+        $dateFrom = \DateTimeImmutable::createFromFormat('Y-n', $interval)->modify('first day of this month')->setTime(0, 0, 0);
+        $dateTo = $dateFrom->modify('+1 month');
+
+        $dateFrom = (new \DateTime())->setTimestamp($dateFrom->getTimestamp());
+        $dateTo = (new \DateTime())->setTimestamp($dateTo->getTimestamp());
+
+        $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $propertiesQuery = $propertyRepository->getPropertiesQuery($user, $dateFrom, $dateTo, explode(', ',$type));
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $propertiesQuery,
+            $request->query->getInt('page', 1),
+            10
         );
+
+        return $this->render('ErpPropertyBundle:Listings:search_result.html.twig', [
+            'user' => $user,
+            'pagination' => $pagination,
+        ]);
     }
 
     /**

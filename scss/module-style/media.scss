@@ -73,6 +73,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 }
 
 @media (min-width: 1039px) and (max-width: 1199px) {
+    .register-form .form-horizontal .form-group_units .control-label {
+        font-size: 16px;
+        padding: 8px 0 0;
+    }
     .features{
         &.property-tab {
             .tab-btn {
@@ -84,7 +88,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         .screening-widget {
             .edit-btn {
                 margin-top: 20px;
-                width: 147px;
+                width: 170px;
             }
         }
     }
@@ -94,18 +98,20 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 margin: 9px 0;
                 .logo {
                     display: inline-block;
-                    background: url(../images/logo-grey-small.png) no-repeat;
+                    //background: url(../images/logo-grey-small.png) no-repeat;
                     width: 225px;
-                    height: 95px;
+                    height: 65px;
+                    //height: 95px;
                 }
             }
         }
         .container-nav {
             width: 100%;
             .logo {
-                background: url(../images/logo-small.png) no-repeat;
+                //background: url(../images/logo-small.png) no-repeat;
                 width: 300px;
-                height: 122px;
+                height: 87px;
+                //height: 122px;
             }
         }
         .slider-text {
@@ -123,10 +129,13 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     .secondary-profile-menu {
         .navbar-default {
             li {
+                line-height: 42px;
                 a {
                     display: inline-block;
-                    padding: 0 10px 0 16px;
-                    font-size: 15px;
+                    vertical-align: text-bottom;
+                    padding: 0 14px 0 4px;
+                    font-size: 16px;
+                    line-height: 18px;
                 }
             }
         }
@@ -239,7 +248,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
 }
-    #landlords-profile {
+    #managers-profile {
         .history-item {
             width: 68%;
         }
@@ -359,7 +368,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .listings {
-        &#landlords-listings-edit {
+        &#managers-listings-edit {
             .prop-description {
                 .prop-details {
                     width: 60%;
@@ -372,7 +381,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 .listing-block {
                     .doc-property-item {
                         .doc-delete-block {
-                            left: 83%;
                         }
                     }
                     .listing-form {
@@ -403,13 +411,9 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 
     .file-upload {
         .upload-input {
-            width: 60%;
-            margin: 0 50px;
             display: inline-block;
         }
         button {
-            float: right;
-            margin-top: 30px;
         }
     }
     .register-form {
@@ -429,6 +433,16 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 }
 
 @media (min-width: 990px) and (max-width: 1040px) {
+    .aboutus_title {
+        font-size: 30px;
+    }
+    #aboutus p, #services p {
+        font-size: 18px;
+    }
+    .register-form .form-horizontal .form-group_units .control-label {
+        font-size: 16px;
+        padding: 8px 0 0;
+    }
     .features{
         &.property-tab {
             .tab-btn {
@@ -440,7 +454,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         .screening-widget {
             .edit-btn {
                 margin-top: 20px;
-                width: 147px;
+                width: 170px;
             }
         }
     }
@@ -475,7 +489,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .modal {
         .modal-dialog {
-            width: 600px !important;
+            min-width: 600px;
+            max-width: 1000px;
+            margin: 30px auto;
+            display: table;
         }
     }
     .header-navbar {
@@ -484,18 +501,20 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 margin: 9px 0;
                 .logo {
                     display: inline-block;
-                    background: url(../images/logo-grey-small.png) no-repeat;
+                    //background: url(../images/logo-grey-small.png) no-repeat;
                     width: 225px;
-                    height: 95px;
+                    //height: 95px;
+                    height: 65px;
                 }
             }
         }
         .container-nav {
             width: 100%;
             .logo {
-                background: url(../images/logo-x-small.png) no-repeat;
+                //background: url(../images/logo-x-small.png) no-repeat;
                 width: 250px;
-                height: 102px;
+                //height: 102px;
+                height: 73px;
             }
         }
     }
@@ -513,14 +532,15 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             li {
                 a {
                     display: inline-block;
-                    padding: 0 10px 0 16px;
-                    font-size: 15px;
+                    vertical-align: middle;
+                    padding: 0 12px 0 3px;
+                    font-size: 16px;
+                    line-height: 23px;
                 }
             }
 
         }
     }
-
     .profile {
         .profile-widget-row {
             .profile-widget-item {
@@ -571,7 +591,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                         display: inline-block;
                         margin-top: 30px;
                         .edit-btn {
-                            width: 67px;
+                            width: 80px;
                             font-size: 13px;
                         }
                     }
@@ -629,7 +649,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
 
-    #landlords-profile {
+    #managers-profile {
         .history-item {
             width: 68%;
         }
@@ -701,10 +721,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 
     .file-upload-wrapper {
         position: relative;
-        margin: 5px 0;
         .file-upload-input {
-            width: 100%;
-            padding-left: 0;
         }
     }
 
@@ -755,12 +772,11 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .listings {
-        &#landlords-listings-edit {
+        &#managers-listings-edit {
             .listings-block {
                 .listing-block {
                     .doc-property-item {
                         .doc-delete-block {
-                            left: 83%;
                         }
                     }
                     .listing-form {
@@ -798,13 +814,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .file-upload {
         .upload-input {
-            width: 60%;
-            margin: 0 50px;
-            display: inline-block;
         }
         button {
-            float: right;
-            margin-top: 30px;
         }
     }
     .register-form {
@@ -820,6 +831,13 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 
 
 @media (min-width: 768px) and (max-width: 993px) {
+  .prising_wrap{
+    float: left;
+    width: 200px;
+  }
+  .form_wrap{
+    margin-left: 220px;
+  }
     #tenants-profile {
         .profile-widget-row {
             .profile-widget-item {
@@ -844,7 +862,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .modal {
         .modal-dialog {
-            width: 600px !important;
+            min-width: 600px;
+            max-width: 1000px;
+            margin: 30px auto;
+            display: table;
         }
     }
     .appointment-request {
@@ -869,18 +890,20 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 margin: 9px 0;
                 .logo {
                     display: inline-block;
-                    background: url(../images/logo-grey-small.png) no-repeat;
+                    //background: url(../images/logo-grey-small.png) no-repeat;
                     width: 225px;
-                    height: 95px;
+                    //height: 95px;
+                    height: 65px;
                 }
             }
         }
         .container-nav {
             width: 100%;
             .logo {
-                background: url(../images/logo-x-small.png) no-repeat;
+                //background: url(../images/logo-x-small.png) no-repeat;
                 width: 246px;
-                height: 103px;
+                //height: 103px;
+                height: 71px;
             }
             .navbar-default {
                 margin: 9px 0;
@@ -952,24 +975,24 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 height: 94px;
                 width: 90px;
                 display: inline-block;
-                &.landlord1-icon {
-                    background: url(../images/homepage/icon4.png) 50%;
-                }
-                &.landlord2-icon {
-                    display: none;
-                }
-                &.landlord3-icon {
-                    display: none;
-                }
-                &.tenant1-icon {
-                    background: url(../images/homepage/icon1.png) 50%;
-                }
-                &.tenant2-icon {
-                    display: none;
-                }
-                &.tenant3-icon {
-                    display: none;
-                }
+                //&.manager1-icon {
+                //    background: url(../images/homepage/icon4.png) 50%;
+                //}
+                //&.manager2-icon {
+                //    display: none;
+                //}
+                //&.manager3-icon {
+                //    display: none;
+                //}
+                //&.tenant1-icon {
+                //    background: url(../images/homepage/icon1.png) 50%;
+                //}
+                //&.tenant2-icon {
+                //    display: none;
+                //}
+                //&.tenant3-icon {
+                //    display: none;
+                //}
             }
             .text-block-service {
                 height: 180px;
@@ -1106,7 +1129,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
         .profile-widget-row {
-            height: 260px;
+            //height: 260px;
+            height: auto;
             position: relative;
             margin: 0 5px 30px;
             .profile-widget-item {
@@ -1118,9 +1142,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 }
                 &.widget-last {
                     margin-right: 0;
-                }
-                &.widget-first {
-                    width: 47%;
                 }
                 .address-details-block {
                     .address-details {
@@ -1137,7 +1158,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     .edit-btn {
                         background-color: #fff;
                         color: #fb872b;
-                        width: 121px;
+                        width: 140px;
                         text-transform: uppercase;
                         border: 1px solid #fb872b;
                         &.paid-report {
@@ -1359,7 +1380,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
 
-    #landlords-profile {
+    #managers-profile {
         .history-item {
             width: 100%;
         }
@@ -1373,6 +1394,22 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             bottom: 260px;
             margin-right: 0;
             width: 364px;
+            top: -319px;
+        }
+        .profile-widget-item-adr{
+            margin: 0 0 0 20px;
+        }
+        .profile-widget-row .profile-widget-item.widget-first.payment-widget{
+            height: 260px;
+        }
+        .profile-widget-row .profile-widget-item.widget-last{
+            width: 100%;
+        }
+        .profile-widget-row .profile-widget-item .tip-form{
+            height: auto;
+        }
+        .col-md-5.col-xs-12.profile-widget-item.screening-widget {
+            margin-bottom: 30px !important;
         }
     }
 
@@ -1659,7 +1696,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
 
-    #landlord-forum-topic {
+    #manager-forum-topic {
         .forum-row {
             .forum-message-container {
                 width: 100%;
@@ -1693,12 +1730,11 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .listings {
-        &#landlords-listings-edit {
+        &#managers-listings-edit {
             .listings-block {
                 .listing-block {
                     .doc-property-item {
                         .doc-delete-block {
-                            left: 83%;
                         }
                     }
                 }
@@ -1729,16 +1765,12 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .file-upload {
         .upload-input {
-            width: 60%;
-            margin: 0 50px;
             display: inline-block;
         }
         button {
-            float: right;
-            margin-top: 30px;
         }
     }
-    #landlord-features {
+    #manager-features {
         .features-table-col {
             width: 230px;
             display: inline-block;
@@ -1793,9 +1825,34 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
     }
+    .aboutus_title {
+        font-size: 30px;
+    }
+  .prising_wrap{
+    float: left;
+    width: 200px;
+  }
+  .form_wrap{
+    margin-left: 220px;
+  }
 }
 
 @media (min-width: 590px) and (max-width: 767px) {
+  .prising_wrap{
+    float: left;
+    width: 200px;
+  }
+  .form_wrap{
+    margin-left: 220px;
+  }
+    .aboutus_title {
+        font-size: 30px;
+    }
+    #managers-profile .col-md-5.col-xs-6.profile-widget-item.widget-last{
+        margin: 0 0 20px 0;
+        width: 100%;
+        height: 395px!important;
+    }
     #tenants-profile {
         .profile-widget-row {
             .profile-widget-item {
@@ -1844,9 +1901,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             .navbar-default {
                 .logo {
                     display: inline-block;
-                    background: url(../images/logo-grey-small.png) no-repeat;
+                    //background: url(../images/logo-grey-small.png) no-repeat;
                     width: 225px;
-                    height: 95px;
+                    //height: 95px;
+                    height: 65px;
                 }
             }
         }
@@ -1859,7 +1917,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                         display: inline-block;
                         position: relative;
                         vertical-align: top;
-                        margin: 28px 0 0;
+                        margin: 14px 0 0;
                         li {
                             display: inline-block;
                         }
@@ -1868,7 +1926,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 .navbar-toggle {
                     background-color: #fff;
                     border: none;
-                    margin-top: 28px;
+                    margin-top: 15px;
                     .icon-bar {
                         background-color: #ca171b;
                         width: 35px;
@@ -1880,9 +1938,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     }
                 }
                 .logo {
-                    background: url(../images/logo-grey-small.png) no-repeat;
-                    width: 225px;
-                    height: 95px;
+                    //background: url(../images/logo-grey-small.png) no-repeat;
+                    width: 206px;
+                    height: 65px;
+                    //height: 95px;
                 }
                 ul {
                     margin-top: 25px;
@@ -1982,24 +2041,24 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 height: 94px;
                 width: 90px;
                 display: inline-block;
-                &.landlord1-icon {
-                    background: url(../images/homepage/icon4.png) 50%;
-                }
-                &.landlord2-icon {
-                    display: none;
-                }
-                &.landlord3-icon {
-                    display: none;
-                }
-                &.tenant1-icon {
-                    background: url(../images/homepage/icon1.png) 50%;
-                }
-                &.tenant2-icon {
-                    display: none;
-                }
-                &.tenant3-icon {
-                    display: none;
-                }
+                //&.manager1-icon {
+                //    background: url(../images/homepage/icon4.png) 50%;
+                //}
+                //&.manager2-icon {
+                //    display: none;
+                //}
+                //&.manager3-icon {
+                //    display: none;
+                //}
+                //&.tenant1-icon {
+                //    background: url(../images/homepage/icon1.png) 50%;
+                //}
+                //&.tenant2-icon {
+                //    display: none;
+                //}
+                //&.tenant3-icon {
+                //    display: none;
+                //}
             }
             .text-block-service {
                 height: 180px;
@@ -2165,6 +2224,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         text-align: left;
         width: 100%;
     }
+    #managers-profile .profile-widget-item-adr {
+        margin: 0;
+        //margin: 0 0 0 20px;
+    }
     .profile {
         margin-bottom: 100px;
         .title-block {
@@ -2178,7 +2241,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
         .profile-widget-row {
-            height: 260px;
+            min-height: 300px;
             margin: 0 5px 30px;
             position: relative;
             .profile-widget-item {
@@ -2192,7 +2255,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     margin-right: 0;
                 }
                 &.widget-first {
-                    width: 45%;
+                    width: 46%;
                 }
                 .address-details-block {
                     .address-details {
@@ -2430,20 +2493,43 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
 
-    #landlords-profile {
+    #managers-profile {
         .history-item {
             width: 100%;
         }
         .tip-item-row {
             float: left;
         }
+        //.tip-item {
+        //    height: 260px;
+        //    position: absolute;
+        //    left: 48%;
+        //    bottom: 260px;
+        //    margin-right: 0;
+        //    width: 52%;
+        //    top: -290px;
+        //}
         .tip-item {
             height: 260px;
-            position: absolute;
-            left: 48%;
-            bottom: 260px;
+            position: static;
+            left: auto;
+            bottom:auto;
             margin-right: 0;
-            width: 52%;
+            width: 100%;
+            top: 0;
+            margin-bottom: 0;
+        }
+        .profile-widget-row .profile-widget-item .tip-form{
+            height: 260px;
+        }
+        .col-md-5.col-xs-12.profile-widget-item.screening-widget {
+            margin-bottom: 30px !important;
+        }
+        .profile-widget-item.payment-widget{
+            height: 260px;
+        }
+        .profile-widget-row .profile-widget-item.widget-last, .property-details .property-accordion .panel .doc-property .doc-property-item {
+            width: 100%;
         }
     }
 
@@ -2794,7 +2880,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
     }
-    #landlord-forum-topic {
+    #manager-forum-topic {
         .forum-row {
             .forum-message-container {
                 width: 100%;
@@ -2833,14 +2919,12 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .listings {
-        &#landlords-listings-edit {
+        &#managers-listings-edit {
             .listings-block {
                 .listing-block {
                     .doc-property-item {
                         .doc-delete-block {
-                            left: 83.5%;
                             margin: 0;
-                            top: 60px;
                         }
                     }
                 }
@@ -2876,13 +2960,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
     .file-upload {
         .upload-input {
-            width: 60%;
-            margin: 0 40px;
-            display: inline-block;
         }
         button {
-            float: right;
-            margin-top: 30px;
         }
     }
 
@@ -2901,7 +2980,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 }
             }
         }
-        &#landlord-features {
+        &#manager-features {
              .table-title {
                 font-size: 36px;
             }
@@ -2965,7 +3044,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
     }
-    #landlord-forum-topic {
+    #manager-forum-topic {
         .message-date {
             font-size: 13px;
         }
@@ -2981,6 +3060,9 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 }
 
 @media (max-width: 589px) {
+    .aboutus_title {
+        font-size: 30px;
+    }
     .row {
         .features {
             &.property-tab {
@@ -3129,7 +3211,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         .listings-block {
             .listing-block {
                 .listing-form {
-                    .propety-name {
+                    .property-name {
                         word-break: break-word;
                         width: 100%;
                     }
@@ -3193,7 +3275,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                             display: inline-block;
                             position: relative;
                             vertical-align: top;
-                            margin: 28px 0 0;
+                            margin: 17px 0 0;
                             li {
                                 display: inline-block;
                             }
@@ -3216,9 +3298,10 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     }
                 }
                 .logo {
-                    background: url(../images/logo-grey-xsmall.png) no-repeat;
+                    //background: url(../images/logo-grey-xsmall.png) no-repeat;
                     width: 160px;
-                    height: 57px;
+                    //height: 57px;
+                    height: 46px;
                 }
                 ul {
                     margin-top: 25px;
@@ -3301,7 +3384,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             height: 100px;
             width: 101px;
             display: inline-block;
-            &.icon-landlords {
+            &.icon-managers {
                 background: url(../images/homepage/circle1-small.png) 50%;
             }
             &.icon-tenants {
@@ -3334,24 +3417,24 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 height: 94px;
                 width: 90px;
                 display: inline-block;
-                &.landlord1-icon {
-                    background: url(../images/homepage/icon4.png) 50%;
-                }
-                &.landlord2-icon {
-                    display: none;
-                }
-                &.landlord3-icon {
-                    display: none;
-                }
-                &.tenant1-icon {
-                    background: url(../images/homepage/icon1.png) 50%;
-                }
-                &.tenant2-icon {
-                    display: none;
-                }
-                &.tenant3-icon {
-                    display: none;
-                }
+                //&.manager1-icon {
+                //    background: url(../images/homepage/icon4.png) 50%;
+                //}
+                //&.manager2-icon {
+                //    display: none;
+                //}
+                //&.manager3-icon {
+                //    display: none;
+                //}
+                //&.tenant1-icon {
+                //    background: url(../images/homepage/icon1.png) 50%;
+                //}
+                //&.tenant2-icon {
+                //    display: none;
+                //}
+                //&.tenant3-icon {
+                //    display: none;
+                //}
             }
             .text-block-service {
                 height: auto;
@@ -3640,13 +3723,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 }
             }
             li {
-                padding: 0 0 20px 0;
-                &:first-child {
-                    padding-top: 20px;
-                }
-                a {
-                    width: 100%;
-                }
+                line-height: 60px;
                 .secondary-menu-icon,
                 .messages-count-icon {
                     display: none;
@@ -3678,7 +3755,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             .profile-widget-item {
                 margin-right: 20px;
                 margin-bottom: 30px;
-                height: 100%;
                 width: 100%;
                 &:last-child {
                     margin-right: 20px;
@@ -3935,7 +4011,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
 
-    #landlords-profile {
+    #managers-profile {
         .history-item {
             width: 100%;
             height: auto;
@@ -4469,7 +4545,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
             }
         }
     }
-    #landlord-forum {
+    #manager-forum {
         .title-block {
             h1 {
                 font-size: 30px;
@@ -4487,14 +4563,14 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
 
-     #landlord-forum-topic {
+     #manager-forum-topic {
         .title-block {
             h1 {
                 font-size: 24px;
             }
         }
         .forum-row {
-            .landlord-message-block {
+            .manager-message-block {
                 margin: 0;
                 &.message-block-top {
                     .forum-message-text {
@@ -4563,8 +4639,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .listings {
-        &#landlords-listings,
-        &#landlords-listings-edit {
+        &#managers-listings,
+        &#managers-listings-edit {
             .listing-block {
                 .listing-form {
                     .documentation-block {
@@ -4578,7 +4654,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                             .doc-delete {
                                 top: 0;
                                 position: absolute;
-                                right: 20;
                             }
                             .doc-delete-block {
                                 .doc-delete {
@@ -4590,7 +4665,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 }
             }
         }
-        &#landlords-listings-edit {
+        &#managers-listings-edit {
             .listings-block {
                 .listing-block {
                     .doc-property-item {
@@ -4654,11 +4729,8 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     .file-upload {
         .upload-input {
             width: 100%;
-            margin: 30px 0 0;
         }
         button {
-            float: right;
-            margin-top: 30px;
         }
     }
 
@@ -4682,7 +4754,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                 }
             }
         }
-        &#landlord-features {
+        &#manager-features {
              .table-title {
                 text-align: center;
                 font-size: 24px;
@@ -4820,11 +4892,22 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         width: 100%;
         overflow: hidden;
     }
+    .banner_main{
+        p{
+            font-size: 16px;
+        }
+        .btn{
+            font-size: 16px;
+        }
+        h2 {
+            font-size: 30px;
+        }
+    }
 }
 
 @media (min-width: 373px) and (max-width: 450px) {
     .features {
-        &#landlord-features {
+        &#manager-features {
             .features-table {
                 .features-table-col {
                     width: 230px;
@@ -4857,7 +4940,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .listings{
-        &#landlords-listings-edit {
+        &#managers-listings-edit {
             .listings-block {
                 .listing-block {
                     .doc-property-item {
@@ -4887,7 +4970,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .features {
-        &#landlord-features {
+        &#manager-features {
             .features-table {
                 width: 100%;
                 .features-table-col {
@@ -4932,7 +5015,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     .secondary-profile-menu {
         .navbar-default {
             li {
-                padding: 0 0 20px 0;
+                line-height: 60px;
             }
         }
     }
@@ -4988,7 +5071,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
    .features {
-        &#landlord-features {
+        &#manager-features {
             .features-table {
                 width: 100%;
                 .features-table-col {
@@ -5053,7 +5136,7 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
         }
     }
     .listings{
-        &#landlords-listings-edit {
+        &#managers-listings-edit {
             .listings-block {
                 .listing-block {
                     .doc-property-item {
@@ -5096,3 +5179,26 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
     }
 }
 
+
+
+
+.secondary-profile-menu {
+    .navbar-default {
+        li {
+            padding: 0;
+            line-height: 60px;
+            a {
+                display: inline-block;
+                vertical-align: text-top;
+                padding: 0 13px 0 3px;
+                font-size: 16px;
+                line-height: 21px;
+            }
+        }
+
+    }
+}
+
+.navbar-nav {
+    margin: 0 0 0 10px;
+}

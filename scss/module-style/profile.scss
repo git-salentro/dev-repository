@@ -65,8 +65,9 @@
             a {
                 display: inline-block;
                 vertical-align: middle;
-                padding: 0 15px 0 25px;
-                font-size: 18px;
+                padding: 0 6px 0 12px;
+                //old padding: 0 15px 0 25px;
+                font-size: 16px;
                 &:active, 
                 &:hover, 
                 &:focus {
@@ -97,6 +98,12 @@
                 width: 23px;
                 vertical-align: middle;
                 display: inline-block;
+                &.dashboard-icon {
+                    background: url(../images/profile/dashboard.png) no-repeat;
+                }
+                &.accounting-icon {
+                    background: url(../images/profile/accounting.png) no-repeat;
+                }
                 &.profile-icon {
                     background: url(../images/profile/profile.png) no-repeat;
                 }
@@ -133,23 +140,20 @@
     margin-bottom: 100px;
     .title-block {
         text-align: center;
-        padding-bottom: 30px;
-        margin-bottom: 40px;
-        border-bottom: 1px solid #e3e1e1;
         h1 {
             font-size: 56px;
+            padding: 0 0 30px 0;
         }
     }
     .screening-widget {
         .edit-btn {
             margin-top: 50px;
-            width: 147px;
+            width: 170px;
             outline: 0;
             font-family: LatoRegular;
         }
     }
     .profile-widget-row {
-        height: 260px;
         margin-bottom: 30px;
         &.settings-row {
             height: auto;
@@ -178,7 +182,6 @@
                                         content: "";
                                         height: 20px;
                                         width: 20px;
-                                        border: 1px solid #000;
                                         display: inline-block;
                                         position: absolute;
                                         right: 10%;
@@ -246,10 +249,7 @@
             height: auto;
         }
         .profile-widget-item {
-            margin-right: 47px;
-            height: 100%;
-            -webkit-border-radius: 5px;
-            -moz-border-radius: 5px;
+            min-height: 260px;
             border-radius: 5px;
             background-color: #fff;
             -webkit-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
@@ -403,7 +403,8 @@
                     color: #b7b7b7;
                 }
                 .bank-details {
-                    height: 100px;
+                    min-height: 100px;
+                    padding: 10px 0 0 10px;
                     .bank-title {
                         .bank-icon {
                             background: url(../images/profile/icon-bank.png) no-repeat;
@@ -566,7 +567,8 @@
                 border-top: 1px solid #e3e1e1;
                 .edit-row {
                     display: inline-block;
-                    margin-top: 30px;
+                    margin-top: 0;
+                    //margin-top: 30px;
                 }
                 .bottom-block-title {
                     display: inline-block;
@@ -579,9 +581,11 @@
                     display: inline-block;
                     vertical-align: middle;
                     &.date-start {
+                        //margin: 6px 10px 0 25px;
                         margin: 20px 10px 0 25px;
                     }
                     &.date-end {
+                        //margin: 6px 10px 0 0;
                         margin: 20px 10px 0 0;
                     }
                     .control-label {
@@ -694,7 +698,8 @@
             padding: 0;
             box-shadow: none;
             &.request-item {
-                height: 550px;
+                //height: 550px;
+                height: 630px;
                 padding: 0 11px;
                 -webkit-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
                 -moz-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
@@ -716,12 +721,11 @@
                 font-size: 14px;
             }
             .profile-widget-content {
-                padding: 0 11px;
+                padding: 0 11px 11px 11px;
                 position: relative;
                 -webkit-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
                 -moz-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
                 box-shadow: 1px 2px 6px rgba(0,0,0,.15);
-                height: 260px;
                 &.widget-second {
                     margin-top: 30px;
                 }
@@ -735,7 +739,7 @@
         }
     }
     .profile-widget-item {
-        .message-landlord {
+        .message-manager {
             margin: 30px 30px 0;
             textarea {
                 height: 40px;
@@ -792,7 +796,7 @@
     }
 }
 
-#landlords-profile {
+#managers-profile {
     .history-item {
         width: 70.9%;
     }

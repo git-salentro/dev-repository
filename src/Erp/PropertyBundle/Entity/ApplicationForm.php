@@ -5,7 +5,7 @@ namespace Erp\PropertyBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PropertyBundle\Entity\ApplicationSection;
-use Erp\UserBundle\Entity\User;
+
 
 /**
  * ApplicationForm
@@ -48,15 +48,15 @@ class ApplicationForm
 
     /**
      * @ORM\OneToOne(
-     *      targetEntity="\Erp\UserBundle\Entity\User",
+     *      targetEntity="\Erp\PropertyBundle\Entity\Property",
      *      inversedBy="applicationForm"
      * )
      * @ORM\JoinColumn(
-     *      name="user_id",
+     *      name="property_id",
      *      referencedColumnName="id"
      * )
      */
-    protected $user;
+    protected $property;
 
     /**
      * @ORM\OneToMany(
@@ -67,6 +67,20 @@ class ApplicationForm
      * )
      */
     protected $applicationSections;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_no_fee", type="boolean")
+     */
+    protected $noFee = true;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="fee", type="float", nullable=true)
+     */
+    protected $fee;
 
     /**
      * Constructor
@@ -104,7 +118,7 @@ class ApplicationForm
      *
      * @param string $id
      *
-     * @return ApplicationSection
+     * @return ApplicationForm
      */
     private function setId($id = null)
     {
@@ -173,7 +187,7 @@ class ApplicationForm
      * @ORM\PrePersist
      * @ORM\PreUpdate
      *
-     * @return ApplicationSection
+     * @return ApplicationForm
      */
     public function setUpdatedDate()
     {
@@ -225,26 +239,79 @@ class ApplicationForm
     }
 
     /**
-     * Set user
+     * Set $noFee
      *
-     * @param User $user
+     * @param boolean $noFee
      *
      * @return ApplicationForm
      */
-    public function setUser(User $user = null)
+    public function setNoFee($noFee)
     {
-        $this->user = $user;
+        $this->noFee = (boolean) $noFee;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get useFee
      *
-     * @return User
+     * @return boolean
      */
-    public function getUser()
+    public function getNoFee()
     {
-        return $this->user;
+        return $this->noFee;
+    }
+
+    /**
+     * Set fee
+     *
+     * @param float $fee
+     *
+     * @return ApplicationForm
+     */
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
+
+        return $this;
+    }
+
+    /**
+     * Get fee
+     *
+     * @return float
+     */
+    public function getFee()
+    {
+        return $this->fee;
+    }
+
+    public function isNoFee()
+    {
+        return $this->noFee;
+    }
+
+    /**
+     * Set property
+     *
+     * @param Property $property
+     *
+     * @return ApplicationForm
+     */
+    public function setProperty(Property $property = null)
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
+    /**
+     * Get property
+     *
+     * @return Property
+     */
+    public function getProperty()
+    {
+        return $this->property;
     }
 }

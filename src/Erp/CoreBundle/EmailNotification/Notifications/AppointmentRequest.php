@@ -21,11 +21,11 @@ class AppointmentRequest extends AbstractEmailNotification
     {
         $message = $params['mailer']
             ->createMessage()
-            ->setFrom([$params['mailFrom'] => 'eRentPay'])
+            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'eRentPay - You have received an appointment request';
+        $subject = 'Zoobdoo - You have received an appointment request';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $appointmentRequest = $params['appointmentRequest'];

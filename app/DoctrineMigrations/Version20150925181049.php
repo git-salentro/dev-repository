@@ -34,7 +34,6 @@ class Version20150925181049 extends AbstractMigration
         $this->addSql('DROP TABLE fees');
         $this->addSql('CREATE INDEX city_name ON cities (name)');
         $this->addSql('CREATE INDEX city_state ON cities (state_code)');
-        $this->addSql('INSERT INTO fees_options (id) VALUES (1)');
     }
 
     /**
@@ -59,7 +58,6 @@ class Version20150925181049 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB'
         );
         $this->addSql('DROP TABLE fees_options');
-        $this->addSql('INSERT INTO fees (id) VALUES (1)');
         $this->addSql('DROP INDEX city_name ON cities');
         $this->addSql('DROP INDEX city_state ON cities');
     }

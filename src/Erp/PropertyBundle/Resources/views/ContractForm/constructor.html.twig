@@ -10,6 +10,12 @@
 {% block pageContent %}
     {{ parent() }}
 
+    <div class="container">
+        <div class="form-group text-right">
+            <a href="{{ path('erp_property_listings_edit_documents', {'propertyId': property.id}) }}" class="btn edit-btn">Back</a>
+        </div>
+    </div>
+
     <!-- Contract Form Constructor-->
     <section id="rental-form-constructor" class="register-form rental-form">
         <div class="container">
@@ -28,14 +34,14 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <b><u>How-To sign Rental Contract online:</u></b><br/>
-                                1) Landlord creates and edits Online Rental Contract using Contract Builder<br/>
-                                2) Landlord previews final contract as Tenant's web-form or as PDF file<br/>
-                                3) Landlord enables contract by "Enable Online Contract for this Property" checkbox<br/>
+                                1) Manager creates and edits Online Rental Contract using Contract Builder<br/>
+                                2) Manager previews final contract as Tenant's web-form or as PDF file<br/>
+                                3) Manager enables contract by "Enable Online Contract for this Property" checkbox<br/>
                                 4) Link to complete Online Rental Contract appears in Tenant's Documentation area<br/>
                                 5) Tenant completes contract form, signs it online and downloads as PDF file<br/>
-                                6) Tenant uploads signed PDF contract to Landlord's Documentation area<br/>
-                                7) Landlord reviews the contract and signs it by clicking SIGN button<br/>
-                                8) Landlord uploads signed PDF contract to Tenant's Documentation area<br/><br/>
+                                6) Tenant uploads signed PDF contract to Manager's Documentation area<br/>
+                                7) Manager reviews the contract and signs it by clicking SIGN button<br/>
+                                8) Manager uploads signed PDF contract to Tenant's Documentation area<br/><br/>
                                 <b><u>Online Rental Contract Builder Help:</u></b><br/>
                                 <b>Warning:</b> this tool is not intended to operate properly on mobile devices, please use only desktop site version for smooth operation.<br/>
                                 <b>Markup:</b> To create an input element enter 2 or more underscores: ____ .To create a checkbox enter square brackets: [] .

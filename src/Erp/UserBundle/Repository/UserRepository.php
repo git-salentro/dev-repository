@@ -3,6 +3,7 @@
 namespace Erp\UserBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Erp\UserBundle\Entity\User;
 
 /**
  * Class UserRepository
@@ -14,7 +15,7 @@ class UserRepository extends EntityRepository
     /**
      * Get users by role
      *
-     * @param string      $role
+     * @param string $role
      * @param string|null $otherRole
      *
      * @return array
@@ -33,5 +34,16 @@ class UserRepository extends EntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function getLandlords(User $user)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.manager = :manager')
+            ->setParameter('manager', $user);
+
+        return $qb->getQuery()
+            ->getResult();
     }
 }

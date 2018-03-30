@@ -6,25 +6,21 @@ use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\PropertyBundle\Entity\Property;
-use Erp\UserBundle\Entity\InvitedUser;
 use Erp\UserBundle\Entity\ProReport;
 use Erp\UserBundle\Entity\ProRequest;
 use Erp\UserBundle\Entity\User;
 use Sonata\AdminBundle\Controller\CRUDController as BaseController;
-use Sonata\AdminBundle\Exception\ModelManagerException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CRUDController extends BaseController
 {
     /**
-     * Send email to landlord with invitation to complete profile
+     * Send email to manager with invitation to complete profile
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Erp\CoreBundle\Exception\UserNotFoundExceptionct
      */
-    public function sentIviteAction()
+    public function sentInviteAction()
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->admin->getSubject();
@@ -44,7 +40,7 @@ class CRUDController extends BaseController
             'sendTo' => $user->getEmail(),
             'url'    => $this->generateUrl('fos_user_security_login', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
-        $emailType = EmailNotificationFactory::TYPE_LANDLORD_COMPLETE_PROFILE;
+        $emailType = EmailNotificationFactory::TYPE_MANAGER_COMPLETE_PROFILE;
         $isSent = $this->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
 
         if ($isSent) {
@@ -53,15 +49,15 @@ class CRUDController extends BaseController
             $this->addFlash('sonata_flash_error', 'An error occurred while sending a message. Please, try again later');
         }
 
-        return $this->redirect($this->generateUrl('admin_erpuserbundle_landlors_list'));
+        return $this->redirect($this->generateUrl('admin_erpuserbundle_managers_list'));
     }
 
     /**
-     * Charge landlord for Pro Request
+     * Charge manager for Pro Request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function chargeLandlordAction()
+    public function chargeManagerAction()
     {
         /** @var $proRequest \Erp\UserBundle\Entity\ProRequest */
         $proRequest = $this->admin->getSubject();
@@ -99,7 +95,7 @@ class CRUDController extends BaseController
             if ($proRequest->getIsRefferal()) {
                 $this->addToReport($proRequest, $currentDate);
             }
-            $this->addFlash('sonata_flash_ps_success', 'Landlord was charged successfully');
+            $this->addFlash('sonata_flash_ps_success', 'Manager was charged successfully');
         }
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -122,48 +118,82 @@ class CRUDController extends BaseController
     }
 
     /**
-     * Delete landlord
+     * Delete manager
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteLandlordAction()
+    public function deleteManagerAction()
     {
         $this->deleteUser();
 
-        return $this->redirect($this->generateUrl('admin_erpuserbundle_landlors_list'));
+        return $this->redirect($this->generateUrl('admin_erpuserbundle_managers_list'));
     }
 
     /**
-     * Disable Landlord
+     * Disable Manager
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function disableLandlordAction()
+    public function disableManagerAction()
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->admin->getSubject();
-        if (!$user || $user->getStatus() !== User::STATUS_ACTIVE) {
+        if (!$user || !$user->isActive()) {
             throw $this->createNotFoundException();
         }
 
-        $isTenants = $this->get('erp.users.landlor_service')->checkIsLandlordHasTenants($user);
-        if ($isTenants) {
-            throw $this->createNotFoundException();
+        $apiManager = $this->get('erp_stripe.entity.api_manager');
+        $userService = $this->get('erp.users.user.service');
+
+        $user->clearProperties();
+        $userService->deactivateUser($user);
+
+        $stripeCustomer = $user->getStripeCustomer();
+
+        $em = $this->getDoctrine()->getManager();
+
+        if ($stripeCustomer) {
+            $stripeSubscription = $stripeCustomer->getStripeSubscription();
+
+            if (!$stripeSubscription) {
+                $this->addFlash(
+                    'sonata_flash_error',
+                    'The user does not have subscription'
+                );
+                return $this->redirect($this->get('request')->headers->get('referer'));
+            }
+
+            $arguments = [
+                'id' => $stripeSubscription->getSubscriptionId(),
+                'options' => null,
+            ];
+            $response = $apiManager->callStripeApi('\Stripe\Subscription', 'retrieve', $arguments);
+
+            if (!$response->isSuccess()) {
+                $this->addFlash(
+                    'sonata_flash_error',
+                    'An occurred error while retrieving subscription'
+                );
+                return $this->redirect($this->get('request')->headers->get('referer'));
+            }
+
+            /** @var \Stripe\Subscription $subscription */
+            $subscription = $response->getContent();
+            $response = $apiManager->callStripeObject($subscription, 'cancel');
+
+            if (!$response->isSuccess()) {
+                $this->addFlash(
+                    'sonata_flash_error',
+                    'An occurred error while cancel subscription'
+                );
+                return $this->redirect($this->get('request')->headers->get('referer'));
+            }
+
+            $em->remove($stripeCustomer);
         }
-
-        $this->get('erp.users.user.service')->deactivateUser($user);
-
-        $user->setStatus(User::STATUS_DISABLED)
-            ->setEnabled(false);
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($user);
-
-        // kill payments and properties
-        $this->get('erp.users.user.service')->deactivateUserPayments($user);
 
         /** @var Property $property */
         foreach ($user->getProperties() as $property) {
-            $property->setStatus($property::STATUS_DRAFT);
             $invitedUsers = $property->getInvitedUsers();
             foreach ($invitedUsers as $invitedUser) {
                 $em->remove($invitedUser);
@@ -173,6 +203,11 @@ class CRUDController extends BaseController
         }
 
         $em->flush();
+
+        $this->addFlash(
+            'sonata_flash_success',
+            'Success'
+        );
 
         return $this->redirect($this->get('request')->headers->get('referer'));
     }
@@ -203,11 +238,11 @@ class CRUDController extends BaseController
     }
 
     /**
-     * Reject Landlord
+     * Reject Manager
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function rejectLandlordAction()
+    public function rejectManagerAction()
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->admin->getSubject();
@@ -258,7 +293,7 @@ class CRUDController extends BaseController
     }
 
     /**
-     * Add landlord to report
+     * Add manager to report
      *
      * @param ProRequest $proRequest
      * @param \DateTime  $date
