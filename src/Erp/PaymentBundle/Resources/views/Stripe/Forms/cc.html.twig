@@ -23,6 +23,11 @@
                     {% endif %}
 
                     {{ form_start(form, {'action': path('erp_payment_stripe_save_credit_card'), 'attr': {'class': 'form-horizontal cc-form', 'novalidate': 'novalidate'}}) }}
+
+                    {% for error in form.vars.errors %}
+                        <span class="field-validation-error">{{ error.message }}</span>
+                    {% endfor %}
+
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-xs-12">
@@ -67,7 +72,7 @@
                                 </div>
                             </div>
                         </div>
-                    {{ form_end(form, {'render_rest': false}) }}
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
