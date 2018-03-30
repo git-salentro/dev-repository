@@ -583,13 +583,13 @@ class User extends BaseUser
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="manager")
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="manager", cascade={"ALL"})
      */
     protected $chargeOutgoings; //sent
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="landlord")
+     * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="landlord", cascade={"ALL"})
      */
     protected $chargeIncomings; //received
 
