@@ -222,6 +222,7 @@ class RegistrationController extends BaseController
 
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
+        /** @var User $user */
         $user = $userManager->createUser();
         $user->setRoles([User::ROLE_TENANT])
             ->setEnabled(true)
@@ -248,6 +249,7 @@ class RegistrationController extends BaseController
                     ->setApplicationFormCounter(User::DEFAULT_APPLICATION_FORM_COUNTER)
                     ->setContractFormCounter(User::DEFAULT_CONTRACT_FORM_COUNTER)
                     ->setIsPrivatePaySimple(0)
+                    ->setManager($managerUser);
                 ;
                 $userManager->updateUser($user);
 
