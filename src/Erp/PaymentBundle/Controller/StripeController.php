@@ -62,13 +62,12 @@ class StripeController extends BaseController
                 $customer = $response->getContent();
 
                 $stripeCustomer = new StripeCustomer();
-                $stripeCustomer->setCustomerId($customer['id']);
+                $stripeCustomer->setCustomerId($customer['id'])
+                    ->setUser($user);
 
-                $user->setStripeCustomer($stripeCustomer);
-
-                $this->em->persist($user);
-                // Force flush for saving Stripe customer
-                $this->em->flush();
+                $em = $this->getDoctrine()->getManagerForClass(StripeCustomer::class);
+                $em->persist($stripeCustomer);
+                $em->flush();
             } else {
                 $response = $customerManager->retrieve($stripeCustomer->getCustomerId(), $options);
 
