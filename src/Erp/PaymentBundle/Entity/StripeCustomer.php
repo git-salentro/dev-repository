@@ -65,7 +65,7 @@ class StripeCustomer
     /**
      * @var StripeSubscription
      *
-     * @ORM\OneToOne(targetEntity="Erp\PaymentBundle\Entity\StripeSubscription", mappedBy="stripeCustomer", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Erp\PaymentBundle\Entity\StripeSubscription", mappedBy="stripeCustomer", cascade={"persist", "remove"})
      */
     protected $stripeSubscription;
 

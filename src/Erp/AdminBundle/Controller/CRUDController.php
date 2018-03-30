@@ -189,7 +189,7 @@ class CRUDController extends BaseController
                 return $this->redirect($this->get('request')->headers->get('referer'));
             }
 
-            $em->remove($stripeSubscription);
+            $em->remove($stripeCustomer);
         }
 
         /** @var Property $property */
