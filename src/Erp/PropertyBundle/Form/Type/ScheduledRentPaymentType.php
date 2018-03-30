@@ -162,7 +162,7 @@ class ScheduledRentPaymentType extends AbstractType
         $property = $user->getTenantProperty();
 
         if (!$property) {
-            return [];
+            return new \RuntimeException('Tenant must have property.');
         }
 
         $propertySettings = $property->getSettings();

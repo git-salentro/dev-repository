@@ -2104,6 +2104,11 @@ class User extends BaseUser
 
     public function isDebtor()
     {
+        // TODO Create Payment balance when tenant register
+        if (!$this->rentPaymentBalance) {
+            return false;
+        }
+
         $balance = $this->rentPaymentBalance->getBalance();
 
         return $balance < 0;

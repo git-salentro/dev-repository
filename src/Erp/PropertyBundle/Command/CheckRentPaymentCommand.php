@@ -37,6 +37,7 @@ class CheckRentPaymentCommand extends ContainerAwareCommand
                 continue;
             }
 
+            // TODO Create Payment balance when tenant register
             if (!$rentPaymentBalance = $tenant->getRentPaymentBalance()) {
                 $rentPaymentBalance = new RentPaymentBalance();
                 $tenant->setRentPaymentBalance($rentPaymentBalance);
