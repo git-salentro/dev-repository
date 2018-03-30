@@ -159,7 +159,7 @@ class UnitController extends Controller
             $property = clone $prototype;
             $property->setUser($user);
 
-            $prototype->setSettings(new PropertySettings());
+            $property->setSettings(new PropertySettings());
 
             $em->persist($property);
         }
