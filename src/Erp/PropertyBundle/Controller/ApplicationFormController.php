@@ -18,6 +18,7 @@ use Erp\PropertyBundle\Form\Type\ApplicationSectionFormType;
 use Erp\PropertyBundle\Repository\ApplicationFieldRepository;
 use Erp\PropertyBundle\Repository\ApplicationSectionRepository;
 use Erp\PropertyBundle\Repository\ApplicationFormRepository;
+use Erp\PropertyBundle\Repository\PropertyRepository;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Entity\UserDocument;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -840,29 +841,28 @@ class ApplicationFormController extends BaseController
     public function copyToOtherPropertiesAction(Request $request, $propertyId)
     {
         $user = $this->getUser();
+        /** @var PropertyRepository $propertyRepository */
         $propertyRepository = $this->em->getRepository(Property::class);
         $currentProperty = $propertyRepository->find($propertyId);
         $propertiesIds = $request->get('property');
         $properties = $propertyRepository->findBy(['id' => $propertiesIds]);
-
-        $applicationFormRepository = $this->em->getRepository(ApplicationForm::class);
-        $applicationForms = $applicationFormRepository->findBy(['property' => $propertiesIds, 'isDefault' => false]);
-
 
         foreach ($properties as $property) {
             $property->setApplicationForm(null);
             $this->em->persist($property);
             $this->em->flush();
         }
-        foreach ($applicationForms as $applicationForm) {
-            $this->em->remove($applicationForm);
-            $this->em->flush();
-        }
+
 
         /** @var ApplicationForm $currentApplicationForm */
         $currentApplicationForm = $currentProperty->getApplicationForm();
         foreach ($properties as $property) {
-            $this->cloneApplicationForm($currentApplicationForm, $property);
+
+//            /** @var ApplicationForm $applicationFormClone */
+//            $applicationFormClone = clone $currentApplicationForm;
+//            $applicationFormClone->setProperty($property);
+//            $this->em->persist($applicationFormClone);
+//            $this->em->flush();
         }
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [

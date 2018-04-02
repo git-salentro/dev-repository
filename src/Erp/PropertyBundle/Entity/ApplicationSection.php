@@ -71,11 +71,6 @@ class ApplicationSection
      *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationForm",
      *      inversedBy="applicationSections"
      * )
-     * @ORM\JoinColumn(
-     *      name="form_id",
-     *      referencedColumnName="id",
-     *      onDelete="CASCADE"
-     * )
      */
     protected $applicationForm;
 
@@ -83,8 +78,13 @@ class ApplicationSection
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationField",
      *      mappedBy="applicationSection",
-     *      cascade={"persist"},
+     *      cascade={"persist","remove"},
      *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="application_section_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      */
     protected $applicationFields;
@@ -103,7 +103,6 @@ class ApplicationSection
                 foreach ($applicationFields as $applicationField) {
                     $applicationFieldClone = clone $applicationField;
                     $applicationFieldClone->setApplicationSection($this);
-
                     $applicationFields->add($applicationFieldClone);
                 }
             }

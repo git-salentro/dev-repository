@@ -97,11 +97,6 @@ class ApplicationField
      *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationSection",
      *      inversedBy="applicationFields"
      * )
-     * @ORM\JoinColumn(
-     *      name="section_id",
-     *      referencedColumnName="id",
-     *      onDelete="CASCADE"
-     * )
      */
     protected $applicationSection;
 
@@ -111,7 +106,7 @@ class ApplicationField
     public function __clone()
     {
         if ($this->id) {
-            $this->setId();
+            $this->setId(null);
         }
     }
 
