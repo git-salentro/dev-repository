@@ -283,6 +283,8 @@
     }
     .upload-doc-col {
         .doc-format {
+            display: inline-block;
+            margin: 0 10px 22px 0;
             span {
                 display: block;
                 &:last-child {
