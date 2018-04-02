@@ -12,6 +12,10 @@
 }
 #secondary-profile-navbar {
     text-align: center;
+    .navbar-nav>li {
+        float: none;
+        display: inline;
+    }
 }
 
 .secondary-profile-menu {
