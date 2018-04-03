@@ -111,11 +111,11 @@ class ApplicationForm
                 foreach ($applicationSections as $applicationSection) {
                     /** @var ApplicationSection $applicationSectionClone */
                     $applicationSectionClone = clone $applicationSection;
-                    $applicationSectionClone->setApplicationForm($this);
-
                     $applicationSections->add($applicationSectionClone);
+                    $applicationSectionClone->setApplicationForm($this);
                 }
             }
+
         }
     }
 

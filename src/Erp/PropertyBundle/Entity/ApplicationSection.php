@@ -106,10 +106,12 @@ class ApplicationSection
 
             if ($applicationFields) {
                 foreach ($applicationFields as $applicationField) {
+                    /** @var ApplicationField $applicationFieldClone */
                     $applicationFieldClone = clone $applicationField;
-                    $applicationFieldClone->setApplicationSection($this);
                     $applicationFields->add($applicationFieldClone);
+                    $applicationFieldClone->setApplicationSection($this);
                 }
+
             }
         }
     }
