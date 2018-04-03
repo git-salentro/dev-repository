@@ -71,6 +71,11 @@ class ApplicationSection
      *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationForm",
      *      inversedBy="applicationSections"
      * )
+     * @ORM\JoinColumn(
+     *      name="application_section_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
      */
     protected $applicationForm;
 
