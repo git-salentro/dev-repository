@@ -10,11 +10,7 @@ for f in "$CERTS_FOLDER/default.crt" "$CERTS_FOLDER/default.key" "$CERTS_FOLDER/
     fi
 done
 
-mkdir /etc/nginx/sites-enabled
-
 if [ "$NUMBER_OF_NECESSARY_CERTS" -eq "3" ]; then
-    mkdir /etc/nginx/certs
-
     cp "$CERTS_FOLDER/default.crt" /etc/nginx/certs/default.crt;
     cp "$CERTS_FOLDER/default.key" /etc/nginx/certs/default.key;
     cp "$CERTS_FOLDER/dhparam.pem" /etc/nginx/certs/dhparam.pem;
