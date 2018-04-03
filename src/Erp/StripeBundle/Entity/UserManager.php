@@ -29,6 +29,7 @@ class UserManager
 
     public function getBankAccount(User $user)
     {
+        //TODO Connected account also have payment details
         /** @var StripeCustomer $stripeCustomer */
         $stripeCustomer = $user->getStripeCustomer();
 
