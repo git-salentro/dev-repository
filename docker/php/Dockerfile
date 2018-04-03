@@ -52,17 +52,12 @@ RUN if [ "${APP_ENV}" = "dev" ];\
   fi
 
 RUN rm -rf /var/lib/apt/lists/*
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY php.ini                 /usr/local/etc/php/
-COPY www.conf                /usr/local/etc/php-fpm.d/www.conf
-COPY docker-entrypoint.sh    /usr/local/bin/
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker-entrypoint.sh /usr/local/bin/
 
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN mkdir -p /var/run/supervisord
-
-RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
 
 WORKDIR /var/www
 
