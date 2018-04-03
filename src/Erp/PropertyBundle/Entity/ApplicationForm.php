@@ -63,7 +63,7 @@ class ApplicationForm
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationSection",
      *      mappedBy="applicationForm",
-     *      cascade={"persist","remove"},
+     *      cascade={"persist", "remove"},
      *      orphanRemoval=true
      * )
      * @ORM\JoinColumn(

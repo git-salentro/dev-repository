@@ -360,7 +360,7 @@ class Property
      * @ORM\OneToOne(
      *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationForm",
      *      mappedBy="property",
-     *      cascade={"persist","remove"},
+     *      cascade={"persist", "remove"},
      *      orphanRemoval=true
      * )
      */
