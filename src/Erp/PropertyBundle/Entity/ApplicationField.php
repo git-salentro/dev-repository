@@ -98,7 +98,7 @@ class ApplicationField
      *      inversedBy="applicationFields"
      * )
      * @ORM\JoinColumn(
-     *      name="section_id",
+     *      name="application_section_id",
      *      referencedColumnName="id",
      *      onDelete="CASCADE"
      * )

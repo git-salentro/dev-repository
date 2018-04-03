@@ -53,7 +53,8 @@ class ApplicationForm
      * )
      * @ORM\JoinColumn(
      *      name="property_id",
-     *      referencedColumnName="id"
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      */
     protected $property;
@@ -62,8 +63,13 @@ class ApplicationForm
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\ApplicationSection",
      *      mappedBy="applicationForm",
-     *      cascade={"persist"},
+     *      cascade={"persist", "remove"},
      *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="application_form_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      */
     protected $applicationSections;
