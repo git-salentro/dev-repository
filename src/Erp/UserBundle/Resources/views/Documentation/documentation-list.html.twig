@@ -27,7 +27,7 @@
                         <span class="status"><span class="doc-status-icon"></span>{{ status }}</span>
                     </li>
                 </button>
-                {% if user.hasRole(role_manager) %}
+                {% if app.user.hasRole(role_manager) %}
                     <ul class="companions-list dropdown-menu" aria-labelledby="dropdownMenu2">
                         <li class="doc-accepted" data-status="{{ constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_PENDING') }}">
                             <span class="status"><span class="doc-accepted-icon doc-status-icon"></span>Pending</span>

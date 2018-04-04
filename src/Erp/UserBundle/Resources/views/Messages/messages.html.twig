@@ -80,7 +80,7 @@
                                 {% else %}
                                     <div class="text-center">
                                         You haven't received Messages from
-                                        {{ user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) ? ' this Tenant' : ' your Manager' }}
+                                        {{ app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) ? ' this Tenant' : ' your Manager' }}
                                         yet
                                     </div>
                                 {% endif %}
