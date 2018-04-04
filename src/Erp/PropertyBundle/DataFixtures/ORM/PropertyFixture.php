@@ -5,6 +5,7 @@ namespace Erp\PropertyBundle\DataFixtures\ORM;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Erp\PropertyBundle\Entity\Property;
+use Erp\PropertyBundle\Entity\PropertySettings;
 use Erp\UserBundle\Entity\User;
 
 class PropertyFixture extends Fixture
@@ -19,7 +20,17 @@ class PropertyFixture extends Fixture
         /** @var User $manager */
         $manager = $this->getReference('tonystark@test.com');
 
+        $propertySettings = new PropertySettings();
+        $propertySettings->setAllowAutoDraft(false);
+        $propertySettings->setAllowCreditCardPayments(true);
+        $propertySettings->setAllowPartialPayments(false);
+        $propertySettings->setDayUntilDue('3');
+        $propertySettings->setPaymentAmount('999');
+        $objectManager->persist($propertySettings);
+        $objectManager->flush();
+
         $object = new Property();
+        $object->setSettings($propertySettings);
         $object->setTenantUser($tenant)
             ->setName('Test Property')
             ->setUser($manager)
