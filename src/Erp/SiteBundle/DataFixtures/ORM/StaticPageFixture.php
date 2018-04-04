@@ -259,11 +259,11 @@ class StaticPageFixture extends Fixture
 Las Vegas, NV 89031</p>
 
 <p>Email: info@zoobdoo.com<br />
-Facebook: <a href="https://www.facebook.com/zoobdoo" style="color:#706e7b;">https://www.facebook.com/zoobdoo</a><br />
-Twitter: <a href="https://twitter.com/zoobdoo" style="color:#706e7b;">https://twitter.com/zoobdoo</a><br />
-LinkedIn: <a href="https://www.linkedin.com/company/zoobdoo" style="color:#706e7b;">https://www.linkedin.com/company/zoobdoo</a><br />
-Pinterest: <a href="https://www.pinterest.com/zoobdoo/" style="color:#706e7b;">https://www.pinterest.com/zoobdoo/</a><br />
-Google+: <a href="https://plus.google.com/u/0/b/114272088414148953802/114272088414148953802/posts/p/pub" style="color:#706e7b;">zoobdoo\'s Google+</a></p>');
+Facebook: <a href="https://www.facebook.com/zoobdoomanager/" style="color:#706e7b;">https://www.facebook.com/zoobdoomanager/</a><br />
+Twitter: <a href="https://twitter.com/Zoobdoo_" style="color:#706e7b;">https://twitter.com/Zoobdoo_</a><br />
+LinkedIn: <a href="https://www.linkedin.com/company/zoobdoo-com" style="color:#706e7b;">https://www.linkedin.com/company/zoobdoo-com</a><br />
+Pinterest: <a href="https://www.pinterest.com/zoobdoocom/pins/" style="color:#706e7b;">https://www.pinterest.com/zoobdoocom/pins/</a><br />
+</p>');
         $staticPage->setInSubmenu(1);
         $staticPage->setWithSubmenu(1);
         $staticPage->setCreatedDate();
@@ -688,7 +688,7 @@ Google+: <a href="https://plus.google.com/u/0/b/114272088414148953802/114272088
         $staticPage->setContent('<ul class="features-list">
 	<li><a href="/">Home</span></a></li>
 	<li><a href="/about">About us</a></li>
-	<li><a href="/landlord-features">Landlord features</a></li>
+	<li><a href="/manager-features">Manager features</a></li>
 	<li><a href="/tenant-features">Tenant Features</a></li>
 	<li><a href="/faq">FAQ</a></li>
 	<li><a href="/contact">Contact</a></li>

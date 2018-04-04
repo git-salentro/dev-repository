@@ -30,9 +30,9 @@ class EmailNotificationFixture extends AbstractFixture implements ContainerAware
 
     private function createEmailNotifications()
     {
-        $this->createEmailNotification('SERVICE_REQUESTS', 'Service Request', 'eRentPay - New Service Request', '', json_decode('{"0":"#url#"}'), 'Click to see', 'You have received a new service request from Tenant!');
-        $this->createEmailNotification('FORUM_TOPICS', 'Forum message', 'eRentPay - New Forum Message', '', json_decode('{"0":"#url#"}'), 'Click to see', 'There is a new message on Forum!');
-        $this->createEmailNotification('PROFILE_MESSAGES', 'Profile messages', 'eRentPay - New Profile Message', '', json_decode('{"0":"#url#"}'), 'Click to see', 'You have received a new message from Tenant.');
+        $this->createEmailNotification('SERVICE_REQUESTS', 'Service Request', 'Zoobdoo - New Service Request', '', json_decode('{"0":"#url#"}'), 'Click to see', 'You have received a new service request from Tenant!');
+        $this->createEmailNotification('FORUM_TOPICS', 'Forum message', 'Zoobdoo - New Forum Message', '', json_decode('{"0":"#url#"}'), 'Click to see', 'There is a new message on Forum!');
+        $this->createEmailNotification('PROFILE_MESSAGES', 'Profile messages', 'Zoobdoo - New Profile Message', '', json_decode('{"0":"#url#"}'), 'Click to see', 'You have received a new message from Tenant.');
     }
 
     protected function createEmailNotification($type, $name, $subject, $body, $tokens, $button, $title)

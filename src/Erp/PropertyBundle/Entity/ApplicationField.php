@@ -111,7 +111,7 @@ class ApplicationField
     public function __clone()
     {
         if ($this->id) {
-            $this->setId();
+            $this->setId(null);
         }
     }
 

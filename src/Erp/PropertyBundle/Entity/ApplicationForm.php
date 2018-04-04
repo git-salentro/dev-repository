@@ -104,20 +104,19 @@ class ApplicationForm
         if ($this->id) {
             $this->setId(null);
             $this->setIsDefault(false);
-
             $applicationSections = $this->getApplicationSections();
-
-            if ($applicationSections) {
-                foreach ($applicationSections as $applicationSection) {
-                    /** @var ApplicationSection $applicationSectionClone */
-                    $applicationSectionClone = clone $applicationSection;
-                    $applicationSectionClone->setApplicationForm($this);
-
-                    $applicationSections->add($applicationSectionClone);
-                }
+            $applicationSectionsArray = new ArrayCollection();
+            foreach ($applicationSections as $applicationSection)
+            {
+                /* @var ApplicationSection $applicationSection */
+                $applicationSectionClone = clone $applicationSection;
+                $applicationSectionClone->setApplicationForm($this);
+                $applicationSectionsArray->add($applicationSectionClone);
             }
+            $this->applicationSections = $applicationSectionsArray;
         }
     }
+
 
     /**
      * Set id

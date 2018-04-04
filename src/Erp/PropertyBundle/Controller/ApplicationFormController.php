@@ -75,7 +75,7 @@ class ApplicationFormController extends BaseController
      * Constructor form page
      *
      * @param Request $request
-     * @param int     $propertyId
+     * @param int $propertyId
      *
      * @return RedirectResponse|Response
      */
@@ -204,7 +204,7 @@ class ApplicationFormController extends BaseController
      * Charge for create application form
      *
      * @param Request $request
-     * @param int     $propertyId
+     * @param int $propertyId
      *
      * @return Response
      */
@@ -439,16 +439,16 @@ class ApplicationFormController extends BaseController
         $breadcrumbs = $this->get('white_october_breadcrumbs');
         $breadcrumbs->addItem('Home', $this->get('router')->generate('erp_site_homepage'))
             ->addItem(
-            $property->getName(),
-            $this->get('router')->generate(
-                'erp_property_page',
-                [
-                    'stateCode' => $property->getCity()->getStateCode(),
-                    'cityName' => $property->getCity()->getName(),
-                    'name' => $property->getName(),
-                ]
-            )
-        );
+                $property->getName(),
+                $this->get('router')->generate(
+                    'erp_property_page',
+                    [
+                        'stateCode' => $property->getCity()->getStateCode(),
+                        'cityName' => $property->getCity()->getName(),
+                        'name' => $property->getName(),
+                    ]
+                )
+            );
         $breadcrumbs->addItem('Online Rental Application');
 
         return $this->render($template, $parameters);
@@ -468,9 +468,9 @@ class ApplicationFormController extends BaseController
     /**
      * Remove application section
      *
-     * @param Request   $request
-     * @param int       $propertyId
-     * @param int       $sectionId
+     * @param Request $request
+     * @param int $propertyId
+     * @param int $sectionId
      *
      * @return JsonResponse
      */
@@ -488,7 +488,7 @@ class ApplicationFormController extends BaseController
         return $this->render(
             'ErpCoreBundle:crossBlocks:delete-confirmation-popup.html.twig',
             [
-                'askMsg'    => 'Are you sure you want to delete this section?',
+                'askMsg' => 'Are you sure you want to delete this section?',
                 'actionUrl' => $this->generateUrl(
                     'erp_property_application_remove_section',
                     [
@@ -503,8 +503,8 @@ class ApplicationFormController extends BaseController
      * Update data application section
      *
      * @param Request $request
-     * @param int     $propertyId
-     * @param int     $sectionId
+     * @param int $propertyId
+     * @param int $sectionId
      *
      * @return JsonResponse
      */
@@ -532,9 +532,9 @@ class ApplicationFormController extends BaseController
     /**
      * Adding field
      *
-     * @param Request   $request
-     * @param int       $propertyId
-     * @param int       $sectionId
+     * @param Request $request
+     * @param int $propertyId
+     * @param int $sectionId
      *
      * @return JsonResponse
      */
@@ -561,7 +561,7 @@ class ApplicationFormController extends BaseController
 
         $applicationField->setSort($sortNumber);
 
-        $validationGroup = ($type === ApplicationField::TYPE_RADIO) ? 'ApplicationFieldRadio': 'ApplicationField';
+        $validationGroup = ($type === ApplicationField::TYPE_RADIO) ? 'ApplicationFieldRadio' : 'ApplicationField';
         $errors = $validator->validate($applicationField, null, $validationGroup);
         if (count($errors)) {
             return new JsonResponse(['errors' => 'Field name or type isn\'t correct']);
@@ -674,7 +674,7 @@ class ApplicationFormController extends BaseController
      * Create application section form
      *
      * @param ApplicationSection $applicationSection
-     * @param Property           $property
+     * @param Property $property
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -691,7 +691,7 @@ class ApplicationFormController extends BaseController
      * Clone application form
      *
      * @param ApplicationForm $applicationForm
-     * @param Property            $property
+     * @param Property $property
      *
      * @return ApplicationForm
      */
@@ -777,8 +777,8 @@ class ApplicationFormController extends BaseController
             'erp_property_page',
             [
                 'stateCode' => $params['property']->getCity()->getStateCode(),
-                'cityName'  => $params['property']->getCity()->getName(),
-                'name'      => $params['property']->getName(),
+                'cityName' => $params['property']->getCity()->getName(),
+                'name' => $params['property']->getName(),
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -847,23 +847,17 @@ class ApplicationFormController extends BaseController
         $propertiesIds = $request->get('property');
         $properties = $propertyRepository->findBy(['id' => $propertiesIds]);
 
-        foreach ($properties as $property) {
-            $property->setApplicationForm(null);
-            $this->em->persist($property);
-            $this->em->flush();
-        }
-
-
         /** @var ApplicationForm $currentApplicationForm */
         $currentApplicationForm = $currentProperty->getApplicationForm();
-        foreach ($properties as $property) {
 
-//            /** @var ApplicationForm $applicationFormClone */
-//            $applicationFormClone = clone $currentApplicationForm;
-//            $applicationFormClone->setProperty($property);
-//            $this->em->persist($applicationFormClone);
-//            $this->em->flush();
+        foreach ($properties as $property) {
+            $property->setApplicationForm(null); //delete all previous application forms
+            $this->em->persist($property);
+            $this->em->flush();
+
+            $this->cloneApplicationForm($currentApplicationForm, $property);
         }
+
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [
             'properties' => $properties,
