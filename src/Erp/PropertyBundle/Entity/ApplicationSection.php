@@ -101,17 +101,16 @@ class ApplicationSection
     {
         if ($this->id) {
             $this->setId(null);
-
             $applicationFields = $this->getApplicationFields();
-
+            $applicationFieldsArray = new ArrayCollection();
             if ($applicationFields) {
                 foreach ($applicationFields as $applicationField) {
                     /** @var ApplicationField $applicationFieldClone */
                     $applicationFieldClone = clone $applicationField;
-                    $applicationFields->add($applicationFieldClone);
                     $applicationFieldClone->setApplicationSection($this);
+                    $applicationFieldsArray->add($applicationFieldClone);
                 }
-
+                $this->applicationFields = $applicationFieldsArray;
             }
         }
     }

@@ -857,7 +857,6 @@ class ApplicationFormController extends BaseController
 
             $this->cloneApplicationForm($currentApplicationForm, $property);
         }
-        $this->em->clear();
 
 
         return $this->render('ErpPropertyBundle:ApplicationForm:copy-complete.html.twig', [
