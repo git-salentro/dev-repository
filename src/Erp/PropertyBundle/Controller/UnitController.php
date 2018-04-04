@@ -154,6 +154,7 @@ class UnitController extends Controller
     private function addProperties(User $user, $quantity)
     {
         $em = $this->getDoctrine()->getManagerForClass(Property::class);
+
         $prototype = new Property();
         for ($i=1; $i<=$quantity; $i++) {
             $property = clone $prototype;

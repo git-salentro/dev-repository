@@ -42,6 +42,8 @@ class Property
     const LIMIT_SEARCH_PER_PAGE    = 9;
     const LIMIT_USER_LISTINGS      = 9;
 
+    const FILED_STATUS = 'status';
+
     /**
      * @var integer
      *
