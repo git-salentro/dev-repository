@@ -2,6 +2,7 @@
 
 namespace Erp\StripeBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\StripeBundle\Entity\Transaction;
@@ -11,6 +12,9 @@ use Erp\StripeBundle\Guesser\TransactionTypeGuesser;
 
 class CashflowController extends Controller
 {
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function indexAction(Request $request)
     {
         /** @var User $user */
