@@ -104,7 +104,6 @@ class ApplicationForm
         if ($this->id) {
             $this->setId(null);
             $this->setIsDefault(false);
-
             $applicationSections = $this->getApplicationSections();
             $applicationSectionsArray = new ArrayCollection();
             foreach ($applicationSections as $applicationSection)
@@ -115,11 +114,8 @@ class ApplicationForm
                 $applicationSectionsArray->add($applicationSectionClone);
             }
             $this->applicationSections = $applicationSectionsArray;
-
-
         }
     }
-
 
 
     /**
