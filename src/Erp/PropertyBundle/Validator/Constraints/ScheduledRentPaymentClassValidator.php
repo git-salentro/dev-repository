@@ -54,19 +54,20 @@ class ScheduledRentPaymentClassValidator extends ConstraintValidator
 
         $userDayDue = $value->getStartPaymentAt()->format('j');
         $dayUntilDue = $propertySettings->getDayUntilDue();
-//        if ($dayUntilDue != $userDayDue) {
-//            if ($this->context instanceof ExecutionContextInterface) {
-//                $this->context->buildViolation($constraint->dayUntilDueMessage)
-//                    ->setParameter('{{ value }}', $userDayDue)
-//                    ->setInvalidValue($userDayDue)
-//                    ->addViolation();
-//            } else {
-//                $this->buildViolation($constraint->dayUntilDueMessage)
-//                    ->setParameter('{{ value }}', $userDayDue)
-//                    ->setInvalidValue($userDayDue)
-//                    ->addViolation();
-//            }
-//        }
+        if ($dayUntilDue < $userDayDue) {
+            if ($this->context instanceof ExecutionContextInterface) {
+                $this->context->buildViolation($constraint->dayUntilDueMessage)
+                    ->setParameter('{{ userValue }}', $userDayDue)
+                    ->setParameter('{{ value }}', $dayUntilDue)
+                    ->setInvalidValue($userDayDue)
+                    ->addViolation();
+            } else {
+                $this->buildViolation($constraint->dayUntilDueMessage)
+                    ->setParameter('{{ value }}', $userDayDue)
+                    ->setInvalidValue($userDayDue)
+                    ->addViolation();
+            }
+        }
 
         if ($value->getAmount() != $propertySettings->getPaymentAmount()) {
             if ($this->context instanceof ExecutionContextInterface) {
