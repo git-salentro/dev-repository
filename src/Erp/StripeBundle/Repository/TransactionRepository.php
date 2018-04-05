@@ -23,6 +23,10 @@ class TransactionRepository extends EntityRepository
                 ->setParameter('customer', $stripeCustomer);
         }
 
+        if ($dateTo) {
+            $dateTo->add(new \DateInterval('P1D'));// To include current date items also
+        }
+
         if ($dateFrom) {
             if ($dateTo) {
                 $qb->andWhere($qb->expr()->between('t.created', ':dateFrom', ':dateTo'))
@@ -51,6 +55,10 @@ class TransactionRepository extends EntityRepository
                 $qb->orWhere('t.customer = :customer')
                     ->setParameter('customer', $stripeCustomer);
             }
+        }
+
+        if ($dateTo) {
+            $dateTo->add(new \DateInterval('P1D'));// To include current date items also
         }
 
         if ($dateFrom) {
