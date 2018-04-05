@@ -10,7 +10,7 @@
     },
     "require": {
         "php": ">=5.6",
-        "symfony/symfony": "2.7.*",
+        "symfony/symfony": "2.8.*",
         "doctrine/orm": "^2.5.14",
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/doctrine-migrations-bundle": "^1.0",
@@ -34,13 +34,14 @@
         "knplabs/knp-paginator-bundle": "^2.5",
         "ee/dataexporter-bundle": "0.4.2",
         "slik/dompdf-bundle" : "dev-master#c7d5b15d12d5c74f6844ffdee755df453f656098",
-        "Trsteel/ckeditor-bundle": "1.8",
+        "Trsteel/ckeditor-bundle": "1.12.1",
         "whiteoctober/breadcrumbs-bundle": "~1.2",
         "goodby/csv": "dev-master#e71217b8d6110f3d1ac3784ef9b8a2383c3398b9",
         "beberlei/DoctrineExtensions": "^1.0",
         "knplabs/knp-snappy-bundle": "^1.5",
         "stripe/stripe-php": "^5.6",
-        "php-amqplib/rabbitmq-bundle": "^1.14"
+        "php-amqplib/rabbitmq-bundle": "^1.14",
+        "shivas/versioning-bundle": "2.0.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

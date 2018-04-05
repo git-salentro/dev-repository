@@ -1,4 +1,3 @@
-# This file is auto-generated during the composer install
 parameters:
     database_host: '%database.host%'
     database_port: '%database.port%'
@@ -20,3 +19,4 @@ parameters:
     docusign_environment: '%docusign.environment%'
     docusign_account_id: '%docusign.account.id%'
     google_analytics_id: '%google.analytics.id%'
+    application_version: 0.0.1
