@@ -43,6 +43,7 @@ class AppKernel extends Kernel
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Erp\StripeBundle\ErpStripeBundle(),
             new Erp\PlaidBundle\ErpPlaidBundle(),
+            new Shivas\VersioningBundle\ShivasVersioningBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
