@@ -150,7 +150,7 @@ class RentPaymentBalance implements DatesAwareInterface
         }
 
         $now = new \DateTime();
-        $createdAt = \DateTimeImmutable::createFromMutable($this->debtStartAt)->modify('-1 day');
+        $createdAt = \DateTimeImmutable::createFromMutable($this->debtStartAt);
 
         $createdAt->setTime(0, 0);
         $now->setTime(0, 0);
