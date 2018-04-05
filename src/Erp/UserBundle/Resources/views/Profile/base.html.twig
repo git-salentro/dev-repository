@@ -14,7 +14,7 @@
 
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/profile-tenant.js') }}"></script>
 
-    {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_TENANT')) %}
+    {% if app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_TENANT')) %}
         <script type="text/javascript" src="{{ asset('bundles/erpuser/js/profile-tenant.js') }}"></script>
     {% else %}
         <script type="text/javascript" src="{{ asset('bundles/erpcore/js/profile.js') }}"></script>
