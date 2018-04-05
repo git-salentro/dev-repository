@@ -48,7 +48,7 @@
             <span class="secondary-menu-icon messages-icon"></span>
             {% if count_unread_messages(app.user) %}
                 <div class="messages-count-icon">
-                    <span class="messages-count">{{ count_unread_messages(user) }}</span>
+                    <span class="messages-count">{{ count_unread_messages(app.user) }}</span>
                 </div>
             {% endif %}
             <a href="{{ path('erp_user_messages') }}">Messages</a>
