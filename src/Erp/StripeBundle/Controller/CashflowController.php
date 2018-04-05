@@ -24,6 +24,7 @@ class CashflowController extends Controller
 
         if (!$stripeAccount || !$stripeCustomer) {
             $this->addFlash('alert_error','Please, verify you bank account.');
+            $this->addFlash('show_navigation_sign_after_register', ''); //popover for Verify button
             return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
         }
 
