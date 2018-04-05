@@ -21,7 +21,7 @@
                 <div class="prop-info"><span class="prop-label">Zip Code</span><span
                 class="prop-details"> {{ property.getZip() }} </span></div>
                 <div class="prop-info"><span class="prop-label">Price</span><span
-                class="prop-details prop-price"> ${{ property.getPrice() }} </span></div>
+                class="prop-details prop-price"> {{ property.settings ? property.settings.paymentAmount|money : '' }} </span></div>
                 <div class="prop-info"><span class="prop-label">Bedrooms</span><span
                 class="prop-details"> {% if property.getOfBeds() %} {{ get_value_of_bed(property.getOfBeds()) }} Bed {% endif %} </span></div>
                 <div class="prop-info"><span class="prop-label">Bathrooms</span><span
