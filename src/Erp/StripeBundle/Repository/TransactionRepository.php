@@ -102,6 +102,10 @@ class TransactionRepository extends EntityRepository
             }
         }
 
+        if ($dateTo) {
+            $dateTo->add(new \DateInterval('P1D'));// To include current date items also
+        }
+
         if ($dateFrom) {
             if ($dateTo) {
                 $qb->andWhere(
