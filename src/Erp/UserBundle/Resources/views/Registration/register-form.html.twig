@@ -1,5 +1,6 @@
 {{ form_start(form, { attr: {'class': 'form-horizontal', 'novalidate': 'novalidate'}, 'enctype': form_enctype(form)}) }}
 
+{% if app.user %}
     {% if (app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER'))) %}
         <div class="row">
             <div class="col-xs-12">
@@ -11,6 +12,7 @@
             </div>
         </div>
     {% endif %}
+{% endif %}
 
     <div class="row">
         <div class="form-group">

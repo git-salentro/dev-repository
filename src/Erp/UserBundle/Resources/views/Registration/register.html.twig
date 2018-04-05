@@ -14,7 +14,11 @@
 {% endblock %}
 
 {% block headerBannerTitle %}
-    {{ app.user.hasRole(roleManager) ? 'Manager' : 'Tenants' }}
+    {% if app.user %}
+        {{ app.user.hasRole(roleManager) ? 'Manager' : 'Tenants' }}
+    {% else %}
+        Welcome
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}
