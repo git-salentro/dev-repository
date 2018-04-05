@@ -2,6 +2,7 @@
 
 namespace Erp\StripeBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\StripeBundle\Entity\Transaction;
@@ -11,6 +12,9 @@ use Erp\StripeBundle\Guesser\TransactionTypeGuesser;
 
 class CashflowController extends Controller
 {
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function indexAction(Request $request)
     {
         /** @var User $user */
@@ -19,9 +23,8 @@ class CashflowController extends Controller
         $stripeCustomer = $user->getStripeCustomer();
 
         if (!$stripeAccount || !$stripeCustomer) {
-            return $this->render('ErpStripeBundle:Transaction:index.html.twig',[
-                'error' => 'Please, verify you bank account.'
-            ]);
+            $this->addFlash('alert_error','Please, verify you bank account.');
+            return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
         }
 
         $form = $this->createForm(new CashflowFilterType());
@@ -35,12 +38,10 @@ class CashflowController extends Controller
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($query, $request->query->getInt('page', 1));
-        //TODO Remove user form all controller. Set user in template
         return $this->render('ErpStripeBundle:Cashflow:index.html.twig', [
-            'user' => $user,
             'pagination' => $pagination,
             'type' => $data['type'],
-            'date_from' => $data['dateFrom'],
+            'date_from' => $data['dateFrom']
         ]);
     }
 }

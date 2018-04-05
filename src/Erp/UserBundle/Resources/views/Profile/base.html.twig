@@ -4,7 +4,7 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
 
 {% block headerBannerTitle %}
-    {% if user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}Manager{% else %}Tenant{% endif %}
+    {% if app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}Manager{% else %}Tenant{% endif %}
 {% endblock %}
 
 {% block javascripts %}

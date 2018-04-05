@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block headerBannerTitle %}
-    {{ user.hasRole(roleManager) ? 'Manager' : 'Tenants' }}
+    {{ app.user.hasRole(roleManager) ? 'Manager' : 'Tenants' }}
 {% endblock %}
 
 {% block pageContent %}
