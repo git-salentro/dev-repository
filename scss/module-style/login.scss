@@ -128,35 +128,3 @@
         }
     }
 }
-
-.terms-group {
-    .terms-link {
-        text-decoration: underline;
-        display: inline-block;
-    }
-    .terms-text {
-        display: none;
-        height: 300px;
-        overflow: auto;
-        margin-top: 50px;
-        border: 2px solid #d6d6d6;
-        border-radius: 5px;
-        padding: 10px 20px;
-        h2 {
-            text-align: center;
-        }
-    }
-    .terms-text.displayed {
-        display: block;
-    }
-    .checkbox {
-        margin-top: 25px;
-        input {
-            width: 17px;
-            height: 17px;
-            bottom: 2px;
-            position: absolute;
-            margin-right: 10px;
-        }
-    }
-}

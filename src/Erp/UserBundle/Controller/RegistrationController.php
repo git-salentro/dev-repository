@@ -185,6 +185,7 @@ class RegistrationController extends BaseController
             throw new NotFoundHttpException('Account is disabled. Please contact site Administrator.');
         }
 
+        /** @var $user User */
         $user
             ->setEnabled(true)
             ->setStatus(User::STATUS_PENDING)
@@ -204,9 +205,10 @@ class RegistrationController extends BaseController
      * Registration for tenant
      *
      * @param Request $request
-     * @param string  $token
+     * @param string $token
      *
      * @return null|Response
+     * @throws \Doctrine\ORM\ORMException
      */
     public function registerTenantAction(Request $request, $token)
     {
