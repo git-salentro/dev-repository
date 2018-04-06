@@ -235,6 +235,22 @@ class StripeController extends BaseController
 
                     return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
                 }
+
+                $arguments = [
+                    'id' => $stripeCustomer->getCustomerId(),
+                    'params' => ['source' => $stripeBankAccountToken],
+                    'options' => $options,
+                ];
+                $response = $apiManager->callStripeApi('\Stripe\Customer', 'update', $arguments);
+
+                if (!$response->isSuccess()) {
+                    $this->addFlash(
+                        'alert_error',
+                        $response->getErrorMessage()
+                    );
+
+                    return $this->redirect($this->generateUrl('erp_user_dashboard_dashboard'));
+                }
             }
         }
 
