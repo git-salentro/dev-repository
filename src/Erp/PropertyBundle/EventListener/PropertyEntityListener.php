@@ -38,9 +38,10 @@ class PropertyEntityListener
     {
         $changeSet = $args->getEntityChangeSet();
 
-        if (!empty($changeSet[Property::FILED_STATUS])) {
-            $this->createHistoryRecord($property);
-        }
+        //TODO: rewrite this part. It creates conflict and do not allow to REMOVE property
+//        if (!empty($changeSet[Property::FILED_STATUS])) {
+//            $this->createHistoryRecord($property);
+//        }
 
     }
 
