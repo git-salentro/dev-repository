@@ -19,12 +19,7 @@ class AccountingController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        /** @var $user \Erp\UserBundle\Entity\User */
-        $user = $this->getUser();
-        //TODO: accounting page
-        return $this->render('ErpUserBundle:Accounting:index.html.twig', [
-            'user' => $user,
-        ]);
+        return $this->render('ErpUserBundle:Accounting:index.html.twig');
     }
 
 

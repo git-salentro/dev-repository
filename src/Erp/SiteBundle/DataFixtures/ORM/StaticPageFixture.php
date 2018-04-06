@@ -210,19 +210,19 @@ class StaticPageFixture extends Fixture
         $staticPage->setTitle('Tenant Features');
         $staticPage->setContent('<div class="row">
 <div class="col-md-2 col-md-offset-1"><img alt="secure.png" src="/assets/images/payonline.png" /><p>Pay rent online (ACH and Credit Card Accepted)</p>
-<a class="learnmore" href="/register">Learn More</a></div>
+</div>
 
 <div class="col-md-2"><img alt="secure.png" src="/assets/images/maintenance.png" /><p>Automated maintenance requests</p>
-<a class="learnmore" href="/register">Learn More</a></div>
+</div>
 
 <div class="col-md-2"><img alt="secure.png" src="/assets/images/application.png" /><p>E-sign applications and contracts</p>
-<a class="learnmore" href="/register">Learn More</a></div>
+</div>
 
 <div class="col-md-2"><img alt="secure.png" src="/assets/images/secure.png" /><p>Keep information safe with multiple firewalls, SSL certification, and PCI compliance verification.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
+</div>
 
 <div class="col-md-2"><img alt="secure.png" src="/assets/images/cycle.png" /><p>No monthly fee.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
+</div>
 </div>
 
 <p> </p>

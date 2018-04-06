@@ -21,9 +21,8 @@ PageController.prototype.selectCustomization = function () {
 };
 
 PageController.prototype.terms = function () {
-    $('.checkbox .terms-link').on('click', function (event) {
-        event.preventDefault();
-        $('.terms-text').show('slow');
+    $('.checkbox .terms-link').on('click', function () {
+        $('.terms-text').toggle('slow','swing');
     });
 
     $(document).ready(function () {
