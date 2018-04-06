@@ -135,7 +135,7 @@ class ListingController extends BaseController
                 /** @var Property $property */
                 foreach ($properties as $property) {
                     $property->setCreatedDate();
-                    $property->setUpdatedDate(new \DateTime());
+                    $property->setUpdatedDate();
                     $this->em->merge($property);
                 }
 
@@ -921,7 +921,7 @@ class ListingController extends BaseController
         );
 
         $formOptions = ['action' => $action, 'method' => 'POST'];
-        $form = $this->createForm(new EditDocumentPropertyFormType($this->container), $property, $formOptions);
+        $form = $this->createForm(new EditDocumentPropertyFormType(), $property, $formOptions);
 
         return $form;
     }
@@ -942,7 +942,7 @@ class ListingController extends BaseController
         );
 
         $formOptions = ['action' => $action, 'method' => 'POST'];
-        $form = $this->createForm(new EditImagePropertyFormType($this->container), $property, $formOptions);
+        $form = $this->createForm(new EditImagePropertyFormType(), $property, $formOptions);
 
         return $form;
     }

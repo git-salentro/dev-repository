@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+docker-compose exec php bash -c "rm -drf app/cache/*"
 docker-compose exec php bash -c "php app/console doctrine:migrations:migrate -n"
 docker-compose exec php bash -c "php app/console assets:install --symlink --env=dev"
 docker-compose exec php bash -c "php app/console assetic:dump --env=dev"
