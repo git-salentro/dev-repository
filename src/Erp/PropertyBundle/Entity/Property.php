@@ -232,6 +232,11 @@ class Property
      * @var float
      *
      * @ORM\Column(name="price", type="float", nullable=true)
+     *
+     * @Assert\NotBlank(
+     *      message="Please enter Price",
+     *      groups={"EditProperty"}
+     * )
      */
     protected $price;
 
@@ -327,8 +332,13 @@ class Property
      * @ORM\OneToMany(
      *      targetEntity="Erp\UserBundle\Entity\InvitedUser",
      *      mappedBy="property",
-     *      cascade={"persist"},
+     *      cascade={"persist","remove"},
      *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      * @ORM\OrderBy({"updatedDate"="DESC"})
      */
@@ -372,8 +382,13 @@ class Property
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\PropertyRepostRequest",
      *      mappedBy="property",
-     *      cascade={"persist"},
+     *      cascade={"persist","remove"},
      *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_repost_request_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      */
     protected $propertyRepostRequests;
@@ -381,8 +396,16 @@ class Property
     /**
      * @var PropertySettings
      * 
-     * @ORM\OneToOne(targetEntity="\Erp\PropertyBundle\Entity\PropertySettings", cascade={"persist"})
-     * @ORM\JoinColumn(name="settings_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="\Erp\PropertyBundle\Entity\PropertySettings",
+     *     mappedBy="property",
+     *     cascade={"persist","remove"},
+     *      orphanRemoval=true
+     *     )
+     * @ORM\JoinColumn(
+     *      name="settings_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
      */
     protected $settings;
 
@@ -390,8 +413,13 @@ class Property
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\PropertyRentHistory",
      *      mappedBy="property",
-     *      cascade={"persist"},
+     *      cascade={"persist","remove"},
      *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_rent_history_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      */
     protected $history;

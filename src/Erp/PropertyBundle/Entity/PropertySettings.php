@@ -20,7 +20,22 @@ class PropertySettings
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
+    /**
+     * @var Property
+     *
+     * @ORM\OneToOne(
+     *      targetEntity="\Erp\PropertyBundle\Entity\Property",
+     *      inversedBy="settings"
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
+     */
+    protected $property;
+
     /**
      * @var integer
      *
