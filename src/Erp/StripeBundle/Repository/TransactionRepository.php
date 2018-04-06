@@ -35,6 +35,9 @@ class TransactionRepository extends EntityRepository
                 $qb->andWhere('t.created > :dateFrom');
             }
             $qb->setParameter('dateFrom', $dateFrom);
+        } elseif ($dateTo) {
+            $qb->andWhere('t.created < :dateTo')
+                ->setParameter('dateTo', $dateTo);
         }
 
         $qb->groupBy('gYear')
@@ -69,6 +72,9 @@ class TransactionRepository extends EntityRepository
                 $qb->andWhere('t.created > :dateFrom');
             }
             $qb->setParameter('dateFrom', $dateFrom);
+        } elseif ($dateTo) {
+            $qb->andWhere('t.created < :dateTo')
+                ->setParameter('dateTo', $dateTo);
         }
 
         if ($type) {

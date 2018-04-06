@@ -2,6 +2,7 @@
 
 namespace Erp\StripeBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,9 @@ use Goodby\CSV\Export\Standard\CsvFileObject;
 
 class TransactionController extends Controller
 {
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function indexAction(Request $request)
     {
         /** @var User $user */
@@ -48,11 +52,13 @@ class TransactionController extends Controller
         );
 
         return $this->render('ErpStripeBundle:Transaction:index.html.twig', [
-            'user' => $user,
             'pagination' => $pagination,
         ]);
     }
 
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function exportAction(Request $request)
     {
         /** @var User $user */
@@ -69,8 +75,8 @@ class TransactionController extends Controller
                 'form' => $form->createView(),
             ]);
         }
-
         if ($form->isSubmitted()) {
+
             if ($form->isValid()) {
                 $dateFrom = $transactionsExport->getDateFrom();
                 $dateTo = $transactionsExport->getDateTo();
@@ -87,7 +93,7 @@ class TransactionController extends Controller
                     ]);
                     $dompdf = $this->get('slik_dompdf');
                     $dompdf->getpdf($html);
-                    $dompdf->stream(sprintf('%s.pdf', $filename), ['Attachment' => '0']);
+                    $dompdf->stream(sprintf('%s.pdf', $filename));
 
                     return new Response(
                         $dompdf->output(),
@@ -100,6 +106,7 @@ class TransactionController extends Controller
                 } elseif ($form->get('csv_submit')->isClicked()) {
                     $i = 0;
                     $items = [];
+                    /** @var Transaction $transaction */
                     foreach ($transactions as $transaction) {
                         $items[] = [
                             $i++,
