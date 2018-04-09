@@ -28,7 +28,7 @@
                     <div class="col-md-5 main-details">
                         <h2>{{ property.getName() }}</h2>
                         <span class="property-address">{{ property.getFullAddress() }}</span>
-                        <span class="property-price">${{ property.getPrice() }}</span>
+                        <span class="property-price">{{ property.settings ? property.settings.paymentAmount|money : '' }}</span>
                         <span class="property-details">
                             {% if property.getOfBeds() %}{{ get_value_of_bed(property.getOfBeds()) }} Bed,{% endif %}
                             {% if property.getOfBaths() %}{{ get_value_of_bath(property.getOfBaths()) }} Bath,{% endif %}
