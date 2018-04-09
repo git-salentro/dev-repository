@@ -1,0 +1,20 @@
+erp_notification_template_list:
+    path:     /notification/template/list
+    defaults: { _controller: ErpNotificationBundle:Template:list }
+
+erp_notification_template_create:
+    path:     /notification/template/create
+    defaults: { _controller: ErpNotificationBundle:Template:create }
+
+erp_notification_template_update:
+    path:     /notification/template/update/{id}
+    defaults: { _controller: ErpNotificationBundle:Template:update }
+    requirements:
+        id: \d+
+
+erp_notification_template_remove:
+    path:     /notification/template/remove/{id}
+    defaults: { _controller: ErpNotificationBundle:Template:remove }
+    requirements:
+        id: \d+
+
