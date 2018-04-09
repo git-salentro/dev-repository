@@ -184,7 +184,7 @@ doctrine_migrations:
 
 sonata_admin:
     title:      Zoobdoo
-    title_logo: bundles/erpadmin/images/admin-logo.jpeg
+    title_logo: bundles/erpadmin/images/admin_logo.png
     security:
         handler: sonata.admin.security.handler.role
     templates:
