@@ -39,7 +39,7 @@
                 <a href="{{ path('erp_property_page', {'stateCode': property.city.stateCode, 'cityName': property.city.name, 'name' : property.getName() }) }}" class="search-result-info property-title bold-text">{{ property.getName() }}</a>
                 <span class="prop-address search-result-info">{{ property.getFullAddress() }}</span>
                 <span class="search-result-info">{% if property.getOfBeds() %}{{ get_value_of_bed(property.getOfBeds()) }} Bed {% endif %}{% if property.getOfBaths() %}{{ get_value_of_bath(property.getOfBaths()) }} Bath {% endif %}{{ property.getSquareFootage() }}+ Sq Ft</span>
-                <span class="prop-price bold-text">${{ property.getPrice() }}+ /mo</span>
+                <span class="prop-price bold-text">{{ property.settings.payAmount }}+ /mo</span>
             </div>
         </div>
     {%  else %}

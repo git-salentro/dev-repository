@@ -229,18 +229,6 @@ class Property
     protected $zip;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="price", type="float", nullable=true)
-     *
-     * @Assert\NotBlank(
-     *      message="Please enter Price",
-     *      groups={"EditProperty"}
-     * )
-     */
-    protected $price;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="of_beds", type="string", length=255,  nullable=true)
@@ -555,30 +543,6 @@ class Property
     public function getZip()
     {
         return $this->zip;
-    }
-
-    /**
-     * Set price
-     *
-     * @param float $price
-     *
-     * @return Property
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return float
-     */
-    public function getPrice()
-    {
-        return $this->price;
     }
 
     /**
