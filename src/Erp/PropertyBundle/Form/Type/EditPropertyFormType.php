@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class EditPropertyFormType
@@ -244,6 +245,14 @@ class EditPropertyFormType extends AbstractType
                         'attr'       => ['class' => 'prop-details prop-price form-control', 'placeholder' => '199'],
                         'label_attr' => ['class' => 'control-label required-label'],
                         'required'   => true,
+                        'constraints' => [
+                            new NotBlank(
+                                [
+                                    'message' => 'Please enter Price',
+                                    'groups' => ['EditProperty']
+                                ]
+                            )
+                        ]
                     ]
                 )
         );
