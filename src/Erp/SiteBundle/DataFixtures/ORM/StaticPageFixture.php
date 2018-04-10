@@ -165,23 +165,15 @@ class StaticPageFixture extends Fixture
         $staticPage->setContent('<div class="container">
 <div class="row">
 <div class="col-xs-3 features"><img alt="integrate.png" src="/assets/images/integrate.png" /><p>Integrate your property management website.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 <div class="col-xs-3 features"><img alt="payment.png" src="/assets/images/payment.png" /><p>Process online payments straight to your account</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 <div class="col-xs-3 features"><img alt="application.png" src="/assets/images/application.png" /><p>Accept applications electronically and receive application fees.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 <div class="col-xs-3 features"><img alt="thumbs.png" src="/assets/images/thumbs.png" /><p>Run credit, criminal, and eviction history.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 </div>
 <div class="row">
 <div class="col-xs-3 features"><img alt="maintenance.png" src="/assets/images/maintenance.png" /><p>Automated maintenance requests.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 <div class="col-xs-3 features"><img alt="2.png" src="/assets/images/2.png" /><p>E-sign rental applications and contracts.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 <div class="col-xs-3 features"><img alt="cycle.png" src="/assets/images/cycle.png" /><p>No contracts! Sign-up now with no obligations.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 <div class="col-xs-3 features"><img alt="secure.png" src="/assets/images/secure.png" /><p>Keep information safe with multiple firewalls, SSL certification, and PCI compliance verification.</p>
-<a class="learnmore" href="/register">Learn More</a></div>
 </div>
 <div class="row">
 <div class="col-xs-12">
