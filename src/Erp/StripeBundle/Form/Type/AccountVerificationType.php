@@ -6,11 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\IsTrue;
 use Erp\PaymentBundle\Entity\StripeAccount;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class AccountVerificationType extends AbstractType
 {
+
     /**
      * @inheritdoc
      */
@@ -59,9 +60,13 @@ class AccountVerificationType extends AbstractType
                     'label' => 'Business Tax Id',
                 ]
             )
-            ->add('birthday', BirthdayType::class, [
-                'widget' => 'text',
+            ->add('birthday', 'birthday', [
+//                'widget' => 'text',
+                'years' => range(1900, date('Y')),
                 'invalid_message' => 'Please enter valid date',
+                'validation_groups' => ['UserTermOfUse', 'ManagerRegister'],
+                'constraints' => new Assert\Date([
+                    'groups'=>['UserTermOfUse', 'ManagerRegister']])
                 ])
             ->add(
                 'firstName',
@@ -82,6 +87,11 @@ class AccountVerificationType extends AbstractType
                 'text',
                 [
                     'label' => 'SSN Last 4 digits',
+                    'constraints' => new Assert\Length([
+                        'min' => 4,
+                        'max' => 4,
+                        'groups' => ['UserTermOfUse','ManagerRegister']
+                    ]),
                 ]
             )
             ->add(
@@ -90,9 +100,10 @@ class AccountVerificationType extends AbstractType
                 [
                     'label' => 'Term of use',
                     'mapped' => false,
-                    'constraints' => new IsTrue([
-                        'message' => 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy'
-                    ]),
+                    'constraints' => new Assert\isTrue([
+                        'message' => 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy',
+                        'groups' => ["UserTermOfUse", "ManagerRegister"]
+                    ])
                 ]
             );
     }

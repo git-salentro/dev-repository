@@ -159,6 +159,7 @@
                 <div class="checkbox">
                     {{ form_widget(form.isTermOfUse) }}
                     <label class="control-label" for="erp_users_manager_form_registration_isTermOfUse">I have read and agree to</label><a href="javascript:void(0)" class="terms-link red-link">Zoobdoo Terms of Use</a>
+                    {{ form_custom_errors.widget(form.isTermOfUse) }}
                 </div>
             </div>
         </div>

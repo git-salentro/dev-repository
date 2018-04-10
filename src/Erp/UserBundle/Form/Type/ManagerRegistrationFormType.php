@@ -1,16 +1,12 @@
 <?php
 namespace Erp\UserBundle\Form\Type;
 
-use Erp\PaymentBundle\Entity\StripeAccount;
+use Symfony\Component\Validator\Constraints as Assert;
+use Erp\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
 class ManagerRegistrationFormType extends AbstractType
@@ -69,9 +65,16 @@ class ManagerRegistrationFormType extends AbstractType
             ->addState()
             ->addPostalCode()
             ->addEmail()
-            ->addPainPassword()
+            ->addPlainPassword()
             ->addIsTermOfUse()
         ;
+        $this->formBuilder->add(
+            'stripeAccount',
+            'erp_stripe_bank_account_verification',
+            [
+                'constraints' => new Assert\Valid()
+            ]
+        );
 
         $this->formBuilder->add(
             'save',
@@ -79,24 +82,19 @@ class ManagerRegistrationFormType extends AbstractType
             ['label' => 'Submit', 'attr' => ['class' => 'btn submit-popup-btn', 'disabled' => 'disabled']]
         );
 
-        $this->formBuilder->add(
-            'stripeAccount',
-            'erp_stripe_bank_account_verification'
-        );
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            [
-                'data_class'        => 'Erp\UserBundle\Entity\User',
-                'validation_groups' => ['ManagerRegister']
-            ]
-        );
+        $resolver->setDefaults(array(
+            'data_class'        => User::class,
+            'validation_groups' => ['UserTermOfUse', 'ManagerRegister']
+        ));
     }
+
 
     public function getName()
     {
@@ -364,13 +362,13 @@ class ManagerRegistrationFormType extends AbstractType
                 'required'           => true,
                 'disabled'           => $disabled,
                 'constraints'        => [
-                    new NotBlank(
+                    new Assert\NotBlank(
                         [
                             'message' => 'Please enter your Email',
                             'groups'  => [$this->validationGroup],
                         ]
                     ),
-                    new Length(
+                    new Assert\Length(
                         [
                             'min'        => 6,
                             'max'        => 255,
@@ -379,7 +377,7 @@ class ManagerRegistrationFormType extends AbstractType
                             'groups'     => [$this->validationGroup],
                         ]
                     ),
-                    new Email(
+                    new Assert\Email(
                         [
                             'message' => 'This value is not a valid Email address.
                                           Use following formats: example@address.com',
@@ -401,7 +399,9 @@ class ManagerRegistrationFormType extends AbstractType
         $this->formBuilder->add(
             'isTermOfUse',
             'checkbox',
-            ['required' => true]
+            [
+                'required' => true
+            ]
         );
 
         return $this;
@@ -410,7 +410,7 @@ class ManagerRegistrationFormType extends AbstractType
     /**
      * @return $this
      */
-    private function addPainPassword()
+    private function addPlainPassword()
     {
         $this->formBuilder->add(
             'plainPassword',
@@ -432,13 +432,13 @@ class ManagerRegistrationFormType extends AbstractType
                 'trim'            => false,
                 'required'        => true,
                 'constraints'     => [
-                    new NotBlank(
+                    new Assert\NotBlank(
                         [
                             'message' => 'Please enter your password',
                             'groups'  => [$this->validationGroup],
                         ]
                     ),
-                    new Regex(
+                    new Assert\Regex(
                         [
                             'pattern' => '/^(?=.{5,255})(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W])(?!.*\s).*$/',
                             'message' => 'The password must contain letters, numbers and

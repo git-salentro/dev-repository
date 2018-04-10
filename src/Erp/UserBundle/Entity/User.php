@@ -401,8 +401,13 @@ class User extends BaseUser
      * @ORM\OneToMany(
      *      targetEntity="\Erp\PropertyBundle\Entity\Property",
      *      mappedBy="user",
-     *      cascade={"persist"},
+     *      cascade={"persist","remove"},
      *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      *
      * @ORM\OrderBy({"createdDate"="DESC"})

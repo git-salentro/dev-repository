@@ -1,16 +1,12 @@
 <?php
+
 namespace Erp\UserBundle\Form\Type;
 
+use Erp\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Regex;
-use Doctrine\ORM\EntityRepository;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserTermOfUseFormType extends AbstractType
 {
@@ -39,31 +35,37 @@ class UserTermOfUseFormType extends AbstractType
 
     /**
      * @param \Symfony\Component\Form\FormBuilderInterface $builder
-     * @param array                                        $options
+     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formBuilder = $builder;
-        $this->addIsTermOfUse();
-
         $this->formBuilder->add(
+            'isTermOfUse',
+            'checkbox',
+            [
+                'required' => true,
+            ]
+        )
+        ->add(
             'save',
             'submit',
-            ['label' => 'Accept', 'attr' => ['class' => 'btn submit-popup-btn', 'disabled' => 'disabled']]
+            ['label' => 'Accept', 'attr' => ['class' => 'btn submit-popup-btn',
+                'disabled' => 'disabled'
+            ]]
         );
     }
 
+
     /**
-     * @param OptionsResolverInterface $resolver
+     * @inheritdoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            [
-                'data_class'        => 'Erp\UserBundle\Entity\User',
-                'validation_groups' => [$this->validationGroup],
-            ]
-        );
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'validation_groups' => [$this->validationGroup],
+        ]);
     }
 
     /**
@@ -74,17 +76,5 @@ class UserTermOfUseFormType extends AbstractType
         return 'erp_users_term_of_use';
     }
 
-    /**
-     * @return $this
-     */
-    private function addIsTermOfUse()
-    {
-        $this->formBuilder->add(
-            'isTermOfUse',
-            'checkbox',
-            ['required' => true]
-        );
 
-        return $this;
-    }
 }

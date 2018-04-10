@@ -149,6 +149,7 @@ class RegistrationController extends BaseController
             return $this->redirectToRoute('erp_user_profile_dashboard');
         }
 
+        /** @var StaticPage $termsOfUse */
         $termsOfUse = $this->em->getRepository('ErpSiteBundle:StaticPage')
             ->findOneBy(['code' => StaticPage::PAGE_CODE_TERMS_OF_USE]);
 

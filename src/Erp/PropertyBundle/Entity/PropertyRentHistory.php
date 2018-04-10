@@ -26,7 +26,7 @@ class PropertyRentHistory
      * @var Property
      *
      * @ORM\ManyToOne(targetEntity="\Erp\PropertyBundle\Entity\Property", inversedBy="history")
-     * @ORM\JoinColumn(name="property_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="property_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $property;
 

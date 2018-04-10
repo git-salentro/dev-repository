@@ -32,8 +32,8 @@ class StripeAccount
     /**
      * @var User
      *
-     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeAccount", cascade={"persist"})
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="stripeAccount", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 
@@ -47,7 +47,7 @@ class StripeAccount
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Transaction", mappedBy="account", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="\Erp\StripeBundle\Entity\Transaction", mappedBy="account", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $transactions;
 
