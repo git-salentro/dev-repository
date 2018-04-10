@@ -3,11 +3,11 @@
 namespace Erp\StripeBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Erp\PaymentBundle\Entity\StripeAccount;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class AccountVerificationType extends AbstractType
 {
@@ -59,60 +59,10 @@ class AccountVerificationType extends AbstractType
                     'label' => 'Business Tax Id',
                 ]
             )
-            ->add(
-                'dayOfBirth',
-                'text',
-                [
-                    'label' => 'Day Of Birth',
-                    'attr' => [
-                        'placeholder' => '01',
-                    ],
-                    'constraints' => [
-                        new Assert\Regex(
-                            [
-                                'message' => 'Invalid Format',
-                                'pattern' => '(0[1-9]|[12][0-9]|3[01])',
-                            ]
-                        ),
-                    ],
-                ]
-            )
-            ->add(
-                'monthOfBirth',
-                'text',
-                [
-                    'label' => 'Month Of Birth',
-                    'attr' => [
-                        'placeholder' => '01',
-                    ],
-                    'constraints' => [
-                        new Assert\Regex(
-                            [
-                                'message' => 'Invalid Format',
-                                'pattern' => '^(0?[1-9]|1[012])$'
-                            ]
-                        ),
-                    ],
-                ]
-            )
-            ->add(
-                'yearOfBirth',
-                'text',
-                [
-                    'label' => 'Year Of Birth',
-                    'attr' => [
-                        'placeholder' => '1999',
-                    ],
-                    'constraints' => [
-                        new Assert\Regex(
-                            [
-                                'message' => 'Invalid Format',
-                                'pattern' => '^19\d{2}$'
-                            ]
-                        ),
-                    ],
-                ]
-            )
+            ->add('birthday', BirthdayType::class, [
+                'widget' => 'text',
+                'invalid_message' => 'Please enter valid date',
+                ])
             ->add(
                 'firstName',
                 'text',

@@ -100,6 +100,14 @@ class StripeAccount
      */
     private $businessTaxId;
 
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="birthday", type="date", nullable=true)
+     */
+    protected $birthday;
+
     /**
      * @var string
      *
@@ -805,5 +813,32 @@ class StripeAccount
     public function getScheduledRentPayments()
     {
         return $this->scheduledRentPayments;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * @param \DateTime $birthday
+     * @return StripeAccount
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
+        if ($birthday instanceof \DateTime) {
+            $day = $birthday->format('d');
+            $month = $birthday->format('m');
+            $year = $birthday->format('Y');
+            if ($day) $this->setDayOfBirth($day);
+            if ($month) $this->setMonthOfBirth($month);
+            if ($year) $this->setYearOfBirth($year);
+        }
+
+        return $this;
     }
 }
