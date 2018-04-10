@@ -3,6 +3,7 @@
 namespace Erp\PropertyBundle\EventListener;
 
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\PropertyBundle\Entity\PropertyRentHistory;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -13,6 +14,16 @@ class PropertyEntityListener
      * @var ManagerRegistry
      */
     private $registry;
+
+    /**
+     * @var bool
+     */
+    private $statusChanged = false;
+
+    /**
+     * @var Property
+     */
+    private $property;
 
     /**
      * @param ManagerRegistry $registry
@@ -36,13 +47,28 @@ class PropertyEntityListener
      */
     public function preUpdate(Property $property, PreUpdateEventArgs $args)
     {
-        $changeSet = $args->getEntityChangeSet();
+        if ($args->hasChangedField(Property::FILED_STATUS)) {
+            $this->statusChanged = true;
+            $this->property = $property;
+        }
+    }
 
-        //TODO: rewrite this part. It creates conflict and do not allow to REMOVE property
-//        if (!empty($changeSet[Property::FILED_STATUS])) {
-//            $this->createHistoryRecord($property);
-//        }
+    /**
+     * @param PostFlushEventArgs $args
+     */
+    public function postFlush(PostFlushEventArgs $args)
+    {
+        if ($this->statusChanged && $this->property) {
+            $property = $this->property;
+            $this->clearStatusDetection();
+            $this->createHistoryRecord($property);
+        }
+    }
 
+    private function clearStatusDetection()
+    {
+        $this->statusChanged = false;
+        $this->property = null;
     }
 
     /**
@@ -50,12 +76,11 @@ class PropertyEntityListener
      */
     private function createHistoryRecord(Property $property)
     {
-        $em = $this->registry->getManagerForClass(PropertyRentHistory::class);
         $propertyRentHistory = new PropertyRentHistory();
-        $propertyRentHistory->setStatus($property->getStatus());
+        $propertyRentHistory->setStatus($property->getStatus())
+            ->setProperty($property);
 
-        $property->addHistory($propertyRentHistory);
-
+        $em = $this->registry->getManagerForClass(PropertyRentHistory::class);
         $em->persist($propertyRentHistory);
         $em->flush();
     }
