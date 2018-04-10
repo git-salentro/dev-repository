@@ -5,12 +5,12 @@ namespace Erp\NotificationBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Erp\NotificationBundle\Entity\Template;
+use Erp\NotificationBundle\Entity\UserNotification;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
 
-class TemplateType extends AbstractType
+class UserNotificationType extends AbstractType
 {
     /**
      * @inheritdoc
@@ -19,31 +19,31 @@ class TemplateType extends AbstractType
     {
         $builder
             ->add(
-                'type',
+                'daysBefore',
                 TextType::class,
                 [
-                    'label' => 'Type',
+                    'label' => 'Days Before Rent Due Date'
                 ]
             )
             ->add(
-                'title',
+                'daysAfter',
                 TextType::class,
                 [
-                    'label' => 'Title',
+                    'label' => 'Days After Rent Due Date'
                 ]
             )
             ->add(
-                'description',
-                CkeditorType::class,
+                'sendAlertAutomatically',
+                CheckboxType::class,
                 [
-                    'label' => 'Description',
+                    'label' => 'Automatically send Alert on Rent Due Date?'
                 ]
             )
             ->add(
                 'submit',
                 SubmitType::class,
                 [
-                    'label' => 'Submit',
+                    'label' => 'Days Before Rent Due Date'
                 ]
             );
     }
@@ -54,7 +54,7 @@ class TemplateType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Template::class,
+            'data_class' => UserNotification::class,
         ]);
     }
 
@@ -63,6 +63,6 @@ class TemplateType extends AbstractType
      */
     public function getName()
     {
-        return 'erp_notification_template';
+        return 'erp_notification_user_notification';
     }
 }

@@ -9,22 +9,38 @@ use Erp\NotificationBundle\Form\Type\TemplateType;
 
 class TemplateController extends Controller
 {
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function listAction()
     {
         return $this->render('ErpNotificationBundle:Template:list.html.twig');
     }
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function createAction(Request $request)
     {
         $entity = new Template();
         return $this->update($entity, $request);
     }
 
+    /**
+     * @param Template $entity
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function updateAction(Template $entity, Request $request)
     {
         return $this->update($entity, $request);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function removeAction($id)
     {
         $em = $this->getDoctrine()->getManagerForClass(Template::class);
@@ -39,6 +55,11 @@ class TemplateController extends Controller
         return $this->redirectToRoute('erp_notification_template_list');
     }
 
+    /**
+     * @param Template $entity
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     private function update(Template $entity, Request $request)
     {
         $form = $this->createForm(new TemplateType(), $entity);
@@ -50,6 +71,9 @@ class TemplateController extends Controller
             $em->flush();
         }
 
-        return $this->render('ErpNotificationBundle:Template:create.html.twig');
+        return $this->render('ErpNotificationBundle:Template:create.html.twig', [
+            'form' => $form->createView(),
+            'entity' => $entity,
+        ]);
     }
 }

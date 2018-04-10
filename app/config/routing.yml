@@ -47,4 +47,9 @@ erp_smart_move:
 
 erp_stripe:
     resource: "@ErpStripeBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix: /
+
+
+erp_notification:
+    resource: "@ErpNotificationBundle/Resources/config/routing.yml"
+    prefix: /

@@ -1,0 +1,38 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block pageContent %}
+    {{ parent() }}
+    <section id="managers-profile" class="profile">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text">Create allert</h1>
+                </div>
+            </div>
+            {{ form_start(form, {'action': path('') }) }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+        </div>
+    </section>
+{% endblock %}
