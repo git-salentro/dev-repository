@@ -10,6 +10,7 @@ use Erp\PaymentBundle\Plaid\Exception\ServiceException;
 use Erp\PaymentBundle\Stripe\Model\CreditCard;
 use Erp\UserBundle\Entity\User;
 use Erp\StripeBundle\Form\Type\AccountVerificationType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Stripe\Account;
 use Stripe\Customer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -268,6 +269,9 @@ class StripeController extends BaseController
         return $this->redirect($url);
     }
 
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
     public function verifyAccountAction(Request $request)
     {
         //TODO Need to verify account if I change BA?
