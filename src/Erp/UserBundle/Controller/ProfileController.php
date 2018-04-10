@@ -11,6 +11,7 @@ use Erp\UserBundle\Form\Type\EmailOptionsFormType;
 use Erp\UserBundle\Form\Type\ManagerDetailsFormType;
 use Erp\UserBundle\Form\Type\TenantContactInfoFormType;
 use Erp\UserBundle\Form\Type\TenantDetailsFormType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,8 +48,8 @@ class ProfileController extends BaseController
     }
 
     /**
-     * Dashboard page
-     *
+     * Dashboard
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @return Response
      */
     public function showAction()
@@ -56,10 +57,6 @@ class ProfileController extends BaseController
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
         $templateName = $user->hasRole(User::ROLE_MANAGER) ? 'Manager' : 'Tenant';
-
-        if (!$user->getIsTermOfUse()) {
-            return $this->redirectToRoute('erp_user_term_of_use');
-        }
 
         return $this->render('ErpUserBundle:Profile/' . $templateName . ':dashboard.html.twig', ['user' => $user]);
     }
@@ -270,7 +267,7 @@ class ProfileController extends BaseController
     {
         $user = $this->getUser();
 
-        $type = new EmailOptionsFormType($request, $this->get('erp.core.location')->getStates());
+        $type = new EmailOptionsFormType();
         $action = $this->generateUrl('erp_user_email_options');
 
         $formOptions = ['action' => $action, 'method' => 'POST'];
