@@ -414,13 +414,6 @@ class Property
     protected $history;
 
     /**
-     * @var UserNotification
-     *
-     * @ORM\OneToOne(targetEntity="\Erp\NotificationBundle\Entity\UserNotification", inversedBy="property")
-     */
-    protected $userNotification;
-
-    /**
      * Constructor
      */
     public function __construct()

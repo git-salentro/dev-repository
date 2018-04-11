@@ -1,38 +1,47 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpnotification/js/add-alerts.controller.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpnotification/js/add-notifications.controller.js') }}"></script>
+{% endblock %}
+
 {% block pageContent %}
     {{ parent() }}
     <section id="managers-profile" class="profile">
         <div class="container">
             <div class="row">
                 <div class="title-block">
-                    <h1 class="bold-text">Create allert</h1>
+                    <h1 class="bold-text">Create alert</h1>
                 </div>
             </div>
-            {{ form_start(form, {'action': path('') }) }}
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="form-group">
-
-                    </div>
-                </div>
-            </div>
-
-            {{ form_end(form) }}
 
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+            {{ form_start(form, {'action': path('erp_notification_user_notification_crate') }) }}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_row(form.notifications) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_row(form.alerts) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            {{ form_label(form.sendAlertAutomatically, null, {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_widget(form.sendAlertAutomatically) }}
+                            {{ form_errors(form.sendAlertAutomatically) }}
+                        </div>
+                    </div>
+                </div>
+                {{ form_widget(form.submit, {'attr': {'class': 'btn red-btn'}}) }}
+            {{ form_end(form) }}
         </div>
     </section>
 {% endblock %}

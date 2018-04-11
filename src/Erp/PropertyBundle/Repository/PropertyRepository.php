@@ -491,6 +491,25 @@ class PropertyRepository extends EntityRepository
             ->getResult();
     }
 
+    public function getPropertiesWithActiveTenant(User $user)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p, tu')
+            ->join('p.user', 'u')
+            ->join('p.tenantUser', 'tu')
+            ->where('tu.status = :status')
+            ->andWhere('tu.enabled = :enabled')
+            ->andWhere('tu.locked = :locked')
+            ->andwhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->setParameter('enabled', true)
+            ->setParameter('locked', false)
+            ->setParameter('status', User::STATUS_ACTIVE);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
     public function getPropertiesListExceptCurrent(Property $property, User $user)
     {
         $qb = $this->createQueryBuilder('p');

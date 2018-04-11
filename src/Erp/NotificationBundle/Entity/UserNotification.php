@@ -6,6 +6,7 @@ use Erp\CoreBundle\Entity\DatesAwareTrait;
 use Erp\CoreBundle\Entity\DatesAwareInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Erp\PropertyBundle\Entity\Property;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class UserNotification
@@ -28,18 +29,18 @@ class UserNotification implements DatesAwareInterface
     private $id;
 
     /**
-     * @var integer
+     * @var ArrayCollection
      *
-     * @ORM\Column(name="days_before", type="integer")
+     * @ORM\OneToMany(targetEntity="Notifications", mappedBy="userNotification", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $daysBefore;
+    private $notifications;
 
     /**
-     * @var integer
+     * @var ArrayCollection
      *
-     * @ORM\Column(name="days_after", type="integer")
+     * @ORM\OneToMany(targetEntity="Alerts", mappedBy="userNotification", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $daysAfter;
+    private $alerts;
 
     /**
      * @var boolean
@@ -55,6 +56,12 @@ class UserNotification implements DatesAwareInterface
      */
     private $property;
 
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+        $this->alerts = new ArrayCollection();
+    }
+
     /**
      * Get id
      *
@@ -63,54 +70,6 @@ class UserNotification implements DatesAwareInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set daysBefore
-     *
-     * @param integer $daysBefore
-     *
-     * @return UserNotification
-     */
-    public function setDaysBefore($daysBefore)
-    {
-        $this->daysBefore = $daysBefore;
-
-        return $this;
-    }
-
-    /**
-     * Get daysBefore
-     *
-     * @return integer
-     */
-    public function getDaysBefore()
-    {
-        return $this->daysBefore;
-    }
-
-    /**
-     * Set daysAfter
-     *
-     * @param integer $daysAfter
-     *
-     * @return UserNotification
-     */
-    public function setDaysAfter($daysAfter)
-    {
-        $this->daysAfter = $daysAfter;
-
-        return $this;
-    }
-
-    /**
-     * Get daysAfter
-     *
-     * @return integer
-     */
-    public function getDaysAfter()
-    {
-        return $this->daysAfter;
     }
 
     /**
@@ -135,6 +94,76 @@ class UserNotification implements DatesAwareInterface
     public function getSendAlertAutomatically()
     {
         return $this->sendAlertAutomatically;
+    }
+
+    /**
+     * Add notification
+     *
+     * @param \Erp\NotificationBundle\Entity\Notifications $notification
+     *
+     * @return UserNotification
+     */
+    public function addNotification(\Erp\NotificationBundle\Entity\Notifications $notification)
+    {
+        $notification->setUserNotification($this);
+        $this->notifications[] = $notification;
+
+        return $this;
+    }
+
+    /**
+     * Remove notification
+     *
+     * @param \Erp\NotificationBundle\Entity\Notifications $notification
+     */
+    public function removeNotification(\Erp\NotificationBundle\Entity\Notifications $notification)
+    {
+        $this->notifications->removeElement($notification);
+    }
+
+    /**
+     * Get notifications
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * Add alert
+     *
+     * @param \Erp\NotificationBundle\Entity\Alerts $alert
+     *
+     * @return UserNotification
+     */
+    public function addAlert(\Erp\NotificationBundle\Entity\Alerts $alert)
+    {
+        $alert->setUserNotification($this);
+        $this->alerts[] = $alert;
+
+        return $this;
+    }
+
+    /**
+     * Remove alert
+     *
+     * @param \Erp\NotificationBundle\Entity\Alerts $alert
+     */
+    public function removeAlert(\Erp\NotificationBundle\Entity\Alerts $alert)
+    {
+        $this->alerts->removeElement($alert);
+    }
+
+    /**
+     * Get alerts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAlerts()
+    {
+        return $this->alerts;
     }
 
     /**

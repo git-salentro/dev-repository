@@ -49,7 +49,6 @@ erp_stripe:
     resource: "@ErpStripeBundle/Resources/config/routing.yml"
     prefix: /
 
-
 erp_notification:
     resource: "@ErpNotificationBundle/Resources/config/routing.yml"
     prefix: /

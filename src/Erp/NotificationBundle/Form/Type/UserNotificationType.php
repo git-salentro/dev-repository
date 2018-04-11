@@ -2,13 +2,14 @@
 
 namespace Erp\NotificationBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Erp\NotificationBundle\Entity\UserNotification;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserNotificationType extends AbstractType
 {
@@ -19,31 +20,35 @@ class UserNotificationType extends AbstractType
     {
         $builder
             ->add(
-                'daysBefore',
-                TextType::class,
+                'notifications',
+                CollectionType::class,
                 [
-                    'label' => 'Days Before Rent Due Date'
+                    'entry_type' => UserNotificationType::class,
                 ]
             )
             ->add(
-                'daysAfter',
-                TextType::class,
+                'alerts',
+                CollectionType::class,
                 [
-                    'label' => 'Days After Rent Due Date'
+                    'entry_type' => AlertType::class,
                 ]
             )
             ->add(
                 'sendAlertAutomatically',
                 CheckboxType::class,
                 [
-                    'label' => 'Automatically send Alert on Rent Due Date?'
+                    'label' => 'Automatically send Alert on Rent Due Date?',
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
                 ]
             )
             ->add(
                 'submit',
                 SubmitType::class,
                 [
-                    'label' => 'Days Before Rent Due Date'
+                    'label' => 'Submit
+                    '
                 ]
             );
     }

@@ -9,6 +9,7 @@ use Erp\NotificationBundle\Entity\Template;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class TemplateType extends AbstractType
 {
@@ -23,6 +24,9 @@ class TemplateType extends AbstractType
                 TextType::class,
                 [
                     'label' => 'Type',
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
                 ]
             )
             ->add(
@@ -30,6 +34,9 @@ class TemplateType extends AbstractType
                 TextType::class,
                 [
                     'label' => 'Title',
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
                 ]
             )
             ->add(
@@ -37,6 +44,9 @@ class TemplateType extends AbstractType
                 CkeditorType::class,
                 [
                     'label' => 'Description',
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
                 ]
             )
             ->add(
