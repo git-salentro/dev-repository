@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+docker-compose exec php bash -c "php app/console app:version:bump"
 docker-compose exec php bash -c "composer install"
 docker-compose exec php bash -c "php app/console doctrine:database:create --if-not-exists"
 

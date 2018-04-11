@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+docker-compose exec php bash -c "php app/console app:version:bump"
 docker-compose exec php bash -c "php app/console doctrine:migrations:migrate -n"
 docker-compose exec php bash -c "php app/console assets:install --symlink --env=dev"
 docker-compose exec php bash -c "php app/console assetic:dump --env=dev"
@@ -13,7 +14,6 @@ docker-compose exec php bash -c "chown -R www-data:www-data app/logs"
 docker-compose exec php bash -c "chown -R www-data:www-data web/uploads"
 docker-compose exec php bash -c "chown -R www-data:www-data web/cache"
 docker-compose exec php bash -c "php app/console security:check"
-docker-compose exec php bash -c "php app/console app:version:bump"
 
 result=$?
 
