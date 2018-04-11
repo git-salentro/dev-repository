@@ -13,6 +13,7 @@ docker-compose exec php bash -c "chown -R www-data:www-data app/logs"
 docker-compose exec php bash -c "chown -R www-data:www-data web/uploads"
 docker-compose exec php bash -c "chown -R www-data:www-data web/cache"
 docker-compose exec php bash -c "php app/console security:check"
+docker-compose exec php bash -c "php app/console app:version:bump"
 
 result=$?
 
