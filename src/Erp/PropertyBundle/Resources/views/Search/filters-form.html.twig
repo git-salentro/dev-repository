@@ -31,19 +31,6 @@
             </div>
         {% endif %}
 
-        {% if propertyFilter.getPriceMin() %}
-            <div class="selected-filter">
-                <span>Price Min: ${{ propertyFilter.getPriceMin()|number_format(0, '$') }}</span>
-                <button type="button" class="close close-selected-filter" data-el-id="{{ form.priceMin.vars.id }}">&times;</button>
-            </div>
-        {% endif %}
-
-        {% if propertyFilter.getPriceMax() %}
-            <div class="selected-filter">
-                <span>Price Max: ${{ propertyFilter.getPriceMax()|number_format(0, '$') }}</span>
-                <button type="button" class="close close-selected-filter" data-el-id="{{ form.priceMax.vars.id }}">&times;</button>
-            </div>
-        {% endif %}
 
         {% if propertyFilter.getBathrooms() %}
             <div class="selected-filter">
@@ -92,21 +79,6 @@
                 {{ form_label(form.zip) }}
                 {{ form_widget(form.zip) }}
                 {{ form_custom_errors.widget(form.zip) }}
-            </div>
-
-            <div class="col-md-12 col-xs-6 filter-item">
-                <div class="col-xs-6 price-filter price-filter1">
-                    {{ form_label(form.priceMin) }}
-                    <div class="select-container dropdown">
-                        {{ form_widget(form.priceMin) }}
-                    </div>
-                </div>
-                <div class="col-xs-6 price-filter">
-                    {{ form_label(form.priceMax) }}
-                    <div class="select-container dropdown">
-                        {{ form_widget(form.priceMax) }}
-                    </div>
-                </div>
             </div>
 
             <div class="col-md-12 col-xs-6 filter-item">

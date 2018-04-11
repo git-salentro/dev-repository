@@ -335,22 +335,6 @@ class PropertyRepository extends EntityRepository
                 ->setParameter('zip', $zip);
         }
 
-        if ($propertyFilter->getPriceMin() && $propertyFilter->getPriceMax()) {
-            $qb->andWhere('pr.price BETWEEN :priceMin AND :priceMax')
-                ->setParameter('priceMin', $propertyFilter->getPriceMin())
-                ->setParameter('priceMax', $propertyFilter->getPriceMax());
-        } else {
-            if ($propertyFilter->getPriceMin()) {
-                $qb->andWhere('pr.price >= :price')
-                    ->setParameter('price', $propertyFilter->getPriceMin());
-            }
-
-            if ($propertyFilter->getPriceMax()) {
-                $qb->andWhere('pr.price <= :price')
-                    ->setParameter('price', $propertyFilter->getPriceMax());
-            }
-        }
-
         if ($propertyFilter->getBathrooms()) {
             $qb->andWhere('pr.ofBaths = :ofBaths')
                 ->setParameter('ofBaths', $propertyFilter->getBathrooms());

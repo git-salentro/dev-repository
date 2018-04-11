@@ -2,11 +2,10 @@
 namespace Erp\PropertyBundle\Form\Type;
 
 use Erp\PropertyBundle\Model\PropertyFilter;
-use Erp\PropertyBundle\Repository\PropertyFilterRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -59,8 +58,6 @@ class PropertyFilterFormType extends AbstractType
             ->addCity()
             ->addZip()
             ->addAddress()
-            ->addPriceMin()
-            ->addPriceMax()
             ->addBathrooms()
             ->addBedrooms()
             ->addSquareFootage()
@@ -74,18 +71,15 @@ class PropertyFilterFormType extends AbstractType
         );
     }
 
+
     /**
-     * Form default options
-     *
-     * @param OptionsResolverInterface $resolver
+     * @inheritdoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            [
-                'data_class' => 'Erp\PropertyBundle\Model\PropertyFilter'
-            ]
-        );
+        $resolver->setDefaults([
+            'data_class' => PropertyFilter::class,
+        ]);
     }
 
     /**
@@ -214,46 +208,6 @@ class PropertyFilterFormType extends AbstractType
     /**
      * @return $this
      */
-    private function addPriceMin()
-    {
-        $this->formBuilder->add(
-            'priceMin',
-            'choice',
-            [
-                'choices'    => $this->propertyService->getListOfPrice(),
-                'attr'       => ['class' => 'form-control select-control'],
-                'label'      => 'Price Min',
-                'label_attr' => ['class' => 'control-label'],
-                'required'   => false,
-            ]
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function addPriceMax()
-    {
-        $this->formBuilder->add(
-            'priceMax',
-            'choice',
-            [
-                'choices'    => $this->propertyService->getListOfPrice(),
-                'attr'       => ['class' => 'form-control select-control'],
-                'label'      => 'Price Max',
-                'label_attr' => ['class' => 'control-label'],
-                'required'   => false,
-            ]
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
     private function addBathrooms()
     {
         $this->formBuilder->add(
@@ -335,8 +289,6 @@ class PropertyFilterFormType extends AbstractType
             'choice',
             [
                 'choices'    => [
-                    'price_asc'         => 'Price Ascending',
-                    'price_desc'        => 'Price Descending',
                     'updatedDate_desc'  => 'Newest to Oldest',
                     'updatedDate_asc'   => 'Oldest to Newest'
                 ],
