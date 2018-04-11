@@ -263,7 +263,7 @@ class StripeController extends BaseController
 
         $this->addFlash(
             'alert_ok',
-            'Success'
+            'Bank account has been verified successfully'
         );
 
         return $this->redirect($url);

@@ -54,6 +54,7 @@
                 product: ['auth'],
                 selectAccount: true,
                 onSuccess: function(public_token, metadata) {
+                    $.blockUI({message: 'Account verifying... please wait.'});
                     $.ajax({
                         url: '{{ path("erp_payment_stripe_verify_bank_account") }}',
                         type: 'POST',
@@ -64,7 +65,10 @@
                         },
                         success: function (response) {
                            if (response.redirect) {
+                               $.blockUI({message: 'Now you\'ll be redirected.'});
+                               // $.unblockUI();
                                document.location = response.redirect;
+
                            }
                         }
                     });
