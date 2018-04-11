@@ -14,7 +14,7 @@ class HomePageContentFixture extends Fixture
     public function load(ObjectManager $objectManager)
     {
         $homePageContent = new HomePageContent();
-        $homePageContent->setServiceBody('<div class="row"><div class="aboutus_title">Are you a property manager or landlord looking to streamline your process? Perhaps you&#39;re a tenant who wishes it was easier to pay rent?</div><p>Sound familiar? <a href="#">That&#39;s why we created Zoobdoo.</a> So thet everything a property manager, landlord, or tenant needs can be found in one place - in a simple, easy-to-navigate platform.</p><p><a href="#features">Check out the features below.</a></p></div>');
+        $homePageContent->setServiceBody('<div class="row"><div class="aboutus_title">Are you a property manager or landlord looking to streamline your process? Perhaps you&#39;re a tenant who wishes it was easier to pay rent?</div><p>Sound familiar? <a href="/register">That&#39;s why we created Zoobdoo.</a> So thet everything a property manager, landlord, or tenant needs can be found in one place - in a simple, easy-to-navigate platform.</p><p><a href="#features">Check out the features below.</a></p></div>');
         $homePageContent->setFeatureBody('<div class="features-title-block"><span>Zoobdoo Portal Features</span></div>
 
 <div class="row text-capabilities">
