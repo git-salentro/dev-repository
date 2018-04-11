@@ -121,7 +121,10 @@
 
     <div class="copyright-dark">
         <div class="container">
-            <span class="copyright">&copy; Copyright <span class="footer-date"></span> Zoobdoo  {{ app_version }}</span>
+            <span class="copyright" title="{{ app_version }}">&copy; Copyright <span class="footer-date"></span> Zoobdoo  {% if (app_version is defined) %}
+                    {% set app_version_array = app_version|split('-') %}{{ app_version_array.0 }}
+                {% endif %}</span>
+
         <div class="social-icons-container">
             <ul class="social-icons">
                 <li><a href="https://www.linkedin.com/company/zoobdoo-com" target="_blank"><img src="{{ asset('bundles/erpsite/images/li.png') }}"></a></li>
