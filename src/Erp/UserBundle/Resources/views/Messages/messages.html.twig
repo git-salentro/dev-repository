@@ -24,17 +24,12 @@
                                         {% set totalMessages = companion['totalMessages'] %}
                                         {% set companion = companion[0] %}
                                         {% set unreadMessages = count_unread_messages(user, companion) %}
-
                                         <li class="companion-name{% if currentCompanion.id == companion.id %} current{% endif %}">
                                             <a href="{{ path('erp_user_messages', {'toUserId':companion.id}) }}">{{ companion.firstName|e }} {{ companion.lastName|e }}
                                                 <span class="messages-total">({{ totalMessages }})</span>
                                             </a>
-                                            {% if unreadMessages %}
-                                                <div class="messages-count-icon">
-                                                    <span class="messages-unread-count messages-count">{{ unreadMessages }}</span>
-                                                </div>
-                                            {% endif %}
                                         </li>
+
                                     {% endfor %}
                                 {% endif %}
                             </ul>
