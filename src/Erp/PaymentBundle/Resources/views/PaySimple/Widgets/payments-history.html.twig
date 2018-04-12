@@ -1,7 +1,7 @@
 {% import '::widgets/form_errors.html.twig' as form_custom_errors %}
 
-<div class="col-md-8 col-xs-12 profile-widget-item history-item">
-    <div class="row widget-title-row">
+<div class="profile-widget-item">
+    <div class="widget-title-row">
         <div class="login-block-title bold-text">Payment History</div>
     </div>
     <div class="history-block">
@@ -31,7 +31,6 @@
         </div>
 
 		{{ form_start(form, { attr: {'class': 'payment-calendar'}, 'enctype': form_enctype(form)}) }}
-            <span class="bottom-block-title">Date </br>Range:</span>
 
             <div class="input-group date date-start">
                 <div class="form-group">
@@ -65,4 +64,5 @@
     <div class="question-mark">
         <a role="popup" href="{{ path('erp_user_profile_hint_content', {'hintCode':'payment_history'}) }}">&#063;</a>
     </div>
+
 </div>

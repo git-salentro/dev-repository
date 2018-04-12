@@ -7,16 +7,16 @@
     {{ block('form_widget_simple') }}
 {%- endblock date_widget -%}
 
-<div class="col-md-3 col-xs-6 profile-widget-item widget-first tenants-pay">
-    <div class="row widget-title-row">
+<div class="profile-widget-item">
+    <div class="widget-title-row">
         <div class="login-block-title bold-text">Pay Rent</div>
     </div>
     {{ form_start(form, {'action': path('erp_property_scheduled_rent_payment_rent'), 'attr': {'class': 'pay-widget'}}) }}
-        <div class="form-group col-xs-7">
+        <div class="form-group col-xs-6">
             {{ form_widget(form.amount) }}
         </div>
 
-        <div class="form-group col-xs-12 date-col">
+        <div class="form-group col-xs-6 date-col">
             {{ form_widget(form.startPaymentAt) }}
         </div>
         <div class="form-group col-xs-12 date-col">
@@ -26,10 +26,8 @@
         </div>
         <div class="form-footer col-xs-12">
             <div class="checkbox">
-                <label>
                     {{ form_widget(form.type) }}
                     {{ form_label(form.type) }}
-                </label>
             </div>
 
             {% if form.agreeAutoWithdrawal is defined %}
@@ -41,7 +39,7 @@
                 </div>
             {% endif %}
 
-            <div class="row edit-row">
+            <div class="text-center">
                 {% set attr = [] %}
 
                 {% if manager.stripeAccount == false or user.stripeCustomer == false %}
@@ -53,5 +51,5 @@
                 {{ form_widget(form.submit, {'attr': attr}) }}
             </div>
         </div>
-    {{ form_end(form) }}
+{{ form_end(form) }}
 </div>

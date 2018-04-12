@@ -83,7 +83,7 @@ class ScheduledRentPaymentType extends AbstractType
                     'label' => false,
                     'attr' => [
                         'class' => 'form-control subject date',
-                        'placeholder' => 'Payment Date',
+                        'placeholder' => 'Date',
                     ],
                     'required' => true,
                     'constraints' => [

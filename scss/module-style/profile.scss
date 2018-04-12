@@ -246,8 +246,6 @@
                                 width: 230px;
                                 display: inline-block;
                                 border: 1px solid #d6d6d6;
-                                -webkit-border-radius: 5px;
-                                -moz-border-radius: 5px;
                                 border-radius: 5px;
                                 padding-left: 37px;
                                 position: relative;
@@ -261,15 +259,13 @@
             height: auto;
         }
         .profile-widget-item {
-            min-height: 260px;
+            min-height: 270px;
             border-radius: 5px;
             background-color: #fff;
-            -webkit-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
-            -moz-box-shadow: 1px 2px 6px rgba(0,0,0,.15);
             box-shadow: 1px 2px 6px rgba(0,0,0,.15);
-            &:last-child {
-                margin-right: 0;
-            }
+            display: inline-block;
+            width: 100%;
+            position: relative;
             &.address-widget {
                 z-index: 5;
             }
@@ -395,12 +391,6 @@
                         margin-right: 8px;
                         width: 15px;
                         height: 15px;
-                        &.icon-user {
-                            background: url(../images/profile/user-icon.png) no-repeat;
-                        }
-                        &.icon-lock {
-                            background: url(../images/profile/locked.png) no-repeat;
-                        }
                     }
                 }
             }
@@ -676,12 +666,13 @@
                 }
                 .form-footer {
                     .checkbox {
-                        font-size: 12px;
-                        margin: 0;
+                        font-size: 13px;
+                        line-height: 19px;
+                        margin: 2px;
                         label {
+                            vertical-align: text-top;
+                            line-height: 20px;
                             input {
-                                width: 15px;
-                                height: 15px;
                             }
                         }
                     }
@@ -753,16 +744,12 @@
     .profile-widget-item {
         .message-manager {
             margin: 30px 30px 0;
-            textarea {
-                height: 40px;
-            }
             .edit-row {
                 margin-top: 10px;
             }
         }
         .pay-widget {
-            margin: 30px 0 0 0;
-            font-size: 13px;
+            margin: 30px 15px;
             label {
                 font-weight: normal;
                 span {
@@ -772,14 +759,12 @@
                     }
                 }
             }
+            .select2-selection__rendered {
+                font-size: 16px;
+                line-height: 2.4em;
+            }
             .method-col {
                 padding: 0;
-            }
-            .form-group {
-                margin-bottom: 2px;
-            }
-            .form-control { 
-                font-size: 14px;
             }
             .form-footer {
                 .checkbox {
@@ -928,7 +913,15 @@
             display: inline-block;
             float: none;
             vertical-align: bottom;
-            margin: 0 4px 4px -20px;
+            margin: 0;
         }
     }
+}
+
+
+.icon-user {
+    background: url(../images/profile/user-icon.png) no-repeat;
+}
+.icon-lock {
+    background: url(../images/profile/locked.png) no-repeat;
 }

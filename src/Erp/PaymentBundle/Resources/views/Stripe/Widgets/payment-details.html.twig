@@ -1,8 +1,9 @@
 {% set cc = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::CREDIT_CARD') %}
 {% set ba = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::BANK_ACCOUNT') %}
 
-<div class="col-md-5 col-xs-12 profile-widget-item widget-last height_custom">
-    <div class="row widget-title-row">
+
+<div class="profile-widget-item">
+    <div class="widget-title-row">
         <div class="login-block-title bold-text">Bank {% if app.user.hasRole('ROLE_TENANT') %}&amp; Cards {% endif %}
             Information
         </div>
@@ -11,13 +12,13 @@
     {#TODO Optimize #}
     {% if app.user.hasRole('ROLE_TENANT') %}
         {% if creditCard or bankAccount %}
-            <div class="row bank-info-row">
+            <div class="bank-info-row">
                 <div class="col-xs-6">
                     {% if creditCard is null %}
                         <div class="bank-details">
                             Cards information is not added yet
                         </div>
-                        <div class="row edit-row">
+                        <div class="text-center">
                             <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}" class="btn edit-btn">
                                 add card info
                             </a>
@@ -29,7 +30,7 @@
                                 <span>**** **** **** {{ creditCard.last4 }}</span>
                             </div>
                         </div>
-                        <div class="row edit-row">
+                        <div class="text-center">
                             <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
                                class="btn edit-btn">edit</a>
                         </div>
@@ -40,17 +41,20 @@
                         <div class="bank-details">
                             Bank information is not added yet
                         </div>
-                        <div class="row edit-row">
+                        <div class="text-center">
                             <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
                     {% else %}
                         <div class="bank-details">
                             <div class="bank-title"><span
-                                        class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
-                            <div class="bank-card"><span>{{ bankAccount.account_holder_name }}</span></div>
-                            <div class="bank-card"><span>{{ bankAccount.routing_number }}</span></div>
+                                        class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span>
+
+                            </div>
+                            <div class="bank-card"><span
+                                        class="icon-user"></span><span>{{ bankAccount.account_holder_name }}</span></div>
+                            <div class="bank-card"><span class="bg-check"></span><span>{{ bankAccount.routing_number }}</span></div>
                         </div>
-                        <div class="row edit-row">
+                        <div class="text-center">
                             <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
 
@@ -58,20 +62,20 @@
                 </div>
             </div>
         {% else %}
-            <div class="row bank-info-row">
+            <div class="bank-info-row">
                 <div class="col-xs-12">
                     <span style="color: #000;">Please add Bank or Cards information in order to pay rent.</span>
                 </div>
             </div>
-            <div class="row bank-info-row">
+            <div class="bank-info-row">
                 <div class="col-xs-6">
-                    <div class="row edit-row custombutton">
+                    <div>
                         <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
                            class="btn edit-btn">add card info</a>
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <div class="row edit-row custombutton">
+                    <div>
                         <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                     </div>
                 </div>
@@ -80,7 +84,7 @@
         {% endif %}
     {% else %}
         {% if bankAccount %}
-            <div class="row bank-info-row">
+            <div class="bank-info-row">
                 <div class="col-xs-12">
                     <div class="row">
                         <div class="bank-details col-xs-9">
@@ -97,9 +101,9 @@
             </div>
             <hr>
         {% else %}
-            <div class="row bank-info-row">
+            <div class="bank-info-row">
                 <div class="col-xs-12">
-                    <div class="row edit-row">
+                    <div class="text-center">
                         <button id='verify-ba' class="btn edit-btn" {% if app.session.flashBag.has('show_navigation_sign_after_register') %}style="position: relative"{% endif %}>
                             {% if app.session.flashBag.has('show_navigation_sign_after_register') %}
                                 {# TODO Refactoring #}

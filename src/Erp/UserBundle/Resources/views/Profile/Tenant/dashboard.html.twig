@@ -25,100 +25,51 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
             <div class="row profile-widget-row">
+
+                <div class="col-md-3 col-xs-12">
                 {{ render(controller('ErpPropertyBundle:ScheduledRentPayment:payRent')) }}
-
-                {{ render(controller('ErpUserBundle:Dashboard:showPaymentDetails')) }}
-
-                {{ render(controller('ErpPaymentBundle:PaymentWidgets:paymentsPreferences')) }}
-            </div>
-
-            <div class="row profile-widget-row profile-widget-rows tenants-block">
-                <div class="col-md-3 col-xs-6 profile-widget-item widget-last tenants-block-item">
-
-                    {{ render(controller('ErpUserBundle:Profile:renderWidgetMessages')) }}
-
-                    <div class="profile-widget-content widget-second">
-                        <div class="row widget-title-row">
-                            <div class="login-block-title bold-text">Email Options</div>
-                        </div>
-                        <div class="email-block">
-                            <div class="email-row">
-                                <span class="fa fa-envelope-o"></span>
-                                <span class="email-details" title="{{ user.email }}">{{ user.email }}</span>
-                                <div class="primary-email">Primary, Email</div>
-                            </div>
-                            {% if user.secondEmail %}
-                                <div class="email-row">
-                                    <span class="fa fa-envelope-o"></span>
-                                    <span class="email-details" title="{{ user.secondEmail }}">{{ user.secondEmail }}</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="row edit-row">
-                            <a class="btn edit-btn" href="{{ path('erp_user_email_options') }}">edit</a>
-                        </div>
-                        <hr>
-                        <div class="question-mark">
-                            <a role="popup" href="{{ path('erp_user_profile_hint_content', {'hintCode':'email_options'}) }}">&#063;</a>
-                        </div>
-                    </div>
-
                 </div>
 
-                {{ render(controller('ErpUserBundle:Profile:renderWidgetServiceRequest')) }}
+                <div class="col-md-6 col-xs-12">
+                {{ render(controller('ErpUserBundle:Dashboard:showPaymentDetails')) }}
+                </div>
 
-                <div class="col-md-3 col-xs-12 profile-widget-item login-widget widget-last">
+                <div class="col-md-3 col-xs-12">
+                    {{ render(controller('ErpUserBundle:Profile:renderWidgetMessages')) }}
+                </div>
 
-                    <div class="profile-widget-content profile-content-last">
-                        <div class="row widget-title-row">
-                            <div class="login-block-title bold-text">Account Login Details</div>
-                        </div>
-                        <div class="row login-row">
-                            <div class="account-photo">
-                                {% if user.image %}
-                                    <img src="{{ asset(user.image.path ~ '/' ~ user.image.name) | imagine_filter('profile_image') }}"/>
-                                {% else %}
-                                     <img src="{{ asset('assets/images/profile/User.png') }}"/>
-                                {% endif %}
-                            </div>
-                            <div class="account-info-block">
-                                <div class="account-info">
-                                    <span class="account-icon icon-user"></span>
-                                    <span class="account-name">{{ user.firstName }}</span>
-                                </div>
-                                <div class="account-info"><span class="account-icon icon-lock"></span><span class="account-name">****</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row edit-row">
-                            <a class="btn edit-btn" href="{{ path('erp_user_details') }}">edit</a>
-                        </div>
-                        <hr>
-                        <div class="question-mark">
-                            <a role="popup" href="{{ path('erp_user_profile_hint_content', {'hintCode':'account_login_details'}) }}">&#063;</a>
-                        </div>
-                    </div>
+            </div>
+            <div class="row profile-widget-row">
 
-                    <div class="profile-widget-content profile-content-last widget-second prop-widget">
-                        <div class="row widget-title-row">
+                <div class="col-md-12 col-xs-12">
+                    <div class="profile-widget-item">
+                        <div class="widget-title-row">
                             <div class="login-block-title bold-text">My Property</div>
                         </div>
                         <div class="address-details-block">
                             <div class="primary-address">Your Address:</div>
                             <span class="address-details street-details">{{ property.getAddress() }}</span>
                             <span class="address-details city-details">
-                                {{ property.getCity() ? property.getCity().getName() : '' }},
+                                    {{ property.getCity() ? property.getCity().getName() : '' }},
                                 {{ property.getStateCode() }} {{ property.getZip() }}
-                            </span>
+                                </span>
                         </div>
                         <hr>
                         <div class="question-mark">
-                            <a role="popup" href="{{ path('erp_user_profile_hint_content', {'hintCode':'my_property'}) }}">&#063;</a>
+                            <a role="popup"
+                               href="{{ path('erp_user_profile_hint_content', {'hintCode':'my_property'}) }}">&#063;</a>
                         </div>
                     </div>
-
                 </div>
+
+
+
+
+
+
+
             </div>
+        </div>
     </section>
 {% endblock %}
 
@@ -132,7 +83,7 @@
                 key: '{{ plaid_public_key }}',
                 product: ['auth'],
                 selectAccount: true,
-                onSuccess: function(public_token, metadata) {
+                onSuccess: function (public_token, metadata) {
                     $.blockUI({message: 'Account verifying... Please wait.'});
                     $.ajax({
                         url: '{{ path("erp_payment_stripe_verify_bank_account") }}',
@@ -151,14 +102,14 @@
                         }
                     });
                 },
-                onExit: function(err, metadata) {
+                onExit: function (err, metadata) {
                     if (err != null) {
 
                     }
                 }
             });
 
-            $('#verify-ba').click(function() {
+            $('#verify-ba').click(function () {
                 linkHandler.open();
             });
         })(jQuery);
