@@ -1161,7 +1161,6 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     .edit-btn {
                         background-color: #fff;
                         color: #fb872b;
-                        width: 140px;
                         text-transform: uppercase;
                         border: 1px solid #fb872b;
                         &.paid-report {
@@ -3587,6 +3586,9 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     height: 70px;
                 span {
                     font-size: 30px;
+                    line-height: 1.3em;
+                    padding: 0 15px;
+                    display: block;
                 }
             }
         }

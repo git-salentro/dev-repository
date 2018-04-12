@@ -1,7 +1,7 @@
 {% set cc = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::CREDIT_CARD') %}
 {% set ba = constant('Erp\\PaymentBundle\\Entity\\StripeCustomer::BANK_ACCOUNT') %}
 
-<div class="col-md-5 col-xs-6 profile-widget-item widget-last height_custom">
+<div class="col-md-5 col-xs-12 profile-widget-item widget-last height_custom">
     <div class="row widget-title-row">
         <div class="login-block-title bold-text">Bank {% if app.user.hasRole('ROLE_TENANT') %}&amp; Cards {% endif %}
             Information
