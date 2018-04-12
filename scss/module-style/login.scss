@@ -22,14 +22,9 @@
     }
     .title-block {
         text-align: center;
-        margin-bottom: 45px;
-        -webkit-border-radius: 4px;
-        -moz-border-radius: 4px;
-        border-radius: 4px;
-        border-bottom: 1px solid #e3e1e1;
         h1 {
             font-size: 56px;
-            margin-bottom: 30px;
+            margin: 45px;
         }
     }
     .login-block {
@@ -51,14 +46,13 @@
             padding: 0;
             .login-block-title {
                 display: block;
-                height: 45px;
                 text-align: center;
                 color: #fff;
                 border-radius: 4px;
                 background-color: #ca171b;
                 font-size: 18px;
                 line-height: 2.5;
-                margin-bottom: 80px;
+                margin-bottom: 60px;
                 vertical-align: middle;
             }
         }
