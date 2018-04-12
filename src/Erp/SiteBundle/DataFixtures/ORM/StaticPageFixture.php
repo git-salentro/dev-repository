@@ -168,6 +168,7 @@ class StaticPageFixture extends Fixture
 <div class="col-xs-3 features"><img alt="payment.png" src="/assets/images/payment.png" /><p>Process online payments straight to your account</p></div>
 <div class="col-xs-3 features"><img alt="application.png" src="/assets/images/application.png" /><p>Accept applications electronically and receive application fees.</p></div>
 <div class="col-xs-3 features"><img alt="thumbs.png" src="/assets/images/thumbs.png" /><p>Run credit, criminal, and eviction history.</p></div>
+</div>
 <div class="row">
 <div class="col-xs-3 features"><img alt="maintenance.png" src="/assets/images/maintenance.png" /><p>Automated maintenance requests.</p></div>
 <div class="col-xs-3 features"><img alt="2.png" src="/assets/images/2.png" /><p>E-sign rental applications and contracts.</p></div>
