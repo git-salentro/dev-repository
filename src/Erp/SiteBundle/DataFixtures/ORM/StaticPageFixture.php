@@ -31,7 +31,7 @@ class StaticPageFixture extends Fixture
 
 <p>Let’s us help you grow your business! Drop us an email now at <a href="mailto:info@zoobdoo.com">info@zoobdoo.com</a>, and let’s get started! </p>
 
-<ul><li>• <a href="https://zoobdoo.com/landlord-features" style="color:#555;" title="Landlords">Manager Features</a></li>
+<ul><li>• <a href="https://zoobdoo.com/manager-features" style="color:#555;" title="Managers">Manager Features</a></li>
 	<li>• <a href="https://zoobdoo.com/tenant-features" style="color:#555;" title="Tenants">Tenant Features</a></li>
 	<li>• <a href="https://zoobdoo.com/contact" style="color:#555;" title="Contact Zoobdoo">Contact us</a></li>
 </ul>');
