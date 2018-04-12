@@ -21,15 +21,42 @@
             {{ form_start(form, {'action': path('erp_notification_user_notification_crate') }) }}
                 <div class="row">
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            {{ form_row(form.notifications) }}
+                        <div class="form-group" id="notifications-block">
+                            <h3>Notifications</h3>
+                            {% for notification in form.notifications %}
+                                {{ form_errors(notification) }}
+                                {{ form_widget(notification) }}
+                            {% endfor %}
                         </div>
+                        <button
+                                type="button"
+                                id="add-notification"
+                                class="btn red-btn"
+                                data-prototype="{{ form_widget(form.notifications.vars.prototype)|e }}"
+                                data-widget-counter="{{ form.notifications.children|length }}"
+                        >
+                            Add
+                        </button>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">
-                            {{ form_row(form.alerts) }}
+                        <div class="form-group" id="alerts-block">
+                            <h3>Alerts</h3>
+                            {% for alert in form.alerts %}
+                                {{ form_errors(alert) }}
+                                {{ form_widget(alert) }}
+                            {% endfor %}
                         </div>
+                        <button
+                                type="button"
+                                id="add-alert"
+                                class="btn red-btn"
+                                data-prototype="{{ form_widget(form.alerts.vars.prototype)|e }}"
+                                data-widget-counter="{{ form.alerts.children|length }}"
+                        >
+                            Add
+                        </button>
                     </div>
+
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
@@ -40,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                {{ form_widget(form.submit, {'attr': {'class': 'btn red-btn'}}) }}
+                {{ form_widget(form.submit, {'label': 'Next', 'attr': {'class': 'btn red-btn'}}) }}
             {{ form_end(form) }}
         </div>
     </section>

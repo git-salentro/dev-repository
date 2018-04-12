@@ -5,12 +5,12 @@ namespace Erp\NotificationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Notifications
+ * Class Alert
  *
- * @ORM\Table(name="erp_notifications_notifications")
+ * @ORM\Table(name="erp_notification_alert")
  * @ORM\Entity
  */
-class Notifications
+class Alert
 {
     /**
      * @ORM\Id
@@ -22,12 +22,12 @@ class Notifications
     /**
      * @var integer
      *
-     * @ORM\Column(name="days_before", type="integer")
+     * @ORM\Column(name="days_after", type="integer")
      */
-    private $daysBefore;
+    private $daysAfter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserNotification", inversedBy="notifications", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="UserNotification", inversedBy="Alert", cascade={"persist"})
      * @ORM\JoinColumn(name="user_notification_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $userNotification;
@@ -43,27 +43,27 @@ class Notifications
     }
 
     /**
-     * Set daysBefore
+     * Set daysAfter
      *
-     * @param integer $daysBefore
+     * @param integer $daysAfter
      *
-     * @return Notifications
+     * @return Alert
      */
-    public function setDaysBefore($daysBefore)
+    public function setDaysAfter($daysAfter)
     {
-        $this->daysBefore = $daysBefore;
+        $this->daysAfter = $daysAfter;
 
         return $this;
     }
 
     /**
-     * Get daysBefore
+     * Get daysAfter
      *
      * @return integer
      */
-    public function getDaysBefore()
+    public function getDaysAfter()
     {
-        return $this->daysBefore;
+        return $this->daysAfter;
     }
 
     /**
@@ -71,7 +71,7 @@ class Notifications
      *
      * @param \Erp\NotificationBundle\Entity\UserNotification $userNotification
      *
-     * @return Notifications
+     * @return Alert
      */
     public function setUserNotification(\Erp\NotificationBundle\Entity\UserNotification $userNotification = null)
     {

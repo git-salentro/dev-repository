@@ -58,15 +58,11 @@ class UserNotificationController extends Controller
         /** @var User $user */
         $user = $this->getUser();
 
-        if ($data = json_decode($request->get('data'), true)) {
-            $idx = $data['idx'];
-            $allElements = $data['all_elements'];
-        } else {
-            $idx = $request->get('idx', []);
-            $allElements = $request->get('all_elements', false);
-        }
+        $idx = $request->get('idx', []);
+        $allElements = $request->get('all_elements', false);
 
-        $propertyRepository = $this->getDoctrine()->getRepository(Property::class);
+        $em = $this->getDoctrine()->getManagerForClass(Property::class);
+        $propertyRepository = $em->getRepository(Property::class);
         /** @var QueryBuilder $qb */
         $qb = $propertyRepository->getQueryBuilderByUser($user);
 
@@ -84,7 +80,7 @@ class UserNotificationController extends Controller
                 $property = $object[0];
 
                 $userNotificationPrototype = clone $userNotification;
-                $userNotificationPrototype->setProperty($property);
+                $userNotificationPrototype->addProperty($property);
 
                 $em->persist($userNotificationPrototype);
 
@@ -115,7 +111,16 @@ class UserNotificationController extends Controller
 
     public function viewAlertAction($id)
     {
+        /** @var User $user */
+        $user = $this->getUser();
 
+        $repo = $this->getDoctrine()->getManagerForClass(UserNotification::class)->getRepository(UserNotification::class);
+        /** @var UserNotification $alert */
+        $alert = $repo->getAlertByUserAndId($id, $user);
+
+        return $this->render('ErpNotificationBundle:UserNotification:view_alert.html.twig', [
+            'alert' => $alert,
+        ]);
     }
 
     private function update(Request $request)

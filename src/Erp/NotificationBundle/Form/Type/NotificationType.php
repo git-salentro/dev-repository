@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Erp\NotificationBundle\Entity\Notification;
 
 class NotificationType extends AbstractType
 {
@@ -20,7 +21,14 @@ class NotificationType extends AbstractType
                 'daysBefore',
                 TextType::class,
                 [
+                    'required' => false,
                     'label' => 'Days Before Rent Due Date',
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label_attr' => [
+                        'class' => 'control-label'
+                    ],
                     'constraints' => [
                         new Assert\NotBlank(),
                     ],
@@ -34,7 +42,7 @@ class NotificationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => '',
+            'data_class' => Notification::class,
         ]);
     }
 

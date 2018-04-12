@@ -11,8 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Class UserNotification
  *
- * @ORM\Table(name="erp_notifications_user_notification")
- * @ORM\Entity
+ * @ORM\Table(name="erp_notification_user_notification")
+ * @ORM\Entity(repositoryClass="Erp\NotificationBundle\Repository\UserNotificationRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class UserNotification implements DatesAwareInterface
@@ -31,14 +31,14 @@ class UserNotification implements DatesAwareInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Notifications", mappedBy="userNotification", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="userNotification", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $notifications;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Alerts", mappedBy="userNotification", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Alert", mappedBy="userNotification", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $alerts;
 
@@ -50,16 +50,22 @@ class UserNotification implements DatesAwareInterface
     private $sendAlertAutomatically;
 
     /**
-     * @var Property
+     * @var ArrayCollection
      *
-     * @ORM\OneToOne(targetEntity="\Erp\PropertyBundle\Entity\Property", inversedBy="userNotification")
+     * @ORM\ManyToMany(targetEntity="Erp\PropertyBundle\Entity\Property")
+     * @ORM\JoinTable(
+     *     name="erp_notification_user_notification_property",
+     *     joinColumns={@ORM\JoinColumn(name="user_notification_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="proprty_id", referencedColumnName="id", unique=true)}
+     * )
      */
-    private $property;
+    private $properties;
 
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
         $this->alerts = new ArrayCollection();
+        $this->properties = new ArrayCollection();
     }
 
     /**
@@ -99,11 +105,11 @@ class UserNotification implements DatesAwareInterface
     /**
      * Add notification
      *
-     * @param \Erp\NotificationBundle\Entity\Notifications $notification
+     * @param \Erp\NotificationBundle\Entity\Notification $notification
      *
      * @return UserNotification
      */
-    public function addNotification(\Erp\NotificationBundle\Entity\Notifications $notification)
+    public function addNotification(\Erp\NotificationBundle\Entity\Notification $notification)
     {
         $notification->setUserNotification($this);
         $this->notifications[] = $notification;
@@ -114,9 +120,9 @@ class UserNotification implements DatesAwareInterface
     /**
      * Remove notification
      *
-     * @param \Erp\NotificationBundle\Entity\Notifications $notification
+     * @param \Erp\NotificationBundle\Entity\Notification $notification
      */
-    public function removeNotification(\Erp\NotificationBundle\Entity\Notifications $notification)
+    public function removeNotification(\Erp\NotificationBundle\Entity\Notification $notification)
     {
         $this->notifications->removeElement($notification);
     }
@@ -134,11 +140,11 @@ class UserNotification implements DatesAwareInterface
     /**
      * Add alert
      *
-     * @param \Erp\NotificationBundle\Entity\Alerts $alert
+     * @param \Erp\NotificationBundle\Entity\Alert $alert
      *
      * @return UserNotification
      */
-    public function addAlert(\Erp\NotificationBundle\Entity\Alerts $alert)
+    public function addAlert(\Erp\NotificationBundle\Entity\Alert $alert)
     {
         $alert->setUserNotification($this);
         $this->alerts[] = $alert;
@@ -149,9 +155,9 @@ class UserNotification implements DatesAwareInterface
     /**
      * Remove alert
      *
-     * @param \Erp\NotificationBundle\Entity\Alerts $alert
+     * @param \Erp\NotificationBundle\Entity\Alert $alert
      */
-    public function removeAlert(\Erp\NotificationBundle\Entity\Alerts $alert)
+    public function removeAlert(\Erp\NotificationBundle\Entity\Alert $alert)
     {
         $this->alerts->removeElement($alert);
     }
@@ -167,26 +173,36 @@ class UserNotification implements DatesAwareInterface
     }
 
     /**
-     * Set property
+     * Add property
      *
      * @param \Erp\PropertyBundle\Entity\Property $property
      *
      * @return UserNotification
      */
-    public function setProperty(\Erp\PropertyBundle\Entity\Property $property = null)
+    public function addProperty(\Erp\PropertyBundle\Entity\Property $property)
     {
-        $this->property = $property;
+        $this->properties[] = $property;
 
         return $this;
     }
 
     /**
-     * Get property
+     * Remove property
      *
-     * @return \Erp\PropertyBundle\Entity\Property
+     * @param \Erp\PropertyBundle\Entity\Property $property
      */
-    public function getProperty()
+    public function removeProperty(\Erp\PropertyBundle\Entity\Property $property)
     {
-        return $this->property;
+        $this->properties->removeElement($property);
+    }
+
+    /**
+     * Get properties
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProperties()
+    {
+        return $this->properties;
     }
 }

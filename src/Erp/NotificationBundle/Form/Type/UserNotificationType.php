@@ -23,32 +23,35 @@ class UserNotificationType extends AbstractType
                 'notifications',
                 CollectionType::class,
                 [
-                    'entry_type' => UserNotificationType::class,
+                    'label' => false,
+                    'entry_type' => NotificationType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
                 ]
             )
             ->add(
                 'alerts',
                 CollectionType::class,
                 [
+                    'label' => false,
                     'entry_type' => AlertType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
                 ]
             )
             ->add(
                 'sendAlertAutomatically',
                 CheckboxType::class,
                 [
+                    'required' => false,
                     'label' => 'Automatically send Alert on Rent Due Date?',
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                    ]
                 ]
             )
             ->add(
                 'submit',
                 SubmitType::class,
                 [
-                    'label' => 'Submit
-                    '
+                    'label' => 'Submit',
                 ]
             );
     }
@@ -60,6 +63,7 @@ class UserNotificationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserNotification::class,
+            'csrf_protection' => false,
         ]);
     }
 
