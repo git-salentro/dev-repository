@@ -5034,6 +5034,9 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                     height: 70px;
                 span {
                     font-size: 25px;
+                    line-height: 1.3em;
+                    padding: 0 15px;
+                    display: block;
                 }
             }
         }
