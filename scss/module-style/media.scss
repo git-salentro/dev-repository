@@ -1628,22 +1628,21 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
                             }
                         }
                         .messages-count-icon {
-                            height: 32px;
-                            width: 32px;
-                            -webkit-border-radius: 17px;
-                            -moz-border-radius: 17px;
+                            padding: 0 9px;
                             border-radius: 17px;
                             color: #fff;
-                            background-color: #f86323;
+                            border: 4px solid #fff;
+                            background-color: rgba(248,99,35,1);
                             position: absolute;
-                            top: 4px;
-                            right: 10px;
+                            top: -12px;
+                            right: -21px;
                             text-align: center;
+                            z-index: 1;
                             span {
                                 font-size: 13px;
-                                line-height: 2.5;
                                 position: relative;
-                                display: inline-block;
+                                display: block;
+                                line-height: 24px;
                             }
                         }
                     }
