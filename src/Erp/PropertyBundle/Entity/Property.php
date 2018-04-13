@@ -282,11 +282,11 @@ class Property
      * @ORM\Column(
      *      name="status",
      *      type="string",
-     *      columnDefinition="ENUM('available','rented', 'draft', 'deleted') DEFAULT 'draft'",
+     *      length=16,
      *      nullable=true
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_DRAFT;
 
     /**
      * @var \DateTime

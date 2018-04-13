@@ -59,8 +59,8 @@ class UserDocument
      *
      * @ORM\Column(
      *      name="status",
-     *      type="string",
-     *      columnDefinition="ENUM('Sent','Completed','Pending') DEFAULT 'Pending'"
+     *      length=32,
+     *      type="string"
      * )
      */
     protected $status = self::STATUS_PENDING;
