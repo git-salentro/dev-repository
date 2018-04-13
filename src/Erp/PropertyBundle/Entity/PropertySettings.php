@@ -28,6 +28,10 @@ class PropertySettings
      *      targetEntity="\Erp\PropertyBundle\Entity\Property",
      *      inversedBy="settings"
      * )
+     * @ORM\JoinColumn(
+     *      name="property_id",
+     *      referencedColumnName="id"
+     * )
      */
     protected $property;
 

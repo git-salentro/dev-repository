@@ -44,8 +44,5 @@ class PropertyFixture extends Fixture
         $objectManager->persist($object);
         $objectManager->flush();
 
-        $propertySettings->setProperty($object);
-        $objectManager->persist($propertySettings);
-        $objectManager->flush();
     }
 }
