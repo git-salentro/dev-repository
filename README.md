@@ -12,12 +12,13 @@ Install Sass:
 
 Run command `gulp`
 
-Run commands `bash deploy/install-dev.sh`.
-and `bash deploy/install-prod.sh`.
+Run in docker: `docker-compose up -d`.
+
+Run commands `bash deploy/install.sh`.
 
 # Updating
-Run commands `bash deploy/update-dev.sh`
-and `bash deploy/update-prod.sh`.
+Run commands `bash deploy/update.sh`
+
 
 Test login with TENANT role: 
 Login: peterparker@test.com
