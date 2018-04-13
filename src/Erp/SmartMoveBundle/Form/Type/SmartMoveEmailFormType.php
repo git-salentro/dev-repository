@@ -50,7 +50,7 @@ class SmartMoveEmailFormType extends AbstractType
         )->add(
             'go',
             'submit',
-            ['label' => 'GO', 'attr' => ['class' => 'btn edit-btn']]
+            ['label' => 'GO', 'attr' => ['class' => 'btn edit-btn btn-space']]
         );
     }
 

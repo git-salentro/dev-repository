@@ -53,7 +53,7 @@ class SmartMoveGetReportFormType extends AbstractType
         )->add(
             'submit',
             'submit',
-            ['label' => 'GET REPORT', 'attr' => ['class' => 'btn edit-btn', 'disabled' => 'disabled']]
+            ['label' => 'GET REPORT', 'attr' => ['class' => 'btn edit-btn btn-space', 'disabled' => 'disabled']]
         );
     }
 
