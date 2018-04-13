@@ -24,21 +24,31 @@
 
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
-            <div class="row profile-widget-row height_custom">
+            <div class="row profile-widget-row">
+                <div class="col-md-6 col-xs-12">
                 {{ render(controller('ErpUserBundle:Dashboard:showPaymentDetails')) }}
+                </div>
             </div>
-            <div class="row profile-widget-row profile-widget-custom">
-                {{ render(controller('ErpUserBundle:Dashboard:showTransactions')) }}
+            <div class="row profile-widget-row">
+                <div class="col-md-12 col-xs-12">
+                    {{ render(controller('ErpUserBundle:Dashboard:showTransactions')) }}
+                </div>
             </div>
-            <div class="row profile-widget-row height_custom">
-                {{ render(controller('ErpUserBundle:Dashboard:showCashflows')) }}
+            <div class="row profile-widget-row">
+                <div class="col-md-6 col-xs-6">
+                    {{ render(controller('ErpSmartMoveBundle:SmartMove:backgroundCreditCheckWidget')) }}
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    {{ render(controller('ErpUserBundle:Dashboard:showProperties')) }}
+                </div>
             </div>
-            <div class="row profile-widget-row profile-widget-custom">
-                {{ render(controller('ErpSmartMoveBundle:SmartMove:backgroundCreditCheckWidget')) }}
-                {{ render(controller('ErpUserBundle:Dashboard:showProperties')) }}
-            </div>
-            <div class="row profile-widget-row profile-widget-custom">
-                {{ render(controller('ErpUserBundle:Dashboard:showLateRentPayments')) }}
+            <div class="row profile-widget-row">
+                <div class="col-md-6 col-xs-6">
+                    {{ render(controller('ErpUserBundle:Dashboard:showCashflows')) }}
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    {{ render(controller('ErpUserBundle:Dashboard:showLateRentPayments')) }}
+                </div>
             </div>
         </div>
     </section>

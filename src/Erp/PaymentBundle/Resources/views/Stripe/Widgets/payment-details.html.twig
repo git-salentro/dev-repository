@@ -41,7 +41,7 @@
                         <div class="bank-details">
                             Bank information is not added yet
                         </div>
-                        <div class="text-center">
+                        <div class="edit-row verify-ba">
                             <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
                     {% else %}
@@ -54,7 +54,7 @@
                                         class="icon-user"></span><span>{{ bankAccount.account_holder_name }}</span></div>
                             <div class="bank-card"><span class="bg-check"></span><span>{{ bankAccount.routing_number }}</span></div>
                         </div>
-                        <div class="text-center">
+                        <div class="edit-row verify-ba">
                             <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
 
@@ -86,7 +86,7 @@
         {% if bankAccount %}
             <div class="bank-info-row">
                 <div class="col-xs-12">
-                    <div class="edit-row row">
+                    <div class="">
                         <div class="bank-details col-xs-9">
                             <div class="bank-title"><span class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
                             <div class="bank-card"><span>Account Holder Name: {{ bankAccount.account_holder_name }}</span></div>
@@ -103,7 +103,7 @@
         {% else %}
             <div class="bank-info-row">
                 <div class="col-xs-12">
-                    <div class="edit-row text-center">
+                    <div class="edit-row verify-ba">
                         <button id='verify-ba' class="btn edit-btn" {% if app.session.flashBag.has('show_navigation_sign_after_register') %}style="position: relative"{% endif %}>
                             {% if app.session.flashBag.has('show_navigation_sign_after_register') %}
                                 {# TODO Refactoring #}
