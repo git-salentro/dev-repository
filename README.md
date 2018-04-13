@@ -19,6 +19,9 @@ Run commands `bash deploy/install.sh`.
 # Updating
 Run commands `bash deploy/update.sh`
 
+#Load fixtures 
+Run command: `docker-compose exec php bash -c "php app/console doctrine:fixtures:load --no-interaction"`
+
 
 Test login with TENANT role: 
 Login: peterparker@test.com
