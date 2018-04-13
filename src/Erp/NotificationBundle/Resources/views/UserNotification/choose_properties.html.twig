@@ -7,8 +7,12 @@
 {%- endblock form_widget_simple -%}
 
 {%- block checkbox_widget -%}
-    <input type="hidden" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <input type="hidden" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget -%}
+
+{%- block choice_widget_collapsed -%}
+    <input type="hidden" {{ block('widget_attributes') }} {% if value %} value="{{ value }}"{% endif %}/>
+{%- endblock choice_widget_collapsed -%}
 
 {%- block form_row -%}
     {{- form_errors(form) -}}
@@ -52,6 +56,7 @@
                     {{ form_widget(alert) }}
                 {% endfor %}
                 {{ form_widget(form.sendAlertAutomatically) }}
+                {{ form_widget(form.template) }}
                 {{ form_widget(form.submit, {'attr': {'class': 'btn red-btn'}}) }}
             {{ form_end(form) }}
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}

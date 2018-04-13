@@ -61,6 +61,14 @@ class UserNotification implements DatesAwareInterface
      */
     private $properties;
 
+    /**
+     * @var Template
+     *
+     * @ORM\ManyToOne(targetEntity="Template")
+     * @ORM\JoinColumn(name="template_id", referencedColumnName="id")
+     */
+    private $template;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
@@ -221,5 +229,30 @@ class UserNotification implements DatesAwareInterface
     public function getProperties()
     {
         return $this->properties;
+    }
+
+
+    /**
+     * Set template
+     *
+     * @param \Erp\NotificationBundle\Entity\Template $template
+     *
+     * @return UserNotification
+     */
+    public function setTemplate(\Erp\NotificationBundle\Entity\Template $template = null)
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    /**
+     * Get template
+     *
+     * @return \Erp\NotificationBundle\Entity\Template
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }

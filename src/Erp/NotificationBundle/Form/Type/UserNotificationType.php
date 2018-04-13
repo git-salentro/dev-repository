@@ -25,6 +25,7 @@ class UserNotificationType extends AbstractType
                 'template',
                 EntityType::class,
                 [
+                    'required' => false,
                     'class' => Template::class,
                     'property' => 'title',
                     'query_builder' => function (EntityRepository $er) {

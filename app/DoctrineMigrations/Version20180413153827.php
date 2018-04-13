@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20180413103910 extends AbstractMigration
+class Version20180413153827 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,7 +18,9 @@ class Version20180413103910 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE erp_notification_template (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(255) NOT NULL, title VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE erp_notification_user_notification ADD template_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE erp_notification_user_notification ADD CONSTRAINT FK_3733D25B5DA0FB8 FOREIGN KEY (template_id) REFERENCES erp_notification_template (id)');
+        $this->addSql('CREATE INDEX IDX_3733D25B5DA0FB8 ON erp_notification_user_notification (template_id)');
     }
 
     /**
@@ -29,6 +31,8 @@ class Version20180413103910 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE erp_notification_template');
+        $this->addSql('ALTER TABLE erp_notification_user_notification DROP FOREIGN KEY FK_3733D25B5DA0FB8');
+        $this->addSql('DROP INDEX IDX_3733D25B5DA0FB8 ON erp_notification_user_notification');
+        $this->addSql('ALTER TABLE erp_notification_user_notification DROP template_id');
     }
 }

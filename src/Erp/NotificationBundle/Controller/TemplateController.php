@@ -31,7 +31,11 @@ class TemplateController extends Controller
      */
     public function createAction(Request $request)
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $entity = new Template();
+        $entity->setUser($user);
+
         return $this->update($entity, $request);
     }
 

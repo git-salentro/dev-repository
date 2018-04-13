@@ -10,7 +10,7 @@ use Erp\UserBundle\Entity\User;
 /**
  * Class Template
  *
- * @ORM\Table(name="erp_notifications_template")
+ * @ORM\Table(name="erp_notification_template")
  * @ORM\Entity(repositoryClass="Erp\NotificationBundle\Repository\TemplateRepository")
  * @ORM\HasLifecycleCallbacks
  */
