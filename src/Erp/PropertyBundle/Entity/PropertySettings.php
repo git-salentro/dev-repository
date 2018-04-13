@@ -201,12 +201,29 @@ class PropertySettings
         return $this->allowAutoDraft;
     }
 
+    /**
+     * @return Property
+     */
+    public function getProperty()
+    {
+        return $this->property;
+    }
+
+    /**
+     * @param Property $property
+     */
+    public function setProperty($property)
+    {
+        $this->property = $property;
+    }
+
+
     public function replace(PropertySettings $settings)
     {
-       $this->dayUntilDue = $settings->getDayUntilDue();
-       $this->paymentAmount = $settings->getPaymentAmount();
-       $this->allowPartialPayments = $settings->getAllowPartialPayments();
-       $this->allowCreditCardPayments = $settings->getAllowCreditCardPayments();
-       $this->allowAutoDraft = $settings->getAllowAutoDraft();
+        $this->dayUntilDue = $settings->getDayUntilDue();
+        $this->paymentAmount = $settings->getPaymentAmount();
+        $this->allowPartialPayments = $settings->getAllowPartialPayments();
+        $this->allowCreditCardPayments = $settings->getAllowCreditCardPayments();
+        $this->allowAutoDraft = $settings->getAllowAutoDraft();
     }
 }
