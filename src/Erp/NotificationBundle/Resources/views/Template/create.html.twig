@@ -20,7 +20,7 @@
 
             {%- set action -%}
                 {%- if entity.id -%}
-                    {{ path('erp_notification_template_update') }}
+                    {{ path('erp_notification_template_update', {'id': entity.id}) }}
                 {%- else -%}
                     {{ path('erp_notification_template_create') }}
                 {%- endif -%}
@@ -30,16 +30,16 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            {{ form_label(form.type, null, {'label_attr': {'class': 'control-label'}}) }}
-                            {{ form_widget(form.type, {'attr': {'class': 'form-control col-xs-4'}}) }}
-                            {{ form_errors(form.type) }}
+                            {{ form_label(form.title, null, {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_widget(form.title, {'attr': {'class': 'form-control select-control col-xs-4'}}) }}
+                            {{ form_errors(form.title) }}
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            {{ form_label(form.title, null, {'label_attr': {'class': 'control-label'}}) }}
-                            {{ form_widget(form.title, {'attr': {'class': 'form-control col-xs-4'}}) }}
-                            {{ form_errors(form.title) }}
+                            {{ form_label(form.type, null, {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_widget(form.type, {'attr': {'class': 'form-control col-xs-4'}}) }}
+                            {{ form_errors(form.type) }}
                         </div>
                     </div>
                 </div>

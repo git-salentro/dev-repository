@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\NotificationBundle\Entity\Template;
 use Erp\NotificationBundle\Form\Type\TemplateType;
+use Erp\UserBundle\Entity\User;
 
 class TemplateController extends Controller
 {
@@ -14,7 +15,14 @@ class TemplateController extends Controller
      */
     public function listAction()
     {
-        return $this->render('ErpNotificationBundle:Template:list.html.twig');
+        /** @var User $user */
+        $user = $this->getUser();
+        $repository = $this->getDoctrine()->getManagerForClass(Template::class)->getRepository(Template::class);
+        $templates = $repository->getTemplatesByUser($user);
+
+        return $this->render('ErpNotificationBundle:Template:list.html.twig', [
+            'templates' => $templates,
+        ]);
     }
 
     /**
@@ -69,6 +77,13 @@ class TemplateController extends Controller
             $em = $this->getDoctrine()->getManagerForClass(Template::class);
             $em->persist($entity);
             $em->flush();
+
+            $this->addFlash(
+                'alert_ok',
+                'Success'
+            );
+
+            return $this->redirectToRoute('erp_notification_template_list');
         }
 
         return $this->render('ErpNotificationBundle:Template:create.html.twig', [

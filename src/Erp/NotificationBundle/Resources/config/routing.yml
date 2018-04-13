@@ -31,3 +31,7 @@ erp_notification_user_notification_view:
 erp_notification_user_notification_choose_properties:
     path: /notification/choose-properties
     defaults: { _controller: ErpNotificationBundle:UserNotification:chooseProperties }
+
+erp_notification_user_notification_list:
+    path: /notification/list
+    defaults: { _controller: ErpNotificationBundle:UserNotification:list }

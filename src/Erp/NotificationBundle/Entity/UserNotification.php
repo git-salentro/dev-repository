@@ -56,7 +56,7 @@ class UserNotification implements DatesAwareInterface
      * @ORM\JoinTable(
      *     name="erp_notification_user_notification_property",
      *     joinColumns={@ORM\JoinColumn(name="user_notification_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="proprty_id", referencedColumnName="id", unique=true)}
+     *     inverseJoinColumns={@ORM\JoinColumn(name="property_id", referencedColumnName="id")}
      * )
      */
     private $properties;
@@ -66,6 +66,23 @@ class UserNotification implements DatesAwareInterface
         $this->notifications = new ArrayCollection();
         $this->alerts = new ArrayCollection();
         $this->properties = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedDate()
+    {
+        $this->updatedAt = new \DateTime();
     }
 
     /**

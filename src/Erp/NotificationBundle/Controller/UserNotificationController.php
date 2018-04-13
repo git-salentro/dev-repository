@@ -14,6 +14,7 @@ class UserNotificationController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction(Request $request)
@@ -38,11 +39,30 @@ class UserNotificationController extends Controller
         ]);
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listAction()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $alerts = [];
+
+        return $this->render('ErpNotificationBundle:UserNotification:list.html.twig', [
+            'alerts' => $alerts,
+        ]);
+    }
+
     public function updateAction(Request $request)
     {
 
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function choosePropertiesAction(Request $request)
     {
         $userNotification = new UserNotification();
@@ -109,6 +129,11 @@ class UserNotificationController extends Controller
         return $this->redirectToRoute('erp_notification_user_notification_crate');
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function viewAlertAction($id)
     {
         /** @var User $user */

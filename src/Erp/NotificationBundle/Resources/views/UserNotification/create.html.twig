@@ -20,6 +20,17 @@
 
             {{ form_start(form, {'action': path('erp_notification_user_notification_crate') }) }}
                 <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            {{ form_label(form.template, null, {'label_attr': {'class': 'control-label'}}) }}
+                            <div class="select-container">
+                                {{ form_widget(form.template, {'attr': {'class': 'form-control select-control'}}) }}
+                            </div>
+                            {{ form_errors(form.template) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group" id="notifications-block">
                             <h3>Notifications</h3>
@@ -56,7 +67,6 @@
                             Add
                         </button>
                     </div>
-
                 </div>
                 <div class="row">
                     <div class="col-sm-12">

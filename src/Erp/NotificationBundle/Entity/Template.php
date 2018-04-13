@@ -2,15 +2,16 @@
 
 namespace Erp\NotificationBundle\Entity;
 
-use Erp\CoreBundle\Entity\DatesAwareTrait;
-use Erp\CoreBundle\Entity\DatesAwareInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Erp\CoreBundle\Entity\DatesAwareInterface;
+use Erp\CoreBundle\Entity\DatesAwareTrait;
+use Erp\UserBundle\Entity\User;
 
 /**
  * Class Template
  *
  * @ORM\Table(name="erp_notifications_template")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Erp\NotificationBundle\Repository\TemplateRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Template implements DatesAwareInterface
@@ -46,6 +47,14 @@ class Template implements DatesAwareInterface
      * @ORM\Column(name="description", type="text")
      */
     private $description;
+
+    /**
+     * @var User
+    *
+     * @ORM\ManyToOne(targetEntity="\Erp\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @ORM\PrePersist
@@ -144,5 +153,29 @@ class Template implements DatesAwareInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Erp\UserBundle\Entity\User $user
+     *
+     * @return Template
+     */
+    public function setUser(\Erp\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Erp\UserBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

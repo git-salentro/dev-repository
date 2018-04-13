@@ -6,23 +6,21 @@
         <div class="container">
             <div class="row">
                 <div class="title-block">
-                    <h1 class="bold-text">View alert</h1>
+                    <h1 class="bold-text">Templates</h1>
                 </div>
             </div>
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <table class="table">
                 <thead>
                 <tr>
-                    <td>Property</td>
-                    <td>Tenant</td>
+                    <td>Title</td>
+                    <td>Type</td>
+                    <td>Action</td>
                 </tr>
                 </thead>
                 <tbody>
-                {% for property in properties %}
-                    <tr>
-                        <td>{{ property.name }}</td>
-                        <td>{{ property.tenantUser.fullName }}</td>
-                    </tr>
+                {% for alert in alerts %}
+
                 {% endfor %}
                 </tbody>
             </table>

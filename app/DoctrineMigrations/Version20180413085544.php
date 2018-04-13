@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20180412155513 extends AbstractMigration
+class Version20180413085544 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -21,11 +21,11 @@ class Version20180412155513 extends AbstractMigration
         $this->addSql('CREATE TABLE erp_notification_notification (id INT AUTO_INCREMENT NOT NULL, user_notification_id INT DEFAULT NULL, days_before INT NOT NULL, INDEX IDX_28513D1EFDC6F10B (user_notification_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE erp_notification_alert (id INT AUTO_INCREMENT NOT NULL, user_notification_id INT DEFAULT NULL, days_after INT NOT NULL, INDEX IDX_93DFA3DFDC6F10B (user_notification_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE erp_notification_user_notification (id INT AUTO_INCREMENT NOT NULL, is_send_alert_automatically INT NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE erp_notification_user_notification_property (user_notification_id INT NOT NULL, proprty_id INT NOT NULL, INDEX IDX_91F97FAEFDC6F10B (user_notification_id), UNIQUE INDEX UNIQ_91F97FAEEBBA7D70 (proprty_id), PRIMARY KEY(user_notification_id, proprty_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE erp_notification_user_notification_property (user_notification_id INT NOT NULL, property_id INT NOT NULL, INDEX IDX_91F97FAEFDC6F10B (user_notification_id), INDEX IDX_91F97FAE549213EC (property_id), PRIMARY KEY(user_notification_id, property_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('ALTER TABLE erp_notification_notification ADD CONSTRAINT FK_28513D1EFDC6F10B FOREIGN KEY (user_notification_id) REFERENCES erp_notification_user_notification (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE erp_notification_alert ADD CONSTRAINT FK_93DFA3DFDC6F10B FOREIGN KEY (user_notification_id) REFERENCES erp_notification_user_notification (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE erp_notification_user_notification_property ADD CONSTRAINT FK_91F97FAEFDC6F10B FOREIGN KEY (user_notification_id) REFERENCES erp_notification_user_notification (id)');
-        $this->addSql('ALTER TABLE erp_notification_user_notification_property ADD CONSTRAINT FK_91F97FAEEBBA7D70 FOREIGN KEY (proprty_id) REFERENCES properties (id)');
+        $this->addSql('ALTER TABLE erp_notification_user_notification_property ADD CONSTRAINT FK_91F97FAE549213EC FOREIGN KEY (property_id) REFERENCES properties (id)');
     }
 
     /**

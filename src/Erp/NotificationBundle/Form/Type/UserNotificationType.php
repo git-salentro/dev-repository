@@ -9,7 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Erp\NotificationBundle\Entity\Template;
+use Doctrine\ORM\EntityRepository;
 
 class UserNotificationType extends AbstractType
 {
@@ -20,6 +22,17 @@ class UserNotificationType extends AbstractType
     {
         $builder
             ->add(
+                'template',
+                EntityType::class,
+                [
+                    'class' => Template::class,
+                    'property' => 'title',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('t');
+                    },
+                ]
+            )
+            ->add(
                 'notifications',
                 CollectionType::class,
                 [
@@ -27,6 +40,7 @@ class UserNotificationType extends AbstractType
                     'entry_type' => NotificationType::class,
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'by_reference' => false,
                 ]
             )
             ->add(
@@ -37,6 +51,7 @@ class UserNotificationType extends AbstractType
                     'entry_type' => AlertType::class,
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'by_reference' => false,
                 ]
             )
             ->add(

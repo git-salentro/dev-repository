@@ -33,6 +33,14 @@ class Notification
     private $userNotification;
 
     /**
+     * @var Template
+     *
+     * @ORM\ManyToOne(targetEntity="Template")
+     * @ORM\JoinColumn(name="template_id", referencedColumnName="id")
+     */
+    private $template;
+
+    /**
      * Get id
      *
      * @return integer
@@ -88,5 +96,29 @@ class Notification
     public function getUserNotification()
     {
         return $this->userNotification;
+    }
+
+    /**
+     * Set template
+     *
+     * @param \Erp\NotificationBundle\Entity\Template $template
+     *
+     * @return Notification
+     */
+    public function setTemplate(\Erp\NotificationBundle\Entity\Template $template = null)
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    /**
+     * Get template
+     *
+     * @return \Erp\NotificationBundle\Entity\Template
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }
