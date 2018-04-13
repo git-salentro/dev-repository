@@ -1,9 +1,10 @@
 <?php
 namespace Erp\PropertyBundle\Form\Type;
 
+use Erp\UserBundle\Entity\InvitedUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class InviteTenantFormType
@@ -37,18 +38,14 @@ class InviteTenantFormType extends AbstractType
     }
 
     /**
-     * Form default options
-     *
-     * @param OptionsResolverInterface $resolver
+     * @inheritdoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            [
-                'data_class'        => 'Erp\UserBundle\Entity\InvitedUser',
+        $resolver->setDefaults([
+                'data_class'        => InvitedUser::class,
                 'validation_groups' => ['InvitedUser']
-            ]
-        );
+        ]);
     }
 
     /**

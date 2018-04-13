@@ -2,10 +2,11 @@
 
 namespace Erp\SmartMoveBundle\Form\Type;
 
+use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PaySimplePayRentFormType
@@ -55,13 +56,14 @@ class SmartMoveEmailFormType extends AbstractType
     }
 
     /**
-     * Form default options
-     *
-     * @param OptionsResolverInterface $resolver
+     * @inheritdoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['data_class' => 'Erp\SmartMoveBundle\Entity\SmartMoveRenter']);
+        $resolver->setDefaults([
+            'data_class' => SmartMoveRenter::class,
+            'csrf_protection'   => false,
+        ]);
     }
 
     /**

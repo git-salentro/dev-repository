@@ -5,9 +5,6 @@ namespace Erp\PropertyBundle\Form\Type;
 use Erp\PropertyBundle\Entity\PropertySettings;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PropertySettingsType extends AbstractType
