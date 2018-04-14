@@ -1,0 +1,84 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpnotification/js/add-alerts.controller.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/erpnotification/js/add-notifications.controller.js') }}"></script>
+{% endblock %}
+
+{% block pageContent %}
+    {{ parent() }}
+    <section id="managers-profile" class="profile">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text">Create alert</h1>
+                </div>
+            </div>
+
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+            {{ form_start(form, {'action': path('erp_notification_user_notification_crate') }) }}
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            {{ form_label(form.template, null, {'label_attr': {'class': 'control-label'}}) }}
+                            <div class="select-container">
+                                {{ form_widget(form.template, {'attr': {'class': 'form-control select-control'}}) }}
+                            </div>
+                            {{ form_errors(form.template) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group" id="notifications-block">
+                            <h3>Notifications</h3>
+                            {% for notification in form.notifications %}
+                                {{ form_errors(notification) }}
+                                {{ form_widget(notification) }}
+                            {% endfor %}
+                        </div>
+                        <button
+                                type="button"
+                                id="add-notification"
+                                class="btn red-btn"
+                                data-prototype="{{ form_widget(form.notifications.vars.prototype)|e }}"
+                                data-widget-counter="{{ form.notifications.children|length }}"
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" id="alerts-block">
+                            <h3>Alerts</h3>
+                            {% for alert in form.alerts %}
+                                {{ form_errors(alert) }}
+                                {{ form_widget(alert) }}
+                            {% endfor %}
+                        </div>
+                        <button
+                                type="button"
+                                id="add-alert"
+                                class="btn red-btn"
+                                data-prototype="{{ form_widget(form.alerts.vars.prototype)|e }}"
+                                data-widget-counter="{{ form.alerts.children|length }}"
+                        >
+                            Add
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            {{ form_label(form.sendAlertAutomatically, null, {'label_attr': {'class': 'control-label'}}) }}
+                            {{ form_widget(form.sendAlertAutomatically) }}
+                            {{ form_errors(form.sendAlertAutomatically) }}
+                        </div>
+                    </div>
+                </div>
+                {{ form_widget(form.submit, {'label': 'Next', 'attr': {'class': 'btn red-btn'}}) }}
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}

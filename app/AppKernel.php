@@ -44,6 +44,7 @@ class AppKernel extends Kernel
             new Erp\StripeBundle\ErpStripeBundle(),
             new Erp\PlaidBundle\ErpPlaidBundle(),
             new Shivas\VersioningBundle\ShivasVersioningBundle(),
+            new Erp\NotificationBundle\ErpNotificationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

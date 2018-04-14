@@ -122,3 +122,4 @@ security:
         - { path: ^/smart-move/report/.*, role: ROLE_MANAGER }
         - { path: ^/smart-move.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/.*, role: ROLE_ADMIN }
+        - { path: ^/notification/.*, role: ROLE_MANAGER }

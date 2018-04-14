@@ -1,12 +1,12 @@
 <?php
 
-namespace Erp\PropertyBundle\Command;
+namespace Erp\NotificationBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AlertUsersBeforePaymentCommand extends ContainerAwareCommand
+class AlertUsersBeforeRentDueDateCommand extends ContainerAwareCommand
 {
     /**
      * @inheritdoc
@@ -14,8 +14,8 @@ class AlertUsersBeforePaymentCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('erp:property:alert-users-after-payment')
-            ->setDescription('Alert users before payment');
+            ->setName('erp:notification:alert-users-after-rent-due-date')
+            ->setDescription('Alert users after rent due date');
     }
 
     /**
