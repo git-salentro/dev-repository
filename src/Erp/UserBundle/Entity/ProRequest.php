@@ -129,7 +129,8 @@ class ProRequest
      * @ORM\Column(
      *      name="status",
      *      length=32,
-     *      type="string"
+     *      type="string",
+     *      nullable=true
      * )
      */
     protected $status = self::STATUS_IN_PROCESS;

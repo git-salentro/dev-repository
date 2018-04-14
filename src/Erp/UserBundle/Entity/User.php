@@ -328,7 +328,9 @@ class User extends BaseUser
      * @ORM\Column(
      *      name="status",
      *      length=16,
-     *      type="string")
+     *      type="string",
+     *      nullable=true
+     * )
      */
     protected $status = self::STATUS_NOT_CONFIRMED;
 

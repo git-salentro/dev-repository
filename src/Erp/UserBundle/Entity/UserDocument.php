@@ -60,7 +60,8 @@ class UserDocument
      * @ORM\Column(
      *      name="status",
      *      length=32,
-     *      type="string"
+     *      type="string",
+     *      nullable=true
      * )
      */
     protected $status = self::STATUS_PENDING;
