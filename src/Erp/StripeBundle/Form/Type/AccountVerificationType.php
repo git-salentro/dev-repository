@@ -62,7 +62,7 @@ class AccountVerificationType extends AbstractType
             )
             ->add('birthday', 'birthday', [
 //                'widget' => 'text',
-                'years' => range(1900, date('Y')),
+                'years' => range(1900, date('Y') - 14), //younger than 13 years old not allowed by STRIPE
                 'invalid_message' => 'Please enter valid date',
                 'validation_groups' => ['UserTermOfUse', 'ManagerRegister'],
                 'constraints' => new Assert\Date([
@@ -87,11 +87,15 @@ class AccountVerificationType extends AbstractType
                 'text',
                 [
                     'label' => 'SSN Last 4 digits',
-                    'constraints' => new Assert\Length([
+                    'constraints' => [
+                        new Assert\Length([
                         'min' => 4,
                         'max' => 4,
-                        'groups' => ['UserTermOfUse','ManagerRegister']
-                    ]),
+                        'groups' => ['UserTermOfUse','ManagerRegister']]),
+                        new Assert\NotBlank([
+                            'groups' => ['UserTermOfUse','ManagerRegister']
+                        ])
+                        ],
                 ]
             )
             ->add(

@@ -14,11 +14,7 @@ Erp\PaymentBundle\Entity\StripeAccount:
             - NotBlank: { groups: [US, company] }
         businessTaxId:
             - NotBlank: { groups: [US, company] }
-        dayOfBirth:
-            - NotBlank: { groups: [US] }
-        monthOfBirth:
-            - NotBlank: { groups: [US] }
-        yearOfBirth:
+        birthday:
             - NotBlank: { groups: [US] }
         firstName:
             - NotBlank: { groups: [US] }
