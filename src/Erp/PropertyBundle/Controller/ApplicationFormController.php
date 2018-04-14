@@ -344,15 +344,15 @@ class ApplicationFormController extends BaseController
         }
 
         if ('POST' === $request->getMethod()) {
-            $applicationCreditCardForm->handleRequest($request);
-
-            if (!$applicationCreditCardForm->isValid()) {
-                return $this->render($template, $parameters);
-            }
-
-            $creditCard = $applicationCreditCard->getCreditCard();
-
             if (!$applicationForm->isNoFee()) {
+                $applicationCreditCardForm->handleRequest($request);
+
+                if (!$applicationCreditCardForm->isValid()) {
+                    return $this->render($template, $parameters);
+                }
+
+                $creditCard = $applicationCreditCard->getCreditCard();
+
                 $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
                 $arguments = [
                     'params' => [
@@ -378,6 +378,12 @@ class ApplicationFormController extends BaseController
 
                     return $this->render($template, $parameters);
                 }
+
+                $pdfFileName = sprintf('%s_%s_%s.pdf', $creditCard->getFirstName(), $creditCard->getLastName(), date('dmYHis'));
+                $pdfOriginalName = sprintf('%s %s.pdf', $creditCard->getFirstName(), $creditCard->getLastName());
+            } else {
+                $pdfFileName = sprintf('application_%s.pdf', date('dmYHis'));
+                $pdfOriginalName = sprintf('application %s.pdf', date('dmYHis'));
             }
 
             $html = $this->renderView(
@@ -387,8 +393,6 @@ class ApplicationFormController extends BaseController
                     'formData' => $formData
                 ]
             );
-            $pdfFileName = sprintf('%s_%s_%s.pdf', $creditCard->getFirstName(), $creditCard->getLastName(), date('dmYHis'));
-            $pdfOriginalName = sprintf('%s %s.pdf', $creditCard->getFirstName(), $creditCard->getLastName());
 
             $this->generatePdfFromHtml($pdfFileName, $html);
 

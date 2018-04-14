@@ -76,7 +76,11 @@
                                                         <a href="{{ path('erp_property_page', {'stateCode': property.city.stateCode, 'cityName': property.city.name, 'name' : property.getName() }) }}" class="btn submit-popup-btn">Back to property</a>
                                                     {% endif %}
                                                 {% endif %}
-                                                <a href="#" class="btn submit-popup-btn tab-next">Next</a>
+                                                {% if property.applicationForm.isNoFee and loop.last %}
+                                                    <button type="submit" class="btn submit-popup-btn application-submit">Submit</button>
+                                                {% else %}
+                                                    <a href="#" class="btn submit-popup-btn tab-next">Next</a>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -158,9 +162,8 @@
     </section>
 {% endblock %}
 
-
-
 {% block javascript_inline %}
+    {% if property.applicationForm.isNoFee == false %}
     <script>
         (function ($) {
             var form = $('[name="application-form"]');
@@ -182,4 +185,5 @@
             });
         })(jQuery);
     </script>
+    {% endif %}
 {% endblock %}
