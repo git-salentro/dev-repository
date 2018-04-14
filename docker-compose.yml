@@ -65,6 +65,9 @@ services:
             - SYMFONY__DOCUSIGN__ENVIRONMENT=${DOCUSIGN_ENVIRONMENT}
             - SYMFONY__DOCUSIGN__ACCOUNT__ID=${DOCUSIGN_ACCOUNT_ID}
             - SYMFONY__GOOGLE__ANALYTICS__ID=${GOOGLE_ANALYTICS_ID}
+            - SYMFONY__REDIS__HOST=${REDIS_HOST}
+            - SYMFONY__REDIS__PORT=${REDIS_PORT}
+            - SYMFONY__REDIS__PASSWORD=${REDIS_PASSWORD}
 
     rabbitmq:
         image: rabbitmq
@@ -77,3 +80,8 @@ services:
         ports:
             - 15672:15672
             - 5672:5672
+
+    redis:
+        image: redis:4-alpine
+        ports:
+            - 6379:6379
