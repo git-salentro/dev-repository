@@ -1,4 +1,4 @@
-FROM php:5.6-fpm
+FROM php:7.0-fpm
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libicu-dev \
@@ -37,10 +37,13 @@ RUN docker-php-ext-install \
     bcmath \
     sockets
 
+RUN pecl install -o -f redis-4.0.0 \
+    &&  rm -rf /tmp/pear \
+    &&  echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
-    && pecl install apcu-4.0.10 \
-    && docker-php-ext-enable apcu
+    && docker-php-ext-enable redis
 
 # Xdebug for dev environment
 ARG APP_ENV=dev
