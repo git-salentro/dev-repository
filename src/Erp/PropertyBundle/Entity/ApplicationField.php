@@ -33,9 +33,10 @@ class ApplicationField
      * @var string
      *
      * @ORM\Column(
-     *      name="type",
-     *      length=16,
-     *      type="string"
+     *     name="type",
+     *     length=16,
+     *     type="string",
+     *     nullable=true
      * )
      *
      * @Assert\NotBlank(

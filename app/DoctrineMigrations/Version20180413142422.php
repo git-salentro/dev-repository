@@ -13,16 +13,16 @@ class Version20180413142422 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-        $this->addSql('ALTER TABLE pro_requests CHANGE status status VARCHAR(32) NOT NULL;');
-        $this->addSql('ALTER TABLE users CHANGE status status VARCHAR(16) NOT NULL;');
-        $this->addSql('ALTER TABLE user_documents CHANGE status status VARCHAR(32) NOT NULL;');
-        $this->addSql('ALTER TABLE application_fields CHANGE type type VARCHAR(16) NOT NULL;');
-        $this->addSql('ALTER TABLE properties CHANGE status status VARCHAR(16) DEFAULT NULL;');
-        $this->addSql('ALTER TABLE property_repost_requests CHANGE status status VARCHAR(16) NOT NULL, CHANGE note note VARCHAR(255) DEFAULT NULL;');
+        $this->addSql('ALTER TABLE pro_requests CHANGE status status VARCHAR(32) NULL DEFAULT \'in_process\';');
+        $this->addSql('ALTER TABLE users CHANGE status status VARCHAR(32) NULL DEFAULT \'not_confirmed\';');
+        $this->addSql('ALTER TABLE user_documents CHANGE status status VARCHAR(32) NULL DEFAULT \'Pending\';');
+        $this->addSql('ALTER TABLE application_fields CHANGE type type VARCHAR(16) NULL DEFAULT \'text\';');
+        $this->addSql('ALTER TABLE properties CHANGE status status VARCHAR(16) NULL DEFAULT \'draft\';');
+        $this->addSql('ALTER TABLE property_repost_requests CHANGE status status VARCHAR(16) NULL DEFAULT \'new\', CHANGE note note VARCHAR(255) DEFAULT NULL;');
         $this->addSql('ALTER TABLE ps_customers CHANGE primary_type primary_type VARCHAR(2) DEFAULT NULL;');
-        $this->addSql('ALTER TABLE ps_deferred_payments CHANGE status status VARCHAR(16) DEFAULT NULL;');
-        $this->addSql('ALTER TABLE ps_history CHANGE status status VARCHAR(16) DEFAULT NULL;');
-        $this->addSql('ALTER TABLE ps_recurring_payment CHANGE subscription_type subscription_type VARCHAR(255) DEFAULT NULL, CHANGE status status VARCHAR(16) DEFAULT NULL, CHANGE type type VARCHAR(255) DEFAULT NULL;');
+        $this->addSql('ALTER TABLE ps_deferred_payments CHANGE status status VARCHAR(16) DEFAULT \'Pending\';');
+        $this->addSql('ALTER TABLE ps_history CHANGE status status VARCHAR(16) NULL DEFAULT \'success\';');
+        $this->addSql('ALTER TABLE ps_recurring_payment CHANGE subscription_type subscription_type VARCHAR(255) DEFAULT NULL, CHANGE status status VARCHAR(16) NULL DEFAULT \'Active\', CHANGE type type VARCHAR(255) DEFAULT NULL;');
     }
 
     /**
