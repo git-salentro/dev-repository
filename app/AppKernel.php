@@ -41,6 +41,7 @@ class AppKernel extends Kernel
             new Erp\SmartMoveBundle\ErpSmartMoveBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new Bukashk0zzz\HelloSignBundle\Bukashk0zzzHelloSignBundle(),
             new Erp\StripeBundle\ErpStripeBundle(),
             new Erp\PlaidBundle\ErpPlaidBundle(),
         );

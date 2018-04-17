@@ -264,3 +264,9 @@ old_sound_rabbit_mq:
             queue_options:    {name: 'update-subscriptions'}
             callback:         erp.payment.consumer.update_subscriptions
             enable_logger: true
+
+bukashk0zzz_hello_sign:
+    login: '%hellosign_username%'
+    # password: '%hellosign_password%' #(Optional, default: null) Null if using apikey or OAuthToken
+    # url: 'https://api.hellosign.com/v3/' #(Optional, default: https://api.hellosign.com/v3/) alternative api base url
+    # oauth_url: 'https://www.hellosign.com/oauth/token' #(Optional, default: https://www.hellosign.com/oauth/token) alternative oauth url
