@@ -20,17 +20,16 @@ class UserNotificationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $templates = $options['templates'] ?? [];
         $builder
             ->add(
                 'template',
                 EntityType::class,
                 [
-                    'required' => false,
+                    'required' => true,
                     'class' => Template::class,
                     'property' => 'title',
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('t');
-                    },
+                    'choices' => $templates
                 ]
             )
             ->add(
@@ -55,14 +54,14 @@ class UserNotificationType extends AbstractType
                     'by_reference' => false,
                 ]
             )
-            ->add(
-                'sendAlertAutomatically',
-                CheckboxType::class,
-                [
-                    'required' => false,
-                    'label' => 'Automatically send Alert on Rent Due Date?',
-                ]
-            )
+            // ->add(
+            //     'sendAlertAutomatically',
+            //     CheckboxType::class,
+            //     [
+            //         'required' => false,
+            //         'label' => 'Automatically send Alert on Rent Due Date?',
+            //     ]
+            // )
             ->add(
                 'submit',
                 SubmitType::class,
@@ -80,6 +79,7 @@ class UserNotificationType extends AbstractType
         $resolver->setDefaults([
             'data_class' => UserNotification::class,
             'csrf_protection' => false,
+            'templates' => [],
         ]);
     }
 

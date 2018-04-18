@@ -18,7 +18,11 @@ erp_notification_template_remove:
     requirements:
         id: \d+
 
-erp_notification_user_notification_crate:
+erp_notification_template_print_pdf:
+    path: /notification/template/print/{id}
+    defaults: { _controller: ErpNotificationBundle:Template:printPdf }
+
+erp_notification_user_notification_create:
     path: /notification/create
     defaults: { _controller: ErpNotificationBundle:UserNotification:create }
 
@@ -35,3 +39,7 @@ erp_notification_user_notification_choose_properties:
 erp_notification_user_notification_list:
     path: /notification/list
     defaults: { _controller: ErpNotificationBundle:UserNotification:list }
+
+erp_notification_user_notification_history:
+    path: /notification/history
+    defaults: { _controller: ErpNotificationBundle:UserNotification:history }

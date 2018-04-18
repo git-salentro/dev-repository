@@ -1,5 +1,10 @@
 {% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpnotification/js/choose-properties.controller.js') }}"></script>
+{% endblock %}
+
 {% form_theme form _self %}
 
 {%- block form_widget_simple -%}
@@ -55,7 +60,7 @@
                     {{ form_errors(alert) }}
                     {{ form_widget(alert) }}
                 {% endfor %}
-                {{ form_widget(form.sendAlertAutomatically) }}
+                {# {{ form_widget(form.sendAlertAutomatically) }} #}
                 {{ form_widget(form.template) }}
                 {{ form_widget(form.submit, {'attr': {'class': 'btn red-btn'}}) }}
             {{ form_end(form) }}

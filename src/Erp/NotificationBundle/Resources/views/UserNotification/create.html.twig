@@ -18,7 +18,7 @@
 
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
-            {{ form_start(form, {'action': path('erp_notification_user_notification_crate') }) }}
+            {{ form_start(form, {'action': path('erp_notification_user_notification_create') }) }}
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
@@ -68,7 +68,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="row">
+                {# <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
                             {{ form_label(form.sendAlertAutomatically, null, {'label_attr': {'class': 'control-label'}}) }}
@@ -76,7 +76,7 @@
                             {{ form_errors(form.sendAlertAutomatically) }}
                         </div>
                     </div>
-                </div>
+                </div> #}
                 {{ form_widget(form.submit, {'label': 'Next', 'attr': {'class': 'btn red-btn'}}) }}
             {{ form_end(form) }}
         </div>

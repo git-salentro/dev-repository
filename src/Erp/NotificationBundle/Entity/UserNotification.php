@@ -74,6 +74,7 @@ class UserNotification implements DatesAwareInterface
         $this->notifications = new ArrayCollection();
         $this->alerts = new ArrayCollection();
         $this->properties = new ArrayCollection();
+        $this->sendAlertAutomatically = false;
     }
 
     /**

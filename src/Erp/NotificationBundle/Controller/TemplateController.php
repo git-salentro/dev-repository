@@ -2,13 +2,13 @@
 
 namespace Erp\NotificationBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Erp\CoreBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\NotificationBundle\Entity\Template;
 use Erp\NotificationBundle\Form\Type\TemplateType;
 use Erp\UserBundle\Entity\User;
 
-class TemplateController extends Controller
+class TemplateController extends BaseController
 {
     /**
      * @return \Symfony\Component\HttpFoundation\Response
@@ -46,6 +46,7 @@ class TemplateController extends Controller
      */
     public function updateAction(Template $entity, Request $request)
     {
+        $this->checkAccess($entity);
         return $this->update($entity, $request);
     }
 
@@ -60,6 +61,7 @@ class TemplateController extends Controller
 
         /** @var Template $template */
         $template = $repository->find($id);
+        $this->checkAccess($entity);
 
         $em->remove($template);
         $em->flush();
@@ -94,5 +96,32 @@ class TemplateController extends Controller
             'form' => $form->createView(),
             'entity' => $entity,
         ]);
+    }
+
+    /**
+     * @param Template $entity
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function printPdfAction(Template $entity, Request $request)
+    {
+        $this->checkAccess($entity);
+
+        $template = 'ErpNotificationBundle:Template:mail.html.twig';
+        $fileName = 'notification_template ('.$entity->getTitle().').pdf';
+        $parameters = [
+            'content' => $entity->getDescription(),
+        ];
+        $html = $this->renderView($template, $parameters);
+        $pdf = $this->get('knp_snappy.pdf')->getOutputFromHtml($html);
+        return $this->pdfResponse($pdf, $fileName);
+    }
+
+    private function checkAccess(Template $template)
+    {
+        $user = $this->getUser();
+        if ($user !== $template->getUser()) {
+            throw $this->createAccessDeniedException('You don\'t have access to this Template');
+        }
     }
 }

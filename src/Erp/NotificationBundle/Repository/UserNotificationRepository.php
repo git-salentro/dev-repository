@@ -29,14 +29,18 @@ class UserNotificationRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getAlertByUserQuery(User $user)
+    private function getAlertByUserQuery(User $user)
     {
         $qb = $this->createQueryBuilder('un');
 
         return $qb->select('un')
-            ->join('un.property', 'p')
-            ->join('p.user', 'u')
-            ->where('u = :user')
+            ->join('un.properties', 'p')
+            ->where('p.user = :user')
             ->setParameter('user', $user);
+    }
+
+    public function getAlertsByUser(User $user)
+    {
+        return $this->getAlertByUserQuery($user)->getQuery()->getResult();
     }
 }

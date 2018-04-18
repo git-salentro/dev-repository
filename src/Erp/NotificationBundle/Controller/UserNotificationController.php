@@ -9,6 +9,7 @@ use Erp\NotificationBundle\Entity\UserNotification;
 use Erp\PropertyBundle\Entity\Property;
 use Doctrine\ORM\QueryBuilder;
 use Erp\UserBundle\Entity\User;
+use Erp\NotificationBundle\Entity\Template;
 
 class UserNotificationController extends Controller
 {
@@ -19,7 +20,7 @@ class UserNotificationController extends Controller
      */
     public function createAction(Request $request)
     {
-        $form = $this->createForm(new UserNotificationType());
+        $form = $this->getForm();
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -46,9 +47,24 @@ class UserNotificationController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $alerts = [];
+        $repo = $this->getDoctrine()->getManagerForClass(UserNotification::class)->getRepository(UserNotification::class);
+        $alerts = $repo->getAlertsByUser($user);
 
         return $this->render('ErpNotificationBundle:UserNotification:list.html.twig', [
+            'alerts' => $alerts,
+        ]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function historyAction()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $alerts = [];
+
+        return $this->render('ErpNotificationBundle:UserNotification:history.html.twig', [
             'alerts' => $alerts,
         ]);
     }
@@ -66,13 +82,11 @@ class UserNotificationController extends Controller
     public function choosePropertiesAction(Request $request)
     {
         $userNotification = new UserNotification();
-        $form = $this->createForm(new UserNotificationType(), $userNotification);
+        $form = $this->getForm($userNotification);
         $form->handleRequest($request);
 
         if (!$form->isValid()) {
-            return $this->render('ErpNotificationBundle:UserNotification:create.html.twig', [
-                'form' => $form->createView(),
-            ]);
+            return $this->redirectToRoute('erp_notification_user_notification_create');
         }
 
         /** @var User $user */
@@ -121,12 +135,7 @@ class UserNotificationController extends Controller
             throw $e;
         }
 
-        $this->addFlash(
-            'alert_ok',
-            'Success'
-        );
-
-        return $this->redirectToRoute('erp_notification_user_notification_crate');
+        return $this->redirectToRoute('erp_notification_user_notification_list');
     }
 
     /**
@@ -151,5 +160,19 @@ class UserNotificationController extends Controller
     private function update(Request $request)
     {
 
+    }
+
+    private function getUserTemplates()
+    {
+        $repository = $this->getDoctrine()->getManagerForClass(Template::class)->getRepository(Template::class);
+        return $repository->getTemplatesByUser($this->getUser());
+    }
+
+    private function getForm(UserNotification $userNotification = null)
+    {
+        $options = [
+            'templates' => $this->getUserTemplates(),
+        ];
+        return $this->createForm(new UserNotificationType(), $userNotification, $options);
     }
 }
