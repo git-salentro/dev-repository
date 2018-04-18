@@ -25,7 +25,6 @@ RUN docker-php-ext-enable imagick
 
 RUN docker-php-ext-install \
     intl \
-    mbstring \
     mcrypt \
     opcache \
     pdo_mysql \
@@ -36,9 +35,7 @@ RUN docker-php-ext-install \
     bcmath \
     sockets
 
-RUN pecl install -o -f redis-4.0.0 \
-    &&  rm -rf /tmp/pear \
-    &&  echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+RUN pecl install -o -f redis-4.0.0
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
