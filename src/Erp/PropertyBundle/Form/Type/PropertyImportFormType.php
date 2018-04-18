@@ -3,10 +3,8 @@ namespace Erp\PropertyBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PropertyImportFormType
@@ -35,10 +33,10 @@ class PropertyImportFormType extends AbstractType
             'file',
             [
                 'constraints' => [
-                    new NotBlank([
+                    new Assert\NotBlank([
                         'groups' => ['PropertyImport']
                     ]),
-                    new File([
+                    new Assert\File([
                         'maxSize' => self::$maxSize,
                         'mimeTypes' => self::$mimeTypes,
                         'mimeTypesMessage' => 'Wrong file format. Allowed file type is CSV',
@@ -61,18 +59,15 @@ class PropertyImportFormType extends AbstractType
         );
     }
 
+
     /**
-     * Form default options
-     *
-     * @param OptionsResolverInterface $resolver
+     * @inheritdoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            [
-                'validation_groups' => ['PropertyImport']
-            ]
-        );
+        $resolver->setDefaults([
+            'validation_groups' => ['PropertyImport']
+        ]);
     }
 
     /**

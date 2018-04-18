@@ -68,11 +68,11 @@ class PaySimpleHistory
      * @ORM\Column(
      *      name="status",
      *      type="string",
-     *      columnDefinition="ENUM('success','error','pending') NOT NULL DEFAULT 'success'",
+     *      length=16,
      *      nullable=true
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_SUCCESS;
 
     /**
      * @var string

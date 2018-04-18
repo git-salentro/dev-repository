@@ -33,9 +33,10 @@ class ApplicationField
      * @var string
      *
      * @ORM\Column(
-     *      name="type",
-     *      type="string",
-     *      columnDefinition="ENUM('file','text','checkbox','radio') NOT NULL DEFAULT 'text'"
+     *     name="type",
+     *     length=16,
+     *     type="string",
+     *     nullable=true
      * )
      *
      * @Assert\NotBlank(
@@ -43,7 +44,7 @@ class ApplicationField
      *      groups={"ApplicationField", "ApplicationFieldType"}
      * )
      */
-    protected $type;
+    protected $type = self::TYPE_TEXT;
 
     /**
      * @var string

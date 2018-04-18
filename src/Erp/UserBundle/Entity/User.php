@@ -42,7 +42,7 @@ class User extends BaseUser
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     const ROLE_ADMIN       = 'ROLE_ADMIN';
     const ROLE_LANDLORD    = 'ROLE_LANDLORD';
-    const ROLE_MANAGER    = 'ROLE_MANAGER';
+    const ROLE_MANAGER     = 'ROLE_MANAGER';
     const ROLE_TENANT      = 'ROLE_TENANT';
     const ROLE_ANONYMOUS   = 'ROLE_ANONYMOUS';
 
@@ -327,12 +327,12 @@ class User extends BaseUser
      *
      * @ORM\Column(
      *      name="status",
+     *      length=16,
      *      type="string",
-     *      columnDefinition=
-     *          "ENUM('pending','active','not_confirmed','disabled','rejected','deleted') DEFAULT 'not_confirmed'"
+     *      nullable=true
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_NOT_CONFIRMED;
 
     /**
      * @var \DateTime

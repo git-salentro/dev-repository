@@ -20,6 +20,7 @@ class PropertyFixture extends Fixture
         /** @var User $manager */
         $manager = $this->getReference('tonystark@test.com');
 
+        /** @var PropertySettings $propertySettings */
         $propertySettings = new PropertySettings();
         $propertySettings->setAllowAutoDraft(false);
         $propertySettings->setAllowCreditCardPayments(true);
@@ -42,5 +43,6 @@ class PropertyFixture extends Fixture
         $objectManager->persist($tenant);
         $objectManager->persist($object);
         $objectManager->flush();
+
     }
 }

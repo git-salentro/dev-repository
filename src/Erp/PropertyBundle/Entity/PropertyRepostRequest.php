@@ -33,16 +33,17 @@ class PropertyRepostRequest
      *
      * @ORM\Column(
      *      name="status",
+     *      length=16,
      *      type="string",
-     *      columnDefinition="ENUM('new','accepted', 'rejected') NOT NULL DEFAULT 'new'"
+     *      nullable=true
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_NEW;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="note", type="string", length=255)
+     * @ORM\Column(name="note", type="string", length=255, nullable=true)
      *
      * @Assert\Length(
      *     max="255",

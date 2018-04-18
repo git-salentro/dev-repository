@@ -16,6 +16,9 @@ use Erp\PaymentBundle\Entity\PaySimpleRecurringPayment;
  */
 class PaySimpleCustomer
 {
+    const PRIMARY_TYPE_CC = 'cc';
+    const PRIMARY_TYPE_BA = 'ba';
+
     /**
      * @var int
      *
@@ -59,8 +62,8 @@ class PaySimpleCustomer
      *
      * @ORM\Column(
      *      name="primary_type",
+     *      length=2,
      *      type="string",
-     *      columnDefinition="ENUM('cc','ba')",
      *      nullable=true
      * )
      */

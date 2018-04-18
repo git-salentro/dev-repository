@@ -18,7 +18,7 @@
                         <div class="bank-details">
                             Cards information is not added yet
                         </div>
-                        <div class="text-center">
+                        <div class="edit-row text-center">
                             <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}" class="btn edit-btn">
                                 add card info
                             </a>
@@ -30,7 +30,7 @@
                                 <span>**** **** **** {{ creditCard.last4 }}</span>
                             </div>
                         </div>
-                        <div class="text-center">
+                        <div class="edit-row">
                             <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
                                class="btn edit-btn">edit</a>
                         </div>
@@ -41,7 +41,7 @@
                         <div class="bank-details">
                             Bank information is not added yet
                         </div>
-                        <div class="text-center">
+                        <div class="edit-row verify-ba">
                             <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
                     {% else %}
@@ -54,7 +54,7 @@
                                         class="icon-user"></span><span>{{ bankAccount.account_holder_name }}</span></div>
                             <div class="bank-card"><span class="bg-check"></span><span>{{ bankAccount.routing_number }}</span></div>
                         </div>
-                        <div class="text-center">
+                        <div class="edit-row verify-ba">
                             <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                         </div>
 
@@ -63,19 +63,19 @@
             </div>
         {% else %}
             <div class="bank-info-row">
-                <div class="col-xs-12">
-                    <span style="color: #000;">Please add Bank or Cards information in order to pay rent.</span>
+                <div class="edit-row">
+                    <span>Please add Bank or Cards information in order to pay rent.</span>
                 </div>
             </div>
             <div class="bank-info-row">
                 <div class="col-xs-6">
-                    <div>
+                    <div class="edit-row">
                         <a type="submit" href="{{ path('erp_payment_stripe_save_credit_card') }}"
                            class="btn edit-btn">add card info</a>
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <div>
+                    <div class="edit-row verify-ba">
                         <button id='verify-ba' class="btn edit-btn">Verify bank account</button>
                     </div>
                 </div>
@@ -86,13 +86,13 @@
         {% if bankAccount %}
             <div class="bank-info-row">
                 <div class="col-xs-12">
-                    <div class="row">
+                    <div class="">
                         <div class="bank-details col-xs-9">
                             <div class="bank-title"><span class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
                             <div class="bank-card"><span>Account Holder Name: {{ bankAccount.account_holder_name }}</span></div>
                             <div class="bank-card"><span>Routing Number: {{ bankAccount.routing_number }}</span></div>
                         </div>
-                        <div class="text-right">
+                        <div class="edit-row text-right">
                             <button id='verify-ba' class="btn btn-space edit-btn">Verify</button>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
         {% else %}
             <div class="bank-info-row">
                 <div class="col-xs-12">
-                    <div class="text-center">
+                    <div class="edit-row verify-ba">
                         <button id='verify-ba' class="btn edit-btn" {% if app.session.flashBag.has('show_navigation_sign_after_register') %}style="position: relative"{% endif %}>
                             {% if app.session.flashBag.has('show_navigation_sign_after_register') %}
                                 {# TODO Refactoring #}

@@ -8,7 +8,7 @@
         <div class="login-block-title bold-text">Pay Rent</div>
     </div>
     {{ form_start(form, { attr: {'class': 'pay-widget'}, 'enctype': form_enctype(form)}) }}
-	<input type="hidden" id="property-price" value="{{ tenantProperty.getPrice() }}"/>
+	<input type="hidden" id="property-price" value="{{ tenantProperty.settings.getPaymentAmount() }}"/>
         <div class="form-group col-xs-7">
             {{ form_widget(form.amount) }}
         </div>

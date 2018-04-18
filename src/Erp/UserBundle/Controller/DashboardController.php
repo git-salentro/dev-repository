@@ -123,6 +123,11 @@ class DashboardController extends BaseController
         $cashIn = $this->getPreparedItems($cashIn, $intervals);
         $cashOut =  $this->getPreparedItems($cashOut, $intervals);
 
+        if (!$stripeAccount || !$stripeCustomer) {
+            $cashIn = 0;
+            $cashOut = 0;
+        }
+
         return $this->render('ErpUserBundle:Dashboard:cashflows.html.twig', [
             'cash_in' => $cashIn,
             'cash_out' => $cashOut,

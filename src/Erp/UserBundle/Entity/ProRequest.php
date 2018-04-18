@@ -128,12 +128,12 @@ class ProRequest
      *
      * @ORM\Column(
      *      name="status",
+     *      length=32,
      *      type="string",
-     *      columnDefinition="ENUM('in_process', 'approved', 'payment_ok', 'payment_error', 'canceled') NOT NULL
-            DEFAULT 'in_process'", nullable=true
+     *      nullable=true
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_IN_PROCESS;
 
     /**
      * @var \DateTime

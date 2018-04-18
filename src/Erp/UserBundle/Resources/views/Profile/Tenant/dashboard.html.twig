@@ -19,6 +19,13 @@
             <div class="row">
                 <div class="title-block">
                     <h1 class="bold-text">Your Profile</h1>
+                    <h4>Current balance:
+                        {% if app.user.rentPaymentBalance.balance is defined %}
+                            {{ app.user.rentPaymentBalance.balance|money }}
+                        {% else %}
+                            00.00$
+                        {% endif %}
+                    </h4>
                 </div>
             </div>
 
@@ -26,7 +33,7 @@
 
             <div class="row profile-widget-row">
 
-                <div class="col-md-3 col-xs-12">
+                <div class="col-md-6 col-xs-12">
                 {{ render(controller('ErpPropertyBundle:ScheduledRentPayment:payRent')) }}
                 </div>
 
@@ -34,15 +41,12 @@
                 {{ render(controller('ErpUserBundle:Dashboard:showPaymentDetails')) }}
                 </div>
 
-                <div class="col-md-3 col-xs-12">
-                    {{ render(controller('ErpUserBundle:Profile:renderWidgetMessages')) }}
-                </div>
-
             </div>
 
             <div class="row profile-widget-row">
 
-                <div class="col-md-12 col-xs-12">
+
+                <div class="col-md-6 col-xs-12">
                     <div class="profile-widget-item">
                         <div class="widget-title-row">
                             <div class="login-block-title bold-text">My Property</div>
@@ -65,6 +69,9 @@
 
 
 
+                <div class="col-md-6 col-xs-12">
+                    {{ render(controller('ErpUserBundle:Profile:renderWidgetMessages')) }}
+                </div>
 
 
 

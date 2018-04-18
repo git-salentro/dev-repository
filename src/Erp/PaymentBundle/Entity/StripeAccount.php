@@ -111,27 +111,6 @@ class StripeAccount
     /**
      * @var string
      *
-     * @ORM\Column(name="day_of_birth", type="string", nullable=true)
-     */
-    private $dayOfBirth;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="month_of_birth", type="string", nullable=true)
-     */
-    private $monthOfBirth;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="year_of_birth", type="string", nullable=true)
-     */
-    private $yearOfBirth;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="first_name", type="string", nullable=true)
      */
     private $firstName;
@@ -231,9 +210,9 @@ class StripeAccount
                 'business_name' => $this->businessName,
                 'business_tax_id' => $this->businessTaxId,
                 'dob' => [
-                    'day' => $this->dayOfBirth,
-                    'month' => $this->monthOfBirth,
-                    'year' => $this->yearOfBirth,
+                    'day' => $this->birthday->format('d'),
+                    'month' => $this->birthday->format('m'),
+                    'year' => $this->birthday->format('Y'),
                 ],
                 'first_name' => $this->firstName,
                 'last_name' => $this->lastName,
@@ -401,77 +380,6 @@ class StripeAccount
         return $this->businessTaxId;
     }
 
-    /**
-     * Set dayOfBirth
-     *
-     * @param string $dayOfBirth
-     *
-     * @return StripeAccount
-     */
-    public function setDayOfBirth($dayOfBirth)
-    {
-        $this->dayOfBirth = $dayOfBirth;
-
-        return $this;
-    }
-
-    /**
-     * Get dayOfBirth
-     *
-     * @return string
-     */
-    public function getDayOfBirth()
-    {
-        return $this->dayOfBirth;
-    }
-
-    /**
-     * Set monthOfBirth
-     *
-     * @param string $monthOfBirth
-     *
-     * @return StripeAccount
-     */
-    public function setMonthOfBirth($monthOfBirth)
-    {
-        $this->monthOfBirth = $monthOfBirth;
-
-        return $this;
-    }
-
-    /**
-     * Get monthOfBirth
-     *
-     * @return string
-     */
-    public function getMonthOfBirth()
-    {
-        return $this->monthOfBirth;
-    }
-
-    /**
-     * Set yearOfBirth
-     *
-     * @param string $yearOfBirth
-     *
-     * @return StripeAccount
-     */
-    public function setYearOfBirth($yearOfBirth)
-    {
-        $this->yearOfBirth = $yearOfBirth;
-
-        return $this;
-    }
-
-    /**
-     * Get yearOfBirth
-     *
-     * @return string
-     */
-    public function getYearOfBirth()
-    {
-        return $this->yearOfBirth;
-    }
 
     /**
      * Set firstName
@@ -830,14 +738,6 @@ class StripeAccount
     public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
-        if ($birthday instanceof \DateTime) {
-            $day = $birthday->format('d');
-            $month = $birthday->format('m');
-            $year = $birthday->format('Y');
-            if ($day) $this->setDayOfBirth($day);
-            if ($month) $this->setMonthOfBirth($month);
-            if ($year) $this->setYearOfBirth($year);
-        }
 
         return $this;
     }

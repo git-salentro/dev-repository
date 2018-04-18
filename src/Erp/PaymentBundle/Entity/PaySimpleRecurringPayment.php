@@ -22,6 +22,9 @@ class PaySimpleRecurringPayment
     const TYPE_ONE       = 'one';
     const TYPE_RECURRING = 'recurring';
 
+    const SUBSCRIPTION_TYPE_CC = 'cc';
+    const SUBSCRIPTION_TYPE_BA = 'ba';
+
     /**
      * @var integer
      *
@@ -66,11 +69,10 @@ class PaySimpleRecurringPayment
      * @ORM\Column(
      *      name="subscription_type",
      *      type="string",
-     *      columnDefinition="ENUM('cc','ba') NOT NULL DEFAULT 'cc'",
      *      nullable=true
      * )
      */
-    protected $subscriptionType;
+    protected $subscriptionType = self::SUBSCRIPTION_TYPE_CC;
 
     /**
      * @var int
@@ -106,11 +108,11 @@ class PaySimpleRecurringPayment
      * @ORM\Column(
      *      name="status",
      *      type="string",
-     *      columnDefinition="ENUM('Active','Expired','Suspended', 'PauseUntil') NOT NULL DEFAULT 'Active'",
+     *      length=16,
      *      nullable=true
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_ACTIVE;
 
     /**
      * @var string
@@ -118,11 +120,10 @@ class PaySimpleRecurringPayment
      * @ORM\Column(
      *      name="type",
      *      type="string",
-     *      columnDefinition="ENUM('one','recurring') NOT NULL DEFAULT 'recurring'",
      *      nullable=true
      * )
      */
-    protected $type;
+    protected $type = self::TYPE_RECURRING;
 
     /**
      * @var \DateTime

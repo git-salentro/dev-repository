@@ -581,3 +581,22 @@
         border-width: 10px 10px 0;
     }
 }
+
+.available-properties-link {
+    font-size: 38px;
+    display: inline-block;
+    margin-right: 30px;
+    padding-bottom: 40px;
+    color: #000;
+    font-weight: bold;
+    font-family: LatoBold;
+    text-decoration: none;
+    &:hover {
+        color: #000;
+        text-decoration: none;
+    }
+    &:active {
+        color: #000;
+        text-decoration: none;
+    }
+}

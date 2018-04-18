@@ -78,11 +78,11 @@ class PaySimpleDeferredPayments
      * @ORM\Column(
      *      name="status",
      *      type="string",
-     *      columnDefinition="ENUM('Pending', 'Posted', 'Settled', 'Authorized', 'Failed') NOT NULL DEFAULT 'Pending'",
+     *      length=16,
      *      nullable=true
      * )
      */
-    protected $status;
+    protected $status = self::STATUS_PENDING;
 
     /**
      * @var \DateTime
