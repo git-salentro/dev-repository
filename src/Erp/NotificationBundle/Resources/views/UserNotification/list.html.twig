@@ -1,0 +1,41 @@
+{% extends 'ErpNotificationBundle::base.html.twig' %}
+
+{% block pageSubContent %}
+    {{ parent() }}
+    <section id="managers-profile" class="profile">
+        <div class="container">
+            {% include "ErpNotificationBundle:UserNotification:actions.html.twig" %}
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+            <h3>Alerts</h3>
+            {% if alerts is not empty %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Type</td>
+                            <td>Template</td>
+                            <td>Send Message</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for alert in alerts %}
+                        <tr>
+                            <td>{{alert.template.type}}</td>
+                            <td>{{alert.template.title}}</td>
+                            <td>
+                                {% for alertItem in alert.alerts %}
+                                    {{alertItem.daysAfter}} days after <br/>
+                                {% endfor %}
+                                {% for notificationItem in alert.notifications %}
+                                    {{notificationItem.daysBefore}} days before <br/>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No alerts found</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

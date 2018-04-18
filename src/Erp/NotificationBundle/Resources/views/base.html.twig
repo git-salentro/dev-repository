@@ -1,0 +1,29 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block pageContent %}
+    {{ parent() }}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <a
+                    class="btn btn-default btn-lg btn-block {{ (currentRoute == 'erp_notification_template_list') ? ' active' : ''}}"
+                    role="button"
+                    href="{{ path('erp_notification_template_list') }}"
+                >
+                    Templates
+                </a>
+            </div>
+            <div class="col-sm-6">
+                {% set routes = ['erp_notification_user_notification_list', 'erp_notification_user_notification_history'] %}
+                <a
+                    class="btn btn-default btn-lg btn-block {{ (currentRoute in routes) ? ' active' : ''}}"
+                    role="button"
+                    href="{{ path('erp_notification_user_notification_history') }}"
+                >
+                    Set Alerts
+                </a>
+            </div>
+        </div>
+    </div>
+    {% block pageSubContent %}{% endblock %}
+{% endblock %}

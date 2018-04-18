@@ -1,0 +1,48 @@
+{% extends 'ErpNotificationBundle::base.html.twig' %}
+
+{% block pageSubContent %}
+    {{ parent() }}
+    <section id="managers-profile" class="profile">
+        <div class="container">
+            <div class="notif-template-nav">
+                <a href="{{ path('erp_notification_template_create') }}" class="btn red-btn">+ Add Template</a>
+                <a href="javascript:void(0);" class="btn red-btn">Send Letter</a>
+            </div>
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+            {% if templates is not empty %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Title</td>
+                            <td>Type</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for template in templates %}
+                        <tr>
+                            <td>{{ template.title }}</td>
+                            <td>{{ template.type }}</td>
+                            <td>
+                                <a
+                                    class="btn red-btn"
+                                    href="{{ path('erp_notification_template_update', {'id': template.id}) }}"
+                                >
+                                    Update
+                                </a>
+                                <a
+                                    class="btn red-btn"
+                                    href="{{ path('erp_notification_template_print_pdf', {'id': template.id}) }}"
+                                    target="_blank"
+                                >
+                                    Get PDF
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/erpnotification/js/choose-properties.controller.js') }}"></script>
+{% endblock %}
+
+{% form_theme form _self %}
+
+{%- block form_widget_simple -%}
+    <input type="hidden" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock form_widget_simple -%}
+
+{%- block checkbox_widget -%}
+    <input type="hidden" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock checkbox_widget -%}
+
+{%- block choice_widget_collapsed -%}
+    <input type="hidden" {{ block('widget_attributes') }} {% if value %} value="{{ value }}"{% endif %}/>
+{%- endblock choice_widget_collapsed -%}
+
+{%- block form_row -%}
+    {{- form_errors(form) -}}
+    {{- form_widget(form) -}}
+{%- endblock form_row -%}
+
+{% block pageContent %}
+    {{ parent() }}
+    <section id="managers-profile" class="profile">
+        <div class="container">
+            <div class="row">
+                <div class="title-block">
+                    <h1 class="bold-text">Choose properties</h1>
+                </div>
+            </div>
+            {{ form_start(form, {'action': path('erp_notification_user_notification_choose_properties')}) }}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td><input type="checkbox" name="all_elements" /></td>
+                            <td>Property</td>
+                            <td>Tenant</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for property in properties %}
+                        <tr>
+                            <td><input type="checkbox" name="idx[]" value="{{ property.id }}" /></td>
+                            <td>{{ property.name }}</td>
+                            <td>{{ property.tenantUser.fullName }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% for notification in form.notifications %}
+                    {{ form_errors(notification) }}
+                    {{ form_widget(notification) }}
+                {% endfor %}
+                {% for alert in form.alerts %}
+                    {{ form_errors(alert) }}
+                    {{ form_widget(alert) }}
+                {% endfor %}
+                {# {{ form_widget(form.sendAlertAutomatically) }} #}
+                {{ form_widget(form.template) }}
+                {{ form_widget(form.submit, {'attr': {'class': 'btn red-btn'}}) }}
+            {{ form_end(form) }}
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+        </div>
+    </section>
+{% endblock %}

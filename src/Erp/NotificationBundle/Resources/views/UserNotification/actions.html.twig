@@ -1,0 +1,7 @@
+<div class="notif-template-nav">
+    {% if currentRoute == 'erp_notification_user_notification_list' %}
+        <a href="{{ path('erp_notification_user_notification_create') }}" class="btn red-btn pull-right">Create new Alert</a>
+    {% endif  %}
+    <a href="{{ path('erp_notification_user_notification_history') }}" class="btn red-btn">Set Alerts</a>
+    <a href="{{ path('erp_notification_user_notification_list') }}" class="btn red-btn">Show Automated Alerts</a>
+</div>

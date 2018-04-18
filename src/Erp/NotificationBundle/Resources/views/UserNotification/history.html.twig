@@ -1,0 +1,38 @@
+{% extends 'ErpNotificationBundle::base.html.twig' %}
+
+{% block pageSubContent %}
+    {{ parent() }}
+    <section id="managers-profile" class="profile">
+        <div class="container">
+            {% include "ErpNotificationBundle:UserNotification:actions.html.twig" %}
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+            <h3>Alert History</h3>
+            {% if alerts is not empty %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Date Sent</td>
+                            <td>Type</td>
+                            <td>Template</td>
+                            <td>Received Verification</td>
+                            <td>Automatic Alert?</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for alert in alerts %}
+                        <tr>
+                            <td>date</td>
+                            <td>type</td>
+                            <td>template</td>
+                            <td>2001-01-01 12:37</td>
+                            <td>no</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No history found</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
