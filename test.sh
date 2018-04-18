@@ -7,6 +7,5 @@ php app/console assetic:dump --env=test
 php app/console doctrine:fixtures:load --no-interaction --env=test
 chmod 777 app/cache -R
 chmod 777 app/logs -R
-chmod 777 app/media -R
-chmod 777 web/media -R
+chmod 777 web/uploads -R
 bin/behat
