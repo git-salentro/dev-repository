@@ -10,6 +10,13 @@ Install Sass:
 
 `sudo gem install sass --no-user-install`
 
+Install Gulp:
+
+`npm install gulp-cli -g`  
+`npm install gulp -D`  
+`touch gulpfile.js`  
+`gulp --help`
+
 Run command `gulp`
 
 Run in docker: `docker-compose up -d`
