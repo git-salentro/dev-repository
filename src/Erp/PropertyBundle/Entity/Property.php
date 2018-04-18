@@ -4,6 +4,7 @@ namespace Erp\PropertyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Erp\NotificationBundle\Entity\UserNotification;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;

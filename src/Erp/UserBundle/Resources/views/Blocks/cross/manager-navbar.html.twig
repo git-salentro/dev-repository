@@ -15,9 +15,13 @@
         </li>
         {% set availRoutes = ['erp_property_listings_all', 'erp_property_listings_add', 'erp_property_listings_edit'] %}
 
-        <li class="menu-item{{ (currentRoute in availRoutes) ? ' current' : ''}}">
+        <li class="menu-item dropdown {{ (currentRoute in availRoutes) ? ' current' : ''}}">
             <span class="secondary-menu-icon listings-icon"></span>
-            <a href="{{ path('erp_property_listings_all') }}">Listings</a>
+            <a data-target="#" href="{{ path('erp_property_listings_all') }}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Listings</a>
+            <ul class="dropdown-menu custom-dropdown" aria-labelledby="listings-dropdown">
+                <li><a href="{{ path('erp_property_listings_all') }}">Listings</a></li>
+                <li><a href="{{ path('erp_notification_template_list') }}">Set alerts</a></li>
+            </ul>
         </li>
         <li class="menu-item{{ currentRoute == 'erp_user_accounting_index' ? ' current' : ''}}">
             <span class="secondary-menu-icon accounting-icon"></span>

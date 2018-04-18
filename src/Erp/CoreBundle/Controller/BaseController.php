@@ -101,4 +101,16 @@ abstract class BaseController extends SymfonyController
 
         return $this;
     }
+
+    public function pdfResponse($pdf, $fileName)
+    {
+        return new Response(
+            $pdf,
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            ]
+        );
+    }
 }
