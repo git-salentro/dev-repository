@@ -42,4 +42,4 @@ erp_notification_user_notification_list:
 
 erp_notification_user_notification_history:
     path: /notification/history
-    defaults: { _controller: ErpNotificationBundle:UserNotification:history }
+    defaults: { _controller: ErpNotificationBundle:History:list }
