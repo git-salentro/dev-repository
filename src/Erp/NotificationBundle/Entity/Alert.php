@@ -27,7 +27,11 @@ class Alert
     private $daysAfter;
 
     /**
+<<<<<<< HEAD
      * @ORM\ManyToOne(targetEntity="UserNotification", inversedBy="Alert", cascade={"persist"})
+=======
+     * @ORM\ManyToOne(targetEntity="UserNotification", inversedBy="alerts", cascade={"persist"})
+>>>>>>> 82c23d89e64f286f5525204e66251b600b4568c4
      * @ORM\JoinColumn(name="user_notification_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $userNotification;
