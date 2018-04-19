@@ -27,7 +27,8 @@ services:
           - ./app/logs/nginx:/var/log/nginx
           - ./docker/nginx/certs:/etc/nginx/certs
           - ./:/var/www/
-
+        depends_on:
+          - php
     php:
         build:
             context: ./docker/php
