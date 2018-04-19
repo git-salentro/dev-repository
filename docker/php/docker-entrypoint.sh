@@ -9,7 +9,7 @@ if [ ! -d "/var/www/app/logs/supervisor" ]; then
 fi
 
 info "Run RabbitMQ"
-php app/console rabbitmq:consumer -m 50
+php app/console rabbitmq:consumer -m 50 update_subscriptions
 
 info "Run Cron"
 #Add env variables for cron tasks

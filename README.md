@@ -1,9 +1,11 @@
 # Installing
 
+Run build bash: `./build.sh`  
+See credentials in `.env` file.  
+
 Install NodeJs:
 
 `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
-
 `sudo apt-get install -y nodejs`
 
 Install Sass:
@@ -28,7 +30,6 @@ Run command `bash deploy/update.sh`
 
 # Load fixtures 
 Run command `docker-compose exec php bash -c "php app/console doctrine:fixtures:load --no-interaction"`
-
   
 Test login with TENANT role:   
 Login: peterparker@test.com  
