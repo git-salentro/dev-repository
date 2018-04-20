@@ -13,9 +13,8 @@ class HistoryController extends BaseController
      */
     public function listAction(Request $request)
     {
-        /** @var User $user */
         $user = $this->getUser();
-        $historyItems = $this->getHistoryRepository()->findAll();
+        $historyItems = $this->getHistoryRepository()->getHistoryByUser($user);
 
         return [
             'historyItems' => $historyItems,

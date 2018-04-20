@@ -43,4 +43,22 @@ class UserNotificationRepository extends EntityRepository
     {
         return $this->getAlertByUserQuery($user)->getQuery()->getResult();
     }
+
+    public function getPropertiesFromNotificationsIterator()
+    {
+        return $this->createQueryBuilder('un')
+            ->distinct()
+            ->select('p.id AS propertyId')
+            ->addSelect('t.id as templateId')
+            ->addSelect('t.type as type')
+            ->addSelect('t.title as title')
+            ->join('un.template', 't')
+            ->join('un.properties', 'p')
+            ->join('p.settings', 'ps', 'WITH', 'ps.dayUntilDue IS NOT NULL')
+            ->join('un.notifications', 'n', 'WITH', '(ps.dayUntilDue - DAY(CURRENT_DATE())) = n.daysBefore')
+            ->andWhere('p.tenantUser IS NOT NULL')
+            ->andWhere('p.status != :status')
+            ->setParameter('status', 'deleted')
+            ->getQuery()->iterate();
+    }
 }
