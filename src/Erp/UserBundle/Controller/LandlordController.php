@@ -10,6 +10,7 @@ use Erp\UserBundle\Entity\Charge;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Form\Type\ChargeFormType;
 use Erp\UserBundle\Form\Type\LandlordFormType;
+use Erp\UserBundle\Form\Type\LandlordPayFormType;
 use Erp\StripeBundle\Entity\PaymentTypeInterface;
 use Erp\StripeBundle\Helper\ApiHelper;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,6 +64,78 @@ class LandlordController extends BaseController
             'user' => $user,
             'form' => $form->createView()
         ]);
+    }
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
+    public function LandlordListAction(Request $request)
+    {
+        //TODO: fetch all landlords
+
+        //manager charge landlord Step 1 (select) in twig
+        /** @var $user \Erp\UserBundle\Entity\User */
+        $user = $this->getUser();
+        $items = $this->getDoctrine()->getManagerForClass(User::class)->getRepository(User::class)->findBy(['manager' => $user]);
+
+        return $this->render('ErpUserBundle:Landlords:pay_landlord.html.twig', [
+            'user' => $user,
+            'items' => $items,
+            'modalTitle' => 'Pay to landlords'
+        ]);
+
+    }
+    /**
+     * @Security("is_granted('ROLE_MANAGER')")
+     */
+    public function payLandlordAction(Request $request)
+    {
+        //TODO: Add bank account landlords
+
+        /** @var $user \Erp\UserBundle\Entity\User */
+        $user = $this->getUser();
+        $landlordId = $request->get('landlordId');
+        $landlord = $this->em->getRepository('ErpUserBundle:User')->findOneBy(['id' => $landlordId]);
+
+        if ($landlord instanceof User) {
+            //Second step
+
+            /** @var $user \Erp\UserBundle\Entity\User */
+
+            $form = $this->createForm(new LandlordPayFormType());
+            $form->handleRequest($request);
+
+            /** @var $manager \Erp\UserBundle\Entity\User */
+            $manager = $landlord->getManager();
+
+            if ($manager->getId() == $user->getId() && $form->isValid()) {
+                //Third (Final) step
+
+                echo "work in progress";
+
+                /*$charge->setManager($user);
+                $charge->setLandlord($landlord);
+                $this->em->persist($charge);
+                $this->em->flush();
+
+                $from = $this->container->getParameter('contact_email');
+                $this->get('erp_user.mailer.processor')->sendChargeEmail($charge, $from);
+
+                $this->addFlash('alert_error', 'Sent');
+                return $this->forward('ErpUserBundle:Landlord:LandlordList');*/
+
+            }
+
+            return $this->render('ErpUserBundle:Landlords:pay_landlord_step_2.html.twig', [
+                'user' => $user,
+                'landlord' => $landlord,
+                'form' => $form->createView()
+            ]);
+
+        } else {
+            //back to landlords list to select
+            $this->addFlash('alert_error', 'Choose any landlord');
+            return $this->forward('ErpUserBundle:Landlord:LandlordList');
+        }
     }
 
     /**
