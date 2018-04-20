@@ -6,7 +6,6 @@
         <div class="container">
             <div class="notif-template-nav">
                 <a href="{{ path('erp_notification_template_create') }}" class="btn red-btn">+ Add Template</a>
-                <a href="javascript:void(0);" class="btn red-btn">Send Letter</a>
             </div>
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             {% if templates is not empty %}
