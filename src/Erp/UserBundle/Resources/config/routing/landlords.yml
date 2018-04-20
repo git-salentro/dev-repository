@@ -23,3 +23,12 @@ erp_user_landlords_choose_charge_type:
     defaults: { _controller: ErpUserBundle:Landlord:chooseChargeType }
     methods: [GET]
 
+erp_user_landlords_list:
+    path:     /landlords-list
+    defaults: { _controller: ErpUserBundle:Landlord:LandlordList }
+    methods: [GET]
+
+erp_user_landlords_pay_landlord:
+    path:     /landlords/pay-landlord
+    defaults: { _controller: ErpUserBundle:Landlord:payLandLord }
+    methods: [GET, POST]

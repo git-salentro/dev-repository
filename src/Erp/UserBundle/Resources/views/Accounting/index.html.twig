@@ -28,11 +28,13 @@
                         <a
                                 class="btn red-btn"
                                 type="submit"
-                                href="#"
-                        >Pay landlord</a>
+                                href="{{ path('erp_user_landlords_list') }}"
+                                role="popup"
+                        >Pay to landlord</a>
                     </div>
                 </div>
 
+                {{ render(controller('ErpUserBundle:Accounting:showAccountingLedger')) }}
             </div>
         </div>
     </section>

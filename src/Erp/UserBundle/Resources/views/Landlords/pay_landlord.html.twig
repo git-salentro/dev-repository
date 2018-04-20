@@ -1,0 +1,35 @@
+{% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+{% if items|length %}
+    <section id="landlord-form-section">
+        <form id="select-landlord-form" method="post" action="{{ path('erp_user_landlords_pay_landlord') }}" role="form">
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="form-group text-left">
+                        <label for="erp_user_landlords_create_firstname" class="required">
+                            Select landlord
+                            <span class="required" title="This field is required">*</span>
+                        </label>
+                        <select name="landlordId" id="landlordId" class="form-control">
+                            <option value="">----------   Select drop down list   --------</option>
+                        {% for landlord in items %}
+                                    <option value="{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</option>
+                        {% endfor %}
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid text-right">
+                <button type="submit" value="Next" class="btn red-btn btn-space" role="button">Next</button>
+            </div>
+        </form>
+    </section>
+{% else %}
+    <p class="text-center">
+        You have no landlords yet.
+    </p>
+{% endif %}
+
+
+
