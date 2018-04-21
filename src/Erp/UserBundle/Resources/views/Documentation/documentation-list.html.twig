@@ -38,11 +38,13 @@
         </div>
         <div class="col-xs-3 table-col sign-col">
             {% if not currentCompanion.hasRole(role_anonymous) and userDocument.isPending %}
-                <a target="_blank" href="{{ path('erp_signature_signature_edit_envelop', {'userDocumentId':userDocument.id}) }}" class="sign-btn signature-btn">Sign</a>
+                <a href="{{ path('erp_signature_hellosign_edit_envelop', {'userDocumentId': userDocument.id}) }}" data-doc="{{ path('erp_signature_hellosign_webhook_savesignature', {'userDocumentId': userDocument.id}) }}" class="sign-btn signature-btn">Sign</a>
             {% endif %}
             {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_PENDING')) or user.hasRole(role_manager) %}
                 <a role="popup" href="{{ path('erp_user_document_delete', {'documentId':userDocument.id}) }}" class="doc-delete">×</a>
             {% endif %}
+            <br />
+            <span class="error" style="margin-left: -100px; padding-top: 5px; position: absolute;"></span>
         </div>
     </li>
 {% endfor %}

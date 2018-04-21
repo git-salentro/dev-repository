@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="https://s3.amazonaws.com/cdn.hellosign.com/public/js/hellosign-embedded.LATEST.min.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpcore/js/file-validator.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpuser/js/documentation.controller.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/erpcore/js/upload.js') }}"></script>
