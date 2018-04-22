@@ -17,7 +17,7 @@ erp_signature_hellosign_edit_envelop:
     defaults: { _controller: ErpSignatureBundle:Signature:editEnvelopHelloSign }
     requirements:
         userDocumentId: \d+
-    methods: [GET, POST]
+    methods: [POST]
 
 erp_signature_hellosign_webhook_savesignature:
     path:     /envelop/hellosign/save/{userDocumentId}
