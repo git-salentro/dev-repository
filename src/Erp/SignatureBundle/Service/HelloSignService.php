@@ -44,11 +44,11 @@ class HelloSignService {
             // $request = new HelloSign\TemplateSignatureRequest;
             $request = new \HelloSign\SignatureRequest;
 
-            $request->enableTestMode();
+            // $request->enableTestMode();
             // $request->setTemplateId('b0ee832977d76cc3240364e0287ccfd1544bb454');
             $request->setSubject($subject);
             $request->setMessage($message);
-            // $request->addSigner($sender->getEmail(), $sender->getFullName());
+            $request->addSigner($sender->getEmail(), $sender->getFullName());
             $request->addSigner($recipient->getEmail(), $recipient->getFullName());
             $request->addFile($pathFileToSign);
             

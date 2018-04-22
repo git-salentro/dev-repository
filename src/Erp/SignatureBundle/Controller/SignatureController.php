@@ -180,6 +180,8 @@ class SignatureController extends BaseController {
                 $hellosignService = $this->get('erp.signature.hellosign.service');
                 
                 if (!$userDocument->getEnvelopId()) {
+                    $clientId = $this->getParameter('hellosign_app_clientid');
+                    
                     $subjectEnvelop = 'The document to be signed';
                     $messageEnvelop = 'Please, sign the current document.';
 

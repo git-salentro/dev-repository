@@ -6,17 +6,18 @@ DocumentationController.prototype.getUrlByRoute = function (route) {
     return $('input[name=route__' + route + ']').val();
 };
 
-DocumentationController.prototype.helloSignGetDocSigned = function (jsonData, urlOk, $objErr) {
+DocumentationController.prototype.helloSignGetDocSigned = function (jsonData, $btn, $objErr, btnDefaultValue) {
     HelloSign.init(jsonData.CLIENT_ID);
     HelloSign.open({
         debug: true,
         url: jsonData.SIGN_URL,
         uxVersion: 2,
+        // skipDomainVerification: true,
         messageListener: function (eventData) {
             if (eventData.event === HelloSign.EVENT_SIGNED) {
                 $objErr.html('You successfully signed the document.');
                 $.ajax({
-                    url: urlOk,
+                    url: $btn.data('doc'),
                     type: 'POST',
                     data: {
                         signatureID: jsonData.SIGNATURE_ID
@@ -30,8 +31,10 @@ DocumentationController.prototype.helloSignGetDocSigned = function (jsonData, ur
                     }
                 });
             } else if (eventData.event === HelloSign.EVENT_CANCELED) {
+                $btn.html(btnDefaultValue);
                 $objErr.html('You closed the document, please reopen to continue.');
             } else if (eventData.event === HelloSign.EVENT_ERROR) {
+                $btn.html(btnDefaultValue);
                 $objErr.html('Uh oh something went wrong. Sorry about that!');
             } else if (eventData.event === HelloSign.EVENT_SENT) {
                 //not used in this example
@@ -119,7 +122,7 @@ DocumentationController.prototype.Edit = function () {
         event.preventDefault();
         
         var $this = $(this);
-        var $errorSpan = $this.siblings('.error');
+        var $errorSpan = $this.parent().siblings('.error-div').find('.error');
         var label = $this.html();
         
         $errorSpan.html('');
@@ -139,7 +142,7 @@ DocumentationController.prototype.Edit = function () {
                 }
                 
                 if (response.SIGN_URL) {
-                    that.helloSignGetDocSigned(response, $this.data('doc'), $errorSpan);
+                    that.helloSignGetDocSigned(response, $this, $errorSpan, label);
                 } else {
                     $this.removeAttr('disabled').html(label).css('opacity', '1.0');
                 }

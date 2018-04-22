@@ -8,14 +8,14 @@
                 </a>
             </span>
             <input class="file-name-input" name="name[]" value="{{ userDocument.document.originalName|e }}"
-            data-document-id="{{ userDocument.document.id }}" type="text">
+                   data-document-id="{{ userDocument.document.id }}" type="text">
         </div>
         <div class="col-xs-2 table-col file-date">{{ userDocument.createdDate|date('m/d/Y') }}</div>
-        <div class="col-xs-3">
+        <div class="col-xs-3 table-col">
             <div class="dropdown">
                 <button class="btn btn-default btn-status dropdown-toggle disabled" data-file-id="{{ userDocument.id }}"
-                data-selected-file-status="{{ userDocument.status }}" type="button" id="dropdownMenu2" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="true">
+                        data-selected-file-status="{{ userDocument.status }}" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true">
                     {% if userDocument.isSent %}
                         {% set status = 'Sent' %}
                     {% elseif userDocument.isSigned %}
@@ -37,14 +37,17 @@
             </div>
         </div>
         <div class="col-xs-3 table-col sign-col">
-            {% if not currentCompanion.hasRole(role_anonymous) and userDocument.isPending %}
-                <a href="{{ path('erp_signature_hellosign_edit_envelop', {'userDocumentId': userDocument.id}) }}" data-doc="{{ path('erp_signature_hellosign_webhook_savesignature', {'userDocumentId': userDocument.id}) }}" class="sign-btn signature-btn">Sign</a>
-            {% endif %}
-            {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_PENDING')) or user.hasRole(role_manager) %}
-                <a role="popup" href="{{ path('erp_user_document_delete', {'documentId':userDocument.id}) }}" class="doc-delete">×</a>
-            {% endif %}
-            <br />
-            <span class="error" style="margin-left: -100px; padding-top: 5px; position: absolute;"></span>
+            <div class="pull-left">
+                {% if not currentCompanion.hasRole(role_anonymous) and userDocument.isPending %}
+                    <a href="{{ path('erp_signature_hellosign_edit_envelop', {'userDocumentId': userDocument.id}) }}" data-doc="{{ path('erp_signature_hellosign_webhook_savesignature', {'userDocumentId': userDocument.id}) }}" class="sign-btn signature-btn">Sign</a>
+                {% endif %}
+                {% if (userDocument.fromUser is null or user.id == userDocument.fromUser.id and status != constant('Erp\\UserBundle\\Entity\\UserDocument::STATUS_PENDING')) or user.hasRole(role_manager) %}
+                    <a role="popup" href="{{ path('erp_user_document_delete', {'documentId':userDocument.id}) }}" class="doc-delete">×</a>
+                {% endif %}
+            </div>
+            <div class="pull-left error-div">
+                <span class="error"></span>
+            </div>
         </div>
     </li>
 {% endfor %}
