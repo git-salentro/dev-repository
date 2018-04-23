@@ -107,14 +107,15 @@ class TemplateController extends BaseController
     {
         $this->checkAccess($entity);
 
-        $template = 'ErpNotificationBundle:Template:mail.html.twig';
+        $html = $this->getTemplateManager()->renderTeplate($entity);
         $fileName = 'notification_template ('.$entity->getTitle().').pdf';
-        $parameters = [
-            'content' => $entity->getDescription(),
-        ];
-        $html = $this->renderView($template, $parameters);
         $pdf = $this->get('knp_snappy.pdf')->getOutputFromHtml($html);
         return $this->pdfResponse($pdf, $fileName);
+    }
+
+    private function getTemplateManager()
+    {
+        return $this->get('erp_notification.template_manager');
     }
 
     private function checkAccess(Template $template)

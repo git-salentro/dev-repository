@@ -2,12 +2,14 @@
 
 namespace Erp\NotificationBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Erp\PropertyBundle\Entity\Property;
+use Erp\NotificationBundle\Entity\UserNotification;
+use Erp\NotificationBundle\Entity\History;
+use Erp\NotificationBundle\Entity\Template;
 
-class NotifyUsersBeforeRentDueDateCommand extends ContainerAwareCommand
+class NotifyUsersBeforeRentDueDateCommand extends BaseNotificationCommand
 {
     /**
      * @inheritdoc
@@ -24,14 +26,7 @@ class NotifyUsersBeforeRentDueDateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-    }
-
-    private function getRepository()
-    {
-        $container = $this->getContainer();
-        $repository = $container->get('doctrine')->getManagerForClass(Property::class)->getRepository(Property::class);
-
-        return $repository;
+        $out = $this->process(self::TYPE_NOTIFICATION);
+        $output->writeln($out);
     }
 }

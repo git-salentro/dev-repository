@@ -55,20 +55,6 @@ class UserNotificationController extends Controller
         ]);
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function historyAction()
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        $alerts = [];
-
-        return $this->render('ErpNotificationBundle:UserNotification:history.html.twig', [
-            'alerts' => $alerts,
-        ]);
-    }
-
     public function updateAction(Request $request)
     {
 
