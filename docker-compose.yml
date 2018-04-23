@@ -25,7 +25,8 @@ services:
           - '443:443'
         volumes:
           - ./app/logs/nginx:/var/log/nginx
-          - ./docker/nginx/certs:/etc/nginx/certs
+          - ./docker/nginx/certs.dist/$APP_ENV/:/etc/nginx/certs/
+          - ./docker/nginx/sites-enabled.dist/$APP_ENV/default.conf:/etc/nginx/sites-enabled/default.conf
           - ./:/var/www/
         depends_on:
           - php
