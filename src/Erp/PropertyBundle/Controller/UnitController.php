@@ -2,6 +2,7 @@
 
 namespace Erp\PropertyBundle\Controller;
 
+use Erp\StripeBundle\Entity\Transaction;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Entity\StripeSubscription;
@@ -92,7 +93,7 @@ class UnitController extends Controller
                     ],
                     'trial_period_days' => StripeCustomer::TRIAL_PERIOD_DAYS,
                     'metadata' => [
-                        'internalType' => 'annual_service_fee'
+                        'internalType' => Transaction::INTERNAL_TYPE_ANNUAL_SERVICE_FEE
                     ],
                 ],
                 'options' => null,

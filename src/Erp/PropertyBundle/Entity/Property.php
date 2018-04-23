@@ -440,6 +440,21 @@ class Property
     protected $history;
 
     /**
+     * @ORM\OneToMany(
+     *      targetEntity="\Erp\PropertyBundle\Entity\ScheduledRentPayment",
+     *      mappedBy="property",
+     *      cascade={"persist","remove"},
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
+     */
+    protected $scheduledRentPayments;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -452,6 +467,7 @@ class Property
         $this->propertyRepostRequests = new ArrayCollection();
         $this->history = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->scheduledRentPayments = new ArrayCollection();
     }
 
     public function __clone()
@@ -1282,6 +1298,48 @@ class Property
     public function getTransactions()
     {
         return $this->transactions;
+    }
+
+
+    /**
+     * Add ScheduledRentPayment
+     *
+     * @param ScheduledRentPayment $scheduledRentPayment
+     * @return Property
+     */
+    public function addScheduledRentPayment(ScheduledRentPayment $scheduledRentPayment)
+    {
+        $scheduledRentPayment->setProperty($this);
+        $this->scheduledRentPayments[] = $scheduledRentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Remove ScheduledRentPayment
+     *
+     * @param ScheduledRentPayment $scheduledRentPayment
+     */
+    public function removeScheduledRentPayment(ScheduledRentPayment $scheduledRentPayment)
+    {
+        $this->transactions->removeElement($scheduledRentPayment);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getScheduledRentPayments()
+    {
+        return $this->scheduledRentPayments;
+    }
+
+    /**
+     * @param mixed $scheduledRentPayments
+     */
+    public function setScheduledRentPayments($scheduledRentPayments)
+    {
+        $this->scheduledRentPayments = $scheduledRentPayments;
     }
 
 

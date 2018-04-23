@@ -30,7 +30,7 @@ class Transaction
     const INTERNAL_TYPE_LATE_RENT_PAYMENT = 'late_rent_payment';
     const INTERNAL_TYPE_RENT_PAYMENT = 'rent_payment';
     const INTERNAL_TYPE_TENANT_SCREENING = 'tenant_screening';
-    const INTERNAL_TYPE_SERVICE_FEE = 'annual_service_fee';
+    const INTERNAL_TYPE_ANNUAL_SERVICE_FEE = 'annual_service_fee';
 
     /**
      * @var integer
