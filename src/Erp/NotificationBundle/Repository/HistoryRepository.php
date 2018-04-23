@@ -14,6 +14,7 @@ class HistoryRepository extends EntityRepository
             ->join('h.property', 'p')
             ->where('p.user = :user')
             ->setParameter('user', $user)
+            ->orderBy('h.createdAt', 'DESC')
             ->getQuery()->getResult();
     }
 }

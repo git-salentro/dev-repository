@@ -44,7 +44,7 @@ class UserNotificationRepository extends EntityRepository
         return $this->getAlertByUserQuery($user)->getQuery()->getResult();
     }
 
-    public function getPropertiesFromNotificationsIterator()
+    public function getPropertiesFromUserNotiticationIterator()
     {
         return $this->createQueryBuilder('un')
             ->distinct()
@@ -55,10 +55,28 @@ class UserNotificationRepository extends EntityRepository
             ->join('un.template', 't')
             ->join('un.properties', 'p')
             ->join('p.settings', 'ps', 'WITH', 'ps.dayUntilDue IS NOT NULL')
-            ->join('un.notifications', 'n', 'WITH', '(ps.dayUntilDue - DAY(CURRENT_DATE())) = n.daysBefore')
             ->andWhere('p.tenantUser IS NOT NULL')
             ->andWhere('p.status != :status')
-            ->setParameter('status', 'deleted')
+            ->setParameter('status', 'deleted');
+    }
+
+    public function getPropertiesFromNotificationsIterator()
+    {
+        return $this->getPropertiesFromUserNotiticationIterator()
+            ->join('un.notifications', 'n', 'WITH', '(ps.dayUntilDue - DAY(CURRENT_DATE())) = n.daysBefore')
+            ->addSelect('n.id AS notificationId')
+            ->addSelect('(ps.dayUntilDue - DAY(CURRENT_DATE())) AS calculatedDaysBefore')
+            ->getQuery()->iterate();
+    }
+
+    public function getPropertiesFromAlertsIterator()
+    {
+        // TODO: add check for last payment date
+        return $this->getPropertiesFromUserNotiticationIterator()
+            ->join('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
+            ->addSelect('a.id AS alertId')
+            ->addSelect('(DAY(CURRENT_DATE()) - ps.dayUntilDue) AS calculatedDaysAfter')
+            // ->andWhere('p.lastPaymentDate < CURRENT_DATE()')
             ->getQuery()->iterate();
     }
 }
