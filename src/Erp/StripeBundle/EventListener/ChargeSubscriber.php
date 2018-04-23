@@ -2,6 +2,7 @@
 
 namespace Erp\StripeBundle\EventListener;
 
+use Erp\PropertyBundle\Entity\Property;
 use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Event\ChargeEvent;
@@ -42,12 +43,14 @@ class ChargeSubscriber extends AbstractSubscriber
         $em = $this->registry->getManagerForClass(Transaction::class);
         $repository = $em->getRepository(Transaction::class);
         $chargeRepository = $em->getRepository(Charge::class);
+        $propertyRepository = $em->getRepository(Property::class);
 
         $stripeAccount = $this->getAccount($stripeCharge->metadata->account);
         $stripeAccountId = ($stripeAccount instanceof StripeAccount) ? $stripeAccount->getId() : null;
         $stripeCustomer = $this->getCustomer($stripeCharge->customer);
         $internalType = $stripeCharge->metadata->internalType;
         $internalChargeId = $stripeCharge->metadata->internalChargeId ? $stripeCharge->metadata->internalChargeId : null; //if exist
+        $propertyId = $stripeCharge->metadata->propertyId ? $stripeCharge->metadata->propertyId : null; //if exist
 
         //get current balance based on
         /* @var $previousTransaction Transaction */
@@ -68,6 +71,7 @@ class ChargeSubscriber extends AbstractSubscriber
 
         $charge = $chargeRepository->find($internalChargeId);
         $transaction = $repository->findOneBy(['account' => $stripeAccountId, 'amount' => $stripeCharge->amount, 'created' => (new \DateTime())->setTimestamp($stripeCharge->created)]);
+        $property = $propertyRepository->find($propertyId);
 
         if ($transaction instanceof Transaction) {
             //exist transaction
@@ -90,6 +94,7 @@ class ChargeSubscriber extends AbstractSubscriber
         }
 
         //update for all cases
+        $transaction->setProperty($property); //set if exist
         $transaction->setStatus($stripeCharge->status);
         $transaction->setAccount($stripeAccount);
         $transaction->setCustomer($stripeCustomer);

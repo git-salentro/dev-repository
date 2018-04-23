@@ -595,6 +595,11 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="Erp\UserBundle\Entity\Charge", mappedBy="landlord", cascade={"ALL"})
+     * @ORM\JoinColumn(
+     *      name="landlord_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
      */
     protected $chargeIncomings; //received
 

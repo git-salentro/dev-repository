@@ -2,6 +2,7 @@
 
 namespace Erp\PropertyBundle\Command;
 
+use Erp\StripeBundle\Entity\Transaction;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,7 +60,8 @@ class CheckScheduledPaymentCommand extends ContainerAwareCommand
                     'customer' => $payment->getCustomer()->getCustomerId(),
                     'metadata' => [
                         'account' => $payment->getAccount()->getAccountId(),
-                        'internalType' => 'rent_payment'
+                        'internalType' => Transaction::INTERNAL_TYPE_RENT_PAYMENT,
+                        'propertyId' => $payment->getProperty()->getId()
                     ],
                 ],
                 'options' => [

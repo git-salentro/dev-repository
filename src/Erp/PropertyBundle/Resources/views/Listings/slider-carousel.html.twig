@@ -7,13 +7,13 @@
             {% if propertyImages %}
                 {% for image in propertyImages %}
                     <div class="item {{ loop.first ? 'active' : ''}}" data-target="#carousel-{{ property.getId() }}">
-                        {% set imagePath = image ? asset(image.getPath() ~ '/' ~ image.getName()) | imagine_filter('listings_325_300') : 'http://placehold.it/325x300' %}
+                        {% set imagePath = image ? asset(image.getPath() ~ '/' ~ image.getName()) | imagine_filter('listings_325_300') : 'https://placehold.it/325x300' %}
                         <img alt="" title="" src="{{ imagePath }}">
                     </div>
                 {% endfor %}
             {% else %}
                 <div class="item active">
-                    <img alt="" title="" src="http://placehold.it/325x300">
+                    <img alt="" title="" src="https://placehold.it/325x300">
                 </div>
             {% endif %}
 
@@ -33,13 +33,13 @@
                 {% if propertyImages %}
                     {% for image in propertyImages %}
                         <li class="{{ loop.first ? 'active' : '' }}" data-slide-to="{{ loop.index - 1 }}" data-target="#carousel-{{ property.getId() }}">
-                            {% set imagePath = image ? asset(image.getPath() ~ '/' ~ image.getName()) | imagine_filter('listings_65_75') : 'http://placehold.it/65x75' %}
+                            {% set imagePath = image ? asset(image.getPath() ~ '/' ~ image.getName()) | imagine_filter('listings_65_75') : 'https://placehold.it/65x75' %}
                             <img alt="" src="{{ imagePath }}">
                         </li>
                     {% endfor %}
                 {% else %}
                     <li class="active" data-slide-to="0" data-target="#carousel-1">
-                        <img alt="" src="http://placehold.it/65x75">
+                        <img alt="" src="https://placehold.it/65x75">
                     </li>
                 {% endif %}
             </ol>
