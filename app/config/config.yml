@@ -273,5 +273,5 @@ old_sound_rabbit_mq:
             connection:       default
             exchange_options: {name: 'send-notification', type: direct}
             queue_options:    {name: 'send-notification'}
-            callback:         erp_notification.consumber.send_notification
+            callback:         erp_notification.consumer.send_notification
             enable_logger: true

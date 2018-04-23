@@ -54,7 +54,7 @@ services:
         arguments: [~, ~, true]
 
   # rabbitmq
-  erp_notification.consumber.send_notification:
+  erp_notification.consumer.send_notification:
     class: Erp\NotificationBundle\Services\RabbitMQ\SendNotificationConsumer
     calls:
       - [setContainer, ["@service_container"]]
