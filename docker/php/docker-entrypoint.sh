@@ -20,5 +20,6 @@ printenv >> /etc/environment
 (crontab -l ; echo "0 1 * * * /usr/local/bin/php /var/www/app/console erp:property:check-rent-payment") | crontab -
 (crontab -l ; echo "0 1 * * * /usr/local/bin/php /var/www/app/console erp:property:stop-auto-withdraw") | crontab -
 (crontab -l ; echo "0 1 * * * /usr/local/bin/php /var/www/app/console erp:notification:notify-users-before-rent-due-date") | crontab -
+(crontab -l ; echo "0 1 * * * /usr/local/bin/php /var/www/app/console erp:notification:alert-users-after-rent-due-date") | crontab -
 
 exec "$@"
