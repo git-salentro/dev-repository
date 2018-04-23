@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use  Erp\CoreBundle\Entity\CreatedAtAwareTrait;
+use Erp\PropertyBundle\Entity\Property;
 use Erp\UserBundle\Entity\Charge;
 
 /**
@@ -24,6 +25,12 @@ class Transaction
     const CASH_OUT = 'cash-out';
     const BANK_ACCOUNT_PAYMENT_METHOD = 'bank_account';
     const CREDIT_CARD_PAYMENT_METHOD = 'card';
+
+    const INTERNAL_TYPE_CHARGE = 'charge';
+    const INTERNAL_TYPE_LATE_RENT_PAYMENT = 'late_rent_payment';
+    const INTERNAL_TYPE_RENT_PAYMENT = 'rent_payment';
+    const INTERNAL_TYPE_TENANT_SCREENING = 'tenant_screening';
+    const INTERNAL_TYPE_SERVICE_FEE = 'annual_service_fee';
 
     /**
      * @var integer
@@ -46,8 +53,7 @@ class Transaction
      *
      * @ORM\Column(name="internal_type", type="string")
      */
-    private $internalType; //charge, late_rent_payment, rent_payment, tenant_screening, annual_service_fee
-
+    private $internalType;
 
     /**
      * @var float
@@ -87,6 +93,14 @@ class Transaction
     private $customer;
 
     /**
+     * @var Property
+     *
+     * @ORM\ManyToOne(targetEntity="\Erp\PropertyBundle\Entity\Property", inversedBy="transactions")
+     * @ORM\JoinColumn(name="property_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     */
+    protected $property;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="payment_method", type="string")
@@ -99,7 +113,6 @@ class Transaction
      * @ORM\Column(name="payment_method_description", type="string", nullable=true)
      */
     private $paymentMethodDescription;
-
 
     /**
      * @var string
@@ -343,7 +356,7 @@ class Transaction
     /**
      * Get metadata
      *
-     * @return array
+     * @return string
      */
     public function getMetadata()
     {
@@ -397,10 +410,12 @@ class Transaction
 
     /**
      * @param mixed $balanceHistory
+     * @return Transaction
      */
     public function setBalanceHistory($balanceHistory)
     {
         $this->balanceHistory = $balanceHistory;
+        return $this;
     }
 
     /**
@@ -413,10 +428,12 @@ class Transaction
 
     /**
      * @param string $internalType
+     * @return Transaction
      */
     public function setInternalType($internalType)
     {
         $this->internalType = $internalType;
+        return $this;
     }
 
     /**
@@ -429,10 +446,12 @@ class Transaction
 
     /**
      * @param string $paymentMethodDescription
+     * @return Transaction
      */
     public function setPaymentMethodDescription($paymentMethodDescription)
     {
         $this->paymentMethodDescription = $paymentMethodDescription;
+        return $this;
     }
 
     /**
@@ -445,9 +464,29 @@ class Transaction
 
     /**
      * @param Charge $charge
+     * @return Transaction
      */
     public function setCharge($charge)
     {
         $this->charge = $charge;
+        return $this;
+    }
+
+    /**
+     * @return Property
+     */
+    public function getProperty()
+    {
+        return $this->property;
+    }
+
+    /**
+     * @param Property $property
+     * @return Transaction
+     */
+    public function setProperty($property)
+    {
+        $this->property = $property;
+        return $this;
     }
 }
