@@ -47,4 +47,8 @@ services:
     class:     Monolog\Handler\StreamHandler
     arguments: [%kernel.logs_dir%/%kernel.environment%.notifiction_alerts.log]
     calls:
-      - [setFormatter, [@app_logger_formatter]]
+      - [setFormatter, [@erp_notification.logger_formatter]]
+
+  erp_notification.logger_formatter:
+        class: Monolog\Formatter\LineFormatter
+        arguments: [~, ~, true]
