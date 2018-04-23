@@ -37,16 +37,11 @@ class BaseNotificationCommand extends ContainerAwareCommand
         if (!in_array($type, self::TYPES)) {
             return -1;
         }
-        $i = 0;
-        $k = 0;
-        $batchSize = 20;
 
         $userNotificationEm = $this->getEntityManager(UserNotification::class);
         $propertyEm = $this->getEntityManager(Property::class);
-        $historyEm = $this->getEntityManager(History::class);
-        $historyManager = $this->getContainer()->get('erp_notification.history_manager');
         $templateManager = $this->getContainer()->get('erp_notification.template_manager');
-        $mailer = $this->getContainer()->get('erp_user.mailer.processor');
+        $producer = $this->getContainer()->get('old_sound_rabbit_mq.send_notification_producer');
 
         $mailFrom = $this->getContainer()->getParameter('contact_email');
 
@@ -59,6 +54,7 @@ class BaseNotificationCommand extends ContainerAwareCommand
             $method = 'getPropertiesFromAlertsIterator';
         }
 
+        $i = 0;
         if ($iterableResult = $userNotificationEm->getRepository(UserNotification::class)->{$method}()) {
             foreach ($iterableResult as $propertyResult) {
                 $data = reset($propertyResult);
@@ -70,31 +66,20 @@ class BaseNotificationCommand extends ContainerAwareCommand
                         $this->logRenderError($ex, $data);
                         continue;
                     }
-                    if ($mailer->sendCustomEmail($tenant->getEmail(), $mailFrom, $data['title'], $rendered)) {
-                        $i++;
-                        $fields = $data;
-                        $fields['property'] = $property;
-                        $fields['tenant'] = $tenant;
-                        
-                        $history = $historyManager->create($fields);
-
-                        $historyEm->persist($history);
-
-                        $this->logSuccess($data);
-
-                        if (($k++ % $batchSize) === 0) {
-                            $historyEm->flush();
-                            $historyEm->clear();
-                        }
-                    } else {
-                        $data['mailTo'] = $tenant->getEmail();
-                        $this->logEmailError($data);
-                    }
+                    $msg = [
+                        'mailTo' => $tenant->getEmail(),
+                        'mailFrom' => $mailFrom,
+                        'data' => $data,
+                        'rendered' => $rendered,
+                        'tenantUser' => $tenant->getId(),
+                        'property' => $property->getId(),
+                        'prefix' => $this->prefix,
+                    ];
+                    $producer->publish(serialize($msg));
+                    $i++;
                 }
             }
         }
-        $historyEm->flush();
-        $historyEm->clear();
         return $i.' tenants ('.$this->prefix.' payment date).';
     }
 
@@ -111,23 +96,6 @@ class BaseNotificationCommand extends ContainerAwareCommand
             'Render error occured for Template (trying to send '.$this->prefix.' pay date).'."\n".
             'Data: '.var_export($data, true)."\n".
             'Error message: '.$ex->getMessage()."\n".
-            '==============================';
-        $this->getContainer()->get('erp_notification.logger')->error($msg);
-    }
-
-    private function logSuccess($data)
-    {
-        $msg =
-            'Success '.$this->prefix.' pay date.'."\n".
-            'Data: '.var_export($data, true)."\n";
-        $this->getContainer()->get('erp_notification.logger')->info($msg);
-    }
-
-    private function logEmailError($data)
-    {
-        $msg = '=============================='."\n".
-            'Cannot send an email (trying to send '.$this->prefix.' pay date).'."\n".
-            'Data: '.var_export($data, true)."\n".
             '==============================';
         $this->getContainer()->get('erp_notification.logger')->error($msg);
     }

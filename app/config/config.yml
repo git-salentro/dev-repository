@@ -106,7 +106,6 @@ swiftmailer:
     port:  "%mailer_port%"
     encryption:  "%mailer_encryption%"
     auth_mode:            ~
-    spool:     { type: memory }
 #    spool:
 #        type: file
 #        path: "%kernel.cache_dir%/swiftmailer/spool"
@@ -259,10 +258,20 @@ old_sound_rabbit_mq:
             connection:       default
             exchange_options: {name: 'update-subscriptions', type: direct}
             service_alias:    update_subscriptions_producer
+        send_notification:
+            connection:       default
+            exchange_options: {name: 'send-notification', type: direct}
+            service_alias:    send_notification_service_producer
     consumers:
         update_subscriptions:
             connection:       default
             exchange_options: {name: 'update-subscriptions', type: direct}
             queue_options:    {name: 'update-subscriptions'}
             callback:         erp.payment.consumer.update_subscriptions
+            enable_logger: true
+        send_notification:
+            connection:       default
+            exchange_options: {name: 'send-notification', type: direct}
+            queue_options:    {name: 'send-notification'}
+            callback:         erp_notification.consumber.send_notification
             enable_logger: true

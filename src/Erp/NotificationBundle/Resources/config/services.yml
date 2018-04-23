@@ -52,3 +52,9 @@ services:
   erp_notification.logger_formatter:
         class: Monolog\Formatter\LineFormatter
         arguments: [~, ~, true]
+
+  # rabbitmq
+  erp_notification.consumber.send_notification:
+    class: Erp\NotificationBundle\Services\RabbitMQ\SendNotificationConsumer
+    calls:
+      - [setContainer, ["@service_container"]]
