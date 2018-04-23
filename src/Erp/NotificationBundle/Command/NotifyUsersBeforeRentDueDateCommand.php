@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\NotificationBundle\Entity\UserNotification;
 use Erp\NotificationBundle\Entity\History;
+use Erp\NotificationBundle\Entity\Template;
 
 class NotifyUsersBeforeRentDueDateCommand extends ContainerAwareCommand
 {
@@ -33,30 +34,47 @@ class NotifyUsersBeforeRentDueDateCommand extends ContainerAwareCommand
         $userNotificationEm = $this->getEntityManager(UserNotification::class);
         $propertyEm = $this->getEntityManager(Property::class);
         $historyEm = $this->getEntityManager(History::class);
-        $mailer = $this->getContainer()->get('erp_user.mailer.processor');
         $historyManager = $this->getContainer()->get('erp_notification.history_manager');
+        $templateManager = $this->getContainer()->get('erp_notification.template_manager');
+        $mailer = $this->getContainer()->get('erp_user.mailer.processor');
+
+        $mailFrom = $this->getContainer()->getParameter('contact_email');
 
         if ($iterableResult = $userNotificationEm->getRepository(UserNotification::class)->getPropertiesFromNotificationsIterator()) {
             foreach ($iterableResult as $propertyResult) {
                 $i++;
                 $data = reset($propertyResult);
                 if ($property = $propertyEm->getRepository(Property::class)->find($data['propertyId'])) {
-                    $fields = $data;
-                    $fields['property'] = $property;
-                    $fields['tenant'] = $property->getTenantUser();
-                    
-                    $history = $historyManager->create($fields);
+                    $tenant = $property->getTenantUser();
+                    try {
+                        $rendered = $templateManager->renderTemplateById($data['templateId']);
+                    } catch (\Exception $ex) {
+                        $this->logRenderError($ex, $data);
+                        continue;
+                    }
+                    if ($mailer->sendCustomEmail($tenant->getEmail(), $mailFrom, $data['title'], $rendered)) {
+                        $fields = $data;
+                        $fields['property'] = $property;
+                        $fields['tenant'] = $tenant;
+                        
+                        $history = $historyManager->create($fields);
 
-                    $historyEm->persist($history);
+                        $historyEm->persist($history);
 
-                    if (($k++ % $batchSize) === 0) {
-                        $historyEm->flush();
-                        $historyEm->clear();
+                        $this->logSuccess($data);
+
+                        if (($k++ % $batchSize) === 0) {
+                            $historyEm->flush();
+                            $historyEm->clear();
+                        }
+                    } else {
+                        $data['mailTo'] = $tenant->getEmail();
+                        $this->logEmailError($data);
                     }
                 }
             }
         }
-        $output->writeln($i.' properties.');
+        $output->writeln($i.' tenants were notified before payment date.');
     }
 
     private function getEntityManager($class)
@@ -64,5 +82,32 @@ class NotifyUsersBeforeRentDueDateCommand extends ContainerAwareCommand
         $repository = $this->getContainer()->get('doctrine')->getManagerForClass($class);
 
         return $repository;
+    }
+
+    private function logRenderError(\Exception $ex, $data)
+    {
+        $msg = '=============================='."\n".
+            'Render error occured for Template (trying to send notification before pay date).'."\n".
+            'Data: '.var_export($data, true)."\n".
+            'Error message: '.$ex->getMessage()."\n".
+            '==============================';
+        $this->getContainer()->get('erp_notification.logger')->error($msg);
+    }
+
+    private function logSuccess($data)
+    {
+        $msg = "\n".
+            'Success notification before pay date.'."\n".
+            'Data: '.var_export($data, true)."\n";
+        $this->getContainer()->get('erp_notification.logger')->info($msg);
+    }
+
+    private function logEmailError($data)
+    {
+        $msg = '=============================='."\n".
+            'Cannot send an email (trying to send notification before pay date).'."\n".
+            'Data: '.var_export($data, true)."\n".
+            '==============================';
+        $this->getContainer()->get('erp_notification.logger')->error($msg);
     }
 }

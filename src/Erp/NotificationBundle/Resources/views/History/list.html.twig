@@ -12,9 +12,10 @@
                     <thead>
                         <tr>
                             <td>Date Sent</td>
+                            <td>Property/Tenant</td>
                             <td>Type</td>
                             <td>Template</td>
-                            <td>Received Verification?</td>
+                            <td>Received Verification</td>
                             <td>Automatic Alert?</td>
                         </tr>
                     </thead>
@@ -22,6 +23,9 @@
                     {% for item in historyItems %}
                         <tr>
                             <td>{{item.createdAt|date('M d, Y h:i')}}</td>
+                            <td>
+                                {{item.property}}<br/>{{item.tenantName}}
+                            </td>
                             <td>{{item.type}}</td>
                             <td>{{item.title}}</td>
                             <td>
