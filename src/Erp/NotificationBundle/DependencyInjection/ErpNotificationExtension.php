@@ -7,7 +7,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-class NotificationExtension extends Extension
+class ErpNotificationExtension extends Extension
 {
     /**
      * @inheritdoc
