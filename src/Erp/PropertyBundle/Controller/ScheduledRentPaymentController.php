@@ -6,20 +6,25 @@ use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PropertyBundle\Entity\ScheduledRentPayment;
 use Erp\PropertyBundle\Form\Type\StopAutoWithdrawalFormType;
 use Erp\UserBundle\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class ScheduledRentPaymentController extends Controller
 {
+    /**
+     * @Security("is_granted('ROLE_TENANT')")
+     */
     public function payRentAction(Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
-        $manager = $user->getTenantProperty()->getUser();
+        $manager = $user->getManager();
         $managerStripeAccount = $manager->getStripeAccount();
         $tenantStripeCustomer = $user->getStripeCustomer();
 
         $entity = new ScheduledRentPayment();
+        $entity->setProperty($user->getTenantProperty());
         $entity->setUser($user);
 
         $form = $this->createForm('erp_property_scheduled_rent_payment', $entity);
