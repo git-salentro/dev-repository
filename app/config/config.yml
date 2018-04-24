@@ -88,6 +88,7 @@ doctrine:
         dql:
             datetime_functions:
                 date_format: DoctrineExtensions\Query\Mysql\DateFormat
+                date: DoctrineExtensions\Query\Mysql\Date
                 year: DoctrineExtensions\Query\Mysql\Year
                 day: DoctrineExtensions\Query\Mysql\Day
             string_functions:

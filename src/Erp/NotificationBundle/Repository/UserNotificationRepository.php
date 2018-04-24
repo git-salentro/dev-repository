@@ -97,9 +97,23 @@ class UserNotificationRepository extends EntityRepository
                     a.id IS NOT NULL AND
                     un.sendAlertAutomatically = 0
                 )')
+            ->andWhere('
+                (
+                    p.paidDate IS NULL OR
+                    (
+                        (
+                            un.sendAlertAutomatically = 0 AND
+                            DATE_ADD(p.paidDate, 1, \'MONTH\') < CURRENT_DATE()
+                        )
+                        OR
+                        (
+                            un.sendAlertAutomatically = 1 AND
+                            DATE(DATE_ADD(p.paidDate, 1, \'MONTH\')) = DATE(CURRENT_DATE())
+                        )
+                    )
+                )')
             ->addSelect('a.id AS alertId')
             ->addSelect('(DAY(CURRENT_DATE()) - ps.dayUntilDue) AS calculatedDaysAfter')
-            // ->andWhere('p.lastPaymentDate < CURRENT_DATE()')
             ->getQuery()->iterate();
     }
 }
