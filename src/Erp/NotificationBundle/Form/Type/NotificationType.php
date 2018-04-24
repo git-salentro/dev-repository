@@ -31,6 +31,8 @@ class NotificationType extends AbstractType
                     ],
                     'constraints' => [
                         new Assert\NotBlank(),
+                        new Assert\Type('integer'),
+                        new Assert\GreaterThanOrEqual(['value' => 1]),
                     ],
                 ]
             );
