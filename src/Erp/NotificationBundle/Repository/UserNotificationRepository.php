@@ -48,7 +48,10 @@ class UserNotificationRepository extends EntityRepository
     {
         return $this->createQueryBuilder('un')
             ->distinct()
-            ->select('p.id AS propertyId')
+            ->select('un.id AS userNotificationId')
+            ->addSelect('un.sendAlertAutomatically')
+            ->addSelect('un.sendNotificationAutomatically')
+            ->addSelect('p.id AS propertyId')
             ->addSelect('t.id as templateId')
             ->addSelect('t.type as type')
             ->addSelect('t.title as title')
@@ -63,7 +66,17 @@ class UserNotificationRepository extends EntityRepository
     public function getPropertiesFromNotificationsIterator()
     {
         return $this->getPropertiesFromUserNotiticationIterator()
-            ->join('un.notifications', 'n', 'WITH', '(ps.dayUntilDue - DAY(CURRENT_DATE())) = n.daysBefore')
+            ->leftJoin('un.notifications', 'n', 'WITH', '(ps.dayUntilDue - DAY(CURRENT_DATE())) = n.daysBefore')
+            // TODO: refactor this to more `doctrine` way
+            ->andWhere('
+                (
+                    n.id IS NULL AND
+                    un.sendNotificationAutomatically = 1 AND
+                    (ps.dayUntilDue - DAY(CURRENT_DATE())) = 0
+                ) OR (
+                    n.id IS NOT NULL AND
+                    un.sendNotificationAutomatically = 0
+                )')
             ->addSelect('n.id AS notificationId')
             ->addSelect('(ps.dayUntilDue - DAY(CURRENT_DATE())) AS calculatedDaysBefore')
             ->getQuery()->iterate();
@@ -73,7 +86,17 @@ class UserNotificationRepository extends EntityRepository
     {
         // TODO: add check for last payment date
         return $this->getPropertiesFromUserNotiticationIterator()
-            ->join('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
+            ->leftJoin('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
+            // TODO: refactor this to more `doctrine` way
+            ->andWhere('
+                (
+                    a.id IS NULL AND
+                    un.sendAlertAutomatically = 1
+                    AND (ps.dayUntilDue - DAY(CURRENT_DATE())) = 0
+                ) OR (
+                    a.id IS NOT NULL AND
+                    un.sendAlertAutomatically = 0
+                )')
             ->addSelect('a.id AS alertId')
             ->addSelect('(DAY(CURRENT_DATE()) - ps.dayUntilDue) AS calculatedDaysAfter')
             // ->andWhere('p.lastPaymentDate < CURRENT_DATE()')

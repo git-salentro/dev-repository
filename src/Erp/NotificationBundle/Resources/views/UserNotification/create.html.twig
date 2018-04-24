@@ -48,6 +48,15 @@
                         >
                             Add
                         </button>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    {{ form_label(form.sendNotificationAutomatically, null, {'label_attr': {'class': 'control-label'}}) }}
+                                    {{ form_widget(form.sendNotificationAutomatically) }}
+                                    {{ form_errors(form.sendNotificationAutomatically) }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group" id="alerts-block">
@@ -66,17 +75,17 @@
                         >
                             Add
                         </button>
-                    </div>
-                </div>
-                {# <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            {{ form_label(form.sendAlertAutomatically, null, {'label_attr': {'class': 'control-label'}}) }}
-                            {{ form_widget(form.sendAlertAutomatically) }}
-                            {{ form_errors(form.sendAlertAutomatically) }}
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    {{ form_label(form.sendAlertAutomatically, null, {'label_attr': {'class': 'control-label'}}) }}
+                                    {{ form_widget(form.sendAlertAutomatically) }}
+                                    {{ form_errors(form.sendAlertAutomatically) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div> #}
+                </div>
                 {{ form_widget(form.submit, {'label': 'Next', 'attr': {'class': 'btn red-btn'}}) }}
             {{ form_end(form) }}
         </div>

@@ -80,7 +80,7 @@ class BaseNotificationCommand extends ContainerAwareCommand
                 }
             }
         }
-        return $i.' tenants ('.$this->prefix.' payment date).';
+        return $i.' emails should be sent ('.$this->prefix.' payment date).';
     }
 
     private function getEntityManager($class)

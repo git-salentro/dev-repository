@@ -50,6 +50,13 @@ class UserNotification implements DatesAwareInterface
     private $sendAlertAutomatically;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_send_notification_automatically", type="integer")
+     */
+    private $sendNotificationAutomatically;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Erp\PropertyBundle\Entity\Property")
@@ -75,6 +82,7 @@ class UserNotification implements DatesAwareInterface
         $this->alerts = new ArrayCollection();
         $this->properties = new ArrayCollection();
         $this->sendAlertAutomatically = false;
+        $this->sendNotificationAutomatically = false;
     }
 
     /**
@@ -126,6 +134,30 @@ class UserNotification implements DatesAwareInterface
     public function getSendAlertAutomatically()
     {
         return $this->sendAlertAutomatically;
+    }
+
+    /**
+     * Set sendNotificationAutomatically
+     *
+     * @param integer $sendNotificationAutomatically
+     *
+     * @return UserNotification
+     */
+    public function setSendNotificationAutomatically($sendNotificationAutomatically)
+    {
+        $this->sendNotificationAutomatically = $sendNotificationAutomatically;
+
+        return $this;
+    }
+
+    /**
+     * Get sendNotificationAutomatically
+     *
+     * @return integer
+     */
+    public function getSendNotificationAutomatically()
+    {
+        return $this->sendNotificationAutomatically;
     }
 
     /**
