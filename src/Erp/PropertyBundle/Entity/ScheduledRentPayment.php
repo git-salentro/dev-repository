@@ -119,6 +119,14 @@ class ScheduledRentPayment
     private $user;
 
     /**
+     * @var Property
+     *
+     * @ORM\ManyToOne(targetEntity="Erp\PropertyBundle\Entity\Property", inversedBy="scheduledRentPayments")
+     * @ORM\JoinColumn(name="property_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $property;
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -454,5 +462,23 @@ class ScheduledRentPayment
         }
 
         $this->user->getAgreeAutoWithdrawal();
+    }
+
+    /**
+     * @return Property
+     */
+    public function getProperty()
+    {
+        return $this->property;
+    }
+
+    /**
+     * @param Property $property
+     * @return ScheduledRentPayment
+     */
+    public function setProperty($property)
+    {
+        $this->property = $property;
+        return $this;
     }
 }

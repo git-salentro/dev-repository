@@ -9,8 +9,11 @@ use Erp\NotificationBundle\Entity\History;
 use Erp\UserBundle\Entity\User;
 use Erp\PropertyBundle\Entity\Property;
 
+
 class SendNotificationConsumer implements ConsumerInterface
 {
+    private $container;
+
     public function setContainer(Container $container)
     {
         $this->container = $container;
@@ -46,7 +49,7 @@ class SendNotificationConsumer implements ConsumerInterface
         }
     }
 
-    private function logSuccess($data, string $prefix = 'unknown')
+    private function logSuccess($data, $prefix = 'unknown')
     {
         $msg =
             'Success '.$prefix.' pay date.'."\n".
@@ -54,7 +57,7 @@ class SendNotificationConsumer implements ConsumerInterface
         $this->container->get('erp_notification.logger')->info($msg);
     }
 
-    private function logEmailError($data, string $prefix = 'unknown')
+    private function logEmailError($data, $prefix = 'unknown')
     {
         $msg = '=============================='."\n".
             'Cannot send an email (trying to send '.$prefix.' pay date).'."\n".
@@ -63,7 +66,7 @@ class SendNotificationConsumer implements ConsumerInterface
         $this->container->get('erp_notification.logger')->error($msg);
     }
 
-    private function logDataError($data, string $prefix = '~unknown~')
+    private function logDataError($data, $prefix = '~unknown~')
     {
         $msg = '=============================='."\n".
             'Cannot parse data (trying to send '.$prefix.' pay date).'."\n".

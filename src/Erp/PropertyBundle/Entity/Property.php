@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Erp\NotificationBundle\Entity\UserNotification;
 use Erp\SmartMoveBundle\Entity\SmartMoveRenter;
+use Erp\StripeBundle\Entity\Transaction;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Erp\UserBundle\Entity\User;
@@ -78,6 +79,23 @@ class Property
      * )
      */
     protected $tenantUser;
+
+    /**
+     * @ORM\OneToMany(
+     *      targetEntity="\Erp\StripeBundle\Entity\Transaction",
+     *      mappedBy="property",
+     *      cascade={"persist","remove"},
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE",
+     *      nullable=true
+     * )
+     */
+    protected $transactions;
+
 
     /**
      * @ORM\ManyToOne(
@@ -304,6 +322,13 @@ class Property
     protected $updatedDate;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="paid_date", type="datetime", nullable=true)
+     */
+    protected $paidDate;
+
+    /**
      * @var AppointmentRequest
      *
      * @ORM\OneToMany(
@@ -415,6 +440,21 @@ class Property
     protected $history;
 
     /**
+     * @ORM\OneToMany(
+     *      targetEntity="\Erp\PropertyBundle\Entity\ScheduledRentPayment",
+     *      mappedBy="property",
+     *      cascade={"persist","remove"},
+     *      orphanRemoval=true
+     * )
+     * @ORM\JoinColumn(
+     *      name="property_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
+     */
+    protected $scheduledRentPayments;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -426,6 +466,8 @@ class Property
         $this->paySimpleHistories = new ArrayCollection();
         $this->propertyRepostRequests = new ArrayCollection();
         $this->history = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->scheduledRentPayments = new ArrayCollection();
     }
 
     public function __clone()
@@ -1206,5 +1248,99 @@ class Property
     {
         return $this->status === self::STATUS_DELETED;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPaidDate()
+    {
+        return $this->paidDate;
+    }
+
+    /**
+     * @param \DateTime $paidDate
+     * @return Property
+     */
+    public function setPaidDate($paidDate)
+    {
+        $this->paidDate = $paidDate;
+        return $this;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param Transaction $transaction
+     * @return Property
+     */
+    public function addTransaction(Transaction $transaction)
+    {
+        $transaction->setProperty($this);
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove transaction
+     *
+     * @param Transaction $transaction
+     */
+    public function removeTransaction(Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+
+    /**
+     * Add ScheduledRentPayment
+     *
+     * @param ScheduledRentPayment $scheduledRentPayment
+     * @return Property
+     */
+    public function addScheduledRentPayment(ScheduledRentPayment $scheduledRentPayment)
+    {
+        $scheduledRentPayment->setProperty($this);
+        $this->scheduledRentPayments[] = $scheduledRentPayment;
+
+        return $this;
+    }
+
+    /**
+     * Remove ScheduledRentPayment
+     *
+     * @param ScheduledRentPayment $scheduledRentPayment
+     */
+    public function removeScheduledRentPayment(ScheduledRentPayment $scheduledRentPayment)
+    {
+        $this->transactions->removeElement($scheduledRentPayment);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getScheduledRentPayments()
+    {
+        return $this->scheduledRentPayments;
+    }
+
+    /**
+     * @param mixed $scheduledRentPayments
+     */
+    public function setScheduledRentPayments($scheduledRentPayments)
+    {
+        $this->scheduledRentPayments = $scheduledRentPayments;
+    }
+
 
 }

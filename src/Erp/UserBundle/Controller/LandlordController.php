@@ -5,6 +5,7 @@ namespace Erp\UserBundle\Controller;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Entity\StripeSubscription;
+use Erp\StripeBundle\Entity\Transaction;
 use Stripe\Subscription;
 use Erp\UserBundle\Entity\Charge;
 use Erp\UserBundle\Entity\User;
@@ -339,7 +340,7 @@ class LandlordController extends BaseController
                         'currency' => StripeCustomer::DEFAULT_CURRENCY,
                         'metadata' => [
                             'account' => $stripeAccountId,
-                            'internalType' => 'charge',
+                            'internalType' => Transaction::INTERNAL_TYPE_CHARGE,
                             'description' => $charge->getDescription(),
                             'internalChargeId' => $charge->getId()
                         ],

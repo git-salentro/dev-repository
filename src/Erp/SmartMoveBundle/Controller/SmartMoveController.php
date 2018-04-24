@@ -12,6 +12,7 @@ use Erp\SmartMoveBundle\Form\Type\SmartMoveEmailFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMoveExamFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMoveGetReportFormType;
 use Erp\SmartMoveBundle\Form\Type\SmartMovePersonalFormType;
+use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Helper\ApiHelper;
 use Erp\UserBundle\Entity\User;
 use Symfony\Component\Form\Form;
@@ -372,7 +373,7 @@ class SmartMoveController extends BaseController
                         'currency' => StripeCustomer::DEFAULT_CURRENCY,
                         'customer' => $customer->getCustomerId(),
                         'metadata' => [
-                            'internalType' => 'tenant_screening'
+                            'internalType' => Transaction::INTERNAL_TYPE_TENANT_SCREENING
                         ],
                     ],
                     'options' => null

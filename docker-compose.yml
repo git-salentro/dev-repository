@@ -1,4 +1,4 @@
-version: '2'
+version: '2.2'
 
 services:
     db:
@@ -16,15 +16,20 @@ services:
             - '3306:3306'
 
     nginx:
-        build: ./docker/nginx
+        build:
+            context: ./docker/nginx
+            args:
+                - APP_ENV=${APP_ENV}
         ports:
           - '80:80'
           - '443:443'
         volumes:
           - ./app/logs/nginx:/var/log/nginx
-          - ./docker/nginx/certs:/etc/nginx/certs
+          - ./docker/nginx/certs.dist/$APP_ENV/:/etc/nginx/certs/
+          - ./docker/nginx/sites-enabled.dist/$APP_ENV/default.conf:/etc/nginx/sites-enabled/default.conf
           - ./:/var/www/
-
+        depends_on:
+          - php
     php:
         build:
             context: ./docker/php
@@ -35,6 +40,10 @@ services:
             - ./docker/php/php.ini:/usr/local/etc/php/php.ini
             - ./docker/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
             - ./docker/php/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+        depends_on:
+          - rabbitmq
+          - db
+          - redis
         environment:
             - SYMFONY__DATABASE__HOST=${MYSQL_ROOT_HOST}
             - SYMFONY__DATABASE__PORT=${MYSQL_PORT}

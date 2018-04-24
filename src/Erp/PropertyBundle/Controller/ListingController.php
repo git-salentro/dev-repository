@@ -834,6 +834,7 @@ class ListingController extends BaseController
         $form->handleRequest($request);
 
         $scheduledRentPayment = new ScheduledRentPayment();
+        $scheduledRentPayment->setProperty($property);
         $stopAutoWithdrawalForm = $this->createForm(new StopAutoWithdrawalFormType(), $scheduledRentPayment);
 
         if ($form->isValid()) {

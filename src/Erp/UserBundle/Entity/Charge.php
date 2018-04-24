@@ -68,6 +68,11 @@ class Charge implements DatesAwareInterface
     /**
      * @var User Landlord
      * @ORM\ManyToOne(targetEntity="Erp\UserBundle\Entity\User", inversedBy="chargeIncomings")
+     * @ORM\JoinColumn(
+     *      name="landlord_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
      */
     protected $landlord; //receiver
 

@@ -119,7 +119,7 @@ ListingsController.prototype.removeLoadedImage = function() {
         self.imagesFieldsList.find( '#' + self.imageFieldsId + imgCntId ).remove();
 
         if ( !self.newBigImagesBlock.children().length ) {
-            self.newBigImagesBlock.html( '<div class="item active first-screen-img"><img alt="" title="" src="http://placehold.it/325x300"></div>' );
+            self.newBigImagesBlock.html( '<div class="item active first-screen-img"><img alt="" title="" src="https://placehold.it/325x300"></div>' );
             self.imageCount = 1;
         }
 
