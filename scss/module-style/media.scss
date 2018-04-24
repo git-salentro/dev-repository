@@ -5211,4 +5211,11 @@ only screen and (min-width: 1234px) and (min-height: 700px) {
 
 .navbar-nav {
     margin: 0 0 0 10px;
+    float: none;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav {
+        float: none;
+    }
 }

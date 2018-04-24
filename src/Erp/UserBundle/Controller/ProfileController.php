@@ -56,7 +56,16 @@ class ProfileController extends BaseController
     {
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
-        $templateName = $user->hasRole(User::ROLE_MANAGER) ? 'Manager' : 'Tenant';
+
+            if ($user->hasRole(User::ROLE_MANAGER)) {
+                $templateName = 'Manager';
+            }
+            if ($user->hasRole(User::ROLE_TENANT)) {
+                $templateName = 'Tenant';
+            }
+            if ($user->hasRole(User::ROLE_LANDLORD)) {
+                $templateName = 'Landlord';
+            }
 
         return $this->render('ErpUserBundle:Profile/' . $templateName . ':dashboard.html.twig', ['user' => $user]);
     }

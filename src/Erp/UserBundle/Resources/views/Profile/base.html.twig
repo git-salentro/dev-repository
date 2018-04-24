@@ -4,7 +4,15 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
 
 {% block headerBannerTitle %}
-    {% if app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}Manager{% else %}Tenant{% endif %}
+    {% if app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}
+        Manager
+    {% endif %}
+    {% if app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD')) %}
+        Landlord
+    {% endif %}
+    {% if app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_TENANT')) %}
+        Tenant
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
