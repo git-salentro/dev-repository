@@ -54,14 +54,22 @@ class UserNotificationType extends AbstractType
                     'by_reference' => false,
                 ]
             )
-            // ->add(
-            //     'sendAlertAutomatically',
-            //     CheckboxType::class,
-            //     [
-            //         'required' => false,
-            //         'label' => 'Automatically send Alert on Rent Due Date?',
-            //     ]
-            // )
+            ->add(
+                'sendNotificationAutomatically',
+                CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => 'Automatically send Notification on Rent Due Date?',
+                ]
+            )
+            ->add(
+                'sendAlertAutomatically',
+                CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => 'Automatically send Alert on Rent Due Date?',
+                ]
+            )
             ->add(
                 'submit',
                 SubmitType::class,
