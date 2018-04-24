@@ -180,22 +180,23 @@ class ApplicationFormController extends BaseController
         $form = $this->createForm(new ApplicationFeeType(), $applicationForm);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $em->persist($applicationForm);
-                $em->flush();
+        if ($form->isValid()) {
+            $em->persist($applicationForm);
+            $em->flush();
 
-                $this->addFlash(
-                    'alert_ok',
-                    'Success'
-                );
-            } else {
+            $this->addFlash(
+                'alert_ok',
+                'Saved'
+            );
+        } else {
+            foreach ($form->getErrors() as $error) {
                 $this->addFlash(
                     'alert_error',
-                    $form->getErrors()[0]->getMessage()
+                    $error->getMessage()
                 );
             }
         }
+
 
         return $this->redirectToRoute('erp_property_application_form', ['propertyId' => $property->getId()]);
     }

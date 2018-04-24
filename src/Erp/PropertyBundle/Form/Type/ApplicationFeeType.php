@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Erp\PropertyBundle\Entity\ApplicationForm;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ApplicationFeeType extends AbstractType
 {
@@ -22,7 +24,7 @@ class ApplicationFeeType extends AbstractType
                 'checkbox',
                 [
                     'label' => 'No fee',
-                    'required' => false,
+                    'required' => false
                 ]
             )
             ->add(
@@ -31,16 +33,18 @@ class ApplicationFeeType extends AbstractType
                 [
                     'label' => 'Fee',
                     'required' => false,
+                    'constraints' => [new Assert\NotBlank(), new Assert\Callback([$this, 'validateFee'])]
                 ]
             )
             ->add(
                 'submit',
                 'submit',
                 [
-                    'label' => 'Submit',
+                    'label' => 'Submit'
                 ]
             );
     }
+
 
     /**
      * @inheritdoc
@@ -48,8 +52,21 @@ class ApplicationFeeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => ApplicationForm::class,
+            'data_class' => ApplicationForm::class
         ]);
+    }
+
+    public function validateFee($value, ExecutionContextInterface $context)
+    {
+        $form = $context->getRoot();
+        /** @var ApplicationForm $data */
+        $data = $form->getData();
+        if (!$data->isNoFee() && ($value <= 0 || $value =='')) {
+            $context
+                ->buildViolation('Fee must be turned off or greater than 0.')
+                ->atPath('updateOptions')
+                ->addViolation();
+        }
     }
 
     /**
