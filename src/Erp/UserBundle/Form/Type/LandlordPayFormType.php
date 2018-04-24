@@ -25,7 +25,9 @@ class LandlordPayFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('bank_country', 'text', ['label' => 'Country', 'required' => true, 'attr' => ['class' => 'form-control'],
+            ->add('currency', 'hidden', ['label' => 'Country', 'required' => true, 'attr' => ['class' => 'form-control','value' => 'usd','placeholder' => 'usd'],
+            ])
+            ->add('bank_country', 'text', ['label' => 'Country', 'required' => true, 'attr' => ['class' => 'form-control','placeholder' => 'US'],
                 'constraints' => [
                     new NotBlank(
                         [
@@ -35,27 +37,38 @@ class LandlordPayFormType extends AbstractType
                     )
                 ]
             ])
-            ->add('account_holder_name', 'text', ['label' => 'Account Holder Name', 'required' => true, 'attr' => ['class' => 'form-control'],
+            ->add('account_holder_name', 'text', ['label' => 'Account Holder Name', 'required' => true, 'attr' => ['class' => 'form-control','placeholder' => 'Jacob Miller'],
                 'constraints' => [
                     new NotBlank(
                         [
-                            'message' => 'Please enter bank name',
+                            'message' => 'Please enter holder name',
                             'groups' => ['LandlordCharge']
                         ]
                     )
                 ]
             ])
-            ->add('account_number', 'text', ['label' => 'Bank Account Number', 'required' => true, 'attr' => ['class' => 'form-control'],
+            ->add('account_number', 'text', ['label' => 'Bank Account Number', 'required' => true, 'attr' => ['class' => 'form-control', 'placeholder' => '000123456789'],
                 'constraints' => [
                     new NotBlank(
                         [
-                            'message' => 'Please enter bank name',
+                            'message' => 'Please enter bank account number',
                             'groups' => ['LandlordCharge']
                         ]
                     )
                 ]
             ])
-            ->add('amount', 'text', ['label' => 'Amount', 'required' => true, 'attr' => ['class' => 'form-control'],
+            ->add('account_holder_type', 'choice', array(
+                'label' => 'Account Type',
+                'attr' => ['class' => 'form-control'],
+                'empty_value' => 'Choose an option',
+                'choices'  => array(
+                    'Individual' => 'individual',
+                    'Company' => 'company',
+                ),
+                // *this line is important*
+                'choices_as_values' => true,
+            ))
+            ->add('amount', 'text', ['label' => 'Amount', 'required' => true, 'attr' => ['class' => 'form-control','placeholder' => '10.00'],
                 'constraints' => [
                     new NotBlank(
                         [
@@ -75,18 +88,8 @@ class LandlordPayFormType extends AbstractType
                     )
                 ]
             ])
-            ->add('account_holder_type', 'text', ['label' => 'Account Type', 'required' => true, 'attr' => ['class' => 'form-control'],
-                'constraints' => [
-                    new NotBlank(
-                        [
-                            'message' => 'Please enter bank name',
-                            'groups' => ['LandlordCharge']
-                        ]
-                    )
-                ]
-            ])
             ->add('description', 'textarea', ['label' => 'Description', 'required' => false, 'attr' => ['class' => 'form-control']])
-            ->add('button', 'submit', ['label' => 'Send charge', 'attr' => ['class' => 'btn red-btn btn-space', 'value' => 'Send charge']]);
+            ->add('button', 'submit', ['label' => 'Pay to landlord', 'attr' => ['class' => 'btn red-btn btn-space', 'value' => 'Send charge']]);
     }
 
     /**
@@ -95,13 +98,12 @@ class LandlordPayFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Charge::class,
             'validation_groups' => ['LandlordCharge']
         ]);
     }
 
     public function getName()
     {
-        return 'erp_user_landlords_charge';
+        return 'erp_user_landlords_pay_landlord';
     }
 }

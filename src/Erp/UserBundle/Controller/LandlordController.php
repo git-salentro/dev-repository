@@ -112,6 +112,25 @@ class LandlordController extends BaseController
 
                 echo "work in progress";
 
+                //TODO Add cache layer (APC or Doctrine)
+                $stripeUserManager = $this->get('erp_stripe.stripe.entity.user_manager');
+                /** @var BankAccount $bankAccount */
+
+                /*$test = $this->em->getRepository('ErpUserBundle:User')->findCustomerID('3');*/
+
+                $managerBankAccount = $stripeUserManager->getBankAccount($user);
+
+                echo "<pre>";
+
+                echo "landlord bank account details <br/>";
+                print_r($_POST);
+
+                echo "manager bank account details <br/>";
+                print_r($test);
+
+                echo "user info <br/>";
+                die;
+
                 /*$charge->setManager($user);
                 $charge->setLandlord($landlord);
                 $this->em->persist($charge);
