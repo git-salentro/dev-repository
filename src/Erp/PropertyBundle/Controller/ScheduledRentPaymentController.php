@@ -19,7 +19,7 @@ class ScheduledRentPaymentController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $manager = $user->getManager();
+        $manager = $user->getTenantProperty()->getUser();
         $managerStripeAccount = $manager->getStripeAccount();
         $tenantStripeCustomer = $user->getStripeCustomer();
 
