@@ -12,7 +12,9 @@
 {%- endblock form_widget_simple -%}
 
 {%- block checkbox_widget -%}
-    <input type="hidden" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <div style="display: none">
+        <input type="checkbox" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    </div>
 {%- endblock checkbox_widget -%}
 
 {%- block choice_widget_collapsed -%}
@@ -35,7 +37,7 @@
                     <h1 class="bold-text">Choose properties</h1>
                 </div>
             </div>
-            {{ form_start(form, {'action': path('erp_notification_user_notification_choose_properties')}) }}
+            {{ form_start(form, {'action': action}) }}
                 <table class="table">
                     <thead>
                         <tr>
@@ -47,7 +49,13 @@
                     <tbody>
                     {% for property in properties %}
                         <tr>
-                            <td><input type="checkbox" name="idx[]" value="{{ property.id }}" /></td>
+                            <td>
+                                <input type="checkbox" name="idx[]" value="{{ property.id }}"
+                                    {% if property in entity.properties %}
+                                        checked
+                                    {% endif %}
+                                />
+                            </td>
                             <td>{{ property.name }}</td>
                             <td>{{ property.tenantUser.fullName }}</td>
                         </tr>
@@ -62,7 +70,7 @@
                     {{ form_errors(alert) }}
                     {{ form_widget(alert) }}
                 {% endfor %}
-                {# {{ form_widget(form.sendAlertAutomatically) }} #}
+                {{ form_widget(form.sendNotificationAutomatically) }}
                 {{ form_widget(form.template) }}
                 {{ form_widget(form.submit, {'attr': {'class': 'btn red-btn'}}) }}
             {{ form_end(form) }}

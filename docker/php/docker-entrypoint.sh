@@ -8,8 +8,9 @@ if [ ! -d "/var/www/app/logs/supervisor" ]; then
     mkdir -p /var/www/app/logs/supervisor
 fi
 
-info "Run RabbitMQ"
-php app/console rabbitmq:consumer -m 50 update_subscriptions  >/var/www/app/logs/rabbitmq.log 2>/var/www/app/logs/rabbitmq2.log &
+# skip this for now because rabbitmq is not ready at this stage
+#info "Run RabbitMQ"
+#php app/console rabbitmq:consumer -m 50 update_subscriptions  >/var/www/app/logs/rabbitmq.log 2>/var/www/app/logs/rabbitmq2.log &
 
 info "Run Cron"
 #Add env variables for cron tasks

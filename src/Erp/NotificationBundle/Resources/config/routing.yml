@@ -26,6 +26,12 @@ erp_notification_user_notification_create:
     path: /notification/create
     defaults: { _controller: ErpNotificationBundle:UserNotification:create }
 
+erp_notification_user_notification_update:
+    path: /notification/update/{id}
+    defaults: { _controller: ErpNotificationBundle:UserNotification:update }
+    requirements:
+        id: \d+
+
 erp_notification_user_notification_view:
     path: /notification/view/{id}
     defaults: { _controller: ErpNotificationBundle:UserNotification:viewAlert }
@@ -35,6 +41,12 @@ erp_notification_user_notification_view:
 erp_notification_user_notification_choose_properties:
     path: /notification/choose-properties
     defaults: { _controller: ErpNotificationBundle:UserNotification:chooseProperties }
+
+erp_notification_user_notification_choose_properties_update:
+    path: /notification/choose-properties/{id}
+    defaults: { _controller: ErpNotificationBundle:UserNotification:chooseProperties }
+    requirements:
+        id: \d+
 
 erp_notification_user_notification_list:
     path: /notification/list

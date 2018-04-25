@@ -45,14 +45,14 @@ class UserNotification implements DatesAwareInterface
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_send_alert_automatically", type="integer")
+     * @ORM\Column(name="is_send_alert_automatically", type="boolean")
      */
     private $sendAlertAutomatically;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_send_notification_automatically", type="integer")
+     * @ORM\Column(name="is_send_notification_automatically", type="boolean")
      */
     private $sendNotificationAutomatically;
 
@@ -262,6 +262,12 @@ class UserNotification implements DatesAwareInterface
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    public function eraseProperties()
+    {
+        $this->properties = new ArrayCollection();
+        return $this;
     }
 
 

@@ -1,4 +1,4 @@
-{% extends 'ErpNotificationBundle::base.html.twig' %}
+{% extends 'ErpUserBundle:Profile:base.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -18,7 +18,9 @@
                 </div>
             </div>
 
-            {{ form_start(form, {'action': path('erp_notification_user_notification_create') }) }}
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
+
+            {{ form_start(form) }}
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">

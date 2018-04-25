@@ -17,11 +17,12 @@ class UserNotificationRepository extends EntityRepository
     {
         $qb = $this->getAlertByUserQuery($user);
 
-        $qb->andWhere('un.id =: id')
-            ->setParameter('id', $id);
+        $qb = $qb->andWhere('un.id = :id')
+            ->setParameter('id', $id)
+            ->setMaxResults(1);
 
         return $qb->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
     /**
@@ -41,7 +42,9 @@ class UserNotificationRepository extends EntityRepository
 
     public function getAlertsByUser(User $user)
     {
-        return $this->getAlertByUserQuery($user)->getQuery()->getResult();
+        return $this->getAlertByUserQuery($user)
+            ->addOrderBy('un.createdAt', 'DESC')
+            ->getQuery()->getResult();
     }
 
     public function getPropertiesFromUserNotiticationIterator()
@@ -84,34 +87,9 @@ class UserNotificationRepository extends EntityRepository
 
     public function getPropertiesFromAlertsIterator()
     {
-        // TODO: add check for last payment date
         return $this->getPropertiesFromUserNotiticationIterator()
-            ->leftJoin('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
-            // TODO: refactor this to more `doctrine` way
-            ->andWhere('
-                (
-                    a.id IS NULL AND
-                    un.sendAlertAutomatically = 1
-                    AND (ps.dayUntilDue - DAY(CURRENT_DATE())) = 0
-                ) OR (
-                    a.id IS NOT NULL AND
-                    un.sendAlertAutomatically = 0
-                )')
-            ->andWhere('
-                (
-                    p.paidDate IS NULL OR
-                    (
-                        (
-                            un.sendAlertAutomatically = 0 AND
-                            DATE_ADD(p.paidDate, 1, \'MONTH\') < CURRENT_DATE()
-                        )
-                        OR
-                        (
-                            un.sendAlertAutomatically = 1 AND
-                            DATE(DATE_ADD(p.paidDate, 1, \'MONTH\')) = DATE(CURRENT_DATE())
-                        )
-                    )
-                )')
+            ->join('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
+            ->andWhere('p.paidDate IS NULL OR DATE_ADD(p.paidDate, 1, \'MONTH\') < CURRENT_DATE()')
             ->addSelect('a.id AS alertId')
             ->addSelect('(DAY(CURRENT_DATE()) - ps.dayUntilDue) AS calculatedDaysAfter')
             ->getQuery()->iterate();

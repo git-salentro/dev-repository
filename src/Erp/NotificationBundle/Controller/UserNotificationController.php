@@ -3,6 +3,7 @@
 namespace Erp\NotificationBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Erp\NotificationBundle\Form\Type\UserNotificationType;
 use Erp\NotificationBundle\Entity\UserNotification;
@@ -20,24 +21,8 @@ class UserNotificationController extends Controller
      */
     public function createAction(Request $request)
     {
-        $form = $this->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            /** @var User $user */
-            $user = $this->getUser();
-            $repo = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
-            $properties = $repo->getPropertiesWithActiveTenant($user);
-
-            return $this->render('ErpNotificationBundle:UserNotification:choose_properties.html.twig', [
-                'properties' => $properties,
-                'form' => $form->createView(),
-            ]);
-        }
-
-        return $this->render('ErpNotificationBundle:UserNotification:create.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        $entity = new UserNotification();
+        return $this->update($entity, $request);
     }
 
     /**
@@ -55,9 +40,10 @@ class UserNotificationController extends Controller
         ]);
     }
 
-    public function updateAction(Request $request)
+    public function updateAction($id, Request $request)
     {
-
+        $alert = $this->getAlert($id);
+        return $this->update($alert, $request);
     }
 
     /**
@@ -65,14 +51,22 @@ class UserNotificationController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function choosePropertiesAction(Request $request)
+    public function choosePropertiesAction(Request $request, $id = null)
     {
-        $userNotification = new UserNotification();
-        $form = $this->getForm($userNotification);
+        $path = '';
+        $userNotification = null;
+        if ($id) {
+            $userNotification = $this->getAlert($id);
+            $path = $this->generateUrl('erp_notification_user_notification_choose_properties_update', ['id' => $id]);
+        } else {
+            $userNotification = new UserNotification();
+            $path = $this->generateUrl('erp_notification_user_notification_choose_properties');
+        }
+        $form = $this->getForm($userNotification, ['action' => $path]);
         $form->handleRequest($request);
 
         if (!$form->isValid()) {
-            return $this->redirectToRoute('erp_notification_user_notification_create');
+            return $this->redirectToRoute('erp_notification_user_notification_list');
         }
 
         /** @var User $user */
@@ -89,24 +83,24 @@ class UserNotificationController extends Controller
         if (count($idx) > 0) {
             $propertyRepository->addIdentifiersToQueryBuilder($qb, $idx);
         } elseif (!$allElements) {
-            $query = null;
+            $qb = null;
         }
 
         $em = $this->getDoctrine()->getManagerForClass(UserNotification::class);
         try {
             $i = 0;
-            foreach ($qb->getQuery()->iterate() as $object) {
-                /** @var Property $property */
-                $property = $object[0];
+            $userNotification->eraseProperties();
+            if ($qb) {
+                foreach ($qb->getQuery()->iterate() as $object) {
+                    /** @var Property $property */
+                    $property = $object[0];
+                    $userNotification->addProperty($property);
+                    $em->persist($userNotification);
 
-                $userNotificationPrototype = clone $userNotification;
-                $userNotificationPrototype->addProperty($property);
-
-                $em->persist($userNotificationPrototype);
-
-                if ((++$i % 20) == 0) {
-                    $em->flush();
-                    $em->clear();
+                    if ((++$i % 20) == 0) {
+                        $em->flush();
+                        $em->clear();
+                    }
                 }
             }
 
@@ -143,9 +137,43 @@ class UserNotificationController extends Controller
         ]);
     }
 
-    private function update(Request $request)
+    private function update(UserNotification $entity, Request $request)
     {
+        $path = '';
+        if ($entity->getId()) {
+            $path = $this->generateUrl('erp_notification_user_notification_update', ['id' => $entity->getId()]);
+        } else {
+            $path = $this->generateUrl('erp_notification_user_notification_create');
+        }
+        $form = $this->getForm($entity, ['action' => $path]);
+        $form->handleRequest($request);
 
+        if ($form->isValid()) {
+            // TODO: fix this hack to not lose data
+            $form = $this->getForm($entity, ['action' => $path]);
+            $form->handleRequest($request);
+            
+            /** @var User $user */
+            $user = $this->getUser();
+            $repo = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+            $properties = $repo->getPropertiesWithActiveTenant($user);
+
+            if ($entity->getId()) {
+                $action = $this->generateUrl('erp_notification_user_notification_choose_properties_update', ['id' => $entity->getId()]);
+            } else {
+                $action = $this->generateUrl('erp_notification_user_notification_choose_properties');
+            }
+            return $this->render('ErpNotificationBundle:UserNotification:choose_properties.html.twig', [
+                'properties' => $properties,
+                'form' => $form->createView(),
+                'action' => $action,
+                'entity' => $entity,
+            ]);
+        }
+
+        return $this->render('ErpNotificationBundle:UserNotification:create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     private function getUserTemplates()
@@ -154,11 +182,21 @@ class UserNotificationController extends Controller
         return $repository->getTemplatesByUser($this->getUser());
     }
 
-    private function getForm(UserNotification $userNotification = null)
+    private function getForm(UserNotification $userNotification = null, array $extra = [])
     {
         $options = [
             'templates' => $this->getUserTemplates(),
         ];
-        return $this->createForm(new UserNotificationType(), $userNotification, $options);
+        return $this->createForm(new UserNotificationType(), $userNotification, array_merge($options, $extra));
+    }
+
+    private function getAlert($id)
+    {
+        $repo = $this->getDoctrine()->getManagerForClass(UserNotification::class)->getRepository(UserNotification::class);
+        $alert = $repo->getAlertByUserAndId($id, $this->getUser());
+        if (!$alert) {
+            throw new NotFoundHttpException('Alert with id '.$id.' not found');
+        }
+        return $alert;
     }
 }
