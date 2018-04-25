@@ -17,11 +17,12 @@ class UserNotificationRepository extends EntityRepository
     {
         $qb = $this->getAlertByUserQuery($user);
 
-        $qb->andWhere('un.id =: id')
-            ->setParameter('id', $id);
+        $qb = $qb->andWhere('un.id = :id')
+            ->setParameter('id', $id)
+            ->setMaxResults(1);
 
         return $qb->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
     /**
@@ -41,7 +42,9 @@ class UserNotificationRepository extends EntityRepository
 
     public function getAlertsByUser(User $user)
     {
-        return $this->getAlertByUserQuery($user)->getQuery()->getResult();
+        return $this->getAlertByUserQuery($user)
+            ->addOrderBy('un.createdAt', 'DESC')
+            ->getQuery()->getResult();
     }
 
     public function getPropertiesFromUserNotiticationIterator()
