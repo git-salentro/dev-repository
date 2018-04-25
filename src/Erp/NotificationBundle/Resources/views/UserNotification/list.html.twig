@@ -11,6 +11,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <td>id</td>
                             <td>Type</td>
                             <td>Template</td>
                             <td>Send Message</td>
@@ -21,6 +22,7 @@
                     <tbody>
                     {% for alert in alerts %}
                         <tr>
+                            <td>{{alert.id}}</td>
                             <td>{{alert.template.type}}</td>
                             <td>{{alert.template.title}}</td>
                             <td>

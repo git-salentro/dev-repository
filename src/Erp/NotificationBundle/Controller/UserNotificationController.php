@@ -139,6 +139,18 @@ class UserNotificationController extends Controller
 
     private function update(UserNotification $entity, Request $request)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $repo = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
+        $properties = $repo->getPropertiesWithActiveTenant($user);
+        if (!$properties) {
+            $this->addFlash(
+                'alert_error',
+                'Sorry, you don\'t have properties with active tenants to create/edit alerts'
+            );
+            return $this->redirectToRoute('erp_notification_user_notification_list');
+        }
+
         $path = '';
         if ($entity->getId()) {
             $path = $this->generateUrl('erp_notification_user_notification_update', ['id' => $entity->getId()]);
@@ -152,11 +164,6 @@ class UserNotificationController extends Controller
             // TODO: fix this hack to not lose data
             $form = $this->getForm($entity, ['action' => $path]);
             $form->handleRequest($request);
-            
-            /** @var User $user */
-            $user = $this->getUser();
-            $repo = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
-            $properties = $repo->getPropertiesWithActiveTenant($user);
 
             if ($entity->getId()) {
                 $action = $this->generateUrl('erp_notification_user_notification_choose_properties_update', ['id' => $entity->getId()]);
