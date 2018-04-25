@@ -36,10 +36,12 @@
                         <div class="form-group">
                             {{ form_label(feeForm.noFee, null, {'label_attr': {'class': 'control-label'}}) }}
                             {{ form_widget(feeForm.noFee) }}
+                            {{ form_errors(feeForm.noFee) }}
                         </div>
                         <div class="form-group">
                             {{ form_label(feeForm.fee, null, {'label_attr': {'class': 'control-label'}}) }}
                             {{ form_widget(feeForm.fee, {'attr': {'class': 'form-control', 'disabled': disableFee}}) }}
+                            {{ form_errors(feeForm.fee) }}
                         </div>
                         {{ form_widget(feeForm.submit,  {'attr': {'class': 'red-btn btn'}}) }}
                     {{ form_end(feeForm) }}
