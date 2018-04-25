@@ -33,7 +33,7 @@ class ApplicationFeeType extends AbstractType
                 [
                     'label' => 'Fee',
                     'required' => false,
-                    'constraints' => [new Assert\NotBlank(), new Assert\Callback([$this, 'validateFee'])]
+                    'constraints' => [new Assert\Callback([$this, 'validateFee'])]
                 ]
             )
             ->add(
@@ -64,7 +64,6 @@ class ApplicationFeeType extends AbstractType
         if (!$data->isNoFee() && ($value <= 0 || $value =='')) {
             $context
                 ->buildViolation('Fee must be turned off or greater than 0.')
-                ->atPath('updateOptions')
                 ->addViolation();
         }
     }

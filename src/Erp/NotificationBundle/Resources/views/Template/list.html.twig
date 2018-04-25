@@ -4,7 +4,7 @@
     {{ parent() }}
     <section id="managers-profile" class="profile">
         <div class="container">
-            <div class="notif-template-nav">
+            <div class="notification-template-nav">
                 <a href="{{ path('erp_notification_template_create') }}" class="btn red-btn">+ Add Template</a>
             </div>
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
