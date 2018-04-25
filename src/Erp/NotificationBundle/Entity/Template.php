@@ -51,7 +51,7 @@ class Template implements DatesAwareInterface
     /**
      * @var User
     *
-     * @ORM\ManyToOne(targetEntity="\Erp\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="\Erp\UserBundle\Entity\User", inversedBy="templates")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

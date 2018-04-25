@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Erp\NotificationBundle\Entity\Template;
 use Erp\PaymentBundle\Entity\PaySimpleCustomer;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -611,6 +612,14 @@ class User extends BaseUser
     protected $agreeAutoWithdrawal;
 
     /**
+     * @var Template
+     *
+     * @ORM\OneToMany(targetEntity="\Erp\NotificationBundle\Entity\Template", mappedBy="user")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $templates;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -629,6 +638,7 @@ class User extends BaseUser
         $this->chargeIncomings = new ArrayCollection();
         $this->smartMoveRenters = new ArrayCollection();
         $this->fees = new ArrayCollection();
+        $this->templates = new ArrayCollection();
     }
 
     /**
@@ -2123,4 +2133,39 @@ class User extends BaseUser
 
         return $balance < 0;
     }
+
+    /**
+     * Add template
+     *
+     * @param Template $template
+     *
+     * @return Template
+     */
+    public function addTemplate(Template $template)
+    {
+        $this->templates[] = $template;
+
+        return $template;
+    }
+
+    /**
+     * Remove template
+     *
+     * @param Template $template
+     */
+    public function removeTemplate(Template $template)
+    {
+        $this->templates->removeElement($template);
+    }
+
+    /**
+     * Get templates
+     *
+     * @return Collection
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
 }

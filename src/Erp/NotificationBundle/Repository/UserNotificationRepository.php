@@ -2,6 +2,7 @@
 
 namespace Erp\NotificationBundle\Repository;
 
+use Erp\PropertyBundle\Entity\Property;
 use Erp\UserBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
@@ -37,7 +38,9 @@ class UserNotificationRepository extends EntityRepository
         return $qb->select('un')
             ->join('un.properties', 'p')
             ->where('p.user = :user')
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+            ->andWhere('p.status != :status')
+            ->setParameter('status',Property::STATUS_DELETED);
     }
 
     public function getAlertsByUser(User $user)
@@ -47,7 +50,7 @@ class UserNotificationRepository extends EntityRepository
             ->getQuery()->getResult();
     }
 
-    public function getPropertiesFromUserNotiticationIterator()
+    public function getPropertiesFromUserNotificationIterator()
     {
         return $this->createQueryBuilder('un')
             ->distinct()
@@ -68,7 +71,7 @@ class UserNotificationRepository extends EntityRepository
 
     public function getPropertiesFromNotificationsIterator()
     {
-        return $this->getPropertiesFromUserNotiticationIterator()
+        return $this->getPropertiesFromUserNotificationIterator()
             ->leftJoin('un.notifications', 'n', 'WITH', '(ps.dayUntilDue - DAY(CURRENT_DATE())) = n.daysBefore')
             // TODO: refactor this to more `doctrine` way
             ->andWhere('
@@ -87,7 +90,7 @@ class UserNotificationRepository extends EntityRepository
 
     public function getPropertiesFromAlertsIterator()
     {
-        return $this->getPropertiesFromUserNotiticationIterator()
+        return $this->getPropertiesFromUserNotificationIterator()
             ->join('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
             ->andWhere('p.paidDate IS NULL OR DATE_ADD(p.paidDate, 1, \'MONTH\') < CURRENT_DATE()')
             ->addSelect('a.id AS alertId')
