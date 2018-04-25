@@ -7,8 +7,8 @@
             <ul class="nav nav-tabs">
                 {% set templateRoutes = ['erp_notification_template_create', 'erp_notification_template_update', 'erp_notification_template_list'] %}
                 <li role="presentation" class="{{ (currentRoute in templateRoutes) ? ' active' : ''}}"><a href="{{ path('erp_notification_template_list') }}">Templates</a></li>
-                {% set alertRoutes = ['erp_notification_user_notification_create', 'erp_notification_user_notification_list', 'erp_notification_user_notification_history'] %}
-                <li role="presentation" class="{{ (currentRoute in alertRoutes) ? ' active' : ''}}"><a href="{{ path('erp_notification_user_notification_history') }}">Set Alerts</a></li>
+                {% set alertRoutes = ['erp_notification_user_notification_create', 'erp_notification_user_notification_update', 'erp_notification_user_notification_list', 'erp_notification_user_notification_history'] %}
+                <li role="presentation" class="{{ (currentRoute in alertRoutes) ? ' active' : ''}}"><a href="{{ path('erp_notification_user_notification_list') }}">Alerts</a></li>
             </ul>
         </div>
     </div>

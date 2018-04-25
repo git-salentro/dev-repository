@@ -173,6 +173,7 @@ class UserNotificationController extends Controller
 
         return $this->render('ErpNotificationBundle:UserNotification:create.html.twig', [
             'form' => $form->createView(),
+            'entity' => $entity
         ]);
     }
 

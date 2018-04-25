@@ -1,4 +1,4 @@
-{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+{% extends 'ErpNotificationBundle::base.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -14,7 +14,15 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <div class="row">
                 <div class="title-block">
-                    <h1 class="bold-text">Create alert</h1>
+                    <h1 class="bold-text">
+                        {%- set title -%}
+                            {%- if entity.id -%}
+                                Edit alert
+                            {%- else -%}
+                                Create alert
+                            {%- endif -%}
+                        {%- endset -%}
+                        </h1>
                 </div>
             </div>
 
@@ -75,15 +83,7 @@
                         >
                             Add
                         </button>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    {{ form_label(form.sendAlertAutomatically, null, {'label_attr': {'class': 'control-label'}}) }}
-                                    {{ form_widget(form.sendAlertAutomatically) }}
-                                    {{ form_errors(form.sendAlertAutomatically) }}
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 {{ form_widget(form.submit, {'label': 'Next', 'attr': {'class': 'btn red-btn'}}) }}
