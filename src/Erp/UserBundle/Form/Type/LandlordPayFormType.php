@@ -25,7 +25,7 @@ class LandlordPayFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('currency', 'hidden', ['label' => 'Country', 'required' => true, 'attr' => ['class' => 'form-control','value' => 'usd','placeholder' => 'usd'],
+            /*->add('currency', 'hidden', ['label' => 'Country', 'required' => true, 'attr' => ['class' => 'form-control','value' => 'usd','placeholder' => 'usd'],
             ])
             ->add('bank_country', 'text', ['label' => 'Country', 'required' => true, 'attr' => ['class' => 'form-control','placeholder' => 'US'],
                 'constraints' => [
@@ -67,7 +67,7 @@ class LandlordPayFormType extends AbstractType
                 ),
                 // *this line is important*
                 'choices_as_values' => true,
-            ))
+            ))*/
             ->add('amount', 'text', ['label' => 'Amount', 'required' => true, 'attr' => ['class' => 'form-control','placeholder' => '10.00'],
                 'constraints' => [
                     new NotBlank(
@@ -89,7 +89,7 @@ class LandlordPayFormType extends AbstractType
                 ]
             ])
             ->add('description', 'textarea', ['label' => 'Description', 'required' => false, 'attr' => ['class' => 'form-control']])
-            ->add('button', 'submit', ['label' => 'Pay to landlord', 'attr' => ['class' => 'btn red-btn btn-space', 'value' => 'Send charge']]);
+            ->add('button', 'submit', ['label' => 'Pay to landlord', 'attr' => ['class' => 'btn red-btn btn-space', 'value' => 'Pay to landlord']]);
     }
 
     /**

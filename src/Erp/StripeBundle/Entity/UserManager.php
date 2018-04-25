@@ -3,6 +3,7 @@
 namespace Erp\StripeBundle\Entity;
 
 use Erp\PaymentBundle\Entity\StripeCustomer;
+use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\UserBundle\Entity\User;
 use PHY\CacheBundle\Cache;
 use Stripe\Customer;
@@ -105,4 +106,38 @@ class UserManager
 
         return null;
     }
+    public function getCustomerInfo(User $user)
+    {
+        //TODO Connected account details
+        /** @var StripeCustomer $stripeCustomer */
+        $stripeCustomer = $user->getStripeCustomer();
+
+        if (!$stripeCustomer) {
+            return;
+        }
+
+        $arguments = [
+            'id' => $stripeCustomer->getCustomerId(),
+            'options' => null,
+        ];
+        return $arguments;
+    }
+
+    public function getStripeAccountInfo(User $user)
+    {
+        //TODO Connected account details
+        /** @var StripeCustomer $stripeCustomer */
+        $StripeAccount = $user->getStripeAccount();
+
+        if (!$StripeAccount) {
+            return;
+        }
+
+        $arguments = [
+            'id' => $StripeAccount->getAccountId(),
+            'options' => null,
+        ];
+        return $arguments;
+    }
+
 }

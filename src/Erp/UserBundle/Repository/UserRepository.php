@@ -4,7 +4,6 @@ namespace Erp\UserBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Erp\UserBundle\Entity\User;
-use Erp\PaymentBundle\Entity\StripeCustomer;
 
 /**
  * Class UserRepository
@@ -46,16 +45,5 @@ class UserRepository extends EntityRepository
 
         return $qb->getQuery()
             ->getResult();
-    }
-
-    public function findCustomerID($user_id)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('s')
-            ->from('Erp\PaymentBundle\Entity\StripeCustomer', 's')
-            ->where('s.user = :user_id')
-            ->setParameter('s.user', $user_id);
-
-        return $qb->getQuery()->getResult();
     }
 }

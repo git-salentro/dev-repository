@@ -9,6 +9,7 @@ class Processor extends BaseProcessor
 {
     const CHARGE_EMAIL_TEMPLATE = 'ErpUserBundle:Landlords:charge_email_template.html.twig';
     const END_OF_TRIAL_PERIOD_TEMPLATE = 'ErpUserBundle:Landlords:end_of_trial_period_template.html.twig';
+    const TRANSFER_EMAIL_TEMPLATE = 'ErpUserBundle:Landlords:transfer_email_template_1.html.twig';
 
     public function sendChargeEmail(Charge $charge, $mailFrom)
     {
@@ -27,4 +28,13 @@ class Processor extends BaseProcessor
 
         return $result;
     }
+    public function sendTransferEmail(Charge $charge, $mailFrom)
+    {
+        $rendered = $this->templating->render(self::TRANSFER_EMAIL_TEMPLATE, ['charge' => $charge]);
+        $subject = sprintf('Transfer from %s to %s', $charge->getManager()->getFullName(), $charge->getLandlord()->getFullName());
+        $result = $this->sendEmail($rendered, $subject, $mailFrom, $charge->getLandlord()->getEmail(), 'text/html');
+
+        return $result;
+    }
+
 }

@@ -5,6 +5,7 @@ namespace Erp\UserBundle\Controller;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Entity\StripeSubscription;
+use Erp\StripeBundle\Entity\Transaction;
 use Stripe\Subscription;
 use Erp\UserBundle\Entity\Charge;
 use Erp\UserBundle\Entity\User;
@@ -18,6 +19,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class LandlordController extends BaseController
 {
+    const TRANSFER_EMAIL_TEMPLATE = 'ErpUserBundle:Landlords:transfer_email_template_1.html.twig';
+
     /**
      * @Security("is_granted('ROLE_MANAGER')")
      */
@@ -96,58 +99,191 @@ class LandlordController extends BaseController
         $landlordId = $request->get('landlordId');
         $landlord = $this->em->getRepository('ErpUserBundle:User')->findOneBy(['id' => $landlordId]);
 
+
         if ($landlord instanceof User) {
             //Second step
 
             /** @var $user \Erp\UserBundle\Entity\User */
 
-            $form = $this->createForm(new LandlordPayFormType());
+            $from = $this->container->getParameter('contact_email');
+
+            $charge = new Charge();
+            $form = $this->createForm(new LandlordPayFormType(),$charge);
             $form->handleRequest($request);
 
             /** @var $manager \Erp\UserBundle\Entity\User */
             $manager = $landlord->getManager();
 
             if ($manager->getId() == $user->getId() && $form->isValid()) {
+
                 //Third (Final) step
 
-                echo "work in progress";
+                $landlordStripeAccount = $landlord->getStripeAccount();
+                $managerStripeCustomer = $manager->getStripeCustomer();
 
                 //TODO Add cache layer (APC or Doctrine)
                 $stripeUserManager = $this->get('erp_stripe.stripe.entity.user_manager');
                 /** @var BankAccount $bankAccount */
 
-                /*$test = $this->em->getRepository('ErpUserBundle:User')->findCustomerID('3');*/
-
+                /** get manager bank account details in website */
                 $managerBankAccount = $stripeUserManager->getBankAccount($user);
+                $managerBankAccountId = $managerBankAccount->id;
+
+                /** get manager stripe customer id in website */
+                $stripeCustomerInfo = $stripeUserManager->getCustomerInfo($user);
+                $managerCustomerId = $stripeCustomerInfo['id'];
+
+                /** get landlord & manager other info in website */
+
+                /*$manaerEmail = $user->getEmail();
+                $landlordEmail = $landlord->getEmail();*/
+
+                $landlordStripeAccount = $landlord->hasStripeAccount();
+
+                if($landlordStripeAccount=='1') {
+                    $rawLandlordStripeAccount = $stripeUserManager->getStripeAccountInfo($landlord);
+                    $landlordStripeAccount = $rawLandlordStripeAccount['id'];
+                }
+
+                /** if manager didn't connect own bank account in website */
 
                 echo "<pre>";
-
-                echo "landlord bank account details <br/>";
                 print_r($_POST);
+                print_r($stripeCustomerInfo);
+                print_r($managerBankAccount);
+                print_r($landlordStripeAccount);
 
-                echo "manager bank account details <br/>";
-                print_r($test);
+                $transaction = new Transaction();
+                $transaction->setType('transfer');
+                $transaction->setAmount(1000);
+                $transaction->setCurrency('usd');
+                $transaction->setPaymentMethod('bank');
+                $transaction->setPaymentMethodDescription('testing data');
+                $transaction->setMetadata('demo');
+                $transaction->setStatus('succeeded');
+                $transaction->setInternalType('transfer');
+                //$this->em->persist($transaction);
+                //$token = $transaction->getId();
+                //$this->em->flush();
 
-                echo "user info <br/>";
+                print_r($transaction);
+                //print_r($token);
+
                 die;
 
-                /*$charge->setManager($user);
-                $charge->setLandlord($landlord);
-                $this->em->persist($charge);
-                $this->em->flush();
+                if (!$managerCustomerId or !$managerBankAccountId) {
+                    $erMsg = 'Manager can not transfer payments. Because could not verify own bank account';
+                    return $this->render('ErpUserBundle:Landlords:transferFailed.html.twig', [
+                        'charge' => $charge,
+                        'modalTitle' => $erMsg,
+                        'user' => $user,
+                        'landlord' => $landlord
+                    ]);
+                }
+                else{
 
-                $from = $this->container->getParameter('contact_email');
-                $this->get('erp_user.mailer.processor')->sendChargeEmail($charge, $from);
+                    /** if landlord didn't have stripe connect account id in website */
 
-                $this->addFlash('alert_error', 'Sent');
-                return $this->forward('ErpUserBundle:Landlord:LandlordList');*/
+                    if(!$landlordStripeAccount)
+                    {
+                        $erMsg = 'Landlord can not accept payments. Because could not find stripe account id';
+                        return $this->render('ErpUserBundle:Landlords:transferFailed.html.twig', [
+                            'charge' => $charge,
+                            'modalTitle' => $erMsg,
+                            'user' => $user,
+                            'landlord' => $landlord
+                        ]);
+                    }
+                    else{
+
+                        $chkstripe = $landlordStripeAccount;
+
+                        /*echo "step 3 in progress <br/>";
+                        print_r($landlordStripeAccount);*/
+
+                        /** Charge data set */
+                        $chargeEm = $this->getDoctrine()->getManagerForClass(Charge::class);
+
+                        $charge->setManager($user);
+                        $charge->setLandlord($landlord);
+                        $this->em->persist($charge);
+                        $token = $charge->getId();
+                        $this->em->flush();
+
+                        $charge = $chargeEm->getRepository(Charge::class)->find($token);
+
+                        $stripeApiManager = $this->get('erp_stripe.entity.api_manager');
+
+                        /** get transfer payment details from form fill data */
+
+                        $rawData = $request->get("erp_user_landlords_pay_landlord");
+                        $amount = $rawData['amount'];
+                        $description = $request->get('description');
+
+                        /** Arguments to create charge as landlord destination */
+
+                        $arguments = [
+                            'params' => [
+                                'amount' => ApiHelper::convertAmountToStripeFormat($amount),
+                                'customer' => $managerCustomerId,
+                                'currency' => StripeCustomer::DEFAULT_CURRENCY,
+                                'source' => $managerBankAccountId,
+                                'capture' => 'true',
+                                    'metadata' => [
+                                    'account' => $landlordStripeAccount,
+                                    'internalType' => 'transfer',
+                                    'description' => $description
+                                ],
+                                'destination' => array(
+                                    'amount' =>  ApiHelper::convertAmountToStripeFormat($amount),
+                                    'account' => $landlordStripeAccount,
+                                ),
+                            ],
+                            'options' => [
+                                'destination' => $landlordStripeAccount
+                            ]
+                        ];
+
+                        /** Get stripe response for landlord payments */
+
+                        $chargeResponse = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
+
+                        $from = $this->container->getParameter('contact_email');
+                        $this->get('erp_user.mailer.processor')->sendTransferEmail($charge, $from);
+
+                        if (!$chargeResponse->isSuccess()) {
+                            $erMsg = 'Transfer Failed due '.$chargeResponse->getErrorMessage();
+                            return $this->render('ErpUserBundle:Landlords:transferFailed.html.twig', [
+                                'charge' => $charge,
+                                'modalTitle' => $erMsg,
+                                'user' => $user,
+                                'landlord' => $landlord
+                            ]);
+                        }
+
+                        $charge->setStatus(Charge::STATUS_PAID);
+
+                        $chargeEm->persist($charge);
+                        $chargeEm->flush();
+
+                        $this->addFlash('alert_success', 'transfer successfully');
+                        return $this->render('ErpUserBundle:Landlords:transferSent.html.twig', [
+                            'charge' => $charge,
+                            'modalTitle' => 'Transfer Successfully',
+                            'user' => $user,
+                            'landlord' => $landlord
+                        ]);
+
+                    }
+                }
 
             }
 
             return $this->render('ErpUserBundle:Landlords:pay_landlord_step_2.html.twig', [
                 'user' => $user,
                 'landlord' => $landlord,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'modalTitle' => 'Pay to landlords'
             ]);
 
         } else {

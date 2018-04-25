@@ -1,0 +1,15 @@
+{% extends 'ErpUserBundle:Mail:layout.html.twig' %}
+
+{% block content %}
+    <p>
+        Hello, <b>{{ charge.landlord.firstname }} {{ charge.landlord.lastname }}.</b>
+    </p>
+    <p>
+        Please see following transfer payment details: <br/>
+        <b>Amount:</b> {{ charge.amount }} USD<br/>
+        {% if (charge.description) %}
+            Note: {{ charge.description }}
+        {% endif %}
+    </p>
+    <p>Sincerely yours, {{ charge.manager.firstname }} {{ charge.manager.lastname }}.</p>
+{% endblock %}
