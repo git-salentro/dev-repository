@@ -66,7 +66,7 @@ class UserNotificationRepository extends EntityRepository
             ->join('p.settings', 'ps', 'WITH', 'ps.dayUntilDue IS NOT NULL')
             ->andWhere('p.tenantUser IS NOT NULL')
             ->andWhere('p.status != :status')
-            ->setParameter('status', 'deleted');
+            ->setParameter('status', Property::STATUS_DELETED);
     }
 
     public function getPropertiesFromNotificationsIterator()
