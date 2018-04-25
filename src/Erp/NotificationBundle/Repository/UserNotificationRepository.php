@@ -43,7 +43,7 @@ class UserNotificationRepository extends EntityRepository
     public function getAlertsByUser(User $user)
     {
         return $this->getAlertByUserQuery($user)
-            ->addOrderBy('un.createdAt', 'DESC')
+            ->addOrderBy('un.id', 'DESC')
             ->getQuery()->getResult();
     }
 
