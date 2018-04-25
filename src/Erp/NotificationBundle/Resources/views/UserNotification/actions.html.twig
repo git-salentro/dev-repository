@@ -1,7 +1,10 @@
+
 <div class="notification-template-nav">
-    {% if currentRoute == 'erp_notification_user_notification_list' %}
-        <a href="{{ path('erp_notification_user_notification_create') }}" class="btn red-btn pull-right">Create new Alert</a>
-    {% endif  %}
-    <a href="{{ path('erp_notification_user_notification_history') }}" class="btn red-btn">Alerts History</a>
-    <a href="{{ path('erp_notification_user_notification_list') }}" class="btn red-btn">Show Automated Alerts</a>
+    <div class="row">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="{{ (currentRoute == 'erp_notification_user_notification_create') ? ' active' : ''}}"><a href="{{ path('erp_notification_user_notification_create') }}">Create new Alert</a></li>
+                <li role="presentation" class="{{ (currentRoute == 'erp_notification_user_notification_history') ? ' active' : ''}}"><a href="{{ path('erp_notification_user_notification_history') }}">Alerts History</a></li>
+                <li role="presentation" class="{{ (currentRoute == 'erp_notification_user_notification_list') ? ' active' : ''}}"><a href="{{ path('erp_notification_user_notification_list') }}">Show Automated Alerts</a></li>
+            </ul>
+    </div>
 </div>

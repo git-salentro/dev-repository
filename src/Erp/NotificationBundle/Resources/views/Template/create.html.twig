@@ -1,9 +1,11 @@
-{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+{% extends 'ErpNotificationBundle::base.html.twig' %}
 
 {% block pageContent %}
     {{ parent() }}
     <section id="managers-profile" class="profile">
         <div class="container">
+            {% include "ErpNotificationBundle:Template:actions.html.twig" %}
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <div class="row">
                 <div class="title-block">
                     {%- set title -%}

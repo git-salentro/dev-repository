@@ -4,25 +4,12 @@
     {{ parent() }}
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
-                <a
-                    class="btn btn-default btn-lg btn-block {{ (currentRoute == 'erp_notification_template_list') ? ' active' : ''}}"
-                    role="button"
-                    href="{{ path('erp_notification_template_list') }}"
-                >
-                    Templates
-                </a>
-            </div>
-            <div class="col-sm-6">
-                {% set routes = ['erp_notification_user_notification_list', 'erp_notification_user_notification_history'] %}
-                <a
-                    class="btn btn-default btn-lg btn-block {{ (currentRoute in routes) ? ' active' : ''}}"
-                    role="button"
-                    href="{{ path('erp_notification_user_notification_history') }}"
-                >
-                    Set Alerts
-                </a>
-            </div>
+            <ul class="nav nav-tabs">
+                {% set templateRoutes = ['erp_notification_template_create', 'erp_notification_template_update', 'erp_notification_template_list'] %}
+                <li role="presentation" class="{{ (currentRoute in templateRoutes) ? ' active' : ''}}"><a href="{{ path('erp_notification_template_list') }}">Templates</a></li>
+                {% set alertRoutes = ['erp_notification_user_notification_create', 'erp_notification_user_notification_list', 'erp_notification_user_notification_history'] %}
+                <li role="presentation" class="{{ (currentRoute in alertRoutes) ? ' active' : ''}}"><a href="{{ path('erp_notification_user_notification_history') }}">Set Alerts</a></li>
+            </ul>
         </div>
     </div>
     {% block pageSubContent %}{% endblock %}

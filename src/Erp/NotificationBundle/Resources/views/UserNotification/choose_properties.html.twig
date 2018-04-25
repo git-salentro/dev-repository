@@ -1,4 +1,4 @@
-{% extends 'ErpUserBundle:Profile:base.html.twig' %}
+{% extends 'ErpNotificationBundle::base.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -28,6 +28,8 @@
     {{ parent() }}
     <section id="managers-profile" class="profile">
         <div class="container">
+            {% include "ErpNotificationBundle:UserNotification:actions.html.twig" %}
+            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <div class="row">
                 <div class="title-block">
                     <h1 class="bold-text">Choose properties</h1>
@@ -64,7 +66,6 @@
                 {{ form_widget(form.template) }}
                 {{ form_widget(form.submit, {'attr': {'class': 'btn red-btn'}}) }}
             {{ form_end(form) }}
-            {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
         </div>
     </section>
 {% endblock %}

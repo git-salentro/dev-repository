@@ -4,9 +4,7 @@
     {{ parent() }}
     <section id="managers-profile" class="profile">
         <div class="container">
-            <div class="notification-template-nav">
-                <a href="{{ path('erp_notification_template_create') }}" class="btn red-btn">+ Add Template</a>
-            </div>
+            {% include "ErpNotificationBundle:Template:actions.html.twig" %}
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             {% if templates is not empty %}
                 <table class="table">
@@ -27,7 +25,7 @@
                                     class="btn red-btn"
                                     href="{{ path('erp_notification_template_update', {'id': template.id}) }}"
                                 >
-                                    Update
+                                    Edit
                                 </a>
                                 <a
                                     class="btn red-btn"
