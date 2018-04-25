@@ -47,19 +47,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for property in properties %}
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="idx[]" value="{{ property.id }}"
-                                    {% if property in entity.properties %}
-                                        checked
-                                    {% endif %}
-                                />
-                            </td>
-                            <td>{{ property.name }}</td>
-                            <td>{{ property.tenantUser.fullName }}</td>
-                        </tr>
+                    {% with {
+                        'properties': properties,
+                        'entity': entity,
+                      } %}
+                        {{ block('properties') }}
+                    {% endwith %}
+                    {% set missingProperties = [] %}
+                    {% for property in entity.properties if property not in properties %}
+                        {% set missingProperties = missingProperties|merge([property]) %}
                     {% endfor %}
+                    {% with {
+                        'properties': missingProperties,
+                        'entity': entity,
+                      } %}
+                        {{ block('properties') }}
+                    {% endwith %}
                     </tbody>
                 </table>
                 {% for notification in form.notifications %}
@@ -76,4 +79,26 @@
             {{ form_end(form) }}
         </div>
     </section>
+{% endblock %}
+
+{% block properties %}
+    {% for property in properties %}
+        <tr>
+            <td>
+                <input type="checkbox" name="idx[]" value="{{ property.id }}"
+                    {% if property in entity.properties %}
+                        checked
+                    {% endif %}
+                />
+            </td>
+            <td>{{ property.name }}</td>
+            <td>
+                {% if property.tenantUser %}
+                    {{ property.tenantUser.fullName }}
+                {% else %}
+                    n/a
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
 {% endblock %}
