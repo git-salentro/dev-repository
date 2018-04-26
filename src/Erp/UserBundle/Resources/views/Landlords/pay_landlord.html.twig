@@ -1,6 +1,12 @@
 {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
 
 {% if items|length %}
+    <style>
+        select#landlordId .verified {
+            font-family: FontAwesome, sans-serif;
+            color: green;
+        }
+    </style>
     <section id="landlord-form-section">
         <form id="select-landlord-form" method="post" action="{{ path('erp_user_landlords_pay_landlord') }}" role="form">
             <div class="row text-center">
@@ -14,7 +20,7 @@
                         <select name="landlordId" id="landlordId" class="form-control">
                             <option value="">----------   Select drop down list   --------</option>
                         {% for landlord in items %}
-                                    <option value="{{ landlord.id }}">{{ landlord.firstname }} {{ landlord.lastname }}</option>
+                                    <option value="{{ landlord.id }}"> &#xf058 {{ landlord.firstname }} {{ landlord.lastname }}</option>
                         {% endfor %}
 
                         </select>

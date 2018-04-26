@@ -5,6 +5,7 @@ namespace Erp\UserBundle\Controller;
 use Erp\CoreBundle\Controller\BaseController;
 use Erp\PaymentBundle\Entity\StripeCustomer;
 use Erp\PaymentBundle\Entity\StripeSubscription;
+use Erp\StripeBundle\Entity\BalanceHistory;
 use Erp\StripeBundle\Entity\Transaction;
 use Stripe\Subscription;
 use Erp\UserBundle\Entity\Charge;
@@ -118,7 +119,7 @@ class LandlordController extends BaseController
 
                 //Third (Final) step
 
-                $landlordStripeAccount = $landlord->getStripeAccount();
+                $landlordStripeAccountInstance = $landlord->getStripeAccount();
                 $managerStripeCustomer = $manager->getStripeCustomer();
 
                 //TODO Add cache layer (APC or Doctrine)
@@ -147,29 +148,12 @@ class LandlordController extends BaseController
 
                 /** if manager didn't connect own bank account in website */
 
-                echo "<pre>";
+                /*echo "<pre>";
                 print_r($_POST);
                 print_r($stripeCustomerInfo);
                 print_r($managerBankAccount);
-                print_r($landlordStripeAccount);
+                print_r($landlordStripeAccount);*/
 
-                $transaction = new Transaction();
-                $transaction->setType('transfer');
-                $transaction->setAmount(1000);
-                $transaction->setCurrency('usd');
-                $transaction->setPaymentMethod('bank');
-                $transaction->setPaymentMethodDescription('testing data');
-                $transaction->setMetadata('demo');
-                $transaction->setStatus('succeeded');
-                $transaction->setInternalType('transfer');
-                //$this->em->persist($transaction);
-                //$token = $transaction->getId();
-                //$this->em->flush();
-
-                print_r($transaction);
-                //print_r($token);
-
-                die;
 
                 if (!$managerCustomerId or !$managerBankAccountId) {
                     $erMsg = 'Manager can not transfer payments. Because could not verify own bank account';
@@ -265,6 +249,40 @@ class LandlordController extends BaseController
 
                         $chargeEm->persist($charge);
                         $chargeEm->flush();
+
+                        $rawcl = $chargeResponse->getContent();
+                        $stAmount = $rawcl->amount;
+                        $stMeta = json_encode($rawcl->metadata);
+                        $stStatus = $rawcl->status;
+                        $stObject = $rawcl->object;
+
+                        $balance = new BalanceHistory();
+
+                        $rawDateTime = new \DateTime();
+                        $transaction = new Transaction();
+                        $transaction->setType($stObject);
+                        $transaction->setAmount($stAmount);
+                        $transaction->setBalance($stAmount);
+                        $transaction->setBalanceHistory($balance);
+                        $transaction->setCurrency('usd');
+                        $transaction->setPaymentMethod('bank');
+                        $transaction->setPaymentMethodDescription($description);
+                        $transaction->setMetadata($stMeta);
+                        $transaction->setStatus('succeeded');
+                        $transaction->setInternalType('transfer');
+                        $transaction->setCreated($rawDateTime);
+                        $transaction->setCustomer($managerStripeCustomer);
+                        $transaction->setAccount($landlordStripeAccountInstance);
+
+                        $this->em->persist($transaction);
+                        $token = $transaction->getId();
+                        $this->em->flush();
+
+                        $balance->setBalance($stAmount);
+                        $balance->setAmount($stAmount);
+                        $balance->setTransaction($transaction);
+                        $this->em->persist($balance);
+                        $this->em->flush();
 
                         $this->addFlash('alert_success', 'transfer successfully');
                         return $this->render('ErpUserBundle:Landlords:transferSent.html.twig', [
