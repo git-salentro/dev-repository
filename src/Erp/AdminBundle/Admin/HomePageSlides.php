@@ -2,6 +2,7 @@
 
 namespace Erp\AdminBundle\Admin;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -42,8 +43,8 @@ class HomePageSlides extends Admin
     {
         $formMapper
             ->add('image', new ImageType(), ['label' => '1920x840px', 'required' => false])
-            ->add('title', 'ckeditor', ['required' => false])
-            ->add('text', 'ckeditor', ['required' => false])
+            ->add('title', CkeditorType::class, ['required' => false])
+            ->add('text', CkeditorType::class, ['required' => false])
         ;
     }
 
