@@ -149,6 +149,11 @@ class Transaction
     /**
      * @var Charge
      * @ORM\OneToOne(targetEntity="Erp\UserBundle\Entity\Charge", inversedBy="transaction")
+     * @ORM\JoinColumn(
+     *      name="transaction_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
      */
     protected $charge;
 
