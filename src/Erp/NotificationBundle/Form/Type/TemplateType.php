@@ -53,7 +53,7 @@ class TemplateType extends AbstractType
                 'submit',
                 SubmitType::class,
                 [
-                    'label' => 'Submit',
+                    'label' => 'Save',
                 ]
             );
     }
