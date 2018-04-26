@@ -287,7 +287,7 @@ class LandlordController extends BaseController
                         $token = $transaction->getId();
                         $this->em->flush();
 
-                        /** Set balance history data and store */
+                        /** Set balance history data and store  */
 
                         $balance->setBalance($stAmount);
                         $balance->setAmount($stAmount);
