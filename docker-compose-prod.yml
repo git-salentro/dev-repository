@@ -2,6 +2,7 @@ version: '2'
 
 services:
     db:
+        restart: always
         build: ./docker/mysql
         volumes:
             - ./docker/mysql/data:/var/lib/mysql
@@ -16,6 +17,7 @@ services:
             - '3306:3306'
 
     nginx:
+        restart: always
         build: ./docker/nginx
         ports:
           - '80:80'
@@ -24,12 +26,22 @@ services:
           - ./app/logs/nginx:/var/log/nginx
           - ./docker/nginx/certs:/etc/nginx/certs
           - ./:/var/www/
+        depends_on:
+          - php
 
     php:
+        restart: always
         build:
             context: ./docker/php
             args:
                 - APP_ENV=prod
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+            db:
+                condition: service_started
+            redis:
+                condition: service_started
         volumes:
             - ./:/var/www/
             - ./docker/php/php.ini:/usr/local/etc/php/php.ini
@@ -70,6 +82,7 @@ services:
             - SYMFONY__REDIS__PASSWORD=${REDIS_PASSWORD}
 
     rabbitmq:
+        restart: always
         image: rabbitmq
         environment:
             - HOSTNAME=${RABBITMQ_HOST}
@@ -80,8 +93,16 @@ services:
         ports:
             - 15672:15672
             - 5672:5672
+        healthcheck:
+            test: ["CMD", "bash", "/var/app/healthcheck.sh"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+        volumes:
+          - ./docker/rabbitmq/:/var/app
 
     redis:
+        restart: always
         image: redis:4-alpine
         ports:
             - 6379:6379
