@@ -11,6 +11,7 @@
             </div>
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <div class="row profile-widget-row profile-widget-custom">
+                {% if app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER')) %}
                 <div class="row">
                     <div class="form-group col-xs-12">
                         <a
@@ -33,6 +34,17 @@
                         >Pay to landlord</a>
                     </div>
                 </div>
+                {% elseif(app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_LANDLORD'))) %}
+                    <!--div class="row">
+                        <div class="form-group col-xs-12">
+                            <a
+                                    class="btn red-btn"
+                                    type="submit"
+                                    href="#"
+                            >Connect Stripe Account</a>
+                        </div>
+                    </div-->
+                {% endif %}
 
                 {{ render(controller('ErpUserBundle:Accounting:showAccountingLedger')) }}
             </div>

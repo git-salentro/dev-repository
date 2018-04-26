@@ -4,7 +4,7 @@
 
 <div class="profile-widget-item">
     <div class="widget-title-row">
-        <div class="login-block-title bold-text">Bank {% if app.user.hasRole('ROLE_TENANT') %}&amp; Cards {% endif %}
+        <div class="login-block-title bold-text">{% if creditCard or bankAccount %}<span title="Verified">&#xf058</span>{% endif %} Bank {% if app.user.hasRole('ROLE_TENANT') %}&amp; Cards {% endif %}
             Information
         </div>
     </div>
@@ -82,6 +82,46 @@
             </div>
             <hr>
         {% endif %}
+    {% elseif app.user.hasRole('ROLE_MANAGER') %}
+        <div class="col-xs-12">
+            {% if bankAccount is null %}
+                <div class="bank-info-row">
+                    <div class="col-xs-12">
+                        <div class="">
+                            <div class="bank-details col-xs-6">
+                                Bank information is not added yet
+                            </div>
+                            <div class="edit-row text-right col-xs-6">
+                                <button id='verify-ba' class="btn btn-space edit-btn">Verify</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% else %}
+                <style>
+                    .profile-widget-item .login-block-title {
+                        font-family: FontAwesome, sans-serif;
+                        color: green;
+                    }
+                </style>
+                <div class="bank-info-row">
+                    <div class="col-xs-12">
+                        <div class="">
+                            <div class="bank-details col-xs-9">
+                                <div class="bank-title"><span class="bank-icon"></span><span>{{ bankAccount.bank_name }}</span></div>
+                                <div class="bank-card"><span class="icon-user"></span><span>Account Holder Name: {{ bankAccount.account_holder_name }}</span></div>
+                                <div class="bank-card"><span class="bg-check"></span><span>Routing Number: {{ bankAccount.routing_number }}</span></div>
+                            </div>
+                            <div class="edit-row verify-ba col-xs-3">
+                                <button id='verify-ba' class="btn edit-btn">Verify</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     {% else %}
         {% if bankAccount %}
             <div class="bank-info-row">

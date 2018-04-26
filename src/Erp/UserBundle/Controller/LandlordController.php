@@ -80,10 +80,12 @@ class LandlordController extends BaseController
         /** @var $user \Erp\UserBundle\Entity\User */
         $user = $this->getUser();
         $items = $this->getDoctrine()->getManagerForClass(User::class)->getRepository(User::class)->findBy(['manager' => $user]);
+        $stripeUserManager = $this->get('erp_stripe.stripe.entity.user_manager');
 
         return $this->render('ErpUserBundle:Landlords:pay_landlord.html.twig', [
             'user' => $user,
             'items' => $items,
+            'stripeUserManager' => $stripeUserManager,
             'modalTitle' => 'Pay to landlords'
         ]);
 
@@ -99,7 +101,6 @@ class LandlordController extends BaseController
         $user = $this->getUser();
         $landlordId = $request->get('landlordId');
         $landlord = $this->em->getRepository('ErpUserBundle:User')->findOneBy(['id' => $landlordId]);
-
 
         if ($landlord instanceof User) {
             //Second step
@@ -153,7 +154,6 @@ class LandlordController extends BaseController
                 print_r($stripeCustomerInfo);
                 print_r($managerBankAccount);
                 print_r($landlordStripeAccount);*/
-
 
                 if (!$managerCustomerId or !$managerBankAccountId) {
                     $erMsg = 'Manager can not transfer payments. Because could not verify own bank account';
@@ -250,15 +250,24 @@ class LandlordController extends BaseController
                         $chargeEm->persist($charge);
                         $chargeEm->flush();
 
+                        /** Set stripe response for stripe transaction and balance history */
+
                         $rawcl = $chargeResponse->getContent();
                         $stAmount = $rawcl->amount;
                         $stMeta = json_encode($rawcl->metadata);
                         $stStatus = $rawcl->status;
                         $stObject = $rawcl->object;
 
+                        /** Create balance history object */
+
                         $balance = new BalanceHistory();
 
+                        /** Create Date Time object */
+
                         $rawDateTime = new \DateTime();
+
+                        /** Create stripe transaction object and set data for store */
+
                         $transaction = new Transaction();
                         $transaction->setType($stObject);
                         $transaction->setAmount($stAmount);
@@ -277,6 +286,8 @@ class LandlordController extends BaseController
                         $this->em->persist($transaction);
                         $token = $transaction->getId();
                         $this->em->flush();
+
+                        /** Set balance history data and store */
 
                         $balance->setBalance($stAmount);
                         $balance->setAmount($stAmount);
