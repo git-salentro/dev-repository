@@ -6,7 +6,7 @@
         <div class="container">
             {% include "ErpNotificationBundle:UserNotification:actions.html.twig" %}
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
-            <h3>Alert History</h3>
+            <h3>Alerts History</h3>
             {% if historyItems is not empty %}
                 <table class="table">
                     <thead>

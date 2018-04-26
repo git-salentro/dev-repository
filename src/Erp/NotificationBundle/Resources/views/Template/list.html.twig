@@ -7,12 +7,12 @@
             {% include "ErpNotificationBundle:Template:actions.html.twig" %}
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             {% if templates is not empty %}
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td class="col-lg-7 col-md-7 col-sm-7 col-xs-7">Title</td>
-                            <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Type</td>
-                            <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Action</td>
+                            <th class="col-lg-7 col-md-7 col-sm-7 col-xs-7">Title</th>
+                            <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Type</th>
+                            <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
