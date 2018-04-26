@@ -593,7 +593,7 @@ class ContractFormController extends BaseController
             'footer-font-size'  => self::PDF_FONT_SIZE_PARAM,
             'footer-left'       =>
                 '   Property: ' . $property->getStateCode()
-                . ', ' . $property->getCity()->getName()
+                . ', ' . $property->getCityName()
                 . ', ' . $property->getAddress()
             ,
             'footer-right'      =>
@@ -667,6 +667,8 @@ class ContractFormController extends BaseController
      */
     private function performChargeESign(User $user)
     {
+        //TODO: remove PaySimple and use Stripe instead
+        return true;
         $amount = $this->get('erp.core.fee.service')->getESignFee();
 
         $payer = ($user->hasRole(User::ROLE_TENANT))

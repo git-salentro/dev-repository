@@ -56,7 +56,8 @@
 /.idea
 /composer.phar
 /log/
-/web/cache/
+/web/cache/*
+!/web/cache/.gitkeep
 .env
 /docker/nginx/certs/*
 !docker/nginx/certs/.gitkeep

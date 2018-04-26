@@ -410,7 +410,7 @@ class Property
 
     /**
      * @var PropertySettings
-     * 
+     *
      * @ORM\OneToOne(targetEntity="\Erp\PropertyBundle\Entity\PropertySettings",
      *     mappedBy="property",
      *     cascade={"persist","remove"},
@@ -868,6 +868,15 @@ class Property
     public function getCity()
     {
         return $this->city;
+    }
+
+    public function getCityName()
+    {
+        $out = '';
+        if ($this->city) {
+            $out = $this->city->getName();
+        }
+        return $out;
     }
 
     /**
@@ -1341,6 +1350,4 @@ class Property
     {
         $this->scheduledRentPayments = $scheduledRentPayments;
     }
-
-
 }
