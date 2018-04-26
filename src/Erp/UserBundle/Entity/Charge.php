@@ -80,6 +80,11 @@ class Charge implements DatesAwareInterface
     /**
      * @var Transaction
      * @ORM\OneToOne(targetEntity="Erp\StripeBundle\Entity\Transaction", mappedBy="charge")
+     * @ORM\JoinColumn(
+     *      name="transaction_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
+     * )
      */
     protected $transaction; //can be empty if not yet paid
 

@@ -8,15 +8,15 @@
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <h3>Alerts History</h3>
             {% if historyItems is not empty %}
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td>Date Sent</td>
-                            <td>Property/Tenant</td>
-                            <td>Type</td>
-                            <td>Template</td>
-                            <td>Received Verification</td>
-                            <td>Automatic Alert?</td>
+                            <th>Date Sent</th>
+                            <th>Property/Tenant</th>
+                            <th>Type</th>
+                            <th>Template</th>
+                            <th>Received Verification</th>
+                            <th>Automatic Alert?</th>
                         </tr>
                     </thead>
                     <tbody>
