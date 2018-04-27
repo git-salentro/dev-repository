@@ -31,7 +31,7 @@ class SmartMoveController extends BaseController
     /**
      * Background Check/Credit Check widget
      *
-     * @Security("is_granted('ROLE_MANAGER') and is_granted('ROLE_LANDLORD')")
+     * @Security("is_granted('ROLE_MANAGER') or is_granted('ROLE_LANDLORD')")
      * @param Request $request
      *
      * @return RedirectResponse|Response
