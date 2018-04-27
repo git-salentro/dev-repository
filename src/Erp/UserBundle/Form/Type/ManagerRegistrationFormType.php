@@ -55,6 +55,7 @@ class ManagerRegistrationFormType extends AbstractType
     {
         $this->formBuilder = $builder;
         $this->addCompanyName()
+            ->addRole()
             ->addFirstName()
             ->addLastName()
             ->addPhone()
@@ -452,4 +453,33 @@ class ManagerRegistrationFormType extends AbstractType
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    private function addRole()
+    {
+        $this->formBuilder->add(
+            'role',
+            'choice',
+            [
+                'label'              => 'Account type',
+                'label_attr'         => ['class' => 'control-label required-label'],
+                'attr'               => [
+                    'class' => 'form-control select-control'
+                ],
+                'choices' => [
+                    User::ROLE_TENANT => 'Tenant',
+                    User::ROLE_MANAGER => 'Manager',
+                    User::ROLE_LANDLORD => 'Landlord'
+                ],
+                'multiple'           => false,
+                'required'           => true,
+                'translation_domain' => $this->translationDomain,
+            ]
+        );
+
+        return $this;
+    }
+
 }

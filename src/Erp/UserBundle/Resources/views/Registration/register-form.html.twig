@@ -15,6 +15,17 @@
 {% endif %}
 
     <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group dropdown-col">
+                {{ form_label(form.role) }}
+                <div class="select-container">
+                    {{ form_widget(form.role) }}
+                </div>
+                {{ form_custom_errors.widget(form.role) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="form-group">
             <div class="col-xs-6">
                 {{ form_label(form.firstName) }}

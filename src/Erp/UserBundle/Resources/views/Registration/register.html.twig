@@ -15,7 +15,13 @@
 
 {% block headerBannerTitle %}
     {% if app.user %}
-        {{ app.user.hasRole(roleManager) ? 'Manager' : 'Tenants' }}
+        {% if app.user.hasRole(role) %}
+            Manager
+        {% elseif app.user.hasRole(role) %}
+            Landlord
+        {% else %}
+            Tenant
+        {% endif %}
     {% else %}
         Welcome
     {% endif %}

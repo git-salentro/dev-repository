@@ -13,7 +13,6 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
-use Erp\UserBundle\Entity\InvitedUser;
 use Erp\PropertyBundle\Entity\Property;
 use Erp\CoreBundle\Entity\Image;
 use Erp\CoreBundle\Entity\City;
@@ -154,6 +153,18 @@ class User extends BaseUser
      * )
      */
     protected $companyName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="role", type="string", length=32)
+     *
+     * @Assert\NotBlank(
+     *     message="Account type is required field",
+     *     groups={"ManagerCreated", "ManagerRegister"}
+     * )
+     */
+    protected $role;
 
     /**
      * @var string
@@ -625,7 +636,6 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->invitedUsers = new ArrayCollection();
         $this->properties = new ArrayCollection();
         $this->paySimpleCustomers = new ArrayCollection();
         $this->userDocuments = new ArrayCollection();
@@ -1006,40 +1016,6 @@ class User extends BaseUser
     public function getProperties()
     {
         return $this->properties;
-    }
-
-    /**
-     * Add invitedUsers
-     *
-     * @param InvitedUser $invitedUsers
-     *
-     * @return $this
-     */
-    public function addInvitedUser(InvitedUser $invitedUsers)
-    {
-        $this->invitedUsers[] = $invitedUsers;
-
-        return $this;
-    }
-
-    /**
-     * Remove invitedUser
-     *
-     * @param InvitedUser $invitedUsers
-     */
-    public function removeInvitedUser(InvitedUser $invitedUsers)
-    {
-        $this->invitedUsers->removeElement($invitedUsers);
-    }
-
-    /**
-     * Get invitedUsers
-     *
-     * @return ArrayCollection|InvitedUser
-     */
-    public function getInvitedUsers()
-    {
-        return $this->invitedUsers;
     }
 
     /**
@@ -2187,5 +2163,28 @@ class User extends BaseUser
             $title = 'Zoobdoo';
         }
         return $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole()
+    {
+        $roles = $this->getRoles();
+        if (is_array($roles)) {
+            foreach ($roles as $role) {
+                $this->role = $role;
+            }
+        }
+        return $this->role;
+    }
+
+    /**
+     * @param string $role
+     */
+    public function setRole(string $role)
+    {
+        $this->role = $role;
+        $this->setRoles([$role]);
     }
 }

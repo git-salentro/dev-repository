@@ -48,7 +48,7 @@ class RegistrationController extends BaseController
     }
 
     /**
-     * Register manager
+     * Register user (manager, landlord)
      *
      * @param Request $request
      *
@@ -63,7 +63,6 @@ class RegistrationController extends BaseController
         $userManager = $this->get('fos_user.user_manager');
         /** @var User $user */
         $user = $userManager->createUser();
-        $user->setRoles([User::ROLE_MANAGER]);
 
         $form = $this->createRegisterForm($request, $user);
         $isRegisterAccept = false;
@@ -126,7 +125,7 @@ class RegistrationController extends BaseController
                 'isRegisterAccept' => $isRegisterAccept,
                 'user'             => $user,
                 'termsOfUse'       => $termsOfUse->getContent(),
-                'roleManager'     => User::ROLE_MANAGER,
+                'role'     => $user->getRole(),
             ]
         );
     }

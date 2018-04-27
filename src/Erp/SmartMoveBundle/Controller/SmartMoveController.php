@@ -15,10 +15,13 @@ use Erp\SmartMoveBundle\Form\Type\SmartMovePersonalFormType;
 use Erp\StripeBundle\Entity\Transaction;
 use Erp\StripeBundle\Helper\ApiHelper;
 use Erp\UserBundle\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SmartMoveController extends BaseController
@@ -28,6 +31,7 @@ class SmartMoveController extends BaseController
     /**
      * Background Check/Credit Check widget
      *
+     * @Security("is_granted('ROLE_MANAGER') and is_granted('ROLE_LANDLORD')")
      * @param Request $request
      *
      * @return RedirectResponse|Response
@@ -39,10 +43,6 @@ class SmartMoveController extends BaseController
 
         if (!$user) {
             return $this->redirectToRoute('fos_user_security_login');
-        }
-
-        if (!$user->hasRole(User::ROLE_MANAGER)) {
-            throw $this->createNotFoundException();
         }
 
         $form = $this->createCheckForm($user);

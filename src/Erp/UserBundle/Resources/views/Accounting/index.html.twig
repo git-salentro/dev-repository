@@ -11,6 +11,8 @@
             </div>
             {% include "ErpCoreBundle:crossBlocks:message.html.twig" with {'alert_ok' : 'alert_ok', 'alert_error' : 'alert_error'} %}
             <div class="row profile-widget-row profile-widget-custom">
+
+                {% if (app.user.hasRole(constant('Erp\\UserBundle\\Entity\\User::ROLE_MANAGER'))) %}
                 <div class="row">
                     <div class="form-group col-xs-12">
                         <a
@@ -27,6 +29,7 @@
                         >Charge Clients</a>
                     </div>
                 </div>
+                {% endif %}
 
                 {{ render(controller('ErpUserBundle:Accounting:showAccountingLedger')) }}
             </div>
