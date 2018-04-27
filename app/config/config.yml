@@ -233,29 +233,10 @@ ivory_ck_editor:
             toolbar: [['strinsert'],["Styles","Format","Font","FontSize","TextColor","BGColor","Undo","Redo","Bold","Italic","Underline","RemoveFormat"],["JustifyLeft","JustifyCenter","JustifyRight","JustifyBlock","Maximize","ShowBlocks"]]
             language: '%locale%'
             extraPlugins: "strinsert"
-            strinsert_strings:
-                -
-                    name: First name
-                    value: '*|FIRSTNAME|*'
-                -
-                    name: Last name
-                    value: '*|LASTNAME|*'
     plugins:
         strinsert:
             path:     '/bundles/erpcore/js/ckeditor/plugins/strinsert/'
             filename: 'plugin.js'
-
-#toolbar: ['styles', 'document', 'clipboard', 'editing', 'basicstyles', 'paragraph', 'links', 'insert', 'tools']
-#    toolbar_groups:
-#        document: ['strinsert']
-#        clipboard: ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo']
-#        editing: ['Find','Replace','-','SelectAll']
-#        basicstyles: ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat']
-#        paragraph: ['NumberedList','BulletedList','-','Outdent','Indent','-','JustifyLeft', 'JustifyCenter','JustifyRight','JustifyBlock']
-#        links: []
-#        insert: ['Table','HorizontalRule','Macros']
-#        styles: ['Styles','Format']
-#        tools: []
 
 knp_snappy:
     temporary_folder: %kernel.cache_dir%/snappy

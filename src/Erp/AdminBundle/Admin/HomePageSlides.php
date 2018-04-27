@@ -43,8 +43,18 @@ class HomePageSlides extends Admin
     {
         $formMapper
             ->add('image', new ImageType(), ['label' => '1920x840px', 'required' => false])
-            ->add('title', CkeditorType::class, ['required' => false])
-            ->add('text', CkeditorType::class, ['required' => false])
+            ->add('title', CkeditorType::class,  [
+                'config' => [
+                    'toolbar' => 'full'
+                ],
+                'required' => false
+            ])
+            ->add('text', CkeditorType::class,  [
+                'config' => [
+                    'toolbar' => 'full'
+                ],
+                'required' => false
+            ])
         ;
     }
 

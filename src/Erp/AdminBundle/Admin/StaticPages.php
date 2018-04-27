@@ -45,7 +45,12 @@ class StaticPages extends Admin
             ->add('metaDescription', 'textarea', ['required' => false])
             ->add('headerTitle', 'text', ['label' => 'Header title / Menu title'])
             ->add('title', 'text', ['required' => false])
-            ->add('content', CkeditorType::class)
+            ->add('content', CkeditorType::class,  [
+                'config' => [
+                    'toolbar' => 'full'
+                ],
+                'required' => false
+            ])
             ->add('inSubmenu', null, ['label' => 'Show submenu item'])
         ;
 

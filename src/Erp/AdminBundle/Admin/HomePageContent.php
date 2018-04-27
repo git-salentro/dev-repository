@@ -40,8 +40,18 @@ class HomePageContent extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('serviceBody', CkeditorType::class, ['required' => false])
-            ->add('featureBody', CkeditorType::class, ['required' => false])
+            ->add('serviceBody', CkeditorType::class, [
+                'config' => [
+                    'toolbar' => 'full'
+                ],
+                'required' => false
+            ])
+            ->add('featureBody', CkeditorType::class, [
+                'config' => [
+                    'toolbar' => 'full'
+                ],
+                'required' => false
+            ])
         ;
     }
 
