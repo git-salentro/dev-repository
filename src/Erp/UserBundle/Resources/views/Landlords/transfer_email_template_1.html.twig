@@ -5,14 +5,15 @@
         Hello, <b>{{ charge.landlord.firstname }} {{ charge.landlord.lastname }}.</b>
     </p>
     <p>
-        Please see following transfer payment details: <br/>
+        Please see following transfer payment details: <br/><br/>
         <b>Transfer Id:</b> {{ charge.txnId }}  <br/>
         <b>Amount:</b> {{ charge.amount }} USD  <br/>
-        <b>Transfer DateTime:</b> {{ charge.datTimeMail }}  <br/>
-
+        <b>Transfer DateTime:</b> {{ charge.datTimeMail }}  <br/><br/>
+    </p>
+    <p>
         {% if (charge.description) %}
-            Note: {{ charge.description }}
+            <b>Note:</b> {{ charge.description }}
         {% endif %}
     </p>
-    <p>Sincerely yours, {{ charge.manager.firstname }} {{ charge.manager.lastname }}.</p>
+    <p>Sincerely yours, <br/>{{ charge.manager.firstname }} {{ charge.manager.lastname }}.</p>
 {% endblock %}

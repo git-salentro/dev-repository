@@ -257,7 +257,7 @@ class LandlordController extends BaseController
 
                         $rawcl = $chargeResponse->getContent();
                         $datTimeMail = $rawcl->created;
-                        $txnId = $rawcl->id;
+                        $txnId = $rawcl->transfer;
 
                         $stAmount = $rawcl->amount;
                         $stBalance = $oldBalance + $stAmount;

@@ -27,17 +27,16 @@
                         </label>
                         <select name="landlordId" id="landlordId" class="form-control">
                             <option value="" class="no_select">----------   Select drop down list   --------</option>
-                            <optgroup label="Verified">
+                            <optgroup label="Verified stripe accoun">
                                 {% for landlord in items %}
                                     {% if(stripeUserManager.stripeAccountInfo(landlord)) %}
                                         <option value="{{ landlord.id }}" {% if(stripeUserManager.stripeAccountInfo(landlord)) %} class="verified" title="verified stripe account" {% else %} class="un_verified" title="un_verified stripe account" {% endif %}> {% if(stripeUserManager.stripeAccountInfo(landlord)) %} &#xf058 {% else %} &#xf057  {% endif %} {{ landlord.firstname }} {{ landlord.lastname }}</option>
                                     {% endif %}
                                 {% endfor %}
                             </optgroup>
-                            <optgroup label="Un-verified">
+                            <optgroup label="Un-verified stripe account">
                                 {% for landlord in items %}
-                                    {% if(stripeUserManager.stripeAccountInfo(landlord)) %}
-                                    {% else %}
+                                    {% if(stripeUserManager.stripeAccountInfo(landlord)) == '' %}
                                         <option value="{{ landlord.id }}" {% if(stripeUserManager.stripeAccountInfo(landlord)) %} class="verified" title="verified stripe account" {% else %} class="un_verified" title="un_verified stripe account" {% endif %}> {% if(stripeUserManager.stripeAccountInfo(landlord)) %} &#xf058 {% else %} &#xf057  {% endif %} {{ landlord.firstname }} {{ landlord.lastname }}</option>
                                     {% endif %}
                                 {% endfor %}
