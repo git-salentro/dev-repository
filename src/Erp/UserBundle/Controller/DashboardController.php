@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class DashboardController extends BaseController
 {
     /**
-     * @Security("is_granted('ROLE_MANAGER') and is_granted('ROLE_LANDLORD')")
+     * @Security("is_granted('ROLE_MANAGER') or is_granted('ROLE_LANDLORD')")
      */
     public function dashboardAction()
     {
