@@ -6,7 +6,10 @@
     </p>
     <p>
         Please see following transfer payment details: <br/>
-        <b>Amount:</b> {{ charge.amount }} USD<br/>
+        <b>Transfer Id:</b> {{ charge.txnId }}  <br/>
+        <b>Amount:</b> {{ charge.amount }} USD  <br/>
+        <b>Transfer DateTime:</b> {{ charge.datTimeMail }}  <br/>
+
         {% if (charge.description) %}
             Note: {{ charge.description }}
         {% endif %}

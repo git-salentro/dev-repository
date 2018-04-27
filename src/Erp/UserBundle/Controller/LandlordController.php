@@ -107,8 +107,6 @@ class LandlordController extends BaseController
 
             /** @var $user \Erp\UserBundle\Entity\User */
 
-            $from = $this->container->getParameter('contact_email');
-
             $charge = new Charge();
             $form = $this->createForm(new LandlordPayFormType(),$charge);
             $form->handleRequest($request);
@@ -117,6 +115,7 @@ class LandlordController extends BaseController
             $manager = $landlord->getManager();
 
             if ($manager->getId() == $user->getId() && $form->isValid()) {
+
 
                 //Third (Final) step
 
@@ -145,6 +144,13 @@ class LandlordController extends BaseController
                 if($landlordStripeAccount=='1') {
                     $rawLandlordStripeAccount = $stripeUserManager->getStripeAccountInfo($landlord);
                     $landlordStripeAccount = $rawLandlordStripeAccount['id'];
+
+                    /** get previous transaction balance for landlord */
+                    $rawStripeId = $landlord->getStripeAccount();
+                    $stId = $rawStripeId->getId();
+                    $GetTransaction = $this->em->getRepository('ErpStripeBundle:Transaction')->getLastTransactionData($stId);
+                    $oldBalance = $GetTransaction['balance'];
+
                 }
 
                 /** if manager didn't connect own bank account in website */
@@ -232,9 +238,6 @@ class LandlordController extends BaseController
 
                         $chargeResponse = $stripeApiManager->callStripeApi('\Stripe\Charge', 'create', $arguments);
 
-                        $from = $this->container->getParameter('contact_email');
-                        $this->get('erp_user.mailer.processor')->sendTransferEmail($charge, $from);
-
                         if (!$chargeResponse->isSuccess()) {
                             $erMsg = 'Transfer Failed due '.$chargeResponse->getErrorMessage();
                             return $this->render('ErpUserBundle:Landlords:transferFailed.html.twig', [
@@ -253,9 +256,12 @@ class LandlordController extends BaseController
                         /** Set stripe response for stripe transaction and balance history */
 
                         $rawcl = $chargeResponse->getContent();
+                        $datTimeMail = $rawcl->created;
+                        $txnId = $rawcl->id;
+
                         $stAmount = $rawcl->amount;
+                        $stBalance = $oldBalance + $stAmount;
                         $stMeta = json_encode($rawcl->metadata);
-                        $stStatus = $rawcl->status;
                         $stObject = $rawcl->object;
 
                         /** Create balance history object */
@@ -264,14 +270,14 @@ class LandlordController extends BaseController
 
                         /** Create Date Time object */
 
-                        $rawDateTime = new \DateTime();
 
                         /** Create stripe transaction object and set data for store */
 
+                        $rawDateTime = new \DateTime();
                         $transaction = new Transaction();
                         $transaction->setType($stObject);
                         $transaction->setAmount($stAmount);
-                        $transaction->setBalance($stAmount);
+                        $transaction->setBalance($stBalance);
                         $transaction->setBalanceHistory($balance);
                         $transaction->setCurrency('usd');
                         $transaction->setPaymentMethod('bank');
@@ -284,16 +290,22 @@ class LandlordController extends BaseController
                         $transaction->setAccount($landlordStripeAccountInstance);
 
                         $this->em->persist($transaction);
-                        $token = $transaction->getId();
+
                         $this->em->flush();
 
                         /** Set balance history data and store  */
 
-                        $balance->setBalance($stAmount);
+                        $balance->setBalance($stBalance);
                         $balance->setAmount($stAmount);
                         $balance->setTransaction($transaction);
                         $this->em->persist($balance);
                         $this->em->flush();
+
+                        $charge->datTimeMail = date('Y-m-d H:i:s', $datTimeMail);
+                        $charge->txnId = $txnId;
+
+                        $from = $this->container->getParameter('contact_email');
+                        $this->get('erp_user.mailer.processor')->sendTransferEmail($charge, $from);
 
                         $this->addFlash('alert_success', 'transfer successfully');
                         return $this->render('ErpUserBundle:Landlords:transferSent.html.twig', [

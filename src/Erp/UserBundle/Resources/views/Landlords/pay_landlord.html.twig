@@ -9,9 +9,11 @@
         }
         select#landlordId .un_verified, select#landlordId.un_verified {
             font-family: FontAwesome, sans-serif;
-            color: #9c9999;
+            color: #6c6c6c;
         }
         select#landlordId option.no_select { color: #555; }
+        select#landlordId optgroup { font-size: 12px; font-weight: 300; color: #898989; }
+        select#landlordId option { font-size: 15px; }
     </style>
     <section id="landlord-form-section">
         <form id="select-landlord-form" method="post" action="{{ path('erp_user_landlords_pay_landlord') }}" role="form">
@@ -25,9 +27,21 @@
                         </label>
                         <select name="landlordId" id="landlordId" class="form-control">
                             <option value="" class="no_select">----------   Select drop down list   --------</option>
-                            {% for landlord in items %}
-                                <option value="{{ landlord.id }}" {% if(stripeUserManager.stripeAccountInfo(landlord)) %} class="verified" title="verified stripe account" {% else %} class="un_verified" title="un_verified stripe account" {% endif %}> {% if(stripeUserManager.stripeAccountInfo(landlord)) %} &#xf058 {% else %} &#xf057  {% endif %} {{ landlord.firstname }} {{ landlord.lastname }}</option>
-                            {% endfor %}
+                            <optgroup label="Verified">
+                                {% for landlord in items %}
+                                    {% if(stripeUserManager.stripeAccountInfo(landlord)) %}
+                                        <option value="{{ landlord.id }}" {% if(stripeUserManager.stripeAccountInfo(landlord)) %} class="verified" title="verified stripe account" {% else %} class="un_verified" title="un_verified stripe account" {% endif %}> {% if(stripeUserManager.stripeAccountInfo(landlord)) %} &#xf058 {% else %} &#xf057  {% endif %} {{ landlord.firstname }} {{ landlord.lastname }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
+                            <optgroup label="Un-verified">
+                                {% for landlord in items %}
+                                    {% if(stripeUserManager.stripeAccountInfo(landlord)) %}
+                                    {% else %}
+                                        <option value="{{ landlord.id }}" {% if(stripeUserManager.stripeAccountInfo(landlord)) %} class="verified" title="verified stripe account" {% else %} class="un_verified" title="un_verified stripe account" {% endif %}> {% if(stripeUserManager.stripeAccountInfo(landlord)) %} &#xf058 {% else %} &#xf057  {% endif %} {{ landlord.firstname }} {{ landlord.lastname }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
                         </select>
                     </div>
                 </div>
