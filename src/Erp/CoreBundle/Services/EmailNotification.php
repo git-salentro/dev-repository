@@ -37,6 +37,8 @@ class EmailNotification
 
         $params['container'] = $this->container;
         $params['mailFrom'] = $this->mailFrom;
+        $params['mailFromTitle'] = $params['mailFromTitle'] ?? 'Zoobdoo';
+        $params['preSubject'] = $params['preSubject'] ?? 'Zoobdoo';
         $params['basePath'] = $this->basePath;
         $params['baseUrl'] = $this->baseUrl;
         $params['mailer'] = $this->mailer;

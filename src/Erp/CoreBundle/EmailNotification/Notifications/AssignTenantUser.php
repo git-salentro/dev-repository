@@ -23,7 +23,7 @@ class AssignTenantUser extends AbstractEmailNotification
         $contailner = $params['container'];
 
         $message = $params['mailer']->createMessage()
-            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
+            ->setFrom([$params['mailFrom'] => $params['mailFromTitle']])
             ->setTo($params['sendTo'])
             ->setContentType('text/html');
 
@@ -35,7 +35,7 @@ class AssignTenantUser extends AbstractEmailNotification
         $emailParams['imageErp'] = $message->embed($this->getLogoPath($params));
 
         $body = $contailner->get('templating')->render($template, $emailParams);
-        $message->setSubject('Zoobdoo - Register your new tenant account now!')->setBody($body);
+        $message->setSubject($params['preSubject'].' - Register your new tenant account now!')->setBody($body);
         $result = $params['mailer']->send($message);
 
         return $result;

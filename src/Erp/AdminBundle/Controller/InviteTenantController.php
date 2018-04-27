@@ -156,10 +156,14 @@ class InviteTenantController extends BaseController
             ['token' => $invitedUser->getInviteCode()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        $user = $this->getUser();
         $emailParams = [
-            'sendTo'      => $invitedUser->getInvitedEmail(),
-            'url'         => $url,
-            'invitedUser' => $invitedUser
+            'sendTo'        => $invitedUser->getInvitedEmail(),
+            'mailFromTitle' => $user->getFromForEmail(),
+            'preSubject'    => $user->getSubjectForEmail(),
+            'url'           => $url,
+            'invitedUser'   => $invitedUser
         ];
 
         $sentStatus = $this->get('erp.core.email_notification.service')
