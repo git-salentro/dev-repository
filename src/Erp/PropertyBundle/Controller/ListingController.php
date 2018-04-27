@@ -559,7 +559,7 @@ class ListingController extends BaseController
 
         if ($request->getMethod() === 'DELETE') {
             $userService = $this->get('erp.users.user.service');
-            $userService->deactivateUser($tenant);
+            $userService->deactivateUser($tenant, true, $this->getUser());
             $userService->setStatusUnreadMessages($tenant);
 
             $property->setTenantUser(null)->setStatus(Property::STATUS_DRAFT);
@@ -872,7 +872,7 @@ class ListingController extends BaseController
         $dateTo = (new \DateTime())->setTimestamp($dateTo->getTimestamp());
 
         $propertyRepository = $this->getDoctrine()->getManagerForClass(Property::class)->getRepository(Property::class);
-        $propertiesQuery = $propertyRepository->getPropertiesQuery($user, $dateFrom, $dateTo, explode(', ',$type));
+        $propertiesQuery = $propertyRepository->getPropertiesQuery($user, $dateFrom, $dateTo, explode(', ', $type));
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(

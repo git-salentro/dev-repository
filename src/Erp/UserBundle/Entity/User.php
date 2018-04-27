@@ -2168,4 +2168,24 @@ class User extends BaseUser
         return $this->templates;
     }
 
+    public function getSubjectForEmail()
+    {
+        $title = $this->getCompanyName();
+        if (!$title) {
+            $title = $this->getFullName();
+        }
+        if (!$title) {
+            $title = 'Zoobdoo';
+        }
+        return $title;
+    }
+
+    public function getFromForEmail()
+    {
+        $title = $this->getFullName();
+        if (!$title) {
+            $title = 'Zoobdoo';
+        }
+        return $title;
+    }
 }

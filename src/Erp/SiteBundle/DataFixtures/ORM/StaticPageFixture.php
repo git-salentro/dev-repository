@@ -71,7 +71,7 @@ class StaticPageFixture extends Fixture
 	<li>Tenant pays a small $3.00 flat fee per ACH transaction.</li>
 	<li>Tenant pays a 2.5% per Credit Card transaction. (Accept Visa, Mastercard and Discover)                   </li>
 	<li>Application fee per applicant submission, $1.00. (Perspective Tenant pays during application process)</li>
-	<li>Credit, background, and eviction check, $19.95.</li>
+	<li>Credit, background, and eviction check, $15.</li>
 	<li>Posting properties online, FREE.</li>
 </ul><p> </p>
 
@@ -129,7 +129,7 @@ class StaticPageFixture extends Fixture
 
 <p><strong>Pay as You Go:</strong></p>
 
-<p>Full Credit, Eviction, and Criminal Screening - $19.95</p>
+<p>Full Credit, Eviction, and Criminal Screening - $15</p>
 
 <p>E-signature per Form - $2.95</p>
 
@@ -773,5 +773,4 @@ Pinterest: <a href="https://www.pinterest.com/zoobdoocom/pins/" target="_blank"
         $objectManager->persist($staticPage);
         $objectManager->flush();
     }
-
 }

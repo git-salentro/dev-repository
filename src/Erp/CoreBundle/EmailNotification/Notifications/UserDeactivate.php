@@ -21,11 +21,11 @@ class UserDeactivate extends AbstractEmailNotification
     {
         $message = $params['mailer']
             ->createMessage()
-            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
+            ->setFrom([$params['mailFrom'] => $params['mailFromTitle']])
             ->setTo($params['sendTo'])
             ->setContentType("text/html");
 
-        $subject = 'Zoobdoo - Your account has been deactivated';
+        $subject = $params['preSubject'].' - Your account has been deactivated';
         $template = 'ErpCoreBundle:EmailNotification:' . $this->type . '.html.twig';
 
         $emailParams['url'] = $params['url'];

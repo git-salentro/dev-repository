@@ -110,12 +110,16 @@ class UserService
      * @param bool $flush
      * @return $this
      */
-    public function deactivateUser(User $user, $flush = true)
+    public function deactivateUser(User $user, $flush = true, User $initiator = null)
     {
         $emailParams = [
             'sendTo' => $user->getEmail(),
             'url' => $this->container->get('router')->generate('erp_site_contact_page', [], true),
         ];
+        if ($initiator) {
+            $emailParams['mailFromTitle'] = $initiator->getFromForEmail();
+            $emailParams['preSubject'] = $initiator->getSubjectForEmail();
+        }
 
         $emailType = EmailNotificationFactory::TYPE_USER_DEACTIVATE;
         $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);
@@ -751,8 +755,7 @@ class UserService
             we need to charge this manager */
         $paySimpleCredentials = $this->getCurrentPaySimpleCredentials($recurringPaymentModel->getCustomer()->getUser());
         $isTenant = $recurringPaymentModel->getCustomer()->getUser()->hasRole(User::ROLE_TENANT);
-        if (
-            $isTenant
+        if ($isTenant
             && $paySimpleCredentials['paySimpleLogin']
             && $paySimpleCredentials['paySimpleApiSecretKey']
             && $status == PaySimpleHistory::STATUS_SUCCESS

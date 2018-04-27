@@ -398,7 +398,8 @@ class SmartMoveController extends BaseController
         }
 
         return $this->render(
-            'ErpCoreBundle:crossBlocks:general-confirmation-popup.html.twig', [
+            'ErpCoreBundle:crossBlocks:general-confirmation-popup.html.twig',
+            [
                 'askMsg'    => 'You will be charged $' . $amount . ' for this feature. Do you want to proceed?',
                 'actionBtn' => 'Yes',
                 'actionUrl' => $this->generateUrl('erp_smart_move_smart_move_pay_report', ['smRenterId' => $smRenter->getId()])
@@ -659,9 +660,11 @@ class SmartMoveController extends BaseController
      */
     private function sendEmailToCheckingUser(SmartMoveRenter $smartMoveRenter, $isToExam = false)
     {
+        $user = $this->getUser();
+        $preSubject = $user->getSubjectForEmail();
         $emailType = EmailNotificationFactory::TYPE_SM_CHECK_USER;
         $token = $smartMoveRenter->getPersonalToken();
-        $title = 'Zoobdoo - Tenant Screening';
+        $title = $preSubject.' - Tenant Screening';
         $text = 'Your Manager is going to perform tenant screening on your identity.';
         $url = 'erp_smart_move_personal_form';
 
@@ -669,14 +672,15 @@ class SmartMoveController extends BaseController
             $token = $smartMoveRenter->getExamToken();
             $url = 'erp_smart_move_exam_form';
             $text = 'Please pass identity verification exam for tenant screening service.';
-            $title = 'Zoobdoo - Tenant Screening Exam';
+            $title = $preSubject.' - Tenant Screening Exam';
         }
 
         $emailParams = [
             'sendTo' => $smartMoveRenter->getEmail(),
             'url'    => $this->generateUrl($url, ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
             'text'   => $text,
-            'title'  => $title
+            'title'  => $title,
+            'mailFromTitle' => $user->getFromForEmail(),
         ];
 
         $sentStatus = $this->container->get('erp.core.email_notification.service')->sendEmail($emailType, $emailParams);

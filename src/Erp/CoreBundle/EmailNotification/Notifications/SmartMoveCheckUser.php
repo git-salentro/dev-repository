@@ -20,7 +20,7 @@ class SmartMoveCheckUser extends AbstractEmailNotification
     public function sendEmailNotification($params)
     {
         $message = $params['mailer']->createMessage()
-            ->setFrom([$params['mailFrom'] => 'Zoobdoo'])
+            ->setFrom([$params['mailFrom'] => $params['mailFromTitle']])
             ->setTo($params['sendTo'])
             ->setContentType('text/html');
 
