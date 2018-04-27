@@ -36,7 +36,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new EE\DataExporterBundle\EEDataExporterBundle(),
             new Slik\DompdfBundle\SlikDompdfBundle(),
-            new Trsteel\CkeditorBundle\TrsteelCkeditorBundle(),
+            new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
             new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
             new Erp\SmartMoveBundle\ErpSmartMoveBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),

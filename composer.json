@@ -35,7 +35,7 @@
         "knplabs/knp-paginator-bundle": "^2.5",
         "ee/dataexporter-bundle": "0.4.2",
         "slik/dompdf-bundle" : "dev-master#c7d5b15d12d5c74f6844ffdee755df453f656098",
-        "Trsteel/ckeditor-bundle": "1.12.1",
+        "egeloen/ckeditor-bundle": "^6.0",
         "whiteoctober/breadcrumbs-bundle": "~1.2",
         "goodby/csv": "dev-master#e71217b8d6110f3d1ac3784ef9b8a2383c3398b9",
         "beberlei/DoctrineExtensions": "^1.0",

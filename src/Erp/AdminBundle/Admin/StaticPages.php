@@ -2,6 +2,7 @@
 
 namespace Erp\AdminBundle\Admin;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -44,7 +45,7 @@ class StaticPages extends Admin
             ->add('metaDescription', 'textarea', ['required' => false])
             ->add('headerTitle', 'text', ['label' => 'Header title / Menu title'])
             ->add('title', 'text', ['required' => false])
-            ->add('content', 'ckeditor')
+            ->add('content', CkeditorType::class)
             ->add('inSubmenu', null, ['label' => 'Show submenu item'])
         ;
 

@@ -2,13 +2,13 @@
 
 namespace Erp\NotificationBundle\Form\Type;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Erp\NotificationBundle\Entity\Template;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TemplateType extends AbstractType
@@ -53,7 +53,7 @@ class TemplateType extends AbstractType
                 'submit',
                 SubmitType::class,
                 [
-                    'label' => 'Submit',
+                    'label' => 'Save',
                 ]
             );
     }

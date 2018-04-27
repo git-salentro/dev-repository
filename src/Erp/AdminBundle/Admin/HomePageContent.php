@@ -2,6 +2,7 @@
 
 namespace Erp\AdminBundle\Admin;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -39,8 +40,8 @@ class HomePageContent extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('serviceBody', 'ckeditor', ['required' => false])
-            ->add('featureBody', 'ckeditor', ['required' => false])
+            ->add('serviceBody', CkeditorType::class, ['required' => false])
+            ->add('featureBody', CkeditorType::class, ['required' => false])
         ;
     }
 
