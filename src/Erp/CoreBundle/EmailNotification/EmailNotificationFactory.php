@@ -21,6 +21,7 @@ use Erp\CoreBundle\EmailNotification\Notifications\UserDeactivate;
 use Erp\CoreBundle\EmailNotification\Notifications\UserActivate;
 use Erp\CoreBundle\EmailNotification\Notifications\ApplicationFormToManager;
 use Erp\CoreBundle\EmailNotification\Notifications\ContactFormToAdmin;
+use Erp\CoreBundle\EmailNotification\Notifications\AlertNotification;
 
 class EmailNotificationFactory
 {
@@ -41,6 +42,7 @@ class EmailNotificationFactory
     const TYPE_CONTACT_FORM_TO_ADMIN        = 'contact_form_to_admin';
     const TYPE_SM_CHECK_USER                = 'smart_move_user_check';
     const TYPE_PS_BANK_ACCOUNT              = 'ps_bank_account';
+    const TYPE_ALERT_NOTIFICATION           = 'alert_notifictaion';
 
     /**
      * Get email provider by type
@@ -105,6 +107,9 @@ class EmailNotificationFactory
             case self::TYPE_APPLICATION_FORM_INSTRUCTION:
                 $provider = new ApplicationFormInstruction();
                 break;
+            case self::TYPE_ALERT_NOTIFICATION:
+                $provider = new AlertNotification();
+                break;
             default:
                 $available = [
                     self::TYPE_ADMIN_USER_CREATE,
@@ -124,6 +129,7 @@ class EmailNotificationFactory
                     self::TYPE_SM_CHECK_USER,
                     self::TYPE_PS_BANK_ACCOUNT,
                     self::TYPE_APPLICATION_FORM_INSTRUCTION,
+                    self::TYPE_ALERT_NOTIFICATION,
                 ];
                 throw new EmailNotificationException(
                     sprintf(

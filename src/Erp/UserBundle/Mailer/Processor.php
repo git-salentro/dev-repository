@@ -27,9 +27,4 @@ class Processor extends BaseProcessor
 
         return $result;
     }
-
-    public function sendCustomEmail(string $mailTo, string $mailFrom, string $subject, $rendered)
-    {
-        return $this->sendEmail($rendered, $subject, $mailFrom, $mailTo, 'text/html');
-    }
 }
