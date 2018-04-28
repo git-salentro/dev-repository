@@ -63,6 +63,7 @@ class DashboardController extends BaseController
 
         $availableProperties = [];
         $rentedProperties = [];
+
         /** @var PropertyRentHistory $record */
         foreach ($history as $record) {
             $interval = $record->getCreatedAt()->format('Y-n');
