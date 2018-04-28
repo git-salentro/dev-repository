@@ -469,7 +469,6 @@ class ManagerRegistrationFormType extends AbstractType
                     'class' => 'form-control select-control'
                 ],
                 'choices' => [
-                    User::ROLE_TENANT => 'Tenant',
                     User::ROLE_MANAGER => 'Manager',
                     User::ROLE_LANDLORD => 'Landlord'
                 ],
