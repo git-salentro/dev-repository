@@ -29,8 +29,9 @@ class PropertySettings
      *      inversedBy="settings"
      * )
      * @ORM\JoinColumn(
-     *      name="property_id",
-     *      referencedColumnName="id"
+     *      name="settings_id",
+     *      referencedColumnName="id",
+     *      onDelete="CASCADE"
      * )
      */
     protected $property;
