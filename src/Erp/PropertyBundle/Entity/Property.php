@@ -119,15 +119,15 @@ class Property
     /**
      * @ORM\ManyToMany(
      *      targetEntity="\Erp\CoreBundle\Entity\Image",
-     *      cascade={"persist"},
+     *      cascade={"persist","remove"},
      *      orphanRemoval=true
      * )
      * @ORM\JoinTable(name="property_images",
      *      joinColumns={
-     *          @ORM\JoinColumn(name="property_id", referencedColumnName="id")
+     *          @ORM\JoinColumn(name="property_id", referencedColumnName="id", onDelete="CASCADE")
      *      },
      *      inverseJoinColumns={
-     *          @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+     *          @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE")
      *      }
      * )
      */
