@@ -17,14 +17,15 @@ class PropertyRentHistoryRepository extends EntityRepository
             Property::STATUS_DRAFT,
         ];
         $qb = $this->createQueryBuilder('prh')
-            ->select('prh')
+            ->select('prh.createdAt', 'prh.status', 'prh.id', 'CONCAT(YEAR(prh.createdAt),\'-\',MONTH(prh.createdAt)) as date')
             ->join('prh.property', 'p')
             ->where('p.user = :user')
             ->andWhere('prh.status IN (:statuses)')
             ->setParameter('statuses', $statuses)
             ->setParameter('user', $user)
             ->addGroupBy('p')
-            ->addGroupBy('prh.status');
+            ->addGroupBy('prh.status')
+            ->addGroupBy('date');
 
         if ($dateFrom) {
             if ($dateTo) {

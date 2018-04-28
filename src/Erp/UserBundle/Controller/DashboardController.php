@@ -63,11 +63,10 @@ class DashboardController extends BaseController
 
         $availableProperties = [];
         $rentedProperties = [];
-
         /** @var PropertyRentHistory $record */
         foreach ($history as $record) {
-            $interval = $record->getCreatedAt()->format('Y-n');
-            switch ($record->getStatus()) {
+            $interval = $record['date'];
+            switch ($record['status']) {
                 case Property::STATUS_DRAFT:
                 case Property::STATUS_AVAILABLE:
                     $availableProperties[$interval] = isset($availableProperties[$interval]) ? ++$availableProperties[$interval] : 1;
