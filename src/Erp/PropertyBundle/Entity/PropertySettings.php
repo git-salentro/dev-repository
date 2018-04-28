@@ -29,7 +29,7 @@ class PropertySettings
      *      inversedBy="settings"
      * )
      * @ORM\JoinColumn(
-     *      name="settings_id",
+     *      name="property_id",
      *      referencedColumnName="id",
      *      onDelete="CASCADE"
      * )
