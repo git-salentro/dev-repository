@@ -34,7 +34,7 @@ class UserFixture extends Fixture
             $user = $userManager->createUser();
         }
 
-        $user->addRole(User::ROLE_MANAGER);
+        $user->setRole(User::ROLE_MANAGER);
         $user
             ->setCompanyName('My manager Company')
             ->setFirstName('Tony')
@@ -77,7 +77,7 @@ class UserFixture extends Fixture
             $user = $userManager->createUser();
         }
 
-        $user->addRole(User::ROLE_LANDLORD);
+        $user->setRole(User::ROLE_LANDLORD);
         $user
             ->setCompanyName('My Landlord Company')
             ->setFirstName('John')
@@ -118,7 +118,7 @@ class UserFixture extends Fixture
             $user = $userManager->createUser();
         }
 
-        $user->addRole(User::ROLE_TENANT);
+        $user->setRole(User::ROLE_TENANT);
         $user
             ->setCompanyName('Tenant')
             ->setFirstName('Peter')
