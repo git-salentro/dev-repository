@@ -105,3 +105,13 @@ erp_property_listing_search:
     options:
         expose: true
     methods: [GET, POST]
+
+erp_property_listings_all_data_for_export:
+    path:     /get-data-compile
+    defaults: { _controller: ErpPropertyBundle:Listing:GetAllProperty }
+    methods: [GET, POST]
+
+erp_property_listings_all_data_for_xml_export:
+    path:     /get-data-xml-compile
+    defaults: { _controller: ErpPropertyBundle:Listing:GetPropertyXml }
+    methods: [GET, POST]

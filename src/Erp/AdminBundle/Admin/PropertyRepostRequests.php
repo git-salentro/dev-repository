@@ -80,7 +80,9 @@ class PropertyRepostRequests extends Admin
      */
     protected function configureRoutes(RouteCollection $collection)
     {
-        $collection->clearExcept(['list', 'delete', 'edit', 'batch']);
+        $collection->clearExcept(['list', 'delete', 'edit', 'batch','export']);
+        $collection->add('csv');
+        $collection->add('xml');
     }
 
     /**

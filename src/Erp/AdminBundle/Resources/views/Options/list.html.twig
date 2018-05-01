@@ -5,8 +5,65 @@
 
 {% block notice %}
     {% include 'ErpAdminBundle:blocks:sonata_message.html.twig' %}
+    <style>
+        div#new_export_btn .btn-group {
+            margin: 0 8px;
+        }
+    </style>
+<div class="row" id="new_export_btn">
+    <div class="sonata-ba-list col-md-10">
+        <div class="box box-secondary">
+            <div class="box-body table-responsive text-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-export"></i>
+                        Export post property CSV Data
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+
+                            <a href="{{ admin.generateUrl('csv') }}">
+                                <i class="glyphicon glyphicon-download"></i>
+                                Today All Modified post request
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ admin.generateUrl('csv',{'type' : '1'}) }}">
+                                <i class="glyphicon glyphicon-download"></i>
+                                Today All Cancelled post request
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-export"></i>
+                        Export post property XML Data
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ admin.generateUrl('xml') }}">
+                                <i class="glyphicon glyphicon-download"></i>
+                                Today All Modified post request
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ admin.generateUrl('xml',{'type' : '1'}) }}">
+                                <i class="glyphicon glyphicon-download"></i>
+                                Today All Cancelled post request
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock notice %}
 
 {% block navbar_title %}
     {{ admin.label }}
+
 {% endblock %}

@@ -67,11 +67,13 @@ services:
         arguments:
             - ~
             - Erp\PropertyBundle\Entity\PropertyRepostRequest
-            - ~
+            - ErpAdminBundle:CRUD
         calls:
             - [ setTemplate, [list, ErpAdminBundle:Options:list.html.twig]]
             - [ setTemplate, [edit, ErpAdminBundle:PropertyRepostRequests:edit.html.twig]]
             - [ setTemplate, [delete, ErpAdminBundle:PropertyRepostRequests:delete.html.twig]]
+            - [ setTemplate, [csv, ErpAdminBundle:Options:list.html.twig]]
+            - [ setTemplate, [xml, ErpAdminBundle:Options:list.html.twig]]
 
     sonata.page.admin.application_forms:
         class: Erp\AdminBundle\Admin\ApplicationForms
