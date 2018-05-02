@@ -36,7 +36,8 @@ class SendNotificationConsumer implements ConsumerInterface
         $emailParams = [
             'mailTo' => $data['mailTo'],
             'mailFrom' => $data['mailFrom'],
-            'subject' => $data['data']['title'],
+            'mailFromTitle' => $data['mailFromTitle'],
+            'subject' => $data['subject'],
             'rendered' => $data['rendered'],
         ];
         try {

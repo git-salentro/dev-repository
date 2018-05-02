@@ -43,8 +43,6 @@ class BaseNotificationCommand extends ContainerAwareCommand
         $templateManager = $this->getContainer()->get('erp_notification.template_manager');
         $producer = $this->getContainer()->get('old_sound_rabbit_mq.send_notification_producer');
 
-        $mailFrom = $this->getContainer()->getParameter('contact_email');
-
         $method = null;
         if ($type === self::TYPE_NOTIFICATION) {
             $this->prefix = 'notification before';
@@ -58,6 +56,7 @@ class BaseNotificationCommand extends ContainerAwareCommand
         if ($iterableResult = $userNotificationEm->getRepository(UserNotification::class)->{$method}()) {
             foreach ($iterableResult as $propertyResult) {
                 $data = reset($propertyResult);
+                /** @var Property $property */
                 if ($property = $propertyEm->getRepository(Property::class)->find($data['propertyId'])) {
                     $tenant = $property->getTenantUser();
                     try {
@@ -66,10 +65,17 @@ class BaseNotificationCommand extends ContainerAwareCommand
                         $this->logRenderError($ex, $data);
                         continue;
                     }
+
+                    $manager = $property->getUser();
+                    $managerFullName = sprintf('Manager %s', $manager->getFromForEmail());
+                    $mailFrom = $this->getContainer()->getParameter('contact_email');
+
                     $msg = [
                         'mailTo' => $tenant->getEmail(),
                         'mailFrom' => $mailFrom,
+                        'mailFromTitle' => $managerFullName,
                         'data' => $data,
+                        'subject' => $manager->getCompanyName() ?: $managerFullName,
                         'rendered' => $rendered,
                         'tenantUser' => $tenant->getId(),
                         'property' => $property->getId(),

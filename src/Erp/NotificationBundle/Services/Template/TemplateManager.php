@@ -23,12 +23,12 @@ class TemplateManager
     public function renderTemplateById(int $id)
     {
         if ($template = $this->repo->find($id)) {
-            return $this->renderTeplate($template);
+            return $this->renderTemplate($template);
         }
         throw new NotFoundHttpException('Template with id '.$id.' not found');
     }
 
-    public function renderTeplate(Template $template)
+    public function renderTemplate(Template $template)
     {
         $parameters = [
             'content' => $template->getDescription(),

@@ -102,7 +102,7 @@ services:
             timeout: 10s
             retries: 5
         volumes:
-          - ./docker/rabbitmq/:/var/app
+            - ./docker/rabbitmq/:/var/app
 
     redis:
         restart: always

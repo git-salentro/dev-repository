@@ -59,11 +59,11 @@ class TemplateController extends BaseController
         $em = $this->getDoctrine()->getManagerForClass(Template::class);
         $repository = $em->getRepository(Template::class);
 
-        /** @var Template $template */
-        $template = $repository->find($id);
+        /** @var Template $entity */
+        $entity = $repository->find($id);
         $this->checkAccess($entity);
 
-        $em->remove($template);
+        $em->remove($entity);
         $em->flush();
 
         return $this->redirectToRoute('erp_notification_template_list');
