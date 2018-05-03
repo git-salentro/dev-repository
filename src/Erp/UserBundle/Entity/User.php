@@ -626,7 +626,7 @@ class User extends BaseUser
      * @var Template
      *
      * @ORM\OneToMany(targetEntity="\Erp\NotificationBundle\Entity\Template", mappedBy="user")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $templates;
 
