@@ -138,7 +138,7 @@ class PropertySettings
      */
     public function setAllowPartialPayments($allowPartialPayments)
     {
-        $this->allowPartialPayments = $allowPartialPayments;
+        $this->allowPartialPayments = (bool) $allowPartialPayments;
 
         return $this;
     }
@@ -222,6 +222,21 @@ class PropertySettings
         $this->property = $property;
     }
 
+    /**
+     * @return bool
+     */
+    public function isAllowPartialPayments()
+    {
+        return $this->allowPartialPayments;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRestrictPartialPayments()
+    {
+        return !$this->allowPartialPayments;
+    }
 
     public function replace(PropertySettings $settings)
     {

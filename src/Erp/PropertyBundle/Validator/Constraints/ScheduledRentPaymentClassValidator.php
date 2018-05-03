@@ -69,7 +69,8 @@ class ScheduledRentPaymentClassValidator extends ConstraintValidator
             }
         }
 
-        if ($value->getAmount() != $propertySettings->getPaymentAmount()) {
+        if ($value->getAmount() != $propertySettings->getPaymentAmount() &&
+            !$propertySettings->isRestrictPartialPayments()) {
             if ($this->context instanceof ExecutionContextInterface) {
                 $this->context->buildViolation($constraint->paymentAmountMessage)
                     ->setParameter('{{ value }}', $value->getAmount())

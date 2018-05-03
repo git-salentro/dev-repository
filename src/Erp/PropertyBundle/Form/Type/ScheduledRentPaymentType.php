@@ -170,9 +170,7 @@ class ScheduledRentPaymentType extends AbstractType
     private function getCategoryChoices(User $user)
     {
         if ($user->isDebtor()) {
-            //TODO Refactor amount
-            $amount = $this->formatter->format($user->getTotalOwedAmount() / 100);
-
+            $amount = $this->formatter->format($user->getTotalOwedAmount());
             return [ScheduledRentPayment::CATEGORY_LATE_RENT_PAYMENT => sprintf('Late Rent Payment (%s)', $amount)];
         }
 
