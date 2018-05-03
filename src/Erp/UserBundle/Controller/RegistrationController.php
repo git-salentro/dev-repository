@@ -3,12 +3,11 @@
 namespace Erp\UserBundle\Controller;
 
 use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
-use Erp\PaymentBundle\Entity\StripeAccount;
 use Erp\SiteBundle\Entity\StaticPage;
 use Erp\UserBundle\Entity\InvitedUser;
 use Erp\UserBundle\Entity\User;
 use Erp\UserBundle\Form\Type\ManagerRegistrationFormType;
-
+use Erp\UserBundle\Entity\RentPaymentBalance;
 use Erp\UserBundle\Form\Type\UserTermOfUseFormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\UserBundle\Controller\RegistrationController as BaseController;
@@ -254,6 +253,10 @@ class RegistrationController extends BaseController
                     ->setManager($managerUser);
                 ;
                 $userManager->updateUser($user);
+
+                $rentPaymentBalance = new RentPaymentBalance();
+                $rentPaymentBalance = $rentPaymentBalance->setUser($user);
+                $user->setRentPaymentBalance($rentPaymentBalance);
 
                 $this->em->persist($invitedUser->getProperty()->setTenantUser($user));
                 $this->em->remove($invitedUser);

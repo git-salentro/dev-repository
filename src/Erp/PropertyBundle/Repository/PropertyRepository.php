@@ -272,13 +272,17 @@ class PropertyRepository extends EntityRepository
         //TODO Optimize. Get rid of hydration
         $yesterday = (new \DateTime())->modify('-1 day');
         $yesterdayDay = $yesterday->format('j');
+        $yesterdayMonth = $yesterday->format('n');
 
         $qb = $this->createQueryBuilder('p')
             ->select('p', 'ps', 'tu')
             ->join('p.settings', 'ps')
             ->join('p.tenantUser', 'tu')
+            ->join('tu.rentPaymentBalance', 'rpb')
             ->where('ps.dayUntilDue = :yesterdayDay')
-            ->setParameter('yesterdayDay', $yesterdayDay);
+            ->andWhere('MONTH(rpb.lastPaymentAt) <> :currentMonth')
+            ->setParameter('yesterdayDay', $yesterdayDay)
+            ->setParameter('currentMonth', $yesterdayMonth);
 
         return $qb
             ->getQuery()

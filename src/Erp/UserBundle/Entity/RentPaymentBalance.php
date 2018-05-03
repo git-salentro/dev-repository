@@ -50,6 +50,13 @@ class RentPaymentBalance implements DatesAwareInterface
     private $debtStartAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_payment_at", type="date", nullable=true)
+     */
+    private $lastPaymentAt;
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -133,15 +140,65 @@ class RentPaymentBalance implements DatesAwareInterface
     {
         return $this->user;
     }
-    
+
+    /**
+     * Get debtStartAt
+     *
+     * @return \DateTime
+     */
+    public function getDebtStartAt()
+    {
+        return $this->debtStartAt;
+    }
+
+    /**
+     * Set debtStartAt
+     *
+     * @param \DateTime $debtStartAt
+     *
+     * @return RentPaymentBalance
+     */
+    public function setDebtStartAt(\DateTime $debtStartAt)
+    {
+        $this->debtStartAt = $debtStartAt;
+
+        return $this;
+    }
+
+    /**
+     * Get lastPaymentAt
+     *
+     * @return \DateTime
+     */
+    public function getLastPaymentAt()
+    {
+        return $this->lastPaymentAt;
+    }
+
+    /**
+     * Set lastPaymentAt
+     *
+     * @param \DateTime $lastPaymentAt
+     *
+     * @return RentPaymentBalance
+     */
+    public function setLastPaymentAt(\DateTime $lastPaymentAt)
+    {
+        $this->lastPaymentAt = $lastPaymentAt;
+
+        return $this;
+    }
+
     public function takeMoneyFromBalance($amount)
     {
         $this->balance -= $amount;
+        $this->lastPaymentAt = new \DateTime();
     }
 
     public function depositMoneyToBalance($amount)
     {
         $this->balance += $amount;
+        $this->lastPaymentAt = new \DateTime();
     }
 
     public function getDayLate()

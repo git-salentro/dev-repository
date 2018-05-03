@@ -29,7 +29,6 @@ class StripeController extends BaseController
 
         $template = 'ErpPaymentBundle:Stripe/Forms:cc.html.twig';
         $templateParams = [
-            'type' => StripeCustomer::CREDIT_CARD,
             'user' => $user,
             'form' => $form->createView(),
             'errors' => null,

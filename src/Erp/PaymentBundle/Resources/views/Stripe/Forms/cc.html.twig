@@ -88,27 +88,25 @@
 {% endblock %}
 
 {% block javascript_inline %}
-    {% if type == cc %}
-        <script>
-            (function ($) {
-                var form = $('[name="{{ form.vars.name }}"]');
+    <script>
+        (function ($) {
+            var form = $('[name="{{ form.vars.name }}"]');
 
-                function stripeResponseHandler(status, response) {
-                    if (status < 200 || status >= 300) {
-                        return false;
-                    } else {
-                        $('#{{ form.token.vars.id }}').val(response['id']);
-                        form.get(0).submit();
-                    }
-                }
-
-                form.on('submit', function (e) {
-                    e.preventDefault();
-                    Stripe.card.createToken(form, stripeResponseHandler);
-
+            function stripeResponseHandler(status, response) {
+                if (status < 200 || status >= 300) {
                     return false;
-                });
-            })(jQuery);
-        </script>
-    {% endif %}
+                } else {
+                    $('#{{ form.token.vars.id }}').val(response['id']);
+                    form.get(0).submit();
+                }
+            }
+
+            form.on('submit', function (e) {
+                e.preventDefault();
+                Stripe.card.createToken(form, stripeResponseHandler);
+
+                return false;
+            });
+        })(jQuery);
+    </script>
 {% endblock %}
