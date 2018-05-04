@@ -17,21 +17,20 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <i class="glyphicon glyphicon-export"></i>
-                        Export post property CSV Data
+                        Export post property XML Data
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-
-                            <a href="{{ admin.generateUrl('csv') }}">
-                                <i class="glyphicon glyphicon-download"></i>
-                                Today All Modified post request
+                            <a href="{{ admin.generateUrl('xml') }}">
+                                <i class="fa fa-refresh"></i>
+                                Sync Today All Modified post requests
                             </a>
                         </li>
                         <li>
-                            <a href="{{ admin.generateUrl('csv',{'type' : '1'}) }}">
-                                <i class="glyphicon glyphicon-download"></i>
-                                Today All Cancelled post request
+                            <a href="{{ admin.generateUrl('xml',{'type' : '1'}) }}">
+                                <i class="fa fa-refresh"></i>
+                                Sync Today All Cancelled post requests
                             </a>
                         </li>
                     </ul>
@@ -39,24 +38,24 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <i class="glyphicon glyphicon-export"></i>
-                        Export post property XML Data
+                        Check post property data Feed url
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="{{ admin.generateUrl('xml') }}">
+                            <a href="{{ asset('assets/xml/active-post-data.xml') }}" target="_blank">
                                 <i class="glyphicon glyphicon-download"></i>
-                                Today All Modified post request
+                                Today All Modified post requests
                             </a>
                         </li>
                         <li>
-                            <a href="{{ admin.generateUrl('xml',{'type' : '1'}) }}">
+                            <a href="{{ asset('assets/xml/cancelled-post-data.xml') }}" target="_blank">
                                 <i class="glyphicon glyphicon-download"></i>
-                                Today All Cancelled post request
+                                Today All Cancelled post requests
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div><p><b>Note:</b> Before open or save For both type feed url ( modified or cancelled posts property ) please sync xml under export post property XML Data toggle button </p>
             </div>
         </div>
     </div>

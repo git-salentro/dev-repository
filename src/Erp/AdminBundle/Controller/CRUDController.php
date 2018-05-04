@@ -12,6 +12,7 @@ use Erp\UserBundle\Entity\User;
 use Sonata\AdminBundle\Controller\CRUDController as BaseController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Goodby\CSV\Export\Standard\ExporterConfig;
@@ -35,72 +36,177 @@ class CRUDController extends BaseController
         $conn = $this->get('database_connection');
 
         /** check type status for delete and active post */
+        $baseurl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
+
         if($type == '1')
         {
-            $stmt = $conn->prepare('SELECT properties.id,properties.created_date,properties.updated_date,properties.name,properties.zip,properties.address,properties.about_properties,properties.additional_details,properties.amenities,properties.of_baths,properties.of_beds,properties.square_footage,cities.name as city_name, cities.country, cities.latitude, cities.longitude,property_repost_requests.note,property_repost_requests.status as repost_request_status FROM properties inner join cities on cities.id = properties.city_id inner join property_repost_requests on property_repost_requests.property_id = properties.id where property_repost_requests.status = "rejected" and DATE(property_repost_requests.updated_date) = CURRENT_DATE()');
+            $stmt = $conn->prepare("SELECT 
+                                    properties.id,
+                                    properties.created_date,
+                                    properties.updated_date,
+                                    properties.name,
+                                    properties_settings.payment_amount as properties_price,
+                                    properties.address,
+                                    properties.zip,
+                                    properties.state_code,
+                                    properties.about_properties,
+                                    properties.additional_details,
+                                    properties.amenities,
+                                    properties.of_baths,
+                                    properties.of_beds,
+                                    properties.square_footage,
+                                    cities.name as city_name,
+                                    cities.country, 
+                                    cities.latitude,
+                                    cities.longitude,
+                                    property_repost_requests.note,
+                                    property_repost_requests.status as repost_request_status
+                                    FROM properties 
+                                    inner join cities on cities.id = properties.city_id 
+                                    inner join property_repost_requests on property_repost_requests.property_id = properties.id 
+                                    left join properties_settings on properties.settings_id = properties_settings.id
+                                    where property_repost_requests.status = 'rejected' and DATE(property_repost_requests.updated_date) = CURRENT_DATE() group by properties.id");
+
             $stmt->execute();
             $result = $stmt->fetchAll();
+        }
+        else
+        {
+            $stmt = $conn->prepare("SELECT 
+                                    properties.id,
+                                    properties.created_date,
+                                    properties.updated_date,
+                                    properties.name,
+                                    properties_settings.payment_amount as properties_price,
+                                    properties.address,
+                                    properties.zip,
+                                    properties.state_code,
+                                    properties.about_properties,
+                                    properties.additional_details,
+                                    properties.amenities,
+                                    properties.of_baths,
+                                    properties.of_beds,
+                                    properties.square_footage,
+                                    cities.name as city_name,
+                                    cities.country, 
+                                    cities.latitude,
+                                    cities.longitude,
+                                    property_repost_requests.note,
+                                    property_repost_requests.status as repost_request_status
+                                    FROM properties
+                                    inner join cities on cities.id = properties.city_id 
+                                    inner join property_repost_requests on property_repost_requests.property_id = properties.id
+                                    left join properties_settings on properties.settings_id = properties_settings.id 
+                                    where property_repost_requests.status != 'rejected' and DATE(properties.updated_date) = CURRENT_DATE() group by properties.id");
+
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+
+        }
+
+        /** check type status for delete and active post for set @filename for sync or export data in current files that's in assets/web/xml => filename */
+        if($type != '')
+        {
+            $todaysFile = $_SERVER['DOCUMENT_ROOT'].'/assets/xml/cancelled-post-data.xml';
         }
         else{
-            $stmt = $conn->prepare('SELECT properties.id,properties.created_date,properties.updated_date,properties.name,properties.address,properties.zip,properties.about_properties,properties.additional_details,properties.amenities,properties.of_baths,properties.of_beds,properties.square_footage,cities.name as city_name, cities.country, cities.latitude, cities.longitude,property_repost_requests.note,property_repost_requests.status as repost_request_status FROM properties inner join cities on cities.id = properties.city_id inner join property_repost_requests on property_repost_requests.property_id = properties.id where property_repost_requests.status != "rejected" and DATE(properties.updated_date) = CURRENT_DATE()');
-            $stmt->execute();
-            $result = $stmt->fetchAll();
+            $todaysFile = $_SERVER['DOCUMENT_ROOT'].'/assets/xml/active-post-data.xml';
         }
 
-        /** Start XML file, echo parent node */
-        $rootNode = new \SimpleXMLElement( "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><properties></properties>" );
-        if($result){
+        /** to check file exist or not */
+        if(file_exists($todaysFile)) {
 
-            foreach($result as $row){
+            /** to check file exist and have writable permission */
+            if (is_writable($todaysFile)) {
 
-                $created_date = date('Y-m-d',strtotime($row['created_date']));
-                $updated_date = date('Y-m-d',strtotime($row['updated_date']));
-                // ADD TO XML DOCUMENT NODE
-                $itemNode = $rootNode->addChild('property');
-                $itemNode->addChild( 'name', $row['name'] );
-                $itemNode->addChild( 'address', $row['address'] );
-                $itemNode->addChild( 'city_name', $row['city_name'] );
-                $itemNode->addChild( 'latitude', $row['latitude'] );
-                $itemNode->addChild( 'longitude', $row['longitude'] );
-                $itemNode->addChild( 'zip', $row['zip'] );
-                $itemNode->addChild( 'about_properties', $row['about_properties'] );
-                $itemNode->addChild( 'amenities', $row['amenities'] );
-                $itemNode->addChild( 'of_beds', $row['of_beds'] );
-                $itemNode->addChild( 'of_baths', $row['of_baths'] );
-                $itemNode->addChild( 'created_date', $created_date );
-                $itemNode->addChild( 'modified_date', $updated_date );
-                $itemNode->addChild( 'repost_request_status', $row['repost_request_status'] );
-                $itemNode->addChild( 'note', $row['note'] );
+                $xmlFileContents = file_get_contents($todaysFile);
+                $rootNode = new \SimpleXMLElement("<?xml version='1.0' encoding='UTF-8' standalone='yes'?><Properties></Properties>");
+
+                /** Start XML file, echo parent node */
+
+                if ($result) {
+                    /** fetch data in foreach loop to add in xml document */
+                    foreach ($result as $row) {
+                        $stmt_img = $result_img = '';
+                        $stmt_img = $conn->prepare("SELECT 
+                                    property_images.property_id,
+                                    CONCAT('$baseurl',images.path,'/', images.name) AS image_path
+                                    FROM property_images 
+                                    left join  images on property_images.image_id = images.id 
+                                    where property_images.property_id = '".$row['id']."'");
+
+                        $stmt_img->execute();
+                        $result_img = $stmt_img->fetchAll();
+
+                        /** set post property created and updated date */
+                        $created_date = date('Y-m-d H:i:s', strtotime($row['created_date']));
+                        $updated_date = date('Y-m-d H:i:s', strtotime($row['updated_date']));
+
+                        /** Add data in document xml node */
+                        $itemNode = $rootNode->addChild('Property');
+                        $itemNode->addAttribute('LocalPropertyID', $row['id']);
+                        $itemNode->addChild('LegalName', $row['name']);
+                        $itemNode->addChild('Description', $row['about_properties']);
+                        $itemNode->addChild('Price', $row['properties_price']);
+                        $itemNode->addChild('Address', $row['address']);
+                        $itemNode->addChild('City', $row['city_name']);
+                        $itemNode->addChild('State', $row['state_code']);
+                        $itemNode->addChild('Zip', $row['zip']);
+                        $itemNode->addChild('Latitude', $row['latitude']);
+                        $itemNode->addChild('Longitude', $row['longitude']);
+                        $itemNode->addChild('Amenities', $row['amenities']);
+                        $itemNode->addChild('Bedrooms', $row['of_beds']);
+                        $itemNode->addChild('FullBaths', $row['of_baths']);
+                        $itemNode->addChild('SquareFeet', $row['square_footage']);
+                        foreach ($result_img as $row_img) {
+                            $data = $itemNode->addChild('PropertyPhoto', $row_img['image_path']);
+                            $data->addAttribute('ImageUrl',  $row_img['image_path']);
+                        }
+                        $itemNode->addChild('Modified_date', $updated_date);
+                    }
+                } else {
+                    /** Set Blank data if didn't have any posts for both case cancelled and modified post */
+                    $itemNode = $rootNode->addChild('Property');
+                    if ($type == '1') {
+                        $itemNode->addChild('empty', 'today cancelled post record not found');
+                    } else {
+                        $itemNode->addChild('empty', 'today modified post record not found');
+                    }
+                }
+
+                /** Save out the xml file update set xml node and data */
+                $rootNode->asXML($todaysFile);
+
+                /** return redirect for export data as xml  */
+                $this->addFlash('sonata_flash_success', 'Sync Xml file update successfully');
+                $referer = $this->getRequest()->headers->get('referer');
+                return $this->redirect($referer);
+
+            }
+            else
+            {
+                /** return redirect for export data as xml if file didn't have writable permission*/
+                $this->addFlash('sonata_flash_error', 'xml file does not exist or is not writable on this path '.$todaysFile.'. Please, try again later');
+                $referer = $this->getRequest()->headers->get('referer');
+                return $this->redirect($referer);
             }
         }
         else
-            {
-                $itemNode = $rootNode->addChild('property');
-                if($type == '1')
-                    {
-                    $itemNode->addChild('empty', 'today cancelled post record not found');
-                    }
-                else
-                    {
-                        $itemNode->addChild('empty', 'today modified post record not found');
-                    }
-            }
-
-        /** check type status for delete and active post */
-        if($type != '')
         {
-            $filename = "deleted-post-data.xml";
-        }
-        else{
-            $filename = "active-post-data.xml";
+            /** return redirect for export data as xml if file didn't exist */
+            $this->addFlash('sonata_flash_error', 'xml file does not exist on this path '.$todaysFile.'. Please, try again later');
+            $referer = $this->getRequest()->headers->get('referer');
+            return $this->redirect($referer);
         }
 
-        return new Response($rootNode->asXML(), 200,array(
+        /*return new Response($rootNode->asXML(), 200,array(
             'X-Sendfile'          => $filename,
             'Content-type'        => 'application/octet-stream',
             'Content-Disposition' => sprintf('attachment; filename="%s"', $filename)
-        ));
+        ));*/
     }
+
+    /** In admin side export data function for CSV file*/
     public function csvAction(Request $request)
     {
 
@@ -108,13 +214,66 @@ class CRUDController extends BaseController
         $conn = $this->get('database_connection');
 
         /** check type status for delete and active post */
+        $baseurl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
+
         if($type == '1')
         {
-            $stmt = $conn->prepare('SELECT properties.id,properties.created_date,properties.updated_date,properties.name,properties.zip,properties.address,properties.about_properties,properties.additional_details,properties.amenities,properties.of_baths,properties.of_beds,properties.square_footage,cities.name as city_name, cities.country, cities.latitude, cities.longitude,property_repost_requests.note,property_repost_requests.status as repost_request_status FROM properties inner join cities on cities.id = properties.city_id inner join property_repost_requests on property_repost_requests.property_id = properties.id where property_repost_requests.status = "rejected" and DATE(property_repost_requests.updated_date) = CURRENT_DATE()');
+            $stmt = $conn->prepare("SELECT 
+                                    properties.id,
+                                    properties.created_date,
+                                    properties.updated_date,
+                                    properties.name,
+                                    properties.address,
+                                    properties.zip,
+                                    properties.state_code,
+                                    properties.about_properties,
+                                    properties.additional_details,
+                                    properties.amenities,
+                                    properties.of_baths,
+                                    properties.of_beds,
+                                    properties.square_footage,
+                                    cities.name as city_name,
+                                    cities.country,
+                                    cities.latitude,
+                                    cities.longitude,
+                                    CONCAT('$baseurl',images.path,'/', images.name) AS image_path,
+                                    property_repost_requests.note,
+                                    property_repost_requests.status as repost_request_status
+                                    FROM properties 
+                                    inner join cities on cities.id = properties.city_id 
+                                    inner join property_repost_requests on property_repost_requests.property_id = properties.id
+                                    left join property_images on property_images.property_id = properties.id
+                                    left join  images on property_images.image_id = images.id 
+                                    where property_repost_requests.status = 'rejected' and DATE(property_repost_requests.updated_date) = CURRENT_DATE() group by properties.id");
             $stmt->execute();
         }
         else{
-            $stmt = $conn->prepare('SELECT properties.id,properties.created_date,properties.updated_date,properties.name,properties.address,properties.zip,properties.about_properties,properties.additional_details,properties.amenities,properties.of_baths,properties.of_beds,properties.square_footage,cities.name as city_name, cities.country, cities.latitude, cities.longitude,property_repost_requests.note,property_repost_requests.status as repost_status FROM properties inner join cities on cities.id = properties.city_id inner join property_repost_requests on property_repost_requests.property_id = properties.id where property_repost_requests.status != "rejected" and DATE(properties.updated_date) = CURRENT_DATE()');
+            $stmt = $conn->prepare("SELECT 
+                                    properties.id,
+                                    properties.created_date,
+                                    properties.updated_date,
+                                    properties.name,
+                                    properties.address,
+                                    properties.zip,
+                                    properties.state_code,
+                                    properties.about_properties,
+                                    properties.additional_details,
+                                    properties.amenities,
+                                    properties.of_baths,
+                                    properties.of_beds,
+                                    properties.square_footage,
+                                    cities.name as city_name, 
+                                    cities.country, cities.latitude, 
+                                    cities.longitude,
+                                    CONCAT('$baseurl',images.path,'/', images.name) AS image_path,
+                                    property_repost_requests.note,
+                                    property_repost_requests.status as repost_status
+                                    FROM properties 
+                                    inner join cities on cities.id = properties.city_id 
+                                    inner join property_repost_requests on property_repost_requests.property_id = properties.id
+                                    left join property_images on property_images.property_id = properties.id
+                                    left join  images on property_images.image_id = images.id 
+                                    where property_repost_requests.status != 'rejected' and DATE(properties.updated_date) = CURRENT_DATE() group by properties.id");
             $stmt->execute();
         }
 
@@ -124,28 +283,30 @@ class CRUDController extends BaseController
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment');
 
-        /** check type status for delete and active post */
+        /** check type status for delete and active post to set @filename for export data */
         if($type != '')
         {
-            $response->headers->set('filename', 'deleted-post-data.csv');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"','cancelled-post-data.csv'));
         }
         else
         {
-            $response->headers->set('filename', 'active-post-data.csv');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"','active-post-data.csv'));
         }
 
-        /** response callback function */
+        /** response callback function for set data and header */
         $response->setCallback(function() use($stmt) {
 
             $results = $stmt->fetch();
             if($results)
             {
+                /** Add keys in ne @keyArray for set in config column headers */
                 $keyArray = array();
                 foreach ($results as $key => $val)
                 {
                     $keyArray[] = $key;
                 }
 
+                /** Create ExporterConfig object and setting config for csv file*/
                 $config = new ExporterConfig();
                 $config
                     ->setDelimiter("\t") // Customize delimiter. Default value is comma(,)
@@ -163,6 +324,7 @@ class CRUDController extends BaseController
             }
             else
             {
+                /** Set Blank data if didn't have any modified and cancelled posts */
                 $config = new ExporterConfig();
                 $config
                     ->setDelimiter("\t") // Customize delimiter. Default value is comma(,)
@@ -178,6 +340,7 @@ class CRUDController extends BaseController
 
             }
         });
+
         $response->send();
 
         return $response;
@@ -329,6 +492,7 @@ class CRUDController extends BaseController
                 'id' => $stripeSubscription->getSubscriptionId(),
                 'options' => null,
             ];
+
             $response = $apiManager->callStripeApi('\Stripe\Subscription', 'retrieve', $arguments);
 
             if (!$response->isSuccess()) {

@@ -2,7 +2,11 @@
     {% for flashMessage in app.session.flashbag.get('sonata_flash_success') %}
         <div class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            Item has been successfully saved
+            {% if flashMessage %}
+                {{ flashMessage }}
+            {% else %}
+                Item has been successfully saved
+            {% endif %}
         </div>
     {% endfor %}
 {% endif %}
@@ -11,7 +15,11 @@
     {% for flashMessage in app.session.flashbag.get('sonata_flash_error') %}
         <div class="alert alert-danger alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            An error has occurred during save operation. Please check the values and try again
+            {% if flashMessage %}
+                {{ flashMessage }}
+            {% else %}
+                An error has occurred during save operation. Please check the values and try again
+            {% endif %}
         </div>
     {% endfor %}
 {% endif %}
