@@ -230,13 +230,13 @@ ivory_ck_editor:
     default_config: oneview
     configs:
         oneview:
-            toolbar: [['strinsert'],["Styles","Format","Font","FontSize","TextColor","BGColor","Undo","Redo","Bold","Italic","Underline","RemoveFormat"],["JustifyLeft","JustifyCenter","JustifyRight","JustifyBlock","Maximize","ShowBlocks"]]
+            toolbar: [['placeholder'],["Styles","Format","Font","FontSize","TextColor","BGColor","Undo","Redo","Bold","Italic","Underline","RemoveFormat"],["JustifyLeft","JustifyCenter","JustifyRight","JustifyBlock","Maximize","ShowBlocks"]]
             language: '%locale%'
-            extraPlugins: "strinsert"
+            extraPlugins: "placeholder"
     plugins:
-        strinsert:
-            path:     '/bundles/erpcore/js/ckeditor/plugins/strinsert/'
-            filename: 'plugin.js'
+        placeholder:
+            path:     '/bundles/erpcore/js/ckeditor/plugins/placeholder/'
+            filename: 'main.js'
 
 knp_snappy:
     temporary_folder: %kernel.cache_dir%/snappy

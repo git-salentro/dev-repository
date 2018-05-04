@@ -60,7 +60,15 @@ class BaseNotificationCommand extends ContainerAwareCommand
                 if ($property = $propertyEm->getRepository(Property::class)->find($data['propertyId'])) {
                     $tenant = $property->getTenantUser();
                     try {
-                        $rendered = $templateManager->renderTemplateById($data['templateId']);
+                        /** @var Template $template */
+                        $template = $templateManager->getTemplate($data['templateId']);
+                        $rendered = $templateManager->renderTemplate($template, [
+                            'firstName' => $tenant->getFirstName(),
+                            'lastName' => $tenant->getLastName(),
+                            'date' => (new \DateTime())->format('d.m.Y'),
+                            'daysBefore' => $data['calculatedDaysBefore'],
+                            'daysAfter' => $data['calculatedDaysAfter'],
+                        ]);
                     } catch (\Exception $ex) {
                         $this->logRenderError($ex, $data);
                         continue;

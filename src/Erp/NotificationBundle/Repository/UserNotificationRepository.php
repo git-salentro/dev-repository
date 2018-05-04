@@ -84,17 +84,20 @@ class UserNotificationRepository extends EntityRepository
                     un.sendNotificationAutomatically = 0
                 )')
             ->addSelect('n.id AS notificationId')
-            ->addSelect('(ps.dayUntilDue - DAY(CURRENT_DATE())) AS calculatedDaysBefore')
+            ->addSelect('(ABS(ps.dayUntilDue - DAY(CURRENT_DATE()))) AS calculatedDaysBefore')
+            ->addSelect('0 AS calculatedDaysAfter')
             ->getQuery()->iterate();
     }
 
     public function getPropertiesFromAlertsIterator()
     {
         return $this->getPropertiesFromUserNotificationIterator()
-            ->join('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
+//            ->join('un.alerts', 'a', 'WITH', '(DAY(CURRENT_DATE()) - ps.dayUntilDue) = a.daysAfter')
             ->andWhere('p.paidDate IS NULL OR DATE_ADD(p.paidDate, 1, \'MONTH\') < CURRENT_DATE()')
             ->addSelect('a.id AS alertId')
-            ->addSelect('(DAY(CURRENT_DATE()) - ps.dayUntilDue) AS calculatedDaysAfter')
+            ->addSelect('(ABS(DAY(CURRENT_DATE()) - ps.dayUntilDue)) AS calculatedDaysAfter')
+            ->addSelect('0 AS calculatedDaysBefore')
+            ->join('un.alerts', 'a', 'WITH', 'a.userNotification=un.id')
             ->getQuery()->iterate();
     }
 }

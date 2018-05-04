@@ -28,11 +28,21 @@ class TemplateManager
         throw new NotFoundHttpException('Template with id '.$id.' not found');
     }
 
-    public function renderTemplate(Template $template)
+    public function renderTemplate(Template $template, array $parameters = [])
     {
-        $parameters = [
-            'content' => $template->getDescription(),
-        ];
-        return $this->twig->render(self::EMAIL_TEMPLATE, $parameters);
+        $rendered = (new \Twig_Environment(new \Twig_Loader_String()))->render($template->getDescription(), $parameters);
+
+        return $this->twig->render(self::EMAIL_TEMPLATE, ['content' => $rendered]);
+    }
+
+    public function getTemplate($id)
+    {
+        $template = $this->repo->find($id);
+
+        if (!$template) {
+            throw new NotFoundHttpException('Template with id '.$id.' not found');
+        }
+
+        return $template;
     }
 }
