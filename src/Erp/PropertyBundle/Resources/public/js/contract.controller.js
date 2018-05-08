@@ -87,12 +87,12 @@ ConstructorController.prototype.contractEdit = function () {
                     });
             },
             selector: contractEditorSelector,
-            plugins: ['autoresize', 'table', 'contextmenu', 'paste'],
+            plugins: ['autoresize', 'table', 'contextmenu', 'paste','code'],
             toolbar: 'bold italic underline ' +
             '| alignleft aligncenter alignright alignjustify ' +
             '| inserttable tableprops deletetable ' +
             '| cell row column ' +
-            '| bullist numlist',
+            '| bullist numlist' + '| undo redo',
             statusbar: false,
             table_advtab: false,
             content_css : '/assets/styles/style.min.css',
@@ -100,6 +100,7 @@ ConstructorController.prototype.contractEdit = function () {
             menubar: false,
             table_cell_advtab: false,
             table_row_advtab: false,
+            visual: false,
         });
 
         function setModalEvents ( editor ) {

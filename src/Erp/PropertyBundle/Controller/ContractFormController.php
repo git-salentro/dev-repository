@@ -505,6 +505,8 @@ class ContractFormController extends BaseController
      */
     protected function parseContractSection(ContractSection $contractSection, $formData = [])
     {
+
+
         // inputs
         $content = preg_replace_callback(
             '/([_]{2,})/',
@@ -551,6 +553,127 @@ class ContractFormController extends BaseController
                         'ErpPropertyBundle:ContractForm/elements:checkbox.html.twig',
                         [
                             'name' => $fieldName,
+                        ]
+                    );
+                }
+
+                return $replacement;
+            },
+            $content
+        );
+
+        // marked display in contract form
+        $content = preg_replace_callback(
+            '/(\{marked-symbol\})/',
+            function () use ($formData) {
+                if ($formData) {
+                    $replacement = '&#10003;';
+                } else {
+                    $replacement = '&#10003;';
+                }
+
+                return $replacement;
+            },
+            $content
+        );
+
+        // un-marked display in contract form
+        $content = preg_replace_callback(
+            '/(\{unmarked-symbol\})/',
+            function () use ($formData) {
+                if ($formData) {
+                    $replacement = '&#10008;';
+                } else {
+                    $replacement = '&#10008;';
+                }
+
+                return $replacement;
+            },
+            $content
+        );
+
+        // inputs date
+        $content = preg_replace_callback(
+            '/(\{date\})/',
+            function ($matches) use ($formData) {
+                $this->fieldsCounter++;
+                $fieldName = 'input_' . $this->fieldsCounter;
+
+                if ($formData) {
+                    $replacement = $this->renderView(
+                        'ErpPropertyBundle:ContractForm/elements:input-pdf-mask.html.twig',
+                        [
+                            'width' => strlen($matches[0]) * self::PDF_WIDTH_BALANCER,
+                            'value' => $formData[$fieldName],
+                        ]
+                    );
+                } else {
+                    $replacement = $this->renderView(
+                        'ErpPropertyBundle:ContractForm/elements:input_date.html.twig',
+                        [
+                            'name' => $fieldName,
+                            'width' => strlen($matches[0]),
+                        ]
+                    );
+                }
+
+                return $replacement;
+            },
+            $content
+        );
+
+        // inputs number
+        $content = preg_replace_callback(
+            '/(\{number\})/',
+            function ($matches) use ($formData) {
+                $this->fieldsCounter++;
+                $fieldName = 'input_' . $this->fieldsCounter;
+
+                if ($formData) {
+                    $replacement = $this->renderView(
+                        'ErpPropertyBundle:ContractForm/elements:input-pdf-mask.html.twig',
+                        [
+                            'width' => strlen($matches[0]) * self::PDF_WIDTH_BALANCER,
+                            'value' => $formData[$fieldName],
+                        ]
+                    );
+                } else {
+                    $replacement = $this->renderView(
+                        'ErpPropertyBundle:ContractForm/elements:input_number.html.twig',
+                        [
+                            'name' => $fieldName,
+                            'width' => strlen($matches[0]),
+                        ]
+                    );
+                }
+
+                return $replacement;
+            },
+            $content
+        );
+
+
+        // inputs time
+        $content = preg_replace_callback(
+            '/(\{time\})/',
+            function ($matches) use ($formData) {
+                $this->fieldsCounter++;
+                $fieldName = 'input_' . $this->fieldsCounter;
+
+                if ($formData) {
+                    $replacement = $this->renderView(
+                        'ErpPropertyBundle:ContractForm/elements:input-pdf-mask.html.twig',
+                        [
+                            'width' => strlen($matches[0]) * self::PDF_WIDTH_BALANCER,
+                            'value' => $formData[$fieldName],
+                        ]
+                    );
+                } else {
+                    $replacement = $this->renderView(
+                        'ErpPropertyBundle:ContractForm/elements:input_time.html.twig',
+                        [
+                            'name' => $fieldName,
+                            'width' => strlen($matches[0]),
                         ]
                     );
                 }
@@ -673,7 +796,8 @@ class ContractFormController extends BaseController
             ? $user->getTenantProperty()->getUser()
             : $user;
 
-        $customer = $payer->getPaySimpleCustomers()->first();
+        $customer = $payer->getPaySimpleCustomers();
+
 
         $accountId = $customer->getPrimaryType() == PaySimpleManagerInterface::CREDIT_CARD
             ? $customer->getCcId()
