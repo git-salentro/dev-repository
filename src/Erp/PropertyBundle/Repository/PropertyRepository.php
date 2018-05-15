@@ -506,4 +506,22 @@ class PropertyRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function GetRentLatePropertiesListForEviction(User $user,$checkDate)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p, tu')
+            ->join('p.settings', 'ps')
+            ->join('p.user', 'u')
+            ->join('p.tenantUser', 'tu')
+            ->join('tu.rentPaymentBalance', 'rpb')
+            ->where('p.user = :user')
+            ->andWhere('rpb.balance < 0')
+            ->andwhere('ps.dayUntilDue is not NULL')
+            ->andWhere("DATE_DIFF(rpb.debtStartAt, CURRENT_DATE()) <= ".$checkDate)
+            ->setParameter('user', $user);
+        return $qb->getQuery()->getResult();
+        /*echo "<pre>";print_r($qb1);print_r($checkDate);
+        die;*/
+    }
 }

@@ -216,3 +216,14 @@ services:
             - Erp\PaymentBundle\Entity\UnitSettings
             - ~
             - '@old_sound_rabbit_mq.update_subscriptions_producer'
+
+    sonata.page.admin.eviction:
+          class: Erp\AdminBundle\Admin\Eviction
+          tags:
+              - { name: sonata.admin, manager_type: orm,group: "Eviction Data", label: "List" }
+          arguments:
+              - ~
+              - Erp\NotificationBundle\Entity\EvictionData
+              - ErpAdminBundle:CRUD
+          calls:
+              - [ setTemplate, [list, ErpAdminBundle:Options:list_new.html.twig]]

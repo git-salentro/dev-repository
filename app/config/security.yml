@@ -123,3 +123,4 @@ security:
         - { path: ^/smart-move.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/.*, role: ROLE_ADMIN }
         - { path: ^/notification/.*, role: ROLE_MANAGER }
+        - { path: ^/eviction/.*, role: ROLE_MANAGER }

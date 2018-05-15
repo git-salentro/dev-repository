@@ -43,3 +43,17 @@ erp_notification_user_notification_list:
 erp_notification_user_notification_history:
     path: /notification/history
     defaults: { _controller: ErpNotificationBundle:UserNotification:history }
+    
+    
+erp_notification_user_eviction:
+    path: /eviction/list
+    defaults: { _controller: ErpNotificationBundle:EvictionData:index }
+
+erp_notification_user_eviction_create:
+    path: /eviction/send-eviction
+    defaults: { _controller: ErpNotificationBundle:EvictionData:SendEviction }
+
+
+erp_notification_user_eviction_choose_properties:
+    path: /eviction/choose-properties
+    defaults: { _controller: ErpNotificationBundle:EvictionData:new }

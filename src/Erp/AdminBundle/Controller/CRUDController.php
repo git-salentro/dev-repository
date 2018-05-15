@@ -6,6 +6,7 @@ use Erp\CoreBundle\EmailNotification\EmailNotificationFactory;
 use Erp\PaymentBundle\PaySimple\Managers\PaySimpleManagerInterface;
 use Erp\PaymentBundle\PaySimple\Models\PaySimpleModels\RecurringPaymentModel;
 use Erp\PropertyBundle\Entity\Property;
+use Erp\NotificationBundle\Entity\Template;
 use Erp\UserBundle\Entity\ProReport;
 use Erp\UserBundle\Entity\ProRequest;
 use Erp\UserBundle\Entity\User;
@@ -23,12 +24,34 @@ use Goodby\CSV\Export\Standard\Collection\PdoCollection;
 
 class CRUDController extends BaseController
 {
-    /**
-     * Send email to manager with invitation to complete profile
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Erp\CoreBundle\Exception\UserNotFoundExceptionct
-     */
+
+    /** send eviction to tenant and template download in admin side*/
+    public function listpdfAction(Request $request, $id = null)
+    {
+        $eid = $request->get('id');
+        $conn = $this->get('database_connection');
+        $stmt = $conn->prepare("SELECT * FROM erp_notification_template where erp_notification_template.id = '$eid'");
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        $template = 'ErpNotificationBundle:Template:mail.html.twig';
+        $fileName = 'notification_template ('.$result['title'].').pdf';
+        $parameters = [
+            'content' => $result['description'],
+        ];
+        $html = $this->renderView($template, $parameters);
+        $pdf = $this->get('knp_snappy.pdf')->getOutputFromHtml($html);
+
+        return new Response(
+            $pdf,
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            ]
+        );
+    }
+    /** get xml feed data in admin side*/
     public function xmlAction(Request $request, $type = null)
     {
 
@@ -345,6 +368,13 @@ class CRUDController extends BaseController
 
         return $response;
     }
+
+    /**
+     * Send email to manager with invitation to complete profile
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Erp\CoreBundle\Exception\UserNotFoundExceptionct
+     */
     public function sentInviteAction()
     {
         /** @var $user \Erp\UserBundle\Entity\User */

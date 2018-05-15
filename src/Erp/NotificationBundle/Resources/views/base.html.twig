@@ -4,7 +4,7 @@
     {{ parent() }}
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <a
                     class="btn btn-default btn-lg btn-block {{ (currentRoute == 'erp_notification_template_list') ? ' active' : ''}}"
                     role="button"
@@ -13,7 +13,7 @@
                     Templates
                 </a>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 {% set routes = ['erp_notification_user_notification_list', 'erp_notification_user_notification_history'] %}
                 <a
                     class="btn btn-default btn-lg btn-block {{ (currentRoute in routes) ? ' active' : ''}}"
@@ -21,6 +21,16 @@
                     href="{{ path('erp_notification_user_notification_history') }}"
                 >
                     Set Alerts
+                </a>
+            </div>
+            <div class="col-sm-4">
+                {% set routes = ['erp_notification_user_eviction','erp_notification_user_eviction_create'] %}
+                <a
+                        class="btn btn-default btn-lg btn-block {{ (currentRoute in routes) ? ' active' : ''}}"
+                        role="button"
+                        href="{{ path('erp_notification_user_eviction') }}"
+                >
+                    Eviction
                 </a>
             </div>
         </div>
